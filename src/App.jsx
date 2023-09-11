@@ -86,8 +86,8 @@ const App = () => {
     const webSocket = new WebSocket('ws://localhost:22322/')
     setSocket(webSocket)
     webSocket.onopen = () => {
-      webSocket.send('Initialise(DemoSplitters)')
-      // webSocket.send('Initialise');
+      // webSocket.send('Initialise(DemoSplitters)');
+      webSocket.send('Initialise')
     }
     webSocket.onmessage = (event) => {
       // Window Creation WC

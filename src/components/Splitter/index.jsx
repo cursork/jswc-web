@@ -1,11 +1,16 @@
 import { checkPeriod, excludeKeys } from '../../utils';
 import { useAppData } from '../../hooks';
 import SelectComponent from '../SelectComponent';
+import SplitPane, { Pane } from 'split-pane-react';
+import 'split-pane-react/esm/themes/default.css';
+import { useState } from 'react';
 
 const Splitter = ({ data }) => {
   const { dataRef } = useAppData();
 
   const { SplitObj1, SplitObj2 } = data?.Properties;
+  const [sizes, setSizes] = useState([100, '30%', 'auto']);
+  const [horizontalSize, setHorizontalSize] = useState([100, 200, 'auto']);
 
   const periodSplitObj1 = checkPeriod(SplitObj1);
   const periodSplitObj2 = checkPeriod(SplitObj2);
@@ -29,62 +34,72 @@ const Splitter = ({ data }) => {
   const updatedFirstForm = excludeKeys(firstFormData);
   const updatedSecondForm = excludeKeys(secondFormData);
 
+  const layoutCSS = {
+    height: '100%',
+  };
+
   // Horizontal Split
   if (data?.Properties?.Style && data?.Properties?.Style == 'Horz') {
     return (
-      <div>
-        {/* top subform */}
-        <div
-          style={{
-            height: data?.Properties?.Posn[0],
-            position: 'relative',
-          }}
+      <div style={{ height: 800, background: 'white' }}>
+        <SplitPane
+          split='horizontal'
+          sizes={horizontalSize}
+          onChange={(sizes) => setHorizontalSize(sizes)}
         >
-          {Object.keys(updatedFirstForm).map((key) => (
-            <SelectComponent data={updatedFirstForm[key]} />
-          ))}
-        </div>
-
-        {/* Horizontal  */}
-        <div style={{ background: '#F0F0F0', height: '2px' }}></div>
-
-        {/* Bottom subform */}
-        <div style={{ position: 'absolute', flex: 1, background: 'white' }}>
-          {Object.keys(updatedSecondForm).map((key) => (
-            <SelectComponent data={updatedSecondForm[key]} />
-          ))}
-        </div>
+          <div>
+            <div
+              style={{
+                height: data?.Properties?.Posn[0],
+                position: 'relative',
+                background: 'white',
+              }}
+            >
+              {Object.keys(updatedFirstForm).map((key) => (
+                <SelectComponent data={updatedFirstForm[key]} />
+              ))}
+            </div>
+          </div>
+          <div style={{ border: '1px solid #F0F0F0' }}>
+            <div style={{ position: 'absolute', flex: 1, background: 'white' }}>
+              {Object.keys(updatedSecondForm).map((key) => (
+                <SelectComponent data={updatedSecondForm[key]} />
+              ))}
+            </div>
+          </div>
+        </SplitPane>
       </div>
     );
   }
 
   // Vertical Split
   return (
-    <div style={{ display: 'flex', height: '100%' }}>
-      {/* LeftSubForm */}
-      <div
-        style={{
-          width: data?.Properties?.Posn[1],
-
-          background: 'white',
-          position: 'relative',
-        }}
-      >
-        {Object.keys(updatedFirstForm).map((key) => (
-          <SelectComponent data={updatedFirstForm[key]} />
-        ))}
+    <SplitPane split='vertical' sizes={sizes} onChange={setSizes}>
+      {/* left Subform */}
+      <Pane minSize={0} maxSize='100%'>
+        <div style={{ ...layoutCSS, border: '1px solid #F0F0F0', background: 'white' }}>
+          <div
+            style={{
+              width: data?.Properties?.Posn[1],
+              background: 'white',
+              position: 'relative',
+            }}
+          >
+            {Object.keys(updatedFirstForm).map((key) => (
+              <SelectComponent data={updatedFirstForm[key]} />
+            ))}
+          </div>
+        </div>
+      </Pane>
+      {/* Right SubForm */}
+      <div style={{ ...layoutCSS, background: 'white' }}>
+        <div style={{ background: 'white' }}>
+          {Object.keys(updatedSecondForm).map((key) => (
+            <SelectComponent data={updatedSecondForm[key]} />
+          ))}
+        </div>
       </div>
-
-      {/* Splitter */}
-      <div style={{ background: '#F0F0F0', width: '2px' }}></div>
-
-      {/* right Subform */}
-      <div style={{ flex: 1, background: 'white' }}>
-        {Object.keys(updatedSecondForm).map((key) => (
-          <SelectComponent data={updatedSecondForm[key]} />
-        ))}
-      </div>
-    </div>
+    </SplitPane>
   );
 };
 
