@@ -15,6 +15,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   return (
     <input
       value={inputValue}
+      type={data?.Properties?.FieldType == 'Numeric' ? 'number' : 'text'}
       onChange={(e) => {
         setInputValue(e.target.value);
 

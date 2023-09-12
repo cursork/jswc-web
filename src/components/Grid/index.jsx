@@ -22,7 +22,14 @@ const Grid = ({ data }) => {
   // Grid without types
 
   return (
-    <div style={{ ...style, border: '1px solid black', overflow: 'auto', background: 'white' }}>
+    <div
+      style={{
+        ...style,
+        border: '1px solid black',
+        overflow: !ColTitles ? 'auto' : 'hidden',
+        background: 'white',
+      }}
+    >
       {/* Table have column */}
       {ColTitles && (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>

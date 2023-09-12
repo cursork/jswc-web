@@ -11,7 +11,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   if (isCheckBox) {
     return (
-      <div style={{ ...styles }}>
+      <div style={{ ...styles,marginLeft:'10px',marginTop:'5px' }}>
         <input
           type='checkbox'
           defaultChecked={inputValue}

@@ -10,8 +10,9 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   return (
     <div style={{ ...styles }}>
       <select
+        className='custom-select'
         defaultValue={value ? value : data?.Properties?.Text}
-        style={{ width: '100%' }}
+        style={{ width: '100%', border: 0 }}
         onChange={(e) => {
           const index = Items.indexOf(e.target.value);
           console.log(

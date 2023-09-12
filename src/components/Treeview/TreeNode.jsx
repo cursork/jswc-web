@@ -14,6 +14,7 @@ const TreeNode = ({ label, children, isChild = false }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
+        paddingTop: '2px',
       }}
     >
       <span>

@@ -28,8 +28,14 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
     );
   if (data?.Properties?.Type == 'Menu') return <Menu data={data} />;
   if (data?.Properties?.Type == 'Grid') return <Grid data={data} />;
-  if (data?.Properties?.Type == 'Edit') return <Edit data={data} value={inputValue} event={event} row={row} column={column} />;
-  if (data?.Properties?.Type == 'Button') return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />;
+  if (data?.Properties?.Type == 'Edit')
+    return (
+      <div style={{ textAlign: data?.Properties?.FieldType == 'Numeric' ? 'right' : 'null', marginLeft:'10px' }}>
+        <Edit data={data} value={inputValue} event={event} row={row} column={column} />
+      </div>
+    );
+  if (data?.Properties?.Type == 'Button')
+    return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />
   if (data?.Properties?.Type == 'Combo')
     return <Combo data={data} value={inputValue} event={event} row={row} column={column} />;
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;
