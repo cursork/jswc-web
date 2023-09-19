@@ -12,38 +12,11 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
     styles = { ...styles, border: 'none' };
   }
 
-  const handleEvent = (e) => {
-    if (e.target.value == '') return alert('Value must be valid');
-    socket.send(
-      event == 'CellChanged'
-        ? JSON.stringify({
-            Event: {
-              EventName: event,
-              ID: extractStringUntilSecondPeriod(data?.ID),
-              Row: parseInt(row) + 1,
-              Col: parseInt(column) + 1,
-              Value:
-                data?.Properties?.FieldType == 'Numeric'
-                  ? parseInt(e.target.value)
-                  : e.target.value,
-            },
-          })
-        : JSON.stringify({
-            Event: {
-              EventName: data?.Properties?.Event[0],
-              ID: data?.ID,
-              Info: parseInt(e.target.value),
-            },
-          })
-    );
-  };
-
   return (
     <input
       value={inputValue}
       type={data?.Properties?.FieldType == 'Numeric' ? 'number' : 'text'}
-      onChange={(e) => setInputValue(e.target.value)}
-      onBlur={(e) => {
+      onChange={(e) => {
         setInputValue(e.target.value);
 
         console.log(
@@ -69,7 +42,28 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
               })
         );
 
-        handleEvent(e);
+        socket.send(
+          event == 'CellChanged'
+            ? JSON.stringify({
+                Event: {
+                  EventName: event,
+                  ID: extractStringUntilSecondPeriod(data?.ID),
+                  Row: parseInt(row) + 1,
+                  Col: parseInt(column) + 1,
+                  Value:
+                    data?.Properties?.FieldType == 'Numeric'
+                      ? parseInt(e.target.value)
+                      : e.target.value,
+                },
+              })
+            : JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data?.ID,
+                  Info: parseInt(e.target.value),
+                },
+              })
+        );
       }}
       style={{ ...styles }}
     />

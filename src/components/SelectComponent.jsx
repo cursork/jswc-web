@@ -11,6 +11,7 @@ import SubForm from './SubForm';
 import List from './List';
 import Splitter from './Splitter';
 import Group from './Group';
+import ScrollBar from './ScrollBar';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -30,12 +31,17 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'Grid') return <Grid data={data} />;
   if (data?.Properties?.Type == 'Edit')
     return (
-      <div style={{ textAlign: data?.Properties?.FieldType == 'Numeric' ? 'right' : 'null', marginLeft:'10px' }}>
+      <div
+        style={{
+          textAlign: data?.Properties?.FieldType == 'Numeric' ? 'right' : 'null',
+          marginLeft: '10px',
+        }}
+      >
         <Edit data={data} value={inputValue} event={event} row={row} column={column} />
       </div>
     );
   if (data?.Properties?.Type == 'Button')
-    return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />
+    return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />;
   if (data?.Properties?.Type == 'Combo')
     return <Combo data={data} value={inputValue} event={event} row={row} column={column} />;
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;
@@ -44,6 +50,7 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'List') return <List data={data} />;
   if (data?.Properties?.Type == 'Splitter') return <Splitter data={data} />;
   if (data?.Properties?.Type == 'Group') return <Group data={data} />;
+  if (data?.Properties?.Type == 'Scroll') return <ScrollBar data={data} />;
 };
 
 export default SelectComponent;

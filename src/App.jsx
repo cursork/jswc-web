@@ -7,7 +7,7 @@ import './App.css';
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [layout, setLayout] = useState('Initialise');
+  const [layout, setLayout] = useState('Initialise(DemoScroll)');
   const dataRef = useRef({});
 
   const handleDate = (data) => {
@@ -86,12 +86,19 @@ const App = () => {
     };
   };
 
+  console.log('data', dataRef.current);
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const search = () => {
-    if (layout != 'Initialise' && layout != 'Initialise(DemoSplitters)') return alert('Not valid');
+    if (
+      layout != 'Initialise' &&
+      layout != 'Initialise(DemoSplitters)' &&
+      layout != 'Initialise(DemoScroll)'
+    )
+      return alert('Not valid');
     dataRef.current = {};
     fetchData();
   };

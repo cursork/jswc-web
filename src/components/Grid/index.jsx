@@ -11,7 +11,7 @@ const Grid = ({ data }) => {
 
   let size = 0;
 
-  const { Values, Input, ColTitles } = data?.Properties;
+  const { Values, Input, ColTitles, RowTitles, CellWidths } = data?.Properties;
 
   const style = setStyle(data?.Properties);
 
@@ -33,8 +33,9 @@ const Grid = ({ data }) => {
       {/* Table have column */}
       {ColTitles && (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {data.ID.includes('VGRID') ? <Cell cellWidth={CellWidths + 50} title={''} /> : null}
           {ColTitles.map((heading) => {
-            return <Cell title={heading} />;
+            return <Cell cellWidth={CellWidths} title={heading} />;
           })}
         </div>
       )}
@@ -42,7 +43,7 @@ const Grid = ({ data }) => {
       {/* Table not have column */}
       {!ColTitles ? (
         <div style={{ display: 'flex' }}>
-          <Cell title={''} />
+          <Cell cellWidth={CellWidths} title={''} />
           {alphabets.map((letter, i) => {
             return i < size ? <Cell title={letter} /> : null;
           })}
@@ -58,11 +59,13 @@ const Grid = ({ data }) => {
               display: 'flex',
             }}
           >
-            {!ColTitles ? <Cell title={row + 1} /> : null}
+            {!ColTitles ? <Cell cellWidth={CellWidths} title={row + 1} /> : null}
+            {RowTitles ? <Cell cellWidth={CellWidths + 50} title={RowTitles[row]} /> : null}
             {tableValues.map((value, column) => {
               const type = findDesiredData(Input && Input[column]);
               return (
                 <Cell
+                  cellWidth={CellWidths}
                   title={value}
                   type={type}
                   parent={data?.Properties?.Event && data?.Properties?.Event[0]}

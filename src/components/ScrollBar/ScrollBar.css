@@ -1,0 +1,43 @@
+/* ScrollBar.css */
+
+/* Scroll bar container */
+.scroll-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+/* Horizontal scroll bar */
+.scroll-bar.horizontal {
+  flex-direction: row;
+  height: 10px;
+}
+
+/* Vertical scroll bar */
+.scroll-bar.vertical {
+  flex-direction: column;
+  width: 10px;
+}
+
+/* Track style */
+.scroll-bar .track {
+  background-color: #ccc;
+  position: relative;
+}
+
+/* Thumb style */
+.scroll-bar .thumb {
+  background-color: grey;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+
+/* Thumb hover effect */
+.scroll-bar .thumb:hover {
+  background-color: grey;
+}
+
+/* You can add more styles and customizations here */

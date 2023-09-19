@@ -1,15 +1,14 @@
 import SelectComponent from '../SelectComponent';
 
-const Cell = ({ title, type = '', parent = '', row = '', column = '' }) => {
- 
-
+const Cell = ({ title, type = '', parent = '', row = '', column = '', cellWidth = '' }) => {
   if (!type) {
     return (
       <div
         style={{
           borderRight: '1px solid  #D3D3D3',
           borderBottom: '1px solid  #D3D3D3',
-          minWidth: '120px',
+          minWidth: cellWidth ? cellWidth : '120px',
+
           textAlign: 'center',
           minHeight: '23px',
         }}
