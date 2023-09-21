@@ -100,7 +100,7 @@ const App = () => {
           console.log(JSON.stringify({ WG: { ID: ID, Properties: { Values: Values } } }));
 
           webSocket.send(JSON.stringify({ WG: { ID: ID, Properties: { Values: Values } } }));
-        } else if (Event == 'Changed') {
+        } else if (EventName == 'Change') {
           console.log(
             JSON.stringify({
               WG: {
