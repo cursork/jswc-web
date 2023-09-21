@@ -11,12 +11,25 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   if (isCheckBox) {
     return (
-      <div style={{ ...styles,marginLeft:'10px',marginTop:'5px' }}>
+      <div style={{ ...styles, marginLeft: '10px', marginTop: '5px' }}>
         <input
           type='checkbox'
           defaultChecked={inputValue}
           onChange={(e) => {
             console.log(
+              JSON.stringify({
+                Event: {
+                  EventName: event,
+                  ID: extractStringUntilSecondPeriod(data?.ID),
+                  Row: parseInt(row) + 1,
+                  Col: parseInt(column) + 1,
+                  Value: e.target.checked ? 1 : 0,
+                },
+              })
+            );
+
+            localStorage.setItem(
+              'lastEvent',
               JSON.stringify({
                 Event: {
                   EventName: event,

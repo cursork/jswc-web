@@ -15,7 +15,29 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
         style={{ width: '100%', border: 0 }}
         onChange={(e) => {
           const index = Items.indexOf(e.target.value);
+
           console.log(
+            event == 'CellChanged'
+              ? JSON.stringify({
+                  Event: {
+                    EventName: event,
+                    ID: extractStringUntilSecondPeriod(data?.ID),
+                    Row: parseInt(row) + 1,
+                    Col: parseInt(column) + 1,
+                    Value: e.target.value,
+                  },
+                })
+              : JSON.stringify({
+                  Event: {
+                    EventName: data?.Properties?.Event[0],
+                    ID: data?.ID,
+                    Info: parseInt(index + 1),
+                  },
+                })
+          );
+
+          localStorage.setItem(
+            'lastEvent',
             event == 'CellChanged'
               ? JSON.stringify({
                   Event: {

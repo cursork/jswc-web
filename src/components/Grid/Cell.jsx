@@ -8,7 +8,7 @@ const Cell = ({ title, type = '', parent = '', row = '', column = '', cellWidth 
           borderRight: '1px solid  #D3D3D3',
           borderBottom: '1px solid  #D3D3D3',
           minWidth: cellWidth ? cellWidth : '120px',
-
+          fontSize: '12px',
           textAlign: 'center',
           minHeight: '23px',
         }}

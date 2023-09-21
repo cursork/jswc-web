@@ -2,7 +2,7 @@ import { AppDataContext } from '../context';
 import { useContext } from 'react';
 
 export const useAppData = () => {
-  const { socketData, dataRef, socket } = useContext(AppDataContext);
+  const { socketData, dataRef, socket, setLastEvent } = useContext(AppDataContext);
 
   const findDesiredData = (ID) => {
     const findData = socketData?.find((obj) => obj.ID == ID);
@@ -14,5 +14,9 @@ export const useAppData = () => {
     return findData?.Properties?.Type;
   };
 
-  return { socketData, findDesiredData, getObjType, dataRef, socket };
+  const BackFire = (event) => {
+    setLastEvent(event);
+  };
+
+  return { socketData, findDesiredData, getObjType, dataRef, socket, BackFire };
 };
