@@ -7,7 +7,7 @@ import './App.css';
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [layout, setLayout] = useState('Initialise');
+  const [layout, setLayout] = useState('Initialise(DemoScroll)');
   const [lastEvent, setLastEvent] = useState(null);
   const dataRef = useRef({});
 
