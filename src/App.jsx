@@ -84,10 +84,12 @@ const App = () => {
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
         handleDate(JSON.parse(event.data).WS);
       } else if (event.data.includes('WG')) {
-        console.log('event from server WG', JSON.parse(event.data).WG);
+        // console.log('event from server WG', JSON.parse(event.data).WG);
 
+        const serverEvent = JSON.parse(event.data).WG;
+
+        const data = getObjectById(dataRef.current, serverEvent.ID);
         const { Event } = JSON.parse(localStorage.getItem('lastEvent'));
-
         const { Info, Value, ID, EventName, Row, Col } = Event;
 
         if (EventName == 'CellChanged') {
@@ -118,6 +120,41 @@ const App = () => {
               },
             })
           );
+        } else if (EventName == 'Select' && ID == 'F1.CalcBtn' && serverEvent.ID == 'F1.Function') {
+          const data = getObjectById(dataRef.current, serverEvent.ID);
+          const {
+            Properties: { SelItems },
+          } = JSON.parse(data);
+          console.log(JSON.stringify({ WG: { ID: serverEvent.ID, Properties: { SelItems } } }));
+          webSocket.send(JSON.stringify({ WG: { ID: serverEvent.ID, Properties: { SelItems } } }));
+        } else if (ID == 'F1.CalcBtn' && serverEvent.ID == 'F1.TableSize') {
+          const { Properties } = JSON.parse(data);
+
+          console.log(
+            JSON.stringify({ WG: { ID: serverEvent.ID, Properties: { Value: Properties?.Text } } })
+          );
+          webSocket.send(
+            JSON.stringify({
+              WG: { ID: serverEvent.ID, Properties: { Value: parseInt(Properties?.Text) } },
+            })
+          );
+        } else if (EventName == 'Select' && ID !== 'F1.CalcBtn') {
+          const { Info } = Event;
+          const data = getObjectById(dataRef.current, ID);
+          const {
+            Properties: { SelItems },
+          } = JSON.parse(data);
+
+          SelItems.fill(0);
+          let indexToChange = Info - 1;
+          SelItems[indexToChange] = 1;
+
+          console.log(JSON.stringify({ WG: { ID: ID, Properties: { SelItems } } }));
+
+          webSocket.send(JSON.stringify({ WG: { ID: ID, Properties: { SelItems } } }));
+        } else if (EventName == 'Scroll') {
+          console.log(JSON.stringify({ WG: { ID: ID, Properties: { THUMB: Info[1] } } }));
+          webSocket.send(JSON.stringify({ WG: { ID: ID, Properties: { THUMB: Info[1] } } }));
         }
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);

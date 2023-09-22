@@ -70,6 +70,16 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
           })
         );
 
+        localStorage.setItem(
+          'lastEvent',
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data?.ID,
+            },
+          })
+        );
+
         socket.send(
           JSON.stringify({
             Event: {

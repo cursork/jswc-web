@@ -14,20 +14,27 @@ const TreeNode = ({ label, children, isChild = false }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        paddingTop: '2px',
+        paddingTop: '1px',
       }}
     >
-      <span>
-        <button
+      <div style={{ fontSize: '12px', display: 'flex' }}>
+        <div
           onClick={(event) => {
             event.preventDefault();
             handleToggle();
           }}
+          style={{
+            cursor: 'pointer',
+            background: '#F0F0F0',
+            width: '15px',
+            textAlign: 'center',
+            color: 'blue',
+          }}
         >
           {isExpanded || isChild ? '-' : '+'}
-        </button>
+        </div>
         {label}
-      </span>
+      </div>
       {isExpanded && children && children.length > 0 && (
         <div style={{ marginLeft: '20px' }}>
           {children.map((child) => (

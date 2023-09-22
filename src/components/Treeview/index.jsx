@@ -38,7 +38,7 @@ const Treeview = ({ data }) => {
   }
 
   return (
-    <div style={{ ...styles, border: '1px solid black', background: 'white', paddingLeft: '10px',paddingTop:'10px' }}>
+    <div style={{ ...styles, border: '1px solid black', background: 'white', paddingLeft: '2px',paddingTop:'2px' }}>
       <TreeView data={treeData} />
     </div>
   );

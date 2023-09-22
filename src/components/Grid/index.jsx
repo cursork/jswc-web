@@ -1,4 +1,4 @@
-import { setStyle } from '../../utils';
+import { setStyle, generateHeader } from '../../utils';
 import { useAppData } from '../../hooks';
 import Cell from './Cell';
 
@@ -16,7 +16,7 @@ const Grid = ({ data }) => {
   const style = setStyle(data?.Properties);
 
   if (!ColTitles) {
-    size = Values[0]?.length;
+    size = Values[0]?.length + 1;
   }
 
   // Grid without types
@@ -43,8 +43,7 @@ const Grid = ({ data }) => {
       {/* Table not have column */}
       {!ColTitles ? (
         <div style={{ display: 'flex' }}>
-          <Cell cellWidth={CellWidths} title={''} />
-          {alphabets.map((letter, i) => {
+          {generateHeader(size).map((letter, i) => {
             return i < size ? <Cell title={letter} /> : null;
           })}
         </div>

@@ -77,6 +77,18 @@ const ScrollBar = ({ data }) => {
             },
           })
         );
+
+        localStorage.setItem(
+          'lastEvent',
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data?.ID,
+              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            },
+          })
+        );
+
         socket.send(
           JSON.stringify({
             Event: {
@@ -121,6 +133,18 @@ const ScrollBar = ({ data }) => {
           },
         })
       );
+
+      localStorage.setItem(
+        'lastEvent',
+        JSON.stringify({
+          Event: {
+            EventName: data?.Properties?.Event[0],
+            ID: data?.ID,
+            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+          },
+        })
+      );
+
       socket.send(
         JSON.stringify({
           Event: {

@@ -45,6 +45,39 @@ export const extractStringUntilSecondPeriod = (inputString) => {
   return inputString;
 };
 
+
+
+export const generateHeader = (length) => {
+  const result = [];
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let current = '';
+
+  while (length > 0) {
+    result.push(current);
+
+    // Increment the current string
+    let carry = 1;
+    for (let i = current.length - 1; i >= 0 && carry; i--) {
+      const char = current[i];
+      const index = alphabet.indexOf(char);
+      if (index === alphabet.length - 1) {
+        current = current.substring(0, i) + alphabet[0] + current.substring(i + 1);
+      } else {
+        current = current.substring(0, i) + alphabet[index + 1] + current.substring(i + 1);
+        carry = 0;
+      }
+    }
+
+    if (carry) {
+      current = 'A' + current;
+    }
+
+    length--;
+  }
+
+  return result;
+}
+
 export function getObjectById(jsonData, targetId) {
   const data = jsonData;
 
@@ -73,3 +106,4 @@ export function getObjectById(jsonData, targetId) {
   const result = searchObject(data, targetId);
   return result ? JSON.stringify(result, null, 2) : null;
 }
+

@@ -37,7 +37,10 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data?.ID,
-                  Info: parseInt(e.target.value),
+                  Info:
+                    data?.Properties?.FieldType == 'Numeric'
+                      ? parseInt(e.target.value)
+                      : e.target.value,
                 },
               })
         );
@@ -61,7 +64,10 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data?.ID,
-                  Info: parseInt(e.target.value),
+                  Info:
+                    data?.Properties?.FieldType == 'Numeric'
+                      ? parseInt(e.target.value)
+                      : e.target.value,
                 },
               })
         );
@@ -84,7 +90,10 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data?.ID,
-                  Info: parseInt(e.target.value),
+                  Info:
+                    data?.Properties?.FieldType == 'Numeric'
+                      ? parseInt(e.target.value)
+                      : e.target.value,
                 },
               })
         );
