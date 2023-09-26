@@ -7,8 +7,8 @@ import './App.css';
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [layout, setLayout] = useState('Initialise(DemoScroll)');
-  const [lastEvent, setLastEvent] = useState(null);
+  const [layout, setLayout] = useState('Initialise');
+
   const dataRef = useRef({});
 
   const handleDate = (data) => {
@@ -183,7 +183,7 @@ const App = () => {
   // console.log({ lastEvent });
 
   return (
-    <AppDataContext.Provider value={{ socketData, dataRef, socket, setLastEvent }}>
+    <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
         <input
           type='text'

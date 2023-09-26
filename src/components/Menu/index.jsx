@@ -1,5 +1,6 @@
-import { excludeKeys, isEmpty } from '../utils';
-import Dropdown from './Dropdown';
+import { excludeKeys, isEmpty } from '../../utils';
+import Dropdown from '../DropDown';
+import './Menu.css';
 
 const Menu = ({ data }) => {
   const updatedData = excludeKeys(data);

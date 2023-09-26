@@ -1,49 +1,3 @@
-/* ScrollBar.css */
-
-/* Scroll bar container */
-.scroll-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-}
-
-/* Horizontal scroll bar */
-.scroll-bar.horizontal {
-  flex-direction: row;
-  height: 10px;
-}
-
-/* Vertical scroll bar */
-.scroll-bar.vertical {
-  flex-direction: column;
-  width: 10px;
-}
-
-/* Track style */
-.scroll-bar .track {
-  background-color: #ccc;
-  position: relative;
-}
-
-/* Thumb style */
-.scroll-bar .thumb {
-  background-color: grey;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background-color 0.3s;
-}
-
-/* Thumb hover effect */
-.scroll-bar .thumb:hover {
-  background-color: grey;
-}
-
-/* You can add more styles and customizations here */
-
-
-/* Add these styles to your ScrollBar.css or a separate CSS file */
 .scroll-bar-icon {
   width: 20px;
   height: 20px;
@@ -61,16 +15,13 @@
   transform: rotate(90deg);
 }
 
-
-/* ScrollBar.css */
-
-/* ScrollBar Container */
 .scroll-bar {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
+  cursor: pointer;
 }
 
 /* Track */
@@ -116,7 +67,7 @@
 .arrow-icon.down {
   width: 24px;
   height: 24px;
-  cursor: pointer ;
+  cursor: pointer;
 }
 
 /* Horizontal Arrow Icons */
@@ -149,3 +100,23 @@
   background-color: darkgray;
 }
 
+.icon-style {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  text-align: center;
+  background-color: #ccc;
+  cursor: pointer;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  color: grey;
+  border: 1px solid white;
+  font-size: 10px;
+}
+
+.scroll-bar {
+  background-color: lightgray;
+  border: 1px solid white;
+}

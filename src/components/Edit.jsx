@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useAppData } from '../hooks';
 
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
-  let styles = setStyle(data?.Properties);
-  const { socket, BackFire } = useAppData();
+  let styles = { ...setStyle(data?.Properties), border: '1px' };
+  const { socket } = useAppData();
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const [inputValue, setInputValue] = useState(hasTextProperty ? data.Properties.Text : value);
 
@@ -98,7 +98,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
               })
         );
       }}
-      style={{ ...styles }}
+      style={{ ...styles, borderRadius: '2px', fontSize: '12px' }}
     />
   );
 };

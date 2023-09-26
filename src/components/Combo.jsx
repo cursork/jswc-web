@@ -8,11 +8,16 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   const { Items } = data?.Properties;
 
   return (
-    <div style={{ ...styles }}>
+    <div style={{ ...styles, borderColor: '#ccc' }}>
       <select
         className='custom-select'
         defaultValue={value ? value : data?.Properties?.Text}
-        style={{ width: '100%', border: 0 }}
+        style={{
+          width: '100%',
+          border: 0,
+          fontSize: '12px',
+          height: event === 'CellChanged' ? null : '100%',
+        }}
         onChange={(e) => {
           const index = Items.indexOf(e.target.value);
 

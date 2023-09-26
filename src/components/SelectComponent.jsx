@@ -7,7 +7,6 @@ import Button from './Button';
 import Combo from './Combo';
 import Label from './Label';
 import Treeview from './Treeview';
-import SubForm from './SubForm';
 import List from './List';
 import Splitter from './Splitter';
 import Group from './Group';

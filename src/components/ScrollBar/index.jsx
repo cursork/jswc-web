@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
+import { Icons } from '../../common';
 import { useAppData } from '../../hooks';
 import './ScrollBar.css';
 
 const ScrollBar = ({ data }) => {
+  const { FA } = Icons;
   const { Align, Type, Thumb, Range } = data?.Properties;
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
@@ -122,11 +124,11 @@ const ScrollBar = ({ data }) => {
     }
   };
 
-  let thumbPosition = (scaledValue / maxValue) * (trackHeight - 50); // Adjust for Height
+  let thumbPosition = (scaledValue / maxValue) * (trackHeight - 20); // Adjust for Height
 
   // adjust for the width
   if (isHorizontal) {
-    thumbPosition = (scaledValue / maxValue) * (trackWidth - 50);
+    thumbPosition = (scaledValue / maxValue) * (trackWidth - 20);
   }
 
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
@@ -134,34 +136,17 @@ const ScrollBar = ({ data }) => {
   const trackStyle = {
     width: isHorizontal ? `${trackWidth}px` : '10px',
     height: isHorizontal ? '10px' : `${trackHeight}px`,
-    backgroundColor: '#ccc',
-    position: 'relative',
-    border: '1px solid white',
   };
 
   const thumbStyle = {
-    width: '50px',
-    height: '50px',
+    width: isHorizontal ? '20px' : '4px',
+    height: isHorizontal ? '4px' : '20px',
     backgroundColor: 'grey',
     position: 'absolute',
-    left: isHorizontal ? `${thumbPosition}px` : 0,
-    top: isHorizontal ? 0 : `${thumbPosition}px`,
+    left: isHorizontal ? `${thumbPosition}px` : 3,
+    top: isHorizontal ? 3 : `${thumbPosition}px`,
     cursor: 'pointer',
-  };
-
-  const iconStyle = {
-    position: 'absolute',
-    width: '10px',
-    height: '10px',
-    textAlign: 'center',
-    backgroundColor: '#ccc',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-    color: 'grey',
-    border: '1px solid white',
+    borderRadius: '5px',
   };
 
   const verticalPosition = {
@@ -257,37 +242,41 @@ const ScrollBar = ({ data }) => {
       <div>
         {isHorizontal ? (
           <>
-            <div
-              className='scroll-bar-icon scroll-bar-icon-horizontal'
-              style={{ ...iconStyle, left: '0' }}
-              onClick={decrementScale}
-            >
-              ▼
-            </div>
-            <div
-              className='scroll-bar-icon scroll-bar-icon-horizontal'
-              style={{ ...iconStyle, right: '0' }}
-              onClick={incrementScale}
-            >
-              ▲
-            </div>
+            <>
+              <div
+                className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
+                style={{ left: '0' }}
+                onClick={decrementScale}
+              >
+                <FA.FaCaretDown />
+              </div>
+              <div
+                className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
+                style={{ right: '0' }}
+                onClick={incrementScale}
+              >
+                <FA.FaCaretUp />
+              </div>
+            </>
           </>
         ) : (
           <>
-            <div
-              className='scroll-bar-icon scroll-bar-icon-vertical'
-              style={{ ...iconStyle, top: '0' }}
-              onClick={decrementScale}
-            >
-              ▲
-            </div>
-            <div
-              className='scroll-bar-icon scroll-bar-icon-vertical'
-              style={{ ...iconStyle, bottom: '0' }}
-              onClick={incrementScale}
-            >
-              ▼
-            </div>
+            <>
+              <div
+                className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
+                style={{ top: '0' }}
+                onClick={decrementScale}
+              >
+                <FA.FaCaretUp />
+              </div>
+              <div
+                className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
+                style={{ bottom: '0' }}
+                onClick={incrementScale}
+              >
+                <FA.FaCaretDown />
+              </div>
+            </>
           </>
         )}
         <div

@@ -89,7 +89,18 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
           })
         );
       }}
-      style={{ ...styles, border: '1px solid black', textAlign: 'center', background: 'white' }}
+      style={{
+        ...styles,
+        border: '1px solid black',
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'white',
+        borderRadius: '2px',
+        borderColor: '#ccc',
+        fontSize: '14px',
+      }}
     >
       {hasCaption ? data?.Properties?.Caption : null}
     </div>
