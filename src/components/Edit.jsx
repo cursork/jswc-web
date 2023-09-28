@@ -1,5 +1,5 @@
 import { setStyle, extractStringUntilSecondPeriod, generateAsteriskString } from '../utils';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAppData } from '../hooks';
 
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
@@ -7,8 +7,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   const { socket } = useAppData();
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const isPassword = data?.Properties.hasOwnProperty('Password');
-
-  const generatePassword = () => {};
+  const inputRef = useRef(null);
 
   const [inputValue, setInputValue] = useState(
     hasTextProperty
@@ -31,10 +30,17 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
       borderBottom: '1px solid black',
     };
   }
+  const handleInputClick = () => {
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
+  };
 
   return (
     <input
+      ref={inputRef}
       value={inputValue}
+      onClick={handleInputClick}
       type={data?.Properties?.FieldType == 'Numeric' ? 'number' : 'text'}
       onChange={(e) => {
         setInputValue(e.target.value);
