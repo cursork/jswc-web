@@ -11,7 +11,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   if (isCheckBox) {
     return (
-      <div style={{ ...styles, marginLeft: '10px', marginTop: '5px' }}>
+      <div style={{ ...styles, marginLeft: '10px' }}>
         <input
           type='checkbox'
           defaultChecked={inputValue}
@@ -21,8 +21,8 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value: e.target.checked ? 1 : 0,
                 },
               })
@@ -34,8 +34,8 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value: e.target.checked ? 1 : 0,
                 },
               })
@@ -46,8 +46,8 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value: e.target.checked ? 1 : 0,
                 },
               })
@@ -97,9 +97,10 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'white',
-        borderRadius: '2px',
+        borderRadius: '4px',
         borderColor: '#ccc',
-        fontSize: '14px',
+        fontSize: '11px',
+        cursor: 'pointer',
       }}
     >
       {hasCaption ? data?.Properties?.Caption : null}

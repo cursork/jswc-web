@@ -8,7 +8,19 @@ const Group = ({ data }) => {
 
   return (
     <div style={{ ...styles, border: '1px solid #F0F0F0', background: 'white' }}>
-      {data?.Properties?.Caption && <p style={{ fontSize: '12px' }}>{data?.Properties?.Caption}</p>}
+      {data?.Properties?.Caption && (
+        <span
+          style={{
+            fontSize: '12px',
+            position: 'relative',
+            bottom: 10,
+            left: 10,
+            background: '#F1F1F1 ',
+          }}
+        >
+          {data?.Properties?.Caption}
+        </span>
+      )}
       {Object.keys(updatedData).map((key) => (
         <SelectComponent data={updatedData[key]} />
       ))}

@@ -5,6 +5,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 .scroll-bar-icon-vertical {
@@ -23,6 +25,7 @@
   position: relative;
   cursor: pointer;
 }
+
 
 /* Track */
 .track {
@@ -119,4 +122,10 @@
 .scroll-bar {
   background-color: lightgray;
   border: 1px solid white;
+}
+
+.scroll-bar:hover .scroll-bar-icon,
+.scroll-bar:hover + .scroll-bar-icon,
+.scroll-bar:hover .scroll-bar-icon.showButtons {
+  opacity: 1;
 }

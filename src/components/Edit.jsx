@@ -1,15 +1,35 @@
-import { setStyle, extractStringUntilSecondPeriod } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, generateAsteriskString } from '../utils';
 import { useState } from 'react';
 import { useAppData } from '../hooks';
 
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
-  let styles = { ...setStyle(data?.Properties), border: '1px' };
+  let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
-  const [inputValue, setInputValue] = useState(hasTextProperty ? data.Properties.Text : value);
+  const isPassword = data?.Properties.hasOwnProperty('Password');
+
+  const generatePassword = () => {};
+
+  const [inputValue, setInputValue] = useState(
+    hasTextProperty
+      ? isPassword
+        ? generateAsteriskString(data?.Properties?.Text?.length)
+        : data.Properties.Text
+      : value
+  );
 
   if (!hasTextProperty) {
     styles = { ...styles, border: 'none' };
+  }
+
+  if (hasTextProperty) {
+    styles = {
+      ...styles,
+      borderTop: 0,
+      borderLeft: 0,
+      borderRight: 0,
+      borderBottom: '1px solid black',
+    };
   }
 
   return (
@@ -25,8 +45,8 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value:
                     data?.Properties?.FieldType == 'Numeric'
                       ? parseInt(e.target.value)
@@ -52,8 +72,8 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value:
                     data?.Properties?.FieldType == 'Numeric'
                       ? parseInt(e.target.value)
@@ -78,8 +98,8 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                 Event: {
                   EventName: event,
                   ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row) + 1,
-                  Col: parseInt(column) + 1,
+                  Row: parseInt(row),
+                  Col: parseInt(column),
                   Value:
                     data?.Properties?.FieldType == 'Numeric'
                       ? parseInt(e.target.value)

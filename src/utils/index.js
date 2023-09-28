@@ -45,8 +45,6 @@ export const extractStringUntilSecondPeriod = (inputString) => {
   return inputString;
 };
 
-
-
 export const generateHeader = (length) => {
   const result = [];
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -76,9 +74,9 @@ export const generateHeader = (length) => {
   }
 
   return result;
-}
+};
 
-export function getObjectById(jsonData, targetId) {
+export const getObjectById = (jsonData, targetId) => {
   const data = jsonData;
 
   function searchObject(node, idToFind) {
@@ -105,5 +103,17 @@ export function getObjectById(jsonData, targetId) {
 
   const result = searchObject(data, targetId);
   return result ? JSON.stringify(result, null, 2) : null;
-}
+};
 
+export const generateAsteriskString = (length) => {
+  if (length <= 0) {
+    return '*'; // Return an empty string if length is zero or negative.
+  }
+
+  let asteriskString = '';
+  for (let i = 0; i < length; i++) {
+    asteriskString += '*';
+  }
+
+  return asteriskString;
+};

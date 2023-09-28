@@ -1,13 +1,36 @@
 import { setStyle, generateHeader } from '../../utils';
 import { useAppData } from '../../hooks';
 import Cell from './Cell';
+import { useState } from 'react';
 
 const Grid = ({ data }) => {
   const { findDesiredData } = useAppData();
+  const [selectedGrid, setSelectedGrid] = useState(null);
+  const [tableProperty, setTableProperty] = useState({ row: false, column: false, body: false });
 
-  const alphabets = Array.from({ length: 26 }, (_, index) =>
-    String.fromCharCode('A'.charCodeAt(0) + index)
-  );
+  const handleGridClick = (row, column, property) => {
+    if (property == 'column') {
+      setTableProperty({
+        row: false,
+        column: true,
+        body: false,
+      });
+    } else if (property == 'row') {
+      setTableProperty({
+        row: true,
+        column: false,
+        body: false,
+      });
+    } else if (property == 'body') {
+      setTableProperty({
+        row: false,
+        column: false,
+        body: true,
+      });
+    }
+
+    setSelectedGrid({ row, column });
+  };
 
   let size = 0;
 
@@ -32,10 +55,35 @@ const Grid = ({ data }) => {
     >
       {/* Table have column */}
       {ColTitles && (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {data.ID.includes('VGRID') ? <Cell cellWidth={CellWidths + 50} title={''} /> : null}
-          {ColTitles.map((heading) => {
-            return <Cell cellWidth={CellWidths} title={heading} />;
+        <div style={{ display: 'flex' }}>
+          {data.ID.includes('VGRID') ? (
+            <Cell
+              cellWidth={CellWidths + 50}
+              title={''}
+              column={0}
+              row={0}
+              isColumn={tableProperty.column}
+              isRow={tableProperty.row}
+              isBody={tableProperty.body}
+              selectedGrid={selectedGrid}
+              onClick={(row, column) => handleGridClick(row, column, 'column')}
+            />
+          ) : null}
+          {ColTitles.map((heading, column) => {
+            return (
+              <Cell
+                isColumn={tableProperty.column}
+                isRow={tableProperty.row}
+                isBody={tableProperty.body}
+                selectedGrid={selectedGrid}
+                cellWidth={CellWidths}
+                title={heading}
+                column={column + 1}
+                onClick={(row, column) => handleGridClick(row, column, 'column')}
+                highLightMe={tableProperty.body && selectedGrid.column === column + 1}
+                row={0}
+              />
+            );
           })}
         </div>
       )}
@@ -44,7 +92,19 @@ const Grid = ({ data }) => {
       {!ColTitles ? (
         <div style={{ display: 'flex' }}>
           {generateHeader(size).map((letter, i) => {
-            return i < size ? <Cell title={letter} /> : null;
+            return i < size ? (
+              <Cell
+                isColumn={tableProperty.column}
+                isRow={tableProperty.row}
+                isBody={tableProperty.body}
+                highLightMe={tableProperty.body && selectedGrid.column === i}
+                row={0}
+                title={letter}
+                column={i}
+                selectedGrid={selectedGrid}
+                onClick={(row, column) => handleGridClick(row, column, 'column')}
+              />
+            ) : null;
           })}
         </div>
       ) : null}
@@ -58,18 +118,51 @@ const Grid = ({ data }) => {
               display: 'flex',
             }}
           >
-            {!ColTitles ? <Cell cellWidth={CellWidths} title={row + 1} /> : null}
-            {RowTitles ? <Cell cellWidth={CellWidths + 50} title={RowTitles[row]} /> : null}
+            {!ColTitles ? (
+              <Cell
+                cellWidth={CellWidths}
+                justify='start'
+                isColumn={tableProperty.column}
+                isRow={tableProperty.row}
+                isBody={tableProperty.body}
+                onClick={(row, column) => handleGridClick(row, column, 'row')}
+                column={0}
+                row={row + 1}
+                title={row + 1}
+                selectedGrid={selectedGrid}
+                highLightMe={tableProperty.body && selectedGrid.row === row + 1}
+              />
+            ) : null}
+            {RowTitles ? (
+              <Cell
+                cellWidth={CellWidths + 50}
+                title={RowTitles[row]}
+                selectedGrid={selectedGrid}
+                row={row + 1}
+                isColumn={tableProperty.column}
+                isRow={tableProperty.row}
+                isBody={tableProperty.body}
+                highLightMe={tableProperty.body && selectedGrid.row === row + 1}
+                onClick={(row, column) => handleGridClick(row, column, 'row')}
+                column={0}
+              />
+            ) : null}
             {tableValues.map((value, column) => {
               const type = findDesiredData(Input && Input[column]);
               return (
                 <Cell
+                  justify={type ? '' : 'end'}
                   cellWidth={CellWidths}
                   title={value}
                   type={type}
                   parent={data?.Properties?.Event && data?.Properties?.Event[0]}
-                  row={row}
-                  column={column}
+                  row={row + 1}
+                  column={column + 1}
+                  selectedGrid={selectedGrid}
+                  onClick={(row, column) => handleGridClick(row, column, 'body')}
+                  isColumn={tableProperty.column}
+                  isRow={tableProperty.row}
+                  isBody={tableProperty.body}
                 />
               );
             })}

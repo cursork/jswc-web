@@ -18,9 +18,12 @@ const List = ({ data }) => {
       {Items &&
         Items.map((item) =>
           selectedItem == item ? (
-            <div style={{ ...selectedStyles }}>{item}</div>
+            <div style={{ ...selectedStyles, fontSize: '12px' }}>{item}</div>
           ) : (
-            <div style={{ cursor: 'pointer' }} onClick={() => setSelectedItem(item)}>
+            <div
+              style={{ cursor: 'pointer', fontSize: '12px' }}
+              onClick={() => setSelectedItem(item)}
+            >
               {item}
             </div>
           )

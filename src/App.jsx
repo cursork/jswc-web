@@ -166,32 +166,20 @@ const App = () => {
   // console.log('data', dataRef.current);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const search = () => {
-    if (
-      layout != 'Initialise' &&
-      layout != 'Initialise(DemoSplitters)' &&
-      layout != 'Initialise(DemoScroll)'
-    )
-      return alert('Not valid');
     dataRef.current = {};
     fetchData();
-  };
+  }, [layout]);
 
   // console.log({ lastEvent });
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-        <input
-          type='text'
-          placeholder='Search here'
-          value={layout}
-          onChange={(e) => setLayout(e.target.value)}
-        />
-        <button onClick={search}>Search</button>
+        <select value={layout} onChange={(e) => setLayout(e.target.value)}>
+          <option value='Initialise'>Initialise</option>
+          <option value='Initialise(DemoSplitters)'>Splitters</option>
+          <option value='Initialise(DemoScroll)'>Scroll</option>
+        </select>
       </div>
 
       <SelectComponent data={dataRef.current['F1']} />

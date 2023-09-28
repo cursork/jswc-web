@@ -11,7 +11,7 @@ const Label = ({ data }) => {
     };
   }
 
-  return <div style={{ ...styles, fontSize: '12px' }}>{data?.Properties?.Caption}</div>;
+  return <div style={{ ...styles, fontSize: '11px' }}>{data?.Properties?.Caption}</div>;
 };
 
 export default Label;

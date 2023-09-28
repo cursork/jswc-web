@@ -9,6 +9,16 @@ const ScrollBar = ({ data }) => {
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
+  const [showButtons, setShowButtons] = useState(false);
+
+  const handleTrackMouseEnter = () => {
+    setShowButtons(true);
+  };
+
+  const handleTrackMouseLeave = () => {
+    setShowButtons(false);
+  };
+
   const { socket } = useAppData();
   const trackRef = useRef(null);
   const thumbRef = useRef(null);
@@ -124,11 +134,11 @@ const ScrollBar = ({ data }) => {
     }
   };
 
-  let thumbPosition = (scaledValue / maxValue) * (trackHeight - 20); // Adjust for Height
+  let thumbPosition = (scaledValue / maxValue) * (trackHeight - 40); // Adjust for Height
 
   // adjust for the width
   if (isHorizontal) {
-    thumbPosition = (scaledValue / maxValue) * (trackWidth - 20);
+    thumbPosition = (scaledValue / maxValue) * (trackWidth - 40);
   }
 
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
@@ -139,12 +149,12 @@ const ScrollBar = ({ data }) => {
   };
 
   const thumbStyle = {
-    width: isHorizontal ? '20px' : '4px',
-    height: isHorizontal ? '4px' : '20px',
+    width: isHorizontal ? '40px' : '8px',
+    height: isHorizontal ? '8px' : '40px',
     backgroundColor: 'grey',
     position: 'absolute',
-    left: isHorizontal ? `${thumbPosition}px` : 3,
-    top: isHorizontal ? 3 : `${thumbPosition}px`,
+    left: isHorizontal ? `${thumbPosition}px` : 1,
+    top: isHorizontal ? 1 : `${thumbPosition}px`,
     cursor: 'pointer',
     borderRadius: '5px',
   };
@@ -238,28 +248,30 @@ const ScrollBar = ({ data }) => {
   };
 
   return (
-    <div style={isHorizontal ? horizontalPosition : verticalPosition}>
+    <div
+      onMouseEnter={handleTrackMouseEnter}
+      onMouseLeave={handleTrackMouseLeave}
+      style={isHorizontal ? horizontalPosition : verticalPosition}
+    >
       <div>
-        {isHorizontal ? (
+        {isHorizontal && showButtons ? (
           <>
-            <>
-              <div
-                className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
-                style={{ left: '0' }}
-                onClick={decrementScale}
-              >
-                <FA.FaCaretDown />
-              </div>
-              <div
-                className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
-                style={{ right: '0' }}
-                onClick={incrementScale}
-              >
-                <FA.FaCaretUp />
-              </div>
-            </>
+            <div
+              className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
+              style={{ left: '0' }}
+              onClick={decrementScale}
+            >
+              <FA.FaCaretDown />
+            </div>
+            <div
+              className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
+              style={{ right: '0' }}
+              onClick={incrementScale}
+            >
+              <FA.FaCaretUp />
+            </div>
           </>
-        ) : (
+        ) : showButtons ? (
           <>
             <>
               <div
@@ -278,7 +290,7 @@ const ScrollBar = ({ data }) => {
               </div>
             </>
           </>
-        )}
+        ) : null}
         <div
           className={`scroll-bar ${isHorizontal ? 'horizontal' : 'vertical'}`}
           style={{ ...trackStyle }}

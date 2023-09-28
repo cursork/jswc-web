@@ -27,8 +27,8 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
                   Event: {
                     EventName: event,
                     ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row) + 1,
-                    Col: parseInt(column) + 1,
+                    Row: parseInt(row),
+                    Col: parseInt(column),
                     Value: e.target.value,
                   },
                 })
@@ -48,8 +48,8 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
                   Event: {
                     EventName: event,
                     ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row) + 1,
-                    Col: parseInt(column) + 1,
+                    Row: parseInt(row),
+                    Col: parseInt(column),
                     Value: e.target.value,
                   },
                 })
@@ -68,8 +68,8 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
                   Event: {
                     EventName: event,
                     ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row) + 1,
-                    Col: parseInt(column) + 1,
+                    Row: parseInt(row),
+                    Col: parseInt(column),
                     Value: e.target.value,
                   },
                 })
