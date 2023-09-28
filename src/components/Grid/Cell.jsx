@@ -20,8 +20,8 @@ const Cell = ({
       <div
         onClick={() => onClick(row, column)}
         style={{
-          borderRight: '1px solid  #F8F8F8',
-          borderBottom: '1px solid  #F8F8F8',
+          borderRight: '1px solid  #EFEFEF',
+          borderBottom: '1px solid  #EFEFEF',
           minWidth: cellWidth ? cellWidth : '100px',
           maxWidth: cellWidth ? cellWidth : '100px',
           fontSize: '12px',
@@ -53,8 +53,8 @@ const Cell = ({
   return (
     <div
       style={{
-        borderRight: '1px solid  #F8F8F8',
-        borderBottom: '1px solid  #F8F8F8',
+        borderRight: '1px solid  #EFEFEF',
+        borderBottom: '1px solid  #EFEFEF',
         minWidth: '100px',
         maxWidth: '100px',
         minHeight: '20px',

@@ -145,13 +145,14 @@ const Grid = ({ data }) => {
                 highLightMe={tableProperty.body && selectedGrid.row === row + 1}
                 onClick={(row, column) => handleGridClick(row, column, 'row')}
                 column={0}
+                justify='start'
               />
             ) : null}
             {tableValues.map((value, column) => {
               const type = findDesiredData(Input && Input[column]);
               return (
                 <Cell
-                  justify={type ? '' : 'end'}
+                  justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}
                   cellWidth={CellWidths}
                   title={value}
                   type={type}

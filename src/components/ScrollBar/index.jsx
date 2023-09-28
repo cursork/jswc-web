@@ -149,12 +149,12 @@ const ScrollBar = ({ data }) => {
   };
 
   const thumbStyle = {
-    width: isHorizontal ? '40px' : '8px',
-    height: isHorizontal ? '8px' : '40px',
-    backgroundColor: 'grey',
+    width: isHorizontal ? '40px' : '6px',
+    height: isHorizontal ? '6px' : '40px',
+    backgroundColor: '#9E9E9E',
     position: 'absolute',
-    left: isHorizontal ? `${thumbPosition}px` : 1,
-    top: isHorizontal ? 1 : `${thumbPosition}px`,
+    left: isHorizontal ? `${thumbPosition}px` : 2,
+    top: isHorizontal ? 2 : `${thumbPosition}px`,
     cursor: 'pointer',
     borderRadius: '5px',
   };
