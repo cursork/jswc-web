@@ -1,53 +1,6 @@
-/* Tree.css */
-.tree {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 16px;
+.rc-tree .rc-tree-treenode {
+  line-height: 10px !important;
 }
-
-.tree-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin: 8px;
-  position: relative;
-}
-
-.vertical-line {
-  border-left: 1px dotted #000;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
-
-.node-content {
-  border: 1px solid #000;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #fff;
-  position: relative;
-  z-index: 2;
-}
-
-.horizontal-line {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.horizontal-line::before {
-  content: '';
-  border-top: 1px dotted #000;
-  width: 1px;
-  height: 50%;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+.rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
+  height: 0px !important;
 }

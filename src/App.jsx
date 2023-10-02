@@ -11,7 +11,7 @@ const App = () => {
 
   const dataRef = useRef({});
 
-  const handleDate = (data) => {
+  const handleData = (data) => {
     const periodCount = checkPeriod(data.ID);
 
     const splitID = data.ID.split('.');
@@ -78,20 +78,18 @@ const App = () => {
         // console.log('event from server WC', JSON.parse(event.data).WC);
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
-        handleDate(JSON.parse(event.data).WC);
+        handleData(JSON.parse(event.data).WC);
       } else if (event.data.includes('WS')) {
         // console.log('event from server WS', JSON.parse(event.data).WS);
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-        handleDate(JSON.parse(event.data).WS);
+        handleData(JSON.parse(event.data).WS);
       } else if (event.data.includes('WG')) {
         // console.log('event from server WG', JSON.parse(event.data).WG);
 
         const serverEvent = JSON.parse(event.data).WG;
-
         const data = getObjectById(dataRef.current, serverEvent.ID);
         const { Event } = JSON.parse(localStorage.getItem('lastEvent'));
         const { Info, Value, ID, EventName, Row, Col } = Event;
-
         if (EventName == 'CellChanged') {
           const data = getObjectById(dataRef.current, ID);
           const {
@@ -152,13 +150,39 @@ const App = () => {
           console.log(JSON.stringify({ WG: { ID: ID, Properties: { SelItems } } }));
 
           webSocket.send(JSON.stringify({ WG: { ID: ID, Properties: { SelItems } } }));
-        } else if (EventName == 'Scroll') {
-          console.log(JSON.stringify({ WG: { ID: ID, Properties: { THUMB: Info[1] } } }));
-          webSocket.send(JSON.stringify({ WG: { ID: ID, Properties: { THUMB: Info[1] } } }));
+        } else if (
+          serverEvent.ID == 'F1.LEFTRIGHT' ||
+          serverEvent.ID == 'F1.UPDOWN' ||
+          EventName == 'Scroll'
+        ) {
+          console.log(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  THUMB: serverEvent?.ID.includes('LEFTRIGHT')
+                    ? JSON.parse(localStorage.getItem('horizontalScroll')).newValue
+                    : JSON.parse(localStorage.getItem('verticalScroll')).newValue,
+                },
+              },
+            })
+          );
+          webSocket.send(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  THUMB: serverEvent?.ID.includes('LEFTRIGHT')
+                    ? JSON.parse(localStorage.getItem('horizontalScroll')).newValue
+                    : JSON.parse(localStorage.getItem('verticalScroll')).newValue,
+                },
+              },
+            })
+          );
         }
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);
-        handleDate(JSON.parse(event.data).WS);
+        handleData(JSON.parse(event.data).WS);
       }
     };
   };

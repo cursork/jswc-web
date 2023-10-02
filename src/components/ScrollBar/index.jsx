@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import { useAppData } from '../../hooks';
 import './ScrollBar.css';
@@ -20,6 +20,7 @@ const ScrollBar = ({ data }) => {
   };
 
   const { socket } = useAppData();
+
   const trackRef = useRef(null);
   const thumbRef = useRef(null);
 
@@ -42,6 +43,24 @@ const ScrollBar = ({ data }) => {
 
       if (newScaledValue >= 1 && newScaledValue <= maxValue) {
         setScaledValue(newScaledValue);
+
+        if (isHorizontal) {
+          localStorage.setItem(
+            'horizontalScroll',
+            JSON.stringify({
+              oldValue: Math.round(scaledValue),
+              newValue: Math.round(newScaledValue),
+            })
+          );
+        } else {
+          localStorage.setItem(
+            'verticalScroll',
+            JSON.stringify({
+              oldValue: Math.round(scaledValue),
+              newValue: Math.round(newScaledValue),
+            })
+          );
+        }
 
         console.log(
           'Event',
@@ -121,6 +140,24 @@ const ScrollBar = ({ data }) => {
           })
         );
 
+        if (isHorizontal) {
+          localStorage.setItem(
+            'horizontalScroll',
+            JSON.stringify({
+              oldValue: Math.round(scaledValue),
+              newValue: Math.round(newScaledValue),
+            })
+          );
+        } else {
+          localStorage.setItem(
+            'verticalScroll',
+            JSON.stringify({
+              oldValue: Math.round(scaledValue),
+              newValue: Math.round(newScaledValue),
+            })
+          );
+        }
+
         socket.send(
           JSON.stringify({
             Event: {
@@ -197,6 +234,24 @@ const ScrollBar = ({ data }) => {
         })
       );
 
+      if (isHorizontal) {
+        localStorage.setItem(
+          'horizontalScroll',
+          JSON.stringify({
+            oldValue: Math.round(scaledValue),
+            newValue: Math.round(newScaledValue),
+          })
+        );
+      } else {
+        localStorage.setItem(
+          'verticalScroll',
+          JSON.stringify({
+            oldValue: Math.round(scaledValue),
+            newValue: Math.round(newScaledValue),
+          })
+        );
+      }
+
       socket.send(
         JSON.stringify({
           Event: {
@@ -235,6 +290,24 @@ const ScrollBar = ({ data }) => {
         })
       );
 
+      if (isHorizontal) {
+        localStorage.setItem(
+          'horizontalScroll',
+          JSON.stringify({
+            oldValue: Math.round(scaledValue),
+            newValue: Math.round(newScaledValue),
+          })
+        );
+      } else {
+        localStorage.setItem(
+          'verticalScroll',
+          JSON.stringify({
+            oldValue: Math.round(scaledValue),
+            newValue: Math.round(newScaledValue),
+          })
+        );
+      }
+
       socket.send(
         JSON.stringify({
           Event: {
@@ -246,6 +319,20 @@ const ScrollBar = ({ data }) => {
       );
     }
   };
+
+  useEffect(() => {
+    if (isHorizontal) {
+      localStorage.setItem(
+        'horizontalScroll',
+        JSON.stringify({ oldValue: Thumb || 1, newValue: Thumb || 1 })
+      );
+    } else {
+      localStorage.setItem(
+        'verticalScroll',
+        JSON.stringify({ oldValue: Thumb || 1, newValue: Thumb || 1 })
+      );
+    }
+  }, []);
 
   return (
     <div

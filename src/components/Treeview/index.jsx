@@ -2,6 +2,7 @@ import { setStyle } from '../../utils';
 
 import Tree from 'rc-tree';
 import 'rc-tree/assets/index.css';
+import './TreeView.css';
 
 const Treeview = ({ data }) => {
   const { Depth, Items } = data?.Properties;
@@ -34,7 +35,7 @@ const Treeview = ({ data }) => {
         border: '1px solid black',
         background: 'white',
         paddingLeft: '2px',
-        paddingTop: '2px',
+        paddingTop: '3px',
       }}
     >
       <Tree
@@ -42,7 +43,6 @@ const Treeview = ({ data }) => {
         showIcon={false}
         showLine={true}
         style={{ fontSize: '12px', lineHeight: '15px', margin: 0, padding: 0 }}
-        height={styles.height}
       />
     </div>
   );

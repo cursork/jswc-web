@@ -14,5 +14,11 @@ export const useAppData = () => {
     return findData?.Properties?.Type;
   };
 
-  return { socketData, findDesiredData, getObjType, dataRef, socket };
+  return {
+    socketData,
+    findDesiredData,
+    getObjType,
+    dataRef,
+    socket,
+  };
 };
