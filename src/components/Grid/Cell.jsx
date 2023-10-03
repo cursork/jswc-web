@@ -22,17 +22,18 @@ const Cell = ({
         style={{
           borderRight: '1px solid  #EFEFEF',
           borderBottom: '1px solid  #EFEFEF',
+          // width: cellWidth ? cellWidth : '100px',
           minWidth: cellWidth ? cellWidth : '100px',
           maxWidth: cellWidth ? cellWidth : '100px',
           fontSize: '12px',
           minHeight: '20px',
           maxHeight: '20px',
           display: 'flex',
+
           alignItems: 'center',
           justifyContent: justify,
           overflow: 'hidden',
           margin: 0,
-          padding: 0,
           cursor: 'pointer',
           background: selectedGrid
             ? selectedGrid.column == column && !isRow && !isBody
@@ -45,7 +46,14 @@ const Cell = ({
             : null,
         }}
       >
-        {title?.toString()?.slice(0, 10)}
+        <span
+          style={{
+            paddingLeft: justify == 'start' ? '4px' : '0px',
+            paddingRight: justify == 'end' ? '4px' : '0px',
+          }}
+        >
+          {title?.toString()?.slice(0, 10)}
+        </span>
       </div>
     );
   }
