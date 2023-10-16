@@ -11,6 +11,10 @@ import List from './List';
 import Splitter from './Splitter';
 import Group from './Group';
 import ScrollBar from './ScrollBar';
+import TabControl from './TabControl';
+import TabButton from './TabButton';
+import SubForm from './SubForm';
+import TextArea from './TextArea';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -28,7 +32,7 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
     );
   if (data?.Properties?.Type == 'Menu') return <Menu data={data} />;
   if (data?.Properties?.Type == 'Grid') return <Grid data={data} />;
-  if (data?.Properties?.Type == 'Edit')
+  if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style !== 'Multi')
     return (
       <div
         style={{
@@ -45,11 +49,17 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
     return <Combo data={data} value={inputValue} event={event} row={row} column={column} />;
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
-  // if (data?.Properties?.Type == 'SubForm') return <SubForm data={data} />;
+  if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
+    return <SubForm data={data} />;
   if (data?.Properties?.Type == 'List') return <List data={data} />;
   if (data?.Properties?.Type == 'Splitter') return <Splitter data={data} />;
   if (data?.Properties?.Type == 'Group') return <Group data={data} />;
   if (data?.Properties?.Type == 'Scroll') return <ScrollBar data={data} />;
+  if (data?.Properties?.Type == 'TabControl') return <TabControl data={data} />;
+  if (data?.Properties?.Type == 'TabButton') return <TabButton data={data} />;
+  if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style == 'Multi') {
+    return <TextArea data={data} />;
+  }
 };
 
 export default SelectComponent;

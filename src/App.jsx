@@ -203,6 +203,7 @@ const App = () => {
           <option value='Initialise'>Initialise</option>
           <option value='Initialise(DemoSplitters)'>Splitters</option>
           <option value='Initialise(DemoScroll)'>Scroll</option>
+          <option value='Initialise(DemoTabs)'>Tabs</option>
         </select>
       </div>
 
