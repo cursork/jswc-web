@@ -15,7 +15,11 @@ input:focus {
   outline: none;
 }
 
-select::after {
+select:focus-visible {
+  outline: 0;
+}
+
+.custom-select::after {
   content: '\25BC';
 }
 

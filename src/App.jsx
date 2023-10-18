@@ -196,6 +196,8 @@ const App = () => {
 
   // console.log({ lastEvent });
 
+  // console.log('data', dataRef.current);
+
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
@@ -204,6 +206,7 @@ const App = () => {
           <option value='Initialise(DemoSplitters)'>Splitters</option>
           <option value='Initialise(DemoScroll)'>Scroll</option>
           <option value='Initialise(DemoTabs)'>Tabs</option>
+          <option value='Initialise(DemoRibbon)'>Ribbon</option>
         </select>
       </div>
 

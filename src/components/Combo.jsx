@@ -10,7 +10,6 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   return (
     <div style={{ ...styles, borderColor: '#ccc' }}>
       <select
-        className='custom-select'
         defaultValue={value ? value : data?.Properties?.Text}
         style={{
           width: '100%',

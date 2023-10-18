@@ -15,6 +15,11 @@ import TabControl from './TabControl';
 import TabButton from './TabButton';
 import SubForm from './SubForm';
 import TextArea from './TextArea';
+import CustomRibbon from './Ribbon';
+import CustomRibbonGroup from './Ribbon/RibbonGroup';
+import CustomRibbonItem from './Ribbon/RibbonItem';
+import CustomRibbonButton from './Ribbon/RibbonButton';
+import CustomRibbonButtonGroup from './Ribbon/RibbonButtonGroup';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -60,6 +65,11 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style == 'Multi') {
     return <TextArea data={data} />;
   }
+  if (data?.Properties?.Type == 'Ribbon') return <CustomRibbon data={data} />;
+  if (data?.Properties?.Type == 'RibbonGroup') return <CustomRibbonGroup data={data} />;
+  if (data?.Properties?.Type == 'RibbonGroupItem') return <CustomRibbonItem data={data} />;
+  if (data?.Properties?.Type == 'RibbonButton') return <CustomRibbonButton data={data} />;
+  if (data?.Properties?.Type == 'RibbonButtonGroup') return <CustomRibbonButtonGroup data={data} />;
 };
 
 export default SelectComponent;
