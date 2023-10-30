@@ -117,3 +117,52 @@ export const generateAsteriskString = (length) => {
 
   return asteriskString;
 };
+
+export const getStringafterPeriod = (ID) => {
+  const parts = ID?.split('.');
+  if (parts?.length > 1) {
+    return parts[1];
+  } else {
+    return '';
+  }
+};
+
+//  Find Parent Index from the tree View
+
+export const calculateSumFromString = (inputString) => {
+  const numbers = inputString[0].split('-').map(Number);
+  if (numbers.length === 2) {
+    const sum = numbers[0] + numbers[1];
+    return sum;
+  } else {
+    return null; // Invalid input
+  }
+};
+
+export const findParentIndex = (depthArray, parentNumber) => {
+  let parentCount = 0;
+  let parentIndex = -1;
+
+  for (let i = 0; i < depthArray.length; i++) {
+    if (depthArray[i] === 0) {
+      parentCount++;
+      if (parentCount === parentNumber) {
+        parentIndex = i;
+        break;
+      }
+    }
+  }
+
+  return parentIndex;
+};
+
+
+
+export const rgbColor = (rgbArray) => {
+  if (rgbArray.length !== 3) {
+    throw new Error('RGB array must have exactly 3 values.');
+  }
+
+  const [r, g, b] = rgbArray;
+  return `rgb(${r}, ${g}, ${b})`;
+};

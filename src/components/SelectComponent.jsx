@@ -20,6 +20,8 @@ import CustomRibbonGroup from './Ribbon/RibbonGroup';
 import CustomRibbonItem from './Ribbon/RibbonItem';
 import CustomRibbonButton from './Ribbon/RibbonButton';
 import CustomRibbonButtonGroup from './Ribbon/RibbonButtonGroup';
+import Poly from './Polygon';
+import Rectangle from './Rectangle';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -70,6 +72,8 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'RibbonGroupItem') return <CustomRibbonItem data={data} />;
   if (data?.Properties?.Type == 'RibbonButton') return <CustomRibbonButton data={data} />;
   if (data?.Properties?.Type == 'RibbonButtonGroup') return <CustomRibbonButtonGroup data={data} />;
+  if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
+  if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
 };
 
 export default SelectComponent;

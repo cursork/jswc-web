@@ -15,5 +15,5 @@
 
 @font-face {
   font-family: 'APL385 Unicode';
-  src: url('../assets/fonts/Apl385.ttf') format('truetype');
+  src: url('/assets/fonts/Apl385.ttf') format('truetype');
 }
