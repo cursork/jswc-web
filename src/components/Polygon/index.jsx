@@ -22,7 +22,7 @@ const Poly = ({ data }) => {
     <div>
       <svg height='70px'>
         {Points.map((polygonPoints, index) => {
-          const flatArray = polygonPoints[0].map((x, i) => [x, polygonPoints[1][i]]);
+          const flatArray = polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);
 
           return (
             <polygon

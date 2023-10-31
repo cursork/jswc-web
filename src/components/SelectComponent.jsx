@@ -72,6 +72,8 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'RibbonGroupItem') return <CustomRibbonItem data={data} />;
   if (data?.Properties?.Type == 'RibbonButton') return <CustomRibbonButton data={data} />;
   if (data?.Properties?.Type == 'RibbonButtonGroup') return <CustomRibbonButtonGroup data={data} />;
+
+
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
 };
