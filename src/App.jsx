@@ -222,15 +222,31 @@ const App = () => {
               })
             );
           }
+
+          setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);
+          handleData(JSON.parse(event.data).WG);
         }
 
         // Server emit from the server
         else {
+          const data = getObjectById(dataRef.current, serverEvent.ID);
+          const jsondata = JSON.parse(data);
+
+          const obj = serverEvent.Properties.map((key) => {
+            return { [key]: jsondata.Properties[key] };
+          });
+
+          let serverObj = {};
+
+          obj.forEach((obj, index) => {
+            serverObj = { ...serverObj, ...obj };
+          });
+
           console.log(
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: serverEvent.Properties,
+                Properties: serverObj,
                 WGID: serverEvent.WGID,
               },
             })
@@ -239,20 +255,19 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: serverEvent.Properties,
+                Properties: serverObj,
                 WGID: serverEvent.WGID,
               },
             })
           );
         }
-        setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);
-        handleData(JSON.parse(event.data).WG);
       }
     };
   };
 
   useEffect(() => {
     dataRef.current = {};
+    localStorage.clear();
     fetchData();
   }, [layout]);
 
