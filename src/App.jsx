@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
 import { checkPeriod, getObjectById } from './utils';
+import { Edit } from './objects';
 import './App.css';
 
 const App = () => {
@@ -229,11 +230,26 @@ const App = () => {
 
         // Server emit from the server
         else {
+          console.log({ serverEvent });
+
           const data = getObjectById(dataRef.current, serverEvent.ID);
           const jsondata = JSON.parse(data);
 
           const obj = serverEvent.Properties.map((key) => {
-            return { [key]: jsondata.Properties[key] };
+            let emitValue = null;
+            let Type = jsondata.Properties.Type;
+
+            switch (Type) {
+              case 'Edit':
+                emitValue = Edit[key];
+                break;
+            }
+
+            console.log({ emitValue });
+
+            return {
+              [key]: jsondata.Properties.hasOwnProperty(key) ? jsondata.Properties[key] : emitValue,
+            };
           });
 
           let serverObj = {};
