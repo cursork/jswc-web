@@ -13,6 +13,8 @@ input[type='number'] {
 
 input:focus {
   outline: none;
+  border-bottom: 2px solid blue !important;
+  /* outline-color: blue; */
 }
 
 select:focus-visible {

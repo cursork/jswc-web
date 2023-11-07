@@ -277,6 +277,12 @@ const App = () => {
             })
           );
         }
+      } else if (event.data.includes('NQ')) {
+        const nqEvent = JSON.parse(event.data).NQ;
+        const element = document.getElementById(nqEvent.ID);
+        element.focus();
+        
+        
       }
     };
   };
@@ -289,7 +295,7 @@ const App = () => {
 
   // console.log({ lastEvent });
 
-  // console.log('data', dataRef.current);
+  console.log('data', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
@@ -300,7 +306,7 @@ const App = () => {
           <option value='Initialise(DemoScroll)'>Scroll</option>
           <option value='Initialise(DemoTabs)'>Tabs</option>
           <option value='Initialise(DemoRibbon)'>Ribbon</option>
-          <option value='Initialise(DemoTreeView)'>Tree View</option>
+          <option value='Initialise(DemoTreeView'>Tree View</option>
           <option value='Initialise(DemoLines)'>Lines</option>
         </select>
       </div>

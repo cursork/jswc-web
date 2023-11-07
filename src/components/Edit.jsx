@@ -38,6 +38,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
 
   return (
     <input
+      id={data.ID}
       ref={inputRef}
       value={inputValue}
       onClick={handleInputClick}
