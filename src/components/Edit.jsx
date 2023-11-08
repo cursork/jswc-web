@@ -6,15 +6,18 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
+  const hasValueProperty = data?.Properties.hasOwnProperty('Value');
   const isPassword = data?.Properties.hasOwnProperty('Password');
   const inputRef = useRef(null);
 
   const [inputValue, setInputValue] = useState(
-    hasTextProperty
+    event == 'CellChanged'
+      ? value
+      : hasTextProperty
       ? isPassword
         ? generateAsteriskString(data?.Properties?.Text?.length)
-        : data.Properties.Text
-      : value
+        : data?.Properties?.Text
+      : data?.Properties?.Value
   );
 
   if (!hasTextProperty) {
