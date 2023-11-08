@@ -127,7 +127,12 @@ const App = () => {
             const serverPropertiesObj = {};
 
             serverEvent.Properties.map((key) => {
-              return (serverPropertiesObj[key] = key == 'Value' ? Info : data?.Properties?.Text);
+              return (serverPropertiesObj[key] =
+                key == 'Value'
+                  ? Info
+                  : data.Properties.FieldType == 'Numeric'
+                  ? parseInt(Info, 10)
+                  : Info);
             });
 
             console.log(
