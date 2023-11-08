@@ -243,7 +243,7 @@ const App = () => {
 
             switch (Type) {
               case 'Edit':
-                emitValue = jsondata?.Properties?.FieldType == 'Numeric' ? 0 : Edit[key];
+                emitValue = parseInt(jsondata?.Properties?.Text, 10);
                 break;
             }
 
