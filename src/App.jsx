@@ -90,121 +90,83 @@ const App = () => {
         const serverEvent = JSON.parse(event.data).WG;
 
         // check if the event Emit from the client side
-        if (localStorage.getItem('lastEvent')) {
-          const data = getObjectById(dataRef.current, serverEvent.ID);
-          const { Event } = JSON.parse(localStorage.getItem('lastEvent'));
-          const { Info, Value, ID, EventName, Row, Col } = Event;
+        if (
+          localStorage.getItem('lastEvent') ||
+          localStorage.getItem('lastGrid') ||
+          localStorage.getItem('lastEdit')
+        ) {
+          const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
 
-          if (EventName == 'CellChanged') {
-            const data = getObjectById(dataRef.current, ID);
+          // Handle the Grid Event
+          if (data?.Properties?.Type == 'Grid') {
+            const { Event } = JSON.parse(localStorage.getItem('lastGrid'));
+            const { Row, Col } = Event;
+
             const {
               Properties: { Values },
-            } = JSON.parse(data);
+            } = data;
             Values[Row - 1][Col - 1] = Value;
 
             console.log(
               JSON.stringify({
-                WG: { ID: ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
+                WG: { ID: serverEvent.ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
               })
             );
+            webSocket.send(
+              JSON.stringify({
+                WG: { ID: serverEvent.ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
+              })
+            );
+          }
 
-            webSocket.send(
-              JSON.stringify({
-                WG: { ID: ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
-              })
-            );
-          } else if (EventName == 'Change') {
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: ID,
-                  Properties: { Value: Info },
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
-
-            webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: ID,
-                  Properties: { Value: Info },
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
-          } else if (
-            EventName == 'Select' &&
-            ID == 'F1.CalcBtn' &&
-            serverEvent.ID == 'F1.Function'
-          ) {
-            const data = getObjectById(dataRef.current, serverEvent.ID);
-            const {
-              Properties: { SelItems },
-            } = JSON.parse(data);
-            console.log(
-              JSON.stringify({
-                WG: { ID: serverEvent.ID, Properties: { SelItems }, WGID: serverEvent.WGID },
-              })
-            );
-            webSocket.send(
-              JSON.stringify({
-                WG: { ID: serverEvent.ID, Properties: { SelItems }, WGID: serverEvent.WGID },
-              })
-            );
-          } else if (ID == 'F1.CalcBtn' && serverEvent.ID == 'F1.TableSize') {
-            const { Properties } = JSON.parse(data);
-
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: { Value: Properties?.Text },
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
-            webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: { Value: parseInt(Properties?.Text) },
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
-          } else if (EventName == 'Select' && ID !== 'F1.CalcBtn') {
+          // handle the Edit Event
+          if (data?.Properties?.Type == 'Edit') {
+            const { Event } = JSON.parse(localStorage.getItem('lastEdit'));
             const { Info } = Event;
-            const data = getObjectById(dataRef.current, ID);
+
+            const serverPropertiesObj = {};
+
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] = key == 'Value' ? Info : data?.Properties?.Text);
+            });
+
+            console.log(
+              JSON.stringify({
+                WG: { ID: serverEvent.ID, Properties: serverPropertiesObj, WGID: serverEvent.WGID },
+              })
+            );
+            webSocket.send(
+              JSON.stringify({
+                WG: { ID: serverEvent.ID, Properties: serverPropertiesObj, WGID: serverEvent.WGID },
+              })
+            );
+          }
+
+          //Handle the Combo Event
+
+          if (data?.Properties?.Type == 'Combo') {
+            const { Event } = JSON.parse(localStorage.getItem('lastEvent'));
+            const { Info } = Event;
             const {
               Properties: { SelItems },
-            } = JSON.parse(data);
+            } = data;
 
             SelItems.fill(0);
             let indexToChange = Info - 1;
             SelItems[indexToChange] = 1;
 
-            console.log(
-              JSON.stringify({ WG: { ID: ID, Properties: { SelItems }, WGID: serverEvent.WGID } })
-            );
+            const serverPropertiesObj = {};
 
-            webSocket.send(
-              JSON.stringify({ WG: { ID: ID, Properties: { SelItems }, WGID: serverEvent.WGID } })
-            );
-          } else if (
-            serverEvent.ID == 'F1.LEFTRIGHT' ||
-            serverEvent.ID == 'F1.UPDOWN' ||
-            EventName == 'Scroll'
-          ) {
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] =
+                key == 'SelItems' ? SelItems : data?.Properties?.Text);
+            });
+
             console.log(
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: {
-                    THUMB: serverEvent?.ID.includes('LEFTRIGHT')
-                      ? JSON.parse(localStorage.getItem('horizontalScroll')).newValue
-                      : JSON.parse(localStorage.getItem('verticalScroll')).newValue,
-                  },
+                  Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -213,11 +175,7 @@ const App = () => {
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: {
-                    THUMB: serverEvent?.ID.includes('LEFTRIGHT')
-                      ? JSON.parse(localStorage.getItem('horizontalScroll')).newValue
-                      : JSON.parse(localStorage.getItem('verticalScroll')).newValue,
-                  },
+                  Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -230,12 +188,8 @@ const App = () => {
 
         // Server emit from the server
         else {
-          console.log({ serverEvent });
-
           const data = getObjectById(dataRef.current, serverEvent.ID);
           const jsondata = JSON.parse(data);
-
-          console.log({ jsondata });
 
           const obj = serverEvent.Properties.map((key) => {
             let emitValue = null;
@@ -295,7 +249,7 @@ const App = () => {
 
   // console.log({ lastEvent });
 
-  console.log('data', dataRef.current);
+  // console.log('data', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>

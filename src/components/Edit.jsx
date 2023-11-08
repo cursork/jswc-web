@@ -73,7 +73,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         );
 
         localStorage.setItem(
-          'lastEvent',
+          event === 'CellChanged' ? 'lastGrid' : 'lastEdit',
           event === 'CellChanged'
             ? JSON.stringify({
                 Event: {
