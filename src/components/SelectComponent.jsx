@@ -29,9 +29,9 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
     return (
       <div
         style={{
-          position: 'absolute',
           translate: '0% -100%',
-          zIndex: '99999',
+          position: 'relative',
+          zIndex:'1'
         }}
       >
         <MenuBar data={data} />
@@ -72,7 +72,6 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'RibbonGroupItem') return <CustomRibbonItem data={data} />;
   if (data?.Properties?.Type == 'RibbonButton') return <CustomRibbonButton data={data} />;
   if (data?.Properties?.Type == 'RibbonButtonGroup') return <CustomRibbonButtonGroup data={data} />;
-
 
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;

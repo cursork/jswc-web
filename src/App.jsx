@@ -235,13 +235,15 @@ const App = () => {
           const data = getObjectById(dataRef.current, serverEvent.ID);
           const jsondata = JSON.parse(data);
 
+          console.log({ jsondata });
+
           const obj = serverEvent.Properties.map((key) => {
             let emitValue = null;
             let Type = jsondata.Properties.Type;
 
             switch (Type) {
               case 'Edit':
-                emitValue = Edit[key];
+                emitValue = jsondata?.Properties?.FieldType == 'Numeric' ? 0 : Edit[key];
                 break;
             }
 
@@ -281,8 +283,6 @@ const App = () => {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
         element.focus();
-        
-        
       }
     };
   };

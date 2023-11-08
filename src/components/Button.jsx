@@ -13,6 +13,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
     return (
       <div style={{ ...styles, marginLeft: '10px' }}>
         <input
+          id={data?.ID}
           type='checkbox'
           defaultChecked={inputValue}
           onChange={(e) => {
@@ -60,6 +61,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   return (
     <div
+      id={data?.ID}
       onClick={() => {
         console.log(
           JSON.stringify({
