@@ -81,7 +81,37 @@ const App = () => {
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
         handleData(JSON.parse(event.data).WC);
       } else if (event.data.includes('WS')) {
-        // console.log('event from server WS', JSON.parse(event.data).WS);
+        const serverEvent = JSON.parse(event.data).WS;
+        let value = null;
+        // @Todo Check that the Edit is Already Present or not if it is Present just change the value we are getting from the server
+        const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
+
+        if (data?.Properties?.Type == 'Edit') {
+          if (serverEvent?.Properties.hasOwnProperty('Text')) {
+            value = serverEvent?.Properties.Text;
+          } else if (serverEvent?.Properties.hasOwnProperty('Value')) {
+            value = serverEvent?.Properties.Value;
+          }
+          // Check that the Already Present Data have Text Key or Value Key
+          if (data?.Properties.hasOwnProperty('Text')) {
+             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            return handleData({
+              ID: serverEvent.ID,
+              Properties: {
+                Text: value,
+              },
+            });
+          } else if (data?.Properties.hasOwnProperty('Value')) {
+             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            return handleData({
+              ID: serverEvent.ID,
+              Properties: {
+                Value: value,
+              },
+            });
+          }
+        }
+
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
         handleData(JSON.parse(event.data).WS);
       } else if (event.data.includes('WG')) {
@@ -254,7 +284,7 @@ const App = () => {
 
   // console.log({ lastEvent });
 
-  // console.log('data', dataRef.current);
+  // console.log('data', dataRef['F1.TableSize']);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>

@@ -1,5 +1,5 @@
 import { setStyle, extractStringUntilSecondPeriod, generateAsteriskString } from '../utils';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../hooks';
 
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
@@ -9,15 +9,21 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
   const isPassword = data?.Properties.hasOwnProperty('Password');
   const inputRef = useRef(null);
+  let editValue = null;
+  if (hasTextProperty) {
+    editValue = data?.Properties.Text;
+  }
+
+  if (hasValueProperty) {
+    editValue = data?.Properties.Value;
+  }
 
   const [inputValue, setInputValue] = useState(
     event == 'CellChanged'
       ? value
-      : hasTextProperty
-      ? isPassword
-        ? generateAsteriskString(data?.Properties?.Text?.length)
-        : data?.Properties?.Text
-      : data?.Properties?.Value
+      : isPassword
+      ? generateAsteriskString(data?.Properties?.Text?.length)
+      : editValue
   );
 
   if (!hasTextProperty) {
@@ -38,6 +44,10 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
       inputRef.current.select();
     }
   };
+
+  useEffect(() => {
+    setInputValue(editValue);
+  }, [editValue]);
 
   return (
     <input
