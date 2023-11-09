@@ -94,7 +94,7 @@ const App = () => {
           }
           // Check that the Already Present Data have Text Key or Value Key
           if (data?.Properties.hasOwnProperty('Text')) {
-             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
             return handleData({
               ID: serverEvent.ID,
               Properties: {
@@ -102,7 +102,7 @@ const App = () => {
               },
             });
           } else if (data?.Properties.hasOwnProperty('Value')) {
-             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
             return handleData({
               ID: serverEvent.ID,
               Properties: {
@@ -162,7 +162,7 @@ const App = () => {
                   ? Info
                   : data.Properties.FieldType == 'Numeric'
                   ? parseInt(Info, 10)
-                  : Info);
+                  : Info.toString());
             });
 
             console.log(
@@ -229,6 +229,7 @@ const App = () => {
           const obj = serverEvent.Properties.map((key) => {
             let emitValue = null;
             let Type = jsondata.Properties.Type;
+            let FieldType = jsondata.Properties.FieldType;
 
             switch (Type) {
               case 'Edit':
@@ -237,9 +238,17 @@ const App = () => {
             }
 
             console.log({ emitValue });
+            const valueToEmit = jsondata.Properties.hasOwnProperty(key)
+              ? jsondata.Properties[key]
+              : emitValue;
 
             return {
-              [key]: jsondata.Properties.hasOwnProperty(key) ? jsondata.Properties[key] : emitValue,
+              [key]:
+                key == 'Value'
+                  ? parseInt(valueToEmit, 10)
+                  : key == 'Text'
+                  ? valueToEmit.toString()
+                  : valueToEmit,
             };
           });
 
