@@ -111,6 +111,8 @@ const Splitter = ({ data }) => {
 
   //Event Information
 
+  // Info [value,value,800,3]
+  // 800 is the height of the Splitter and 3 is the width of the splitter
   return (
     <SplitPane
       split='vertical'
@@ -118,13 +120,13 @@ const Splitter = ({ data }) => {
       onChange={(value) => {
         setSizes(value);
       }}
-      onDragEnd={() => {
+      onDragEnd={(e) => {
         console.log(
           JSON.stringify({
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(sizes[0]), 800, 3],
+              Info: [0, Math.round(e.screenX), 800, 3],
             },
           })
         );
@@ -134,7 +136,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(sizes[0]), 800, 3],
+              Info: [0, Math.round(e.screenX), 800, 3],
             },
           })
         );
@@ -145,7 +147,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(sizes[0]), 800, 3],
+              Info: [0, Math.round(e.screenX), 800, 3],
             },
           })
         );
