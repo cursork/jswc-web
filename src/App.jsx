@@ -225,8 +225,41 @@ const App = () => {
             let Splitter = null;
 
             // Check that this ID belongs to the vertical scroll or horizontal Scroll
-            if (ID.includes('LEFT') || ID.includes('RIGHT'))
-              Splitter = localStorage.getItem('verticalSplitter');
+            if (ID.includes('LEFT')) Splitter = localStorage.getItem('verticalSplitter');
+
+            if (ID.includes('RIGHT')) {
+              const rightPane = JSON.parse(localStorage.getItem('verticalSplitter'));
+
+              const { Event } = rightPane;
+              const { Info, EventName, ID } = Event;
+
+              const newValue = 800 - (Info[1] + Info[3]);
+
+              const serverObj = {};
+              serverEvent.Properties.map((key) => {
+                serverObj[key] = key == 'Size' ? [Info[2], newValue] : [0, Info[1] + 3];
+              });
+
+              console.log(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+
+              return webSocket.send(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+            }
 
             if (ID.includes('TOP') || ID.includes('BOT'))
               Splitter = localStorage.getItem('horizontalSplitter');
@@ -237,7 +270,7 @@ const App = () => {
             const serverObj = {};
 
             serverEvent.Properties.map((key) => {
-              serverObj[key] = key == 'Size' ? [Info[2], Info[1]] : [[Info[0], Info[1]]];
+              serverObj[key] = key == 'Size' ? [Info[2], Info[1]] : [Info[0], Info[1]];
             });
 
             console.log(
