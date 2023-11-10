@@ -3,11 +3,12 @@ import { useAppData } from '../../hooks';
 import SelectComponent from '../SelectComponent';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const Splitter = ({ data }) => {
   const { dataRef } = useAppData();
   const { socket } = useAppData();
+  const verticalSplitter = useRef();
 
   const { SplitObj1, SplitObj2 } = data?.Properties;
   const [sizes, setSizes] = useState([100, '30%', 'auto']);
@@ -126,7 +127,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX), 800, 3],
+              Info: [0, Math.round(e.screenX) - 50, 800, 3],
             },
           })
         );
@@ -136,7 +137,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX), 800, 3],
+              Info: [0, Math.round(e.screenX) - 50, 800, 3],
             },
           })
         );
@@ -147,7 +148,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX), 800, 3],
+              Info: [0, Math.round(e.screenX) - 50, 800, 3],
             },
           })
         );
