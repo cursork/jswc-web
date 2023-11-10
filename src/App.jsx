@@ -233,11 +233,18 @@ const App = () => {
 
             const { Event } = JSON.parse(Splitter);
             const { Info } = Event;
+
+            const serverObj = {};
+
+            serverEvent.Properties.map((key) => {
+              serverObj[key] = key == 'Size' ? [Info[2], Info[1]] : [[Info[0], Info[1]]];
+            });
+
             console.log(
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: { Size: [Info[2], Info[1]] },
+                  Properties: serverObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -247,7 +254,7 @@ const App = () => {
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: { Size: [Info[2], Info[1]] },
+                  Properties: serverObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -287,7 +294,7 @@ const App = () => {
           handleData(JSON.parse(event.data).WG);
         }
 
-        // Server emit from the server
+        // Server emit from the server default Values
         else {
           const data = getObjectById(dataRef.current, serverEvent.ID);
           const jsondata = JSON.parse(data);

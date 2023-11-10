@@ -48,15 +48,18 @@ const Splitter = ({ data }) => {
           split='horizontal'
           sizes={horizontalSize}
           onChange={(sizes) => {
+            localStorage.setItem('coordinates', JSON.stringify(sizes));
             setHorizontalSize(sizes);
           }}
           onDragEnd={(e) => {
+            const coordinates = JSON.parse(localStorage.getItem('coordinates'));
+
             console.log(
               JSON.stringify({
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data.ID,
-                  Info: [Math.round(e.clientY - 50), 0, 3, 494],
+                  Info: [Math.round(coordinates[0]), 0, 3, 494],
                 },
               })
             );
@@ -66,7 +69,7 @@ const Splitter = ({ data }) => {
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data.ID,
-                  Info: [Math.round(e.clientY - 50), 0, 3, 494],
+                  Info: [Math.round(coordinates[0]), 0, 3, 494],
                 },
               })
             );
@@ -77,7 +80,7 @@ const Splitter = ({ data }) => {
                 Event: {
                   EventName: data?.Properties?.Event[0],
                   ID: data.ID,
-                  Info: [0, Math.round(sizes[0]), 800, 3],
+                  Info: [Math.round(coordinates[0]), 0, 800, 3],
                 },
               })
             );
@@ -112,8 +115,10 @@ const Splitter = ({ data }) => {
 
   //Event Information
 
-  // Info [value,value,800,3]
+  // Info [0,left,800,3]
   // 800 is the height of the Splitter and 3 is the width of the splitter
+  //0 is the top position of the Splitter and left is the left position of the Splitter
+
   return (
     <SplitPane
       split='vertical'
@@ -130,7 +135,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(coordinates[0]) , 800, 3],
+              Info: [0, Math.round(coordinates[0]), 800, 3],
             },
           })
         );
@@ -140,7 +145,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(coordinates[0]) , 800, 3],
+              Info: [0, Math.round(coordinates[0]), 800, 3],
             },
           })
         );
