@@ -119,15 +119,18 @@ const Splitter = ({ data }) => {
       split='vertical'
       sizes={sizes}
       onChange={(value) => {
+        localStorage.setItem('coordinates', JSON.stringify(value));
         setSizes(value);
       }}
       onDragEnd={(e) => {
+        const coordinates = JSON.parse(localStorage.getItem('coordinates'));
+
         console.log(
           JSON.stringify({
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX) - 50, 800, 3],
+              Info: [0, Math.round(coordinates[0]) , 800, 3],
             },
           })
         );
@@ -137,7 +140,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX) - 50, 800, 3],
+              Info: [0, Math.round(coordinates[0]) , 800, 3],
             },
           })
         );
@@ -148,7 +151,7 @@ const Splitter = ({ data }) => {
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(e.screenX) - 50, 800, 3],
+              Info: [0, Math.round(coordinates[0]), 800, 3],
             },
           })
         );
