@@ -46,6 +46,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   };
 
   useEffect(() => {
+    if(isPassword) return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
     setInputValue(editValue);
   }, [editValue]);
 

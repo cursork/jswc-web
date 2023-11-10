@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 const Splitter = ({ data }) => {
   const { dataRef } = useAppData();
+  const { socket } = useAppData();
 
   const { SplitObj1, SplitObj2 } = data?.Properties;
   const [sizes, setSizes] = useState([100, '30%', 'auto']);
@@ -45,7 +46,41 @@ const Splitter = ({ data }) => {
         <SplitPane
           split='horizontal'
           sizes={horizontalSize}
-          onChange={(sizes) => setHorizontalSize(sizes)}
+          onChange={(sizes) => {
+            setHorizontalSize(sizes);
+          }}
+          onDragEnd={(e) => {
+            console.log(
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [Math.round(e.clientY - 50), 0, 3, 494],
+                },
+              })
+            );
+
+            socket.send(
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [Math.round(e.clientY - 50), 0, 3, 494],
+                },
+              })
+            );
+
+            localStorage.setItem(
+              'horizontalSplitter',
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [0, Math.round(sizes[0]), 800, 3],
+                },
+              })
+            );
+          }}
         >
           <div>
             <div
@@ -73,8 +108,49 @@ const Splitter = ({ data }) => {
   }
 
   // Vertical Split
+
+  //Event Information
+
   return (
-    <SplitPane split='vertical' sizes={sizes} onChange={setSizes}>
+    <SplitPane
+      split='vertical'
+      sizes={sizes}
+      onChange={(value) => {
+        setSizes(value);
+      }}
+      onDragEnd={() => {
+        console.log(
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data.ID,
+              Info: [0, Math.round(sizes[0]), 800, 3],
+            },
+          })
+        );
+
+        socket.send(
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data.ID,
+              Info: [0, Math.round(sizes[0]), 800, 3],
+            },
+          })
+        );
+
+        localStorage.setItem(
+          'verticalSplitter',
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data.ID,
+              Info: [0, Math.round(sizes[0]), 800, 3],
+            },
+          })
+        );
+      }}
+    >
       {/* left Subform */}
       <Pane minSize={0} maxSize='100%'>
         <div style={{ ...layoutCSS, border: '1px solid #F0F0F0', background: 'white' }}>

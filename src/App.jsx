@@ -123,7 +123,9 @@ const App = () => {
         if (
           localStorage.getItem('lastEvent') ||
           localStorage.getItem('lastGrid') ||
-          localStorage.getItem('lastEdit')
+          localStorage.getItem('lastEdit') ||
+          localStorage.getItem('verticalSplitter') ||
+          localStorage.getItem('horizontalSplitter')
         ) {
           const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
 
@@ -217,6 +219,70 @@ const App = () => {
             );
           }
 
+          // Handle the SubForm
+          if (data?.Properties?.Type == 'SubForm') {
+            const ID = data?.ID;
+            let Splitter = null;
+
+            // Check that this ID belongs to the vertical scroll or horizontal Scroll
+            if (ID.includes('LEFT') || ID.includes('RIGHT'))
+              Splitter = localStorage.getItem('verticalSplitter');
+
+            if (ID.includes('TOP') || ID.includes('BOT'))
+              Splitter = localStorage.getItem('horizontalSplitter');
+
+            const { Event } = JSON.parse(Splitter);
+            const { Info } = Event;
+            console.log(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: { Size: [Info[2], Info[1]] },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+
+            webSocket.send(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: { Size: [Info[2], Info[1]] },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+          }
+
+          if (data?.Properties?.Type == 'Splitter') {
+            const Splitter =
+              data?.Properties.Style == 'Horz'
+                ? localStorage.getItem('horizontalSplitter')
+                : localStorage.getItem('verticalSplitter');
+            const { Event } = JSON.parse(Splitter);
+            const { Info } = Event;
+
+            console.log(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: { Posn: [Info[0], Info[1]] },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+
+            webSocket.send(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: { Posn: [Info[0], Info[1]] },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+          }
+
           setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);
           handleData(JSON.parse(event.data).WG);
         }
@@ -237,7 +303,6 @@ const App = () => {
                 break;
             }
 
-            console.log({ emitValue });
             const valueToEmit = jsondata.Properties.hasOwnProperty(key)
               ? jsondata.Properties[key]
               : emitValue;
