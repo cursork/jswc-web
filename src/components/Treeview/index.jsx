@@ -36,7 +36,7 @@ const Treeview = ({ data }) => {
       console.log(
         JSON.stringify({
           Event: {
-            EventName: ['Expanding'],
+            EventName: 'Expanding',
             ID: data?.ID,
             Info: Info + 1,
           },
@@ -48,7 +48,7 @@ const Treeview = ({ data }) => {
       socket.send(
         JSON.stringify({
           Event: {
-            EventName: ['Expanding'],
+            EventName: 'Expanding',
             ID: data?.ID,
             Info: Info + 1,
           },
@@ -63,7 +63,7 @@ const Treeview = ({ data }) => {
       console.log(
         JSON.stringify({
           Event: {
-            EventName: ['Retracting'],
+            EventName: 'Retracting',
             ID: data?.ID,
             Info: Info + 1,
           },
@@ -75,7 +75,7 @@ const Treeview = ({ data }) => {
       socket.send(
         JSON.stringify({
           Event: {
-            EventName: ['Retracting'],
+            EventName: 'Retracting',
             ID: data?.ID,
             Info: Info + 1,
           },

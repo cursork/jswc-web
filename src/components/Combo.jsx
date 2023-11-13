@@ -41,26 +41,31 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
                 })
           );
 
-          localStorage.setItem(
-            'lastEvent',
-            event == 'CellChanged'
-              ? JSON.stringify({
-                  Event: {
-                    EventName: event,
-                    ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row),
-                    Col: parseInt(column),
-                    Value: e.target.value,
-                  },
-                })
-              : JSON.stringify({
-                  Event: {
-                    EventName: data?.Properties?.Event[0],
-                    ID: data?.ID,
-                    Info: parseInt(index + 1),
-                  },
-                })
-          );
+          if (event == 'CellChanged') {
+            localStorage.setItem(
+              'lastGrid',
+              JSON.stringify({
+                Event: {
+                  EventName: event,
+                  ID: extractStringUntilSecondPeriod(data?.ID),
+                  Row: parseInt(row),
+                  Col: parseInt(column),
+                  Value: e.target.value,
+                },
+              })
+            );
+          } else {
+            localStorage.setItem(
+              'comboEvent',
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data?.ID,
+                  Info: parseInt(index + 1),
+                },
+              })
+            );
+          }
 
           socket.send(
             event == 'CellChanged'

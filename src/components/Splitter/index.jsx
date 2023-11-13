@@ -41,7 +41,12 @@ const Splitter = ({ data }) => {
   };
 
   // Horizontal Split
+  console.log({data})
+  console.log('Check Splitter', data?.Properties?.Style && data?.Properties?.Style == 'Horz');
+
   if (data?.Properties?.Style && data?.Properties?.Style == 'Horz') {
+    console.log('in Horizontal SPlitter', data);
+
     return (
       <div style={{ height: 800, background: 'white' }}>
         <SplitPane
@@ -52,38 +57,42 @@ const Splitter = ({ data }) => {
             setHorizontalSize(sizes);
           }}
           onDragEnd={(e) => {
-            const coordinates = JSON.parse(localStorage.getItem('coordinates'));
+            try {
+              const coordinates = JSON.parse(localStorage.getItem('coordinates'));
 
-            console.log(
-              JSON.stringify({
-                Event: {
-                  EventName: data?.Properties?.Event[0],
-                  ID: data.ID,
-                  Info: [Math.round(coordinates[0]), 0, 3, 494],
-                },
-              })
-            );
+              console.log(
+                JSON.stringify({
+                  Event: {
+                    EventName: data?.Properties?.Event[0],
+                    ID: data.ID,
+                    Info: [Math.round(coordinates[0]), 0, 3, 494],
+                  },
+                })
+              );
 
-            socket.send(
-              JSON.stringify({
-                Event: {
-                  EventName: data?.Properties?.Event[0],
-                  ID: data.ID,
-                  Info: [Math.round(coordinates[0]), 0, 3, 494],
-                },
-              })
-            );
+              socket.send(
+                JSON.stringify({
+                  Event: {
+                    EventName: data?.Properties?.Event[0],
+                    ID: data.ID,
+                    Info: [Math.round(coordinates[0]), 0, 3, 494],
+                  },
+                })
+              );
 
-            localStorage.setItem(
-              'horizontalSplitter',
-              JSON.stringify({
-                Event: {
-                  EventName: data?.Properties?.Event[0],
-                  ID: data.ID,
-                  Info: [Math.round(coordinates[0]), 0, 800, 3],
-                },
-              })
-            );
+              localStorage.setItem(
+                'horizontalSplitter',
+                JSON.stringify({
+                  Event: {
+                    EventName: data?.Properties?.Event[0],
+                    ID: data.ID,
+                    Info: [Math.round(coordinates[0]), 0, 800, 3],
+                  },
+                })
+              );
+            } catch (error) {
+              console.log({ error });
+            }
           }}
         >
           <div>

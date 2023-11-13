@@ -125,14 +125,15 @@ const App = () => {
           localStorage.getItem('lastGrid') ||
           localStorage.getItem('lastEdit') ||
           localStorage.getItem('verticalSplitter') ||
-          localStorage.getItem('horizontalSplitter')
+          localStorage.getItem('horizontalSplitter') ||
+          localStorage.getItem('comboEvent')
         ) {
           const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
 
           // Handle the Grid Event
           if (data?.Properties?.Type == 'Grid') {
             const { Event } = JSON.parse(localStorage.getItem('lastGrid'));
-            const { Row, Col } = Event;
+            const { Row, Col, Value } = Event;
 
             const {
               Properties: { Values },
@@ -182,7 +183,7 @@ const App = () => {
           //Handle the Combo Event
 
           if (data?.Properties?.Type == 'Combo') {
-            const { Event } = JSON.parse(localStorage.getItem('lastEvent'));
+            const { Event } = JSON.parse(localStorage.getItem('comboEvent'));
             const { Info } = Event;
             const {
               Properties: { SelItems },
@@ -225,10 +226,67 @@ const App = () => {
             let Splitter = null;
 
             // Check that this ID belongs to the vertical scroll or horizontal Scroll
-            if (ID.includes('LEFT')) Splitter = localStorage.getItem('verticalSplitter');
 
-            if (ID.includes('RIGHT')) {
+            // Vertical and Left
+            if (ID.includes('LEFT') && !ID.includes('TOP') && !ID.includes('BOT')) {
+              Splitter = localStorage.getItem('verticalSplitter');
+              const { Event } = JSON.parse(Splitter);
+              const { Info } = Event;
+              const serverObj = {};
+              serverEvent.Properties.map((key) => {
+                serverObj[key] = key == 'Size' ? [Info[2], Info[1]] : [Info[0], Info[1]];
+              });
+
+              console.log(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+              webSocket.send(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+            }
+
+            // Vertical and Right
+            if (ID.includes('RIGHT') && !ID.includes('TOP') && !ID.includes('BOT')) {
               const rightPane = JSON.parse(localStorage.getItem('verticalSplitter'));
+
+              // check that it is requesting the position of the RightSubForm without moving the Vertical Splitter
+              if (!rightPane) {
+                const serverObj = {};
+                serverEvent.Properties.map((key) => {
+                  serverObj[key] = key == 'Size' ? [800, 800 - 203] : [0, 200];
+                });
+                console.log(
+                  JSON.stringify({
+                    WG: {
+                      ID: serverEvent.ID,
+                      Properties: serverObj,
+                      WGID: serverEvent.WGID,
+                    },
+                  })
+                );
+
+                webSocket.send(
+                  JSON.stringify({
+                    WG: {
+                      ID: serverEvent.ID,
+                      Properties: serverObj,
+                      WGID: serverEvent.WGID,
+                    },
+                  })
+                );
+              }
 
               const { Event } = rightPane;
               const { Info, EventName, ID } = Event;
@@ -250,7 +308,7 @@ const App = () => {
                 })
               );
 
-              return webSocket.send(
+              webSocket.send(
                 JSON.stringify({
                   WG: {
                     ID: serverEvent.ID,
@@ -261,39 +319,92 @@ const App = () => {
               );
             }
 
-            if (ID.includes('TOP') || ID.includes('BOT'))
-              Splitter = localStorage.getItem('horizontalSplitter');
+            //Horizontal and Top
 
-            const { Event } = JSON.parse(Splitter);
-            const { Info } = Event;
+            if (ID.includes('TOP')) {
+              const topSubForm = JSON.parse(localStorage.getItem('horizontalSplitter'));
+              const rigthSubForm = JSON.parse(localStorage.getItem('verticalSplitter'));
+              const { Event } = topSubForm;
+              const { Info } = Event;
 
-            const serverObj = {};
+              let rightWidth = null;
 
-            serverEvent.Properties.map((key) => {
-              serverObj[key] = key == 'Size' ? [Info[2], Info[1]] : [Info[0], Info[1]];
-            });
+              const serverObj = {};
 
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverObj,
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
+              //Size [height,width]  POSN [top,left]
 
-            webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverObj,
-                  WGID: serverEvent.WGID,
-                },
-              })
-            );
+              if (rigthSubForm)
+                rightWidth = 800 - (rigthSubForm.Event.Info[1] + rigthSubForm.Event.Info[3]);
+              else rightWidth = 800 - 203;
+
+              serverEvent.Properties.map((key) => {
+                serverObj[key] = key == 'Size' ? [Info[0], rightWidth] : [Info[0], 0];
+              });
+
+              console.log(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+
+              webSocket.send(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+            }
+
+            // Horizontal and Bottom
+            if (ID.includes('BOT')) {
+              const topSubForm = JSON.parse(localStorage.getItem('horizontalSplitter'));
+              const rigthSubForm = JSON.parse(localStorage.getItem('verticalSplitter'));
+              const { Event } = topSubForm;
+              const { Info } = Event;
+
+              let rightWidth = null;
+
+              const serverObj = {};
+
+              if (rigthSubForm)
+                rightWidth = 800 - (rigthSubForm.Event.Info[1] + rigthSubForm.Event.Info[3]);
+
+              let bottomHeight = 800 - (Info[0] + 3);
+
+              serverEvent.Properties.map((key) => {
+                serverObj[key] = key == 'Size' ? [bottomHeight, rightWidth] : [Info[0] + 3, 0];
+              });
+
+              console.log(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+
+              webSocket.send(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    Properties: serverObj,
+                    WGID: serverEvent.WGID,
+                  },
+                })
+              );
+            }
           }
 
+          //Handle the Splitter
           if (data?.Properties?.Type == 'Splitter') {
             const Splitter =
               data?.Properties.Style == 'Horz'
@@ -323,8 +434,7 @@ const App = () => {
             );
           }
 
-          setSocketData((prevData) => [...prevData, JSON.parse(event.data).WG]);
-          handleData(JSON.parse(event.data).WG);
+          // handleData(JSON.parse(event.data).WG);
         }
 
         // Server emit from the server default Values
@@ -398,7 +508,7 @@ const App = () => {
 
   // console.log({ lastEvent });
 
-  // console.log('data', dataRef['F1.TableSize']);
+  console.log('Appdata', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
@@ -411,6 +521,7 @@ const App = () => {
           <option value='Initialise(DemoRibbon)'>Ribbon</option>
           <option value='Initialise(DemoTreeView'>Tree View</option>
           <option value='Initialise(DemoLines)'>Lines</option>
+          <option value='Initialise(DemoEdit)'>Edit</option>
         </select>
       </div>
 

@@ -30,7 +30,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
             );
 
             localStorage.setItem(
-              'lastEvent',
+              'lastGrid',
               JSON.stringify({
                 Event: {
                   EventName: event,
