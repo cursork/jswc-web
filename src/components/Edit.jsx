@@ -5,6 +5,9 @@ import { useAppData } from '../hooks';
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
+
+  const { FieldType } = data?.Properties;
+
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
   const isPassword = data?.Properties.hasOwnProperty('Password');
@@ -18,6 +21,10 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
     editValue = data?.Properties.Value;
   }
 
+  if (!hasTextProperty) {
+    styles = { ...styles, border: 'none' };
+  }
+
   const [inputValue, setInputValue] = useState(
     event == 'CellChanged'
       ? value
@@ -25,10 +32,6 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
       ? generateAsteriskString(data?.Properties?.Text?.length)
       : editValue
   );
-
-  if (!hasTextProperty) {
-    styles = { ...styles, border: 'none' };
-  }
 
   if (hasTextProperty) {
     styles = {
@@ -46,7 +49,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   };
 
   useEffect(() => {
-    if(isPassword) return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
+    if (isPassword) return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
     setInputValue(editValue);
   }, [editValue]);
 
@@ -87,7 +90,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         );
 
         localStorage.setItem(
-          event === 'CellChanged' ? 'lastGrid' : 'lastEdit',
+          event === 'CellChanged' ? extractStringUntilSecondPeriod(data?.ID) : data?.ID,
           event === 'CellChanged'
             ? JSON.stringify({
                 Event: {

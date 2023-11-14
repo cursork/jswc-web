@@ -30,7 +30,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
             );
 
             localStorage.setItem(
-              'lastGrid',
+              extractStringUntilSecondPeriod(data?.ID),
               JSON.stringify({
                 Event: {
                   EventName: event,

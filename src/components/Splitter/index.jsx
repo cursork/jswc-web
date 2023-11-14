@@ -4,13 +4,17 @@ import SelectComponent from '../SelectComponent';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
 import { useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 const Splitter = ({ data }) => {
   const { dataRef } = useAppData();
   const { socket } = useAppData();
   const verticalSplitter = useRef();
 
-  const { SplitObj1, SplitObj2 } = data?.Properties;
+  let formWidth = 800;
+  let formHeight = 800;
+
+  const { SplitObj1, SplitObj2, Style, Posn } = data?.Properties;
   const [sizes, setSizes] = useState([100, '30%', 'auto']);
   const [horizontalSize, setHorizontalSize] = useState([100, 200, 'auto']);
 
@@ -40,13 +44,116 @@ const Splitter = ({ data }) => {
     height: '100%',
   };
 
+  const initializeSplitterDimensions = () => {
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          EventName: data?.Properties?.Event[0],
+          ID: data.ID,
+          Info: Posn,
+        },
+      })
+    );
+
+    if (Style && Style == 'Horz') {
+      const localStorageKeys = Object.keys(localStorage);
+
+      localStorageKeys.forEach((key) => {
+        const IDs = key.split('.');
+
+        if (IDs.length == 2 && IDs.includes('RIGHT')) {
+          const rightPaneDimensions = JSON.parse(localStorage.getItem(key));
+          const { Size } = rightPaneDimensions;
+
+          localStorage.setItem(
+            SplitObj1,
+            JSON.stringify({ Size: [Posn[0], Size[1]], Posn: [Posn[0], 0] })
+          );
+          localStorage.setItem(
+            SplitObj2,
+            JSON.stringify({
+              Size: [formHeight - (Posn[0] + 3), Size[1]],
+              Posn: [Posn[0] + 3, 0],
+            })
+          );
+        }
+      });
+    } else {
+      localStorage.setItem(
+        SplitObj1,
+        JSON.stringify({ Size: [formHeight, Posn[1]], Posn: [0, Posn[1]] })
+      );
+      localStorage.setItem(
+        SplitObj2,
+        JSON.stringify({
+          Size: [formHeight, formWidth - (Posn[1] + 3)],
+          Posn: [0, Posn[1] + 3],
+        })
+      );
+    }
+  };
+
+  const calculateVerticalDimensions = (leftWidth) => {
+    const rightWidth = formWidth - (leftWidth + 3);
+    localStorage.setItem(
+      SplitObj1,
+      JSON.stringify({ Size: [formHeight, leftWidth], Posn: [0, leftWidth] })
+    );
+    localStorage.setItem(
+      SplitObj2,
+      JSON.stringify({ Size: [formHeight, rightWidth], Posn: [0, leftWidth + 3] })
+    );
+
+    // Updated the position of top and bottom
+
+    const localStorageKeys = Object.keys(localStorage);
+
+    localStorageKeys.forEach((key) => {
+      const IDs = key.split('.');
+
+      if (IDs.length == 3 && IDs.includes('TOP') && IDs.includes('RIGHT')) {
+        const topPreviousDimension = JSON.parse(localStorage.getItem(key));
+        const { Size, Posn } = topPreviousDimension;
+        localStorage.setItem(
+          key,
+          JSON.stringify({ Size: [Size[0], rightWidth], Posn: [Posn[0], 0] })
+        );
+      } else if (IDs.length == 3 && IDs.includes('BOT') && IDs.includes('RIGHT')) {
+        const bottomPreviousDimension = JSON.parse(localStorage.getItem(key));
+        const { Size, Posn } = bottomPreviousDimension;
+        localStorage.setItem(
+          key,
+          JSON.stringify({ Size: [Size[0], rightWidth], Posn: [Posn[0], 0] })
+        );
+      }
+    });
+  };
+
+  const calculateHorizontalDimensions = (topHeight) => {
+    const topDimensions = JSON.parse(localStorage.getItem(SplitObj1));
+    const bottomDimensions = JSON.parse(localStorage.getItem(SplitObj2));
+
+    localStorage.setItem(
+      SplitObj1,
+      JSON.stringify({ Size: [topHeight, topDimensions.Size[1]], Posn: [topHeight, 0] })
+    );
+    localStorage.setItem(
+      SplitObj2,
+      JSON.stringify({
+        Size: [formHeight - (topHeight + 3), bottomDimensions.Size[1]],
+        Posn: [topHeight + 3, 0],
+      })
+    );
+  };
+
+  useEffect(() => {
+    initializeSplitterDimensions();
+  }, []);
+
   // Horizontal Split
-  console.log({data})
-  console.log('Check Splitter', data?.Properties?.Style && data?.Properties?.Style == 'Horz');
 
-  if (data?.Properties?.Style && data?.Properties?.Style == 'Horz') {
-    console.log('in Horizontal SPlitter', data);
-
+  if (Style && Style == 'Horz') {
     return (
       <div style={{ height: 800, background: 'white' }}>
         <SplitPane
@@ -57,42 +164,39 @@ const Splitter = ({ data }) => {
             setHorizontalSize(sizes);
           }}
           onDragEnd={(e) => {
-            try {
-              const coordinates = JSON.parse(localStorage.getItem('coordinates'));
+            const coordinates = JSON.parse(localStorage.getItem('coordinates'));
 
-              console.log(
-                JSON.stringify({
-                  Event: {
-                    EventName: data?.Properties?.Event[0],
-                    ID: data.ID,
-                    Info: [Math.round(coordinates[0]), 0, 3, 494],
-                  },
-                })
-              );
+            calculateHorizontalDimensions(Math.round(coordinates[0]));
+            console.log(
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [Math.round(coordinates[0]), 0, 3, 494],
+                },
+              })
+            );
 
-              socket.send(
-                JSON.stringify({
-                  Event: {
-                    EventName: data?.Properties?.Event[0],
-                    ID: data.ID,
-                    Info: [Math.round(coordinates[0]), 0, 3, 494],
-                  },
-                })
-              );
+            socket.send(
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [Math.round(coordinates[0]), 0, 3, 494],
+                },
+              })
+            );
 
-              localStorage.setItem(
-                'horizontalSplitter',
-                JSON.stringify({
-                  Event: {
-                    EventName: data?.Properties?.Event[0],
-                    ID: data.ID,
-                    Info: [Math.round(coordinates[0]), 0, 800, 3],
-                  },
-                })
-              );
-            } catch (error) {
-              console.log({ error });
-            }
+            localStorage.setItem(
+              data?.ID,
+              JSON.stringify({
+                Event: {
+                  EventName: data?.Properties?.Event[0],
+                  ID: data.ID,
+                  Info: [Math.round(coordinates[0]), 0],
+                },
+              })
+            );
           }}
         >
           <div>
@@ -138,7 +242,7 @@ const Splitter = ({ data }) => {
       }}
       onDragEnd={(e) => {
         const coordinates = JSON.parse(localStorage.getItem('coordinates'));
-
+        calculateVerticalDimensions(Math.round(coordinates[0]));
         console.log(
           JSON.stringify({
             Event: {
@@ -160,12 +264,12 @@ const Splitter = ({ data }) => {
         );
 
         localStorage.setItem(
-          'verticalSplitter',
+          data.ID,
           JSON.stringify({
             Event: {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
-              Info: [0, Math.round(coordinates[0]), 800, 3],
+              Info: [0, Math.round(coordinates[0])],
             },
           })
         );

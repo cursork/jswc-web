@@ -43,7 +43,7 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
 
           if (event == 'CellChanged') {
             localStorage.setItem(
-              'lastGrid',
+              extractStringUntilSecondPeriod(data?.ID),
               JSON.stringify({
                 Event: {
                   EventName: event,
@@ -56,7 +56,7 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
             );
           } else {
             localStorage.setItem(
-              'comboEvent',
+              data?.ID,
               JSON.stringify({
                 Event: {
                   EventName: data?.Properties?.Event[0],

@@ -74,7 +74,7 @@ const ScrollBar = ({ data }) => {
         );
 
         localStorage.setItem(
-          'lastEvent',
+          data.ID,
           JSON.stringify({
             Event: {
               EventName: data?.Properties?.Event[0],
@@ -130,7 +130,7 @@ const ScrollBar = ({ data }) => {
         );
 
         localStorage.setItem(
-          'lastEvent',
+          data.ID,
           JSON.stringify({
             Event: {
               EventName: data?.Properties?.Event[0],
@@ -224,7 +224,7 @@ const ScrollBar = ({ data }) => {
       );
 
       localStorage.setItem(
-        'lastEvent',
+        data.ID,
         JSON.stringify({
           Event: {
             EventName: data?.Properties?.Event[0],
@@ -269,7 +269,6 @@ const ScrollBar = ({ data }) => {
     if (newScaledValue >= 1) {
       setScaledValue(newScaledValue);
       console.log(
-        'Event',
         JSON.stringify({
           Event: {
             EventName: data?.Properties?.Event[0],
@@ -280,7 +279,7 @@ const ScrollBar = ({ data }) => {
       );
 
       localStorage.setItem(
-        'lastEvent',
+        data.ID,
         JSON.stringify({
           Event: {
             EventName: data?.Properties?.Event[0],
