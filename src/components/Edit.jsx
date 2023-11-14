@@ -6,6 +6,8 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
 
+  let inputType = 'text';
+
   const { FieldType } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
@@ -23,6 +25,14 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
 
   if (!hasTextProperty) {
     styles = { ...styles, border: 'none' };
+  }
+
+  if (FieldType == 'Numeric') {
+    inputType = 'number';
+  }
+
+  if (FieldType == 'Date') {
+    inputType = 'date';
   }
 
   const [inputValue, setInputValue] = useState(
@@ -59,7 +69,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
       ref={inputRef}
       value={inputValue}
       onClick={handleInputClick}
-      type={data?.Properties?.FieldType == 'Numeric' ? 'number' : 'text'}
+      type={inputType}
       onChange={(e) => {
         setInputValue(e.target.value);
 

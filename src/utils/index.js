@@ -156,8 +156,6 @@ export const findParentIndex = (depthArray, parentNumber) => {
   return parentIndex;
 };
 
-
-
 export const rgbColor = (rgbArray) => {
   if (rgbArray.length !== 3) {
     throw new Error('RGB array must have exactly 3 values.');
@@ -165,4 +163,14 @@ export const rgbColor = (rgbArray) => {
 
   const [r, g, b] = rgbArray;
   return `rgb(${r}, ${g}, ${b})`;
+};
+
+export const calculateDateAfterDays = (days) => {
+  // Start date: 1900-1-1
+  var startDate = new Date(1900, 0, 1);
+
+  // Calculate the target date
+  var targetDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+  return targetDate;
 };
