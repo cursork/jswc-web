@@ -19,8 +19,8 @@ const Poly = ({ data }) => {
   }, [Points, FStyle, FillCol, FCol, LWidth]);
 
   return (
-    <div>
-      <svg height='70px'>
+    <div style={{ position: 'absolute' }}>
+      <svg height='60px'>
         {Points.map((polygonPoints, index) => {
           const flatArray = polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);
 
