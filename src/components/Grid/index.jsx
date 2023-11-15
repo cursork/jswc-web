@@ -151,6 +151,7 @@ const Grid = ({ data }) => {
             ) : null}
             {tableValues.map((value, column) => {
               const type = findDesiredData(Input && Input[column]);
+
               return (
                 <Cell
                   justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}

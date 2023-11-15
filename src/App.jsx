@@ -434,7 +434,7 @@ const App = () => {
 
         if (Type == 'SubForm') {
           const serverPropertiesObj = {};
-          const SubForm = JSON.parse(localStorage.getItem(serverEvent.ID))
+          const SubForm = JSON.parse(localStorage.getItem(serverEvent.ID));
           serverEvent.Properties.map((key) => {
             return (serverPropertiesObj[key] = SubForm[key]);
           });
@@ -467,9 +467,12 @@ const App = () => {
 
   useEffect(() => {
     dataRef.current = {};
+    setSocketData([]);
     localStorage.clear();
     fetchData();
   }, [layout]);
+
+  // console.log('AppData', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>

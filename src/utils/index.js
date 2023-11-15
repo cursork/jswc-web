@@ -172,5 +172,31 @@ export const calculateDateAfterDays = (days) => {
   // Calculate the target date
   var targetDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
 
-  return targetDate;
+  // Format the date as YYYY-MM-DD
+  var formattedDate = targetDate.toISOString().split('T')[0];
+
+  return formattedDate;
+};
+
+export const calculateDaysFromDate = (inputDate) => {
+  // Parse the input date string in the "YYYY-MM-DD" format
+  const [year, month, day] = inputDate.split('-');
+  const inputDateObj = new Date(year, month - 1, day); // month is 0-based in JavaScript Dates
+
+  // Start date: 1900-1-1 at midnight
+  const startDate = new Date(1900, 0, 1, 0, 0, 0, 0);
+
+  // Calculate the difference in milliseconds
+  const timeDifference = inputDateObj.getTime() - startDate.getTime();
+
+  // Calculate the number of days
+  const daysDifference = timeDifference / (24 * 60 * 60 * 1000);
+
+  return Math.round(daysDifference);
+};
+
+export const replaceDanishToNumber = (number) => {
+  const cleanedNumberString = number.replace(/\./g, '').replace(',', '.');
+  const originalNumber = parseFloat(cleanedNumberString);
+  return originalNumber;
 };

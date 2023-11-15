@@ -6,16 +6,16 @@ const Rectangle = ({ data }) => {
   return (
     <div>
       {Points.map((rectanglePoints, index) => {
-        let top = index * 35;
-        let left = index * 25;
+        let top = index * 40;
+        let left = index * 16;
         return (
-          <div style={{ position: 'absolute', top, left }}>
+          <div style={{ position: 'absolute', left, top }}>
             <svg height='200px' width='200px'>
               <rect
                 rx={Radius[index * 0]}
                 ry={Radius[index * 0]}
-                x={rectanglePoints[0]}
-                y={rectanglePoints[1]}
+                x={rectanglePoints[1]}
+                y={rectanglePoints[0]}
                 width='50'
                 height='30'
                 fill='none'
