@@ -7,14 +7,14 @@ const Rectangle = ({ data }) => {
     <div>
       {Points.map((rectanglePoints, index) => {
         let top = index * 40;
-        let left = index * 16;
+        let left = index * 38;
         return (
           <div style={{ position: 'absolute', left, top }}>
             <svg height='200px' width='200px'>
               <rect
                 rx={Radius[index * 0]}
                 ry={Radius[index * 0]}
-                x={rectanglePoints[1]}
+                x={rectanglePoints[1]-40}
                 y={rectanglePoints[0]}
                 width='50'
                 height='30'
