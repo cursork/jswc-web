@@ -100,9 +100,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
     };
   }
 
-  const handleKeyDown = (event) => {
-    // Check if Alt, Ctrl, or Shift keys are pressed
-  };
+
 
   return (
     <input
@@ -133,7 +131,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         if (FieldType == 'LongNumeric') {
           value = replaceDanishToNumber(e.target.value);
 
-          setInputValue(e.target.value);
+          setInputValue(e.target.value.toLocaleString('da-DK'));
           setEmitValue(value);
         }
 
@@ -194,6 +192,12 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         // );
       }}
       onBlur={() => {
+
+        if (FieldType == 'LongNumeric') {
+          setInputValue(emitValue.toLocaleString('da-DK'));
+        }
+
+
         console.log(
           event == 'CellChanged'
             ? JSON.stringify({
