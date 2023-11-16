@@ -14,6 +14,8 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
   const [inputType, setInputType] = useState('text');
+  const [inputValue, setInputValue] = useState('');
+  const [emitValue, setEmitValue] = useState('');
 
   const { FieldType, MaxLength, FCol, Decimal } = data?.Properties;
 
@@ -31,8 +33,6 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   //     ? generateAsteriskString(data?.Properties?.Text?.length)
   //     : editValue
   // );
-
-  const [inputValue, setInputValue] = useState('');
 
   const decideInputValue = () => {
     if (event == 'CellChanged') {
@@ -102,25 +102,6 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
 
   const handleKeyDown = (event) => {
     // Check if Alt, Ctrl, or Shift keys are pressed
-    const isAltPressed = event.altKey;
-    const isCtrlPressed = event.ctrlKey;
-    const isShiftPressed = event.shiftKey;
-
-    // Log the results
-    console.log(
-      'Alt:',
-      isAltPressed,
-      'Ctrl:',
-      isCtrlPressed,
-      'Shift:',
-      isShiftPressed,
-      'value',
-      event.target.value,
-      'characterkey',
-      event.charCode,
-      'keyCode',
-      event.keyCode
-    );
   };
 
   return (
@@ -136,15 +117,83 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
           if (!Decimal) {
             value = parseInt(e.target.value);
             setInputValue(e.target.value);
+            setEmitValue(value);
           }
 
           let number = parseInt(e.target.value);
           value = number.toFixed(Decimal);
+          setEmitValue(value);
           setInputValue(value);
         }
-        if (FieldType == 'Date') value = calculateDaysFromDate(e.target.value) + 1;
-        if (FieldType == 'LongNumeric') value = replaceDanishToNumber(e.target.value);
+        if (FieldType == 'Date') {
+          value = calculateDaysFromDate(e.target.value) + 1;
+          setInputValue(e.target.value);
+          setEmitValue(value);
+        }
+        if (FieldType == 'LongNumeric') {
+          value = replaceDanishToNumber(e.target.value);
+          console.log('longNumeric', e.target.value);
+          setInputValue(e.target.value);
+          setEmitValue(value);
+        }
 
+        if (!FieldType) {
+          setEmitValue(e.target.value);
+          setInputValue(e.target.value);
+        }
+
+        // console.log(
+        //   JSON.stringify({
+        //     Event: {
+        //       EventName: 'KeyPress',
+        //       ID: data?.ID,
+        //       Info: [e.target.value.toString(), e.charCode, e.keyCode, e.shiftKey],
+        //     },
+        //   })
+        // );
+
+        // localStorage.setItem(
+        //   event === 'CellChanged' ? extractStringUntilSecondPeriod(data?.ID) : data?.ID,
+        //   event === 'CellChanged'
+        //     ? JSON.stringify({
+        //         Event: {
+        //           EventName: event,
+        //           ID: extractStringUntilSecondPeriod(data?.ID),
+        //           Row: parseInt(row),
+        //           Col: parseInt(column),
+        //           Value: value,
+        //         },
+        //       })
+        //     : JSON.stringify({
+        //         Event: {
+        //           EventName: data?.Properties?.Event[0],
+        //           ID: data?.ID,
+        //           Info: value,
+        //         },
+        //       })
+        // );
+
+        // socket.send(
+        //   event == 'CellChanged'
+        //     ? JSON.stringify({
+        //         Event: {
+        //           EventName: event,
+        //           ID: extractStringUntilSecondPeriod(data?.ID),
+        //           Row: parseInt(row),
+        //           Col: parseInt(column),
+        //           Value: value,
+        //         },
+        //       })
+        //     : JSON.stringify({
+        //         Event: {
+        //           EventName: data?.Properties?.Event[1],
+        //           ID: data?.ID,
+        //           Info: value,
+        //         },
+        //       })
+        // );
+      }}
+      onBlur={() => {
         console.log(
           event == 'CellChanged'
             ? JSON.stringify({
@@ -153,18 +202,17 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                   ID: extractStringUntilSecondPeriod(data?.ID),
                   Row: parseInt(row),
                   Col: parseInt(column),
-                  Value: value,
+                  Value: emitValue,
                 },
               })
             : JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[0],
+                  EventName: 'Change',
                   ID: data?.ID,
-                  Info: value,
+                  Info: emitValue,
                 },
               })
         );
-
         localStorage.setItem(
           event === 'CellChanged' ? extractStringUntilSecondPeriod(data?.ID) : data?.ID,
           event === 'CellChanged'
@@ -174,14 +222,14 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                   ID: extractStringUntilSecondPeriod(data?.ID),
                   Row: parseInt(row),
                   Col: parseInt(column),
-                  Value: value,
+                  Value: emitValue,
                 },
               })
             : JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[0],
+                  EventName: 'Change',
                   ID: data?.ID,
-                  Info: value,
+                  Info: emitValue,
                 },
               })
         );
@@ -194,19 +242,48 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
                   ID: extractStringUntilSecondPeriod(data?.ID),
                   Row: parseInt(row),
                   Col: parseInt(column),
-                  Value: value,
+                  Value: emitValue,
                 },
               })
             : JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[1],
+                  EventName: 'Change',
                   ID: data?.ID,
-                  Info: value,
+                  Info: emitValue,
                 },
               })
         );
       }}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => {
+        setTimeout(() => {
+          const isAltPressed = e.altKey ? 4 : 0;
+          const isCtrlPressed = e.ctrlKey ? 2 : 0;
+          const isShiftPressed = e.shiftKey ? 1 : 0;
+          const charCode = e.key.charCodeAt(0);
+
+          const value = e.target.value;
+          let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+          console.log(
+            JSON.stringify({
+              Event: {
+                EventName: 'KeyPress',
+                ID: data?.ID,
+                Info: [value.toString(), charCode, e.keyCode, shiftState],
+              },
+            })
+          );
+
+          socket.send(
+            JSON.stringify({
+              Event: {
+                EventName: 'KeyPress',
+                ID: data?.ID,
+                Info: [value.toString(), charCode, e.keyCode, shiftState],
+              },
+            })
+          );
+        }, 0);
+      }}
       style={{ ...styles, borderRadius: '2px', fontSize: '12px' }}
       maxLength={MaxLength}
     />
