@@ -122,7 +122,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
 
           let number = parseInt(e.target.value);
           value = number.toFixed(Decimal);
-          setEmitValue(value);
+          setEmitValue(parseInt(value));
           setInputValue(value);
         }
         if (FieldType == 'Date') {
@@ -132,7 +132,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         }
         if (FieldType == 'LongNumeric') {
           value = replaceDanishToNumber(e.target.value);
-          console.log('longNumeric', e.target.value);
+
           setInputValue(e.target.value);
           setEmitValue(value);
         }

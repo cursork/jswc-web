@@ -14,12 +14,13 @@ const Rectangle = ({ data }) => {
               <rect
                 rx={Radius[index * 0]}
                 ry={Radius[index * 0]}
-                x={rectanglePoints[1]-40}
+                x={rectanglePoints[1] - 40}
                 y={rectanglePoints[0]}
                 width='50'
                 height='30'
                 fill='none'
                 stroke={rgbColor(FCol[index])}
+                strokeWidth={'1px'}
               />
             </svg>
           </div>
