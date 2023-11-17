@@ -321,6 +321,30 @@ const App = () => {
               })
             );
           }
+
+          const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
+          console.log(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  SelItems: Event['SelItems'],
+                },
+                WGID: serverEvent.WGID,
+              },
+            })
+          );
+          return webSocket.send(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  SelItems: Event['SelItems'],
+                },
+                WGID: serverEvent.WGID,
+              },
+            })
+          );
         }
 
         if (Type == 'Scroll') {
