@@ -186,9 +186,16 @@ const App = () => {
           if (!localStorage.getItem(serverEvent.ID)) {
             const editValue = Text ? Text : Value;
 
+            const isNumber = refData?.Properties?.hasOwnProperty('FieldType');
+
             const serverPropertiesObj = {};
             serverEvent.Properties.map((key) => {
-              return (serverPropertiesObj[key] = editValue);
+              return (serverPropertiesObj[key] =
+                key == 'Text'
+                  ? JSON.stringify(editValue)
+                  : isNumber
+                  ? parseInt(editValue)
+                  : editValue);
             });
 
             console.log(
@@ -215,12 +222,7 @@ const App = () => {
           const { Info } = Event;
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] =
-              key == 'Value'
-                ? Info
-                : data.Properties.FieldType == 'Numeric'
-                ? parseInt(Info, 10)
-                : Info.toString());
+            return (serverPropertiesObj[key] = key == 'Value' ? Info : Info.toString());
           });
 
           console.log(
