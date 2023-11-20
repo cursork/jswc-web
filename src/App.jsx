@@ -510,10 +510,15 @@ const App = () => {
           <option value='Initialise(DemoTreeView'>Tree View</option>
           <option value='Initialise(DemoLines)'>Lines</option>
           <option value='Initialise(DemoEdit)'>Edit</option>
+          <option value='Initialise(DemoPictures)'>Pictures</option>
         </select>
       </div>
 
-      <SelectComponent data={dataRef.current['F1']} />
+      {layout == 'Initialise(DemoPictures)' ? (
+        <SelectComponent data={dataRef.current['F']} />
+      ) : (
+        <SelectComponent data={dataRef.current['F1']} />
+      )}
     </AppDataContext.Provider>
   );
 };

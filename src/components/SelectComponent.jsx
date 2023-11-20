@@ -22,6 +22,7 @@ import CustomRibbonButton from './Ribbon/RibbonButton';
 import CustomRibbonButtonGroup from './Ribbon/RibbonButtonGroup';
 import Poly from './Polygon';
 import Rectangle from './Rectangle';
+import ImageSubForm from './ImgSubForm';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -31,7 +32,7 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
         style={{
           translate: '0% -100%',
           position: 'relative',
-          zIndex:'1'
+          zIndex: '1',
         }}
       >
         <MenuBar data={data} />
@@ -58,6 +59,10 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
   if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
     return <SubForm data={data} />;
+  // Image Subform
+  if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('Picture'))
+    return <ImageSubForm data={data} />;
+
   if (data?.Properties?.Type == 'List') return <List data={data} />;
   if (data?.Properties?.Type == 'Splitter') return <Splitter data={data} />;
   if (data?.Properties?.Type == 'Group') return <Group data={data} />;

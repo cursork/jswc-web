@@ -3,11 +3,14 @@ import { useAppData } from '../hooks';
 
 const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
   const styles = setStyle(data?.Properties);
-  const { socket } = useAppData();
+  const { socket, findDesiredData } = useAppData();
+  const { Picture } = data?.Properties;
 
   const hasCaption = data.Properties.hasOwnProperty('Caption');
 
   const isCheckBox = data?.Properties?.Style && data?.Properties?.Style == 'Check';
+
+  const ImageData = findDesiredData(Picture && Picture);
 
   if (isCheckBox) {
     return (
@@ -95,6 +98,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         cursor: 'pointer',
       }}
     >
+      {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null}
       {hasCaption ? data?.Properties?.Caption : null}
     </div>
   );
