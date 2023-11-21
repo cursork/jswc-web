@@ -1,17 +1,34 @@
 import { setStyle, extractStringUntilSecondPeriod } from '../utils';
 
 import { useAppData } from '../hooks';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   const { socket } = useAppData();
   const styles = setStyle(data?.Properties);
-  const { Items } = data?.Properties;
+  const { Items, Text, SelItems } = data?.Properties;
+
+  let hasTextProperty = data?.Properties.hasOwnProperty('Text');
+
+  const [comboInput, setComboInput] = useState('');
+
+  useEffect(() => {
+    if (data?.Properties.hasOwnProperty('Text')) {
+      setComboInput(data?.Properties?.Text);
+    } else {
+      const index = SelItems?.findIndex((element) => element == 1);
+      setComboInput(Items[index]);
+    }
+  }, [data]);
+
+  console.log({ comboInput });
 
   return (
     <div style={{ ...styles, borderColor: '#ccc' }}>
       <select
         id={data?.ID}
-        defaultValue={value ? value : data?.Properties?.Text}
+        defaultValue={value ? value : comboInput}
         style={{
           width: '100%',
           border: 0,

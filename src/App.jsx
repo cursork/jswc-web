@@ -112,6 +112,30 @@ const App = () => {
           }
         }
 
+        if (data?.Properties?.Type == 'Combo') {
+          if (serverEvent?.Properties.hasOwnProperty('Text')) {
+            value = serverEvent?.Properties.Text;
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            return handleData({
+              ID: serverEvent.ID,
+              Properties: {
+                ...data?.Properties,
+                Text: value,
+              },
+            });
+          } else if (data?.Properties.hasOwnProperty('SelItems')) {
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            value = serverEvent?.Properties.SelItems;
+            return handleData({
+              ID: serverEvent.ID,
+              Properties: {
+                ...data?.Properties,
+                SelItems: value,
+              },
+            });
+          }
+        }
+
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
         handleData(JSON.parse(event.data).WS);
       } else if (event.data.includes('WG')) {
