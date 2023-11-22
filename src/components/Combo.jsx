@@ -9,20 +9,16 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   const styles = setStyle(data?.Properties);
   const { Items, Text, SelItems } = data?.Properties;
 
-  let hasTextProperty = data?.Properties.hasOwnProperty('Text');
-
-  const [comboInput, setComboInput] = useState('');
+  const [comboInput, setComboInput] = useState(data?.Properties?.Text || null);
 
   useEffect(() => {
-    if (data?.Properties.hasOwnProperty('Text')) {
-      setComboInput(data?.Properties?.Text);
-    } else {
+    if (!data?.Properties.hasOwnProperty('Text')) {
       const index = SelItems?.findIndex((element) => element == 1);
       setComboInput(Items[index]);
     }
   }, [data]);
 
-  console.log({ comboInput });
+  console.log({ result: comboInput === 'x' });
 
   return (
     <div style={{ ...styles, borderColor: '#ccc' }}>

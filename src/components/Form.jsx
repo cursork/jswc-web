@@ -6,13 +6,15 @@ const Form = ({ data }) => {
   const { findDesiredData } = useAppData();
   const styles = setStyle(data?.Properties, 'relative');
 
-  const { BCol, Picture } = data?.Properties;
+  const { BCol, Picture, Size } = data?.Properties;
 
   const decideImageStyle = Picture && Picture[1];
 
   const updatedData = excludeKeys(data);
 
   const ImageData = findDesiredData(Picture && Picture[0]);
+
+  localStorage.setItem('formDimension', JSON.stringify(Size));
 
   let imageStyles = null;
 

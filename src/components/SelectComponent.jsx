@@ -23,6 +23,8 @@ import CustomRibbonButtonGroup from './Ribbon/RibbonButtonGroup';
 import Poly from './Polygon';
 import Rectangle from './Rectangle';
 import ImageSubForm from './ImgSubForm';
+import ShapeSubForm from './ShapeSubForm';
+import { excludeKeys } from '../utils';
 
 const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
@@ -32,7 +34,7 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
         style={{
           translate: '0% -100%',
           position: 'relative',
-          zIndex: '1',
+          zIndex: '2',
         }}
       >
         <MenuBar data={data} />
@@ -80,6 +82,7 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
 
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
+  if (data?.Properties?.Type == 'SubForm') return <ShapeSubForm data={data} />;
 };
 
 export default SelectComponent;

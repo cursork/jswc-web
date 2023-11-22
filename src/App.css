@@ -11,7 +11,16 @@ input[type='number'] {
   text-align: right;
 }
 
-input:focus {
+input[type='number']:focus {
+  outline: none;
+  border-bottom: 2px solid blue !important;
+}
+
+input[type='date']:focus {
+  outline: none;
+}
+
+input[type='text']:focus {
   outline: none;
   border-bottom: 2px solid blue !important;
   /* outline-color: blue; */
@@ -28,6 +37,6 @@ select:focus-visible {
 .split-sash-content.split-sash-content-vscode.split-sash-content-active {
   background-color: #f0f0f0;
 }
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
 }

@@ -1,31 +1,38 @@
 import { rgbColor } from '../../utils';
+import Canvas from '../Canvas';
 
-const Rectangle = ({ data }) => {
+const Rectangle = ({
+  data,
+  parentSize = JSON.parse(localStorage.getItem('formDimension')),
+  posn = [0, 0],
+}) => {
   const { Points, Size, FCol, Radius } = data?.Properties;
 
+  const pointsArray = Points[0].map((y, i) => [Points[1][i], y]);
+  const sizeArray = Size[0].map((y, i) => [Size[1][i], y]);
+
+  console.log({ pointsArray });
+  console.log({ sizeArray });
+
   return (
-    <div>
-      {Points.map((rectanglePoints, index) => {
-        let top = index * 40;
-        let left = index * 38;
-        return (
-          <div style={{ position: 'absolute', left, top }}>
-            <svg height='200px' width='200px'>
-              <rect
-                rx={Radius[index * 0]}
-                ry={Radius[index * 0]}
-                x={rectanglePoints[1] - 40}
-                y={rectanglePoints[0]}
-                width='50'
-                height='30'
-                fill='none'
-                stroke={rgbColor(FCol[index])}
-                strokeWidth={'1px'}
-              />
-            </svg>
-          </div>
-        );
-      })}
+    <div style={{ position: 'absolute', top: posn[0], left: posn[1] }}>
+      <svg height={parentSize[0]} width={parentSize[1]}>
+        {pointsArray.map((rectanglePoints, index) => {
+          return (
+            <rect
+              rx={Radius[index * 0]}
+              ry={Radius[index * 0]}
+              x={rectanglePoints[0]}
+              y={rectanglePoints[1]}
+              width={sizeArray[index][0]}
+              height={sizeArray[index][1]}
+              fill='none'
+              stroke={rgbColor(FCol[index])}
+              strokeWidth={'1px'}
+            />
+          );
+        })}
+      </svg>
     </div>
   );
 };

@@ -100,8 +100,6 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
     };
   }
 
-
-
   return (
     <input
       id={data.ID}
@@ -192,11 +190,9 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         // );
       }}
       onBlur={() => {
-
         if (FieldType == 'LongNumeric') {
           setInputValue(emitValue.toLocaleString('da-DK'));
         }
-
 
         console.log(
           event == 'CellChanged'
@@ -288,7 +284,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
           );
         }, 0);
       }}
-      style={{ ...styles, borderRadius: '2px', fontSize: '12px' }}
+      style={{ ...styles, borderRadius: '2px', fontSize: '12px', zIndex: 1 }}
       maxLength={MaxLength}
     />
   );
