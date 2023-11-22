@@ -75,13 +75,16 @@ const App = () => {
     webSocket.onmessage = (event) => {
       // Window Creation WC
 
-      if (event.data.includes('WC')) {
+      const keys = Object.keys(JSON.parse(event.data));
+
+      if (keys[0] == 'WC') {
         // console.log('event from server WC', JSON.parse(event.data).WC);
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
         handleData(JSON.parse(event.data).WC);
-      } else if (event.data.includes('WS')) {
+      } else if (keys[0] == 'WS') {
         const serverEvent = JSON.parse(event.data).WS;
+
         let value = null;
         // @Todo Check that the Edit is Already Present or not if it is Present just change the value we are getting from the server
         const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
@@ -138,9 +141,10 @@ const App = () => {
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
         handleData(JSON.parse(event.data).WS);
-      } else if (event.data.includes('WG')) {
+      } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
-        const refData = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
+
+        const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
         const Type = refData?.Properties?.Type;
 
         // Get Data from the Ref
@@ -483,6 +487,31 @@ const App = () => {
         }
 
         if (Type == 'SubForm') {
+          if (!localStorage.getItem(serverEvent.ID)) {
+            const serverPropertiesObj = {};
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] = Properties[key]);
+            });
+
+            console.log(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: serverPropertiesObj,
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+            return webSocket.send(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: serverPropertiesObj,
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+          }
           const serverPropertiesObj = {};
           const SubForm = JSON.parse(localStorage.getItem(serverEvent.ID));
           serverEvent.Properties.map((key) => {
@@ -507,7 +536,7 @@ const App = () => {
             })
           );
         }
-      } else if (event.data.includes('NQ')) {
+      } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
         element.focus();

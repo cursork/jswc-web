@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { excludeKeys } from '../../utils';
 import Rectangle from '../Rectangle';
 import SelectComponent from '../SelectComponent';
