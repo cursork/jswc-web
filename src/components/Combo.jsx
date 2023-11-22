@@ -18,8 +18,6 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
     }
   }, [data]);
 
-  console.log({ result: comboInput === 'x' });
-
   return (
     <div style={{ ...styles, borderColor: '#ccc' }}>
       <select

@@ -11,9 +11,6 @@ const Rectangle = ({
   const pointsArray = Points[0].map((y, i) => [Points[1][i], y]);
   const sizeArray = Size[0].map((y, i) => [Size[1][i], y]);
 
-  console.log({ pointsArray });
-  console.log({ sizeArray });
-
   return (
     <div style={{ position: 'absolute', top: posn[0], left: posn[1] }}>
       <svg height={parentSize[0]} width={parentSize[1]}>

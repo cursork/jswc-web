@@ -5,8 +5,6 @@ import SelectComponent from '../SelectComponent';
 const ShapeSubForm = ({ data }) => {
   const { Posn, Size } = data?.Properties;
 
-  console.log({ Posn });
-
   const updatedData = excludeKeys(data);
   return (
     <div style={{ background: 'white' }}>
