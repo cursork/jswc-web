@@ -11,11 +11,29 @@ const CustomRibbonGroup = ({ data }) => {
   const size = Size || 1;
 
   return (
-    <RibbonGroup title={Title} colClass={`col-${size}`}>
-      {Object.keys(updatedData).map((key) => {
-        return <SelectComponent data={updatedData[key]} />;
-      })}
-    </RibbonGroup>
+    <div className={`col-${size}`}>
+      <div
+        style={{ border: '1px solid red', position: 'relative', height: '100%' }}
+        className='row'
+      >
+        {Object.keys(updatedData).map((key) => {
+          return <SelectComponent data={updatedData[key]} />;
+        })}
+
+        <div
+          style={{
+            backgroundColor: 'rgb(204, 204, 204)',
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+          }}
+        >
+          <p style={{ margin: 0, fontSize: '12px', fontWeight: 'bolder' }} className='text-center'>
+            {Title}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

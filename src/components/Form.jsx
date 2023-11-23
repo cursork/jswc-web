@@ -30,6 +30,7 @@ const Form = ({ data }) => {
     <div
       style={{
         ...styles,
+        // width: '1000px',
         background: BCol ? rgbColor(BCol) : '#F0F0F0',
         position: 'relative',
         border: '1px solid #F0F0F0',

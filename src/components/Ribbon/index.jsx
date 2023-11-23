@@ -11,11 +11,11 @@ const CustomRibbon = ({ data }) => {
   const updatedData = excludeKeys(data);
 
   return (
-    <Ribbon>
+    <div className='row' style={{ height: '8rem'}}>
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}
-    </Ribbon>
+    </div>
   );
 };
 

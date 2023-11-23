@@ -5,23 +5,13 @@ const CustomRibbonButton = ({ data }) => {
   const { Icon, Caption } = data?.Properties;
 
   const IconComponent = Icons[Icon];
-
   return (
-    <RibbonButton>
-      <IconComponent size={20} />
-      <div
-        style={{
-          display: 'flex',
-          textWrap: 'balance',
-          fontSize: '8px',
-          textAlign: 'center',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {Caption}
+    <div className='d-flex align-items-center justify-content-center'>
+      <div className='d-flex align-items-center flex-column justify-content-center'>
+        <IconComponent size={30} />
+        <div style={{ fontSize: '11px', fontWeight: 'bolder',textAlign:"center" }}>{Caption}</div>
       </div>
-    </RibbonButton>
+    </div>
   );
 };
 

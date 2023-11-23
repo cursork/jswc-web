@@ -3,6 +3,7 @@ import * as AppIcons from './RibbonIcons';
 const CustomRibbonButtonGroup = ({ data }) => {
   const { Captions, Icons } = data?.Properties;
 
+  return null;
   return (
     <div
       style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}
@@ -18,8 +19,8 @@ const CustomRibbonButtonGroup = ({ data }) => {
               justifyContent: 'center',
             }}
           >
-            <IconComponent size={12} />
-            <div style={{ fontSize: '8px', margin: '10px', textAlign: 'center' }}>{title}</div>
+            <IconComponent size={20} />
+            <div style={{ fontSize: '12px', margin: '10px', textAlign: 'center' }}>{title}</div>
           </div>
         );
       })}
