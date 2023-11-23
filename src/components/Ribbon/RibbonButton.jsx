@@ -8,7 +8,7 @@ const CustomRibbonButton = ({ data }) => {
   return (
     <div className='d-flex align-items-center justify-content-center'>
       <div className='d-flex align-items-center flex-column justify-content-center'>
-        <IconComponent size={30} />
+        <IconComponent size={25} />
         <div style={{ fontSize: '11px', fontWeight: 'bolder',textAlign:"center" }}>{Caption}</div>
       </div>
     </div>

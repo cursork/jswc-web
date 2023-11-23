@@ -13,7 +13,7 @@ const CustomRibbonGroup = ({ data }) => {
   return (
     <div className={`col-${size}`}>
       <div
-        style={{ border: '1px solid red', position: 'relative', height: '100%' }}
+        style={{ border: '1px solid rgb(204, 204, 204)', position: 'relative', height: '100%' }}
         className='row'
       >
         {Object.keys(updatedData).map((key) => {
