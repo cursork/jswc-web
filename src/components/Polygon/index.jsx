@@ -6,13 +6,12 @@ const Poly = ({ data }) => {
   const { FCol, FillCol, LWidth, Points, FStyle } = data?.Properties;
 
   const svgRef = useRef(null);
+  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
   useEffect(() => {
     if (svgRef.current) {
       const svgElement = svgRef.current;
       const bbox = svgElement.getBBox();
-
-      console.log({ bbox });
 
       svgElement.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
     }
@@ -20,7 +19,7 @@ const Poly = ({ data }) => {
 
   return (
     <div style={{ position: 'absolute' }}>
-      <svg height='60px'>
+      <svg height={parentSize[0]} width={parentSize[1]}>
         {Points.map((polygonPoints, index) => {
           const flatArray = polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);
 
