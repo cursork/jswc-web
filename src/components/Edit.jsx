@@ -11,56 +11,59 @@ import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../hooks';
 
 const Edit = ({ data, value, event = '', row = '', column = '' }) => {
+  const currentLocale = navigator.language || navigator.userLanguage;
+
   let styles = { ...setStyle(data?.Properties) };
   const { socket } = useAppData();
   const [inputType, setInputType] = useState('text');
   const [inputValue, setInputValue] = useState('');
   const [emitValue, setEmitValue] = useState('');
+  const [initialValue, setInitialValue] = useState('');
 
   const { FieldType, MaxLength, FCol, Decimal } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
   const isPassword = data?.Properties.hasOwnProperty('Password');
+  const hasEvent = data?.Properties.hasOwnProperty('Event');
 
   const inputRef = useRef(null);
-  let editValue = null;
-
-  // const [inputValue, setInputValue] = useState(
-  //   event == 'CellChanged'
-  //     ? value
-  //     : isPassword
-  //     ? generateAsteriskString(data?.Properties?.Text?.length)
-  //     : editValue
-  // );
 
   const decideInputValue = () => {
     if (event == 'CellChanged') {
       if (FieldType == 'Date') {
         setEmitValue(value);
+        setInitialValue(value);
         return setInputValue(calculateDateAfterDays(value));
       }
 
       if (FieldType == 'LongNumeric') {
         setEmitValue(value);
-        return setInputValue(value.toLocaleString('da-DK'));
+        setInitialValue(value);
+        return setInputValue(value.toLocaleString(currentLocale));
       }
+      setEmitValue(value);
+      setInitialValue(value);
       return setInputValue(value);
     }
     if (hasTextProperty) {
       if (isPassword) {
+        setInitialValue(generateAsteriskString(data?.Properties?.Text?.length));
         setEmitValue(data?.Properties?.Text);
         return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
       } else {
         setEmitValue(data?.Properties?.Text);
+        setInitialValue(data?.Properties?.Text);
         return setInputValue(data?.Properties?.Text);
       }
     }
     if (hasValueProperty) {
       if (isPassword) {
-        setInputValue(data?.Properties?.Value);
+        setInitialValue(generateAsteriskString(data?.Properties?.Value?.length));
+        setEmitValue(data?.Properties?.Value);
         return setInputValue(generateAsteriskString(data?.Properties?.Value?.length));
       } else {
+        setInitialValue(data?.Properties?.Value);
         setEmitValue(data?.Properties?.Value);
         return setInputValue(data?.Properties?.Value);
       }
@@ -135,7 +138,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
         if (FieldType == 'LongNumeric') {
           value = replaceDanishToNumber(e.target.value);
 
-          setInputValue(e.target.value.toLocaleString('da-DK'));
+          setInputValue(e.target.value.toLocaleString(currentLocale));
           setEmitValue(value);
         }
 
@@ -197,7 +200,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
       }}
       onBlur={() => {
         if (FieldType == 'LongNumeric') {
-          setInputValue(emitValue.toLocaleString('da-DK'));
+          setInputValue(emitValue.toLocaleString(currentLocale));
         }
 
         console.log(
@@ -240,25 +243,51 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
               })
         );
 
-        socket.send(
-          event == 'CellChanged'
-            ? JSON.stringify({
-                Event: {
-                  EventName: event,
-                  ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row),
-                  Col: parseInt(column),
-                  Value: emitValue,
-                },
-              })
-            : JSON.stringify({
-                Event: {
-                  EventName: 'Change',
-                  ID: data?.ID,
-                  Info: emitValue,
-                },
-              })
-        );
+        if (event == 'CellChanged' && value != emitValue) {
+          socket.send(
+            event == 'CellChanged'
+              ? JSON.stringify({
+                  Event: {
+                    EventName: event,
+                    ID: extractStringUntilSecondPeriod(data?.ID),
+                    Row: parseInt(row),
+                    Col: parseInt(column),
+                    Value: emitValue,
+                  },
+                })
+              : JSON.stringify({
+                  Event: {
+                    EventName: 'Change',
+                    ID: data?.ID,
+                    Info: emitValue,
+                  },
+                })
+          );
+          return;
+        }
+
+        if (hasEvent && initialValue != emitValue) {
+          socket.send(
+            event == 'CellChanged'
+              ? JSON.stringify({
+                  Event: {
+                    EventName: event,
+                    ID: extractStringUntilSecondPeriod(data?.ID),
+                    Row: parseInt(row),
+                    Col: parseInt(column),
+                    Value: emitValue,
+                  },
+                })
+              : JSON.stringify({
+                  Event: {
+                    EventName: 'Change',
+                    ID: data?.ID,
+                    Info: emitValue,
+                  },
+                })
+          );
+          return;
+        }
       }}
       onKeyDown={(e) => {
         setTimeout(() => {
