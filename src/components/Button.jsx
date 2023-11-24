@@ -14,7 +14,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   if (isCheckBox) {
     return (
-      <div style={{ ...styles, marginLeft: '10px' }}>
+      <div style={{ ...styles, marginLeft: '10px', zIndex: 1 }}>
         <input
           id={data?.ID}
           type='checkbox'
@@ -96,6 +96,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         borderColor: '#ccc',
         fontSize: '11px',
         cursor: 'pointer',
+        zIndex: 1,
       }}
     >
       {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null}

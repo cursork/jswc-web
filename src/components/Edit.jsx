@@ -37,25 +37,31 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   const decideInputValue = () => {
     if (event == 'CellChanged') {
       if (FieldType == 'Date') {
+        setEmitValue(value);
         return setInputValue(calculateDateAfterDays(value));
       }
 
       if (FieldType == 'LongNumeric') {
+        setEmitValue(value);
         return setInputValue(value.toLocaleString('da-DK'));
       }
       return setInputValue(value);
     }
     if (hasTextProperty) {
       if (isPassword) {
+        setEmitValue(data?.Properties?.Text);
         return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
       } else {
+        setEmitValue(data?.Properties?.Text);
         return setInputValue(data?.Properties?.Text);
       }
     }
     if (hasValueProperty) {
       if (isPassword) {
+        setInputValue(data?.Properties?.Value);
         return setInputValue(generateAsteriskString(data?.Properties?.Value?.length));
       } else {
+        setEmitValue(data?.Properties?.Value);
         return setInputValue(data?.Properties?.Value);
       }
     }

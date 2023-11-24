@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
 import { checkPeriod, getObjectById } from './utils';
-import { Edit } from './objects';
 import './App.css';
 
 const App = () => {
@@ -116,24 +115,17 @@ const App = () => {
         }
 
         if (data?.Properties?.Type == 'Combo') {
-          if (serverEvent?.Properties.hasOwnProperty('Text')) {
-            value = serverEvent?.Properties.Text;
-            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-            return handleData({
-              ID: serverEvent.ID,
-              Properties: {
-                ...data?.Properties,
-                Text: value,
-              },
-            });
-          } else if (data?.Properties.hasOwnProperty('SelItems')) {
+          if (serverEvent?.Properties.hasOwnProperty('SelItems')) {
             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
             value = serverEvent?.Properties.SelItems;
+            const indextoFind = value.indexOf(1);
+            let Text = data?.Properties?.Items[indextoFind];
             return handleData({
               ID: serverEvent.ID,
               Properties: {
                 ...data?.Properties,
                 SelItems: value,
+                Text,
               },
             });
           }
@@ -219,11 +211,7 @@ const App = () => {
             const serverPropertiesObj = {};
             serverEvent.Properties.map((key) => {
               return (serverPropertiesObj[key] =
-                key == 'Text'
-                  ? JSON.stringify(editValue)
-                  : isNumber
-                  ? parseInt(editValue)
-                  : editValue);
+                key == 'Text' ? editValue.toString() : isNumber ? parseInt(editValue) : editValue);
             });
 
             console.log(
@@ -282,7 +270,7 @@ const App = () => {
                 },
               })
             );
-            webSocket.send(
+            return webSocket.send(
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
