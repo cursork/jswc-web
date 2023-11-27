@@ -13,54 +13,41 @@ const App = () => {
 
   const handleData = (data) => {
     const periodCount = checkPeriod(data.ID);
-
     const splitID = data.ID.split('.');
 
-    if (periodCount == 0) {
-      if (!dataRef.current[splitID[0]]) {
-        dataRef.current[splitID[0]] = { ...data };
-      }
-    } else if (periodCount == 1) {
-      // If we found same Id key so we came in this check
-      if (dataRef.current[splitID[0]].hasOwnProperty(splitID[1])) {
-        return (dataRef.current[splitID[0]][splitID[1]] = {
-          ...dataRef.current[splitID[0]][splitID[1]],
-          Properties: { ...dataRef.current[splitID[0]][splitID[1]].Properties, ...data.Properties },
-        });
-      }
-      dataRef.current[splitID[0]][splitID[1]] = data;
-    } else if (periodCount == 2) {
-      dataRef.current[splitID[0]][splitID[1]][splitID[2]] = data;
-    } else if (periodCount == 3) {
-      // adding a check if the key already exists or not
-      if (dataRef.current[splitID[0]][splitID[1]][splitID[2]].hasOwnProperty(splitID[3])) {
-        return (dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]] = {
-          ...dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]],
-          Properties: {
-            ...dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]].Properties,
-            ...data.Properties,
-          },
-        });
-      }
-      dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]] = data;
-    } else if (periodCount == 4) {
-      if (
-        dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]].hasOwnProperty(splitID[4])
-      ) {
-        return (dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]][splitID[4]] = {
-          ...dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]][splitID[4]],
-          Properties: {
-            ...dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]][splitID[4]]
-              .Properties,
-            ...data.Properties,
-          },
-        });
+    // If there's a key without a period, reset dataRef and build the structure again
+    if (periodCount === 0) {
+      dataRef.current = {};
+    }
+
+    let currentLevel = dataRef.current;
+
+    for (let i = 0; i < periodCount; i++) {
+      const key = splitID[i];
+
+      if (!currentLevel[key]) {
+        currentLevel[key] = {};
       }
 
-      dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]][splitID[4]] = data;
-    } else if (periodCount == 5) {
-      dataRef.current[splitID[0]][splitID[1]][splitID[2]][splitID[3]][splitID[4]][splitID[5]] =
-        data;
+      currentLevel = currentLevel[key];
+    }
+
+    // Check if the key already exists at the final level
+    const finalKey = splitID[periodCount];
+    if (currentLevel.hasOwnProperty(finalKey)) {
+      // Update the existing object with new properties
+      currentLevel[finalKey] = {
+        ...currentLevel[finalKey],
+        Properties: {
+          ...currentLevel[finalKey].Properties,
+          ...data.Properties,
+        },
+      };
+    } else {
+      // Create a new object at the final level
+      currentLevel[finalKey] = {
+        ...data,
+      };
     }
   };
 
@@ -539,29 +526,11 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-  // console.log('AppData', dataRef.current);
+  console.log('AppData', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-        <select value={layout} onChange={(e) => setLayout(e.target.value)}>
-          <option value='Initialise'>Initialise</option>
-          <option value='Initialise(DemoSplitters)'>Splitters</option>
-          <option value='Initialise(DemoScroll)'>Scroll</option>
-          <option value='Initialise(DemoTabs)'>Tabs</option>
-          <option value='Initialise(DemoRibbon)'>Ribbon</option>
-          <option value='Initialise(DemoTreeView'>Tree View</option>
-          <option value='Initialise(DemoLines)'>Lines</option>
-          <option value='Initialise(DemoEdit)'>Edit</option>
-          <option value='Initialise(DemoPictures)'>Pictures</option>
-        </select>
-      </div>
-
-      {layout == 'Initialise(DemoPictures)' ? (
-        <SelectComponent data={dataRef.current['F']} />
-      ) : (
-        <SelectComponent data={dataRef.current['F1']} />
-      )}
+      <SelectComponent data={dataRef.current['F1']} />
     </AppDataContext.Provider>
   );
 };
