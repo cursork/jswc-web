@@ -15,6 +15,8 @@ import './TreeView.css';
 const Treeview = ({ data }) => {
   const { Depth, Items, ImageListObj, ImageIndex } = data?.Properties;
 
+  const hasEvent = data?.Properties.hasOwnProperty('Event');
+
   const [nodeData, setNodeData] = useState([]);
 
   const { dataRef, socket } = useAppData();
@@ -32,55 +34,63 @@ const Treeview = ({ data }) => {
       const missingPart = treeState.filter((item) => !nodeData.includes(item));
       const Info = findParentIndex(Depth, 1 + calculateSumFromString(missingPart));
 
-      // Print the Event
-      console.log(
-        JSON.stringify({
-          Event: {
-            EventName: 'Expanding',
-            ID: data?.ID,
-            Info: Info + 1,
-          },
-        })
-      );
+      // Only Emit the Event when the event is Present
 
-      //sending the Event
+      if (hasEvent) {
+        // Print the Event
+        console.log(
+          JSON.stringify({
+            Event: {
+              EventName: 'Expanding',
+              ID: data?.ID,
+              Info: Info + 1,
+            },
+          })
+        );
 
-      socket.send(
-        JSON.stringify({
-          Event: {
-            EventName: 'Expanding',
-            ID: data?.ID,
-            Info: Info + 1,
-          },
-        })
-      );
+        //sending the Event
+
+        socket.send(
+          JSON.stringify({
+            Event: {
+              EventName: 'Expanding',
+              ID: data?.ID,
+              Info: Info + 1,
+            },
+          })
+        );
+      }
     } else if (treeState.length < nodeData.length) {
       const missingPart = nodeData.filter((item) => !treeState.includes(item));
 
       const Info = findParentIndex(Depth, 1 + calculateSumFromString(missingPart));
 
-      // Print the event
-      console.log(
-        JSON.stringify({
-          Event: {
-            EventName: 'Retracting',
-            ID: data?.ID,
-            Info: Info + 1,
-          },
-        })
-      );
+      // Check that if it has Event or not
 
-      // sending the event
+      if (hasEvent) {
+        // Print the event
+        console.log(
+          JSON.stringify({
+            Event: {
+              EventName: 'Retracting',
+              ID: data?.ID,
+              Info: Info + 1,
+            },
+          })
+        );
 
-      socket.send(
-        JSON.stringify({
-          Event: {
-            EventName: 'Retracting',
-            ID: data?.ID,
-            Info: Info + 1,
-          },
-        })
-      );
+        // sending the event
+
+        socket.send(
+          JSON.stringify({
+            Event: {
+              EventName: 'Retracting',
+              ID: data?.ID,
+              Info: Info + 1,
+            },
+          })
+        );
+      }
     } else {
       console.log('Equal');
     }
