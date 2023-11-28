@@ -411,13 +411,16 @@ const App = () => {
           const { Posn } = Properties;
 
           if (!localStorage.getItem(serverEvent.ID)) {
+            const serverPropertiesObj = {};
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] = Properties[key]);
+            });
+
             console.log(
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: {
-                    Posn,
-                  },
+                  Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -426,9 +429,7 @@ const App = () => {
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
-                  Properties: {
-                    Posn,
-                  },
+                  Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
                 },
               })
@@ -436,14 +437,18 @@ const App = () => {
           }
 
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
-          const { Info } = Event;
+          const { Info, Size } = Event;
+
+          const serverPropertiesObj = {};
+          serverEvent.Properties.map((key) => {
+            return (serverPropertiesObj[key] = key == 'Posn' ? Info : Size);
+          });
+
           console.log(
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: {
-                  Posn: Info,
-                },
+                Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
               },
             })
@@ -452,9 +457,7 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: {
-                  Posn: Info,
-                },
+                Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
               },
             })
@@ -530,6 +533,17 @@ const App = () => {
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+        <select value={layout} onChange={(e) => setLayout(e.target.value)}>
+          <option value='Initialise'>Initialise</option>
+          <option value='Initialise(DemoSplitters)'>Splitters</option>
+          <option value='Initialise(DemoScroll)'>Scroll</option>
+          <option value='Initialise(DemoTabs)'>Tabs</option>
+          <option value='Initialise(DemoRibbon)'>Ribbon</option>
+          <option value='Initialise(DemoTreeView'>Tree View</option>
+          <option value='Initialise(DemoLines)'>Lines</option>
+        </select>
+      </div>
       <SelectComponent data={dataRef.current['F1']} />
     </AppDataContext.Provider>
   );

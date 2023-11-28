@@ -9,8 +9,6 @@ import { useEffect } from 'react';
 const Splitter = ({ data }) => {
   const { dataRef } = useAppData();
   const { socket } = useAppData();
-  const verticalSplitter = useRef();
-
   let formWidth = 800;
   let formHeight = 800;
 
@@ -45,17 +43,6 @@ const Splitter = ({ data }) => {
   };
 
   const initializeSplitterDimensions = () => {
-    localStorage.setItem(
-      data?.ID,
-      JSON.stringify({
-        Event: {
-          EventName: data?.Properties?.Event[0],
-          ID: data.ID,
-          Info: Posn,
-        },
-      })
-    );
-
     if (Style && Style == 'Horz') {
       const localStorageKeys = Object.keys(localStorage);
 
@@ -65,6 +52,18 @@ const Splitter = ({ data }) => {
         if (IDs.length == 2 && IDs.includes('RIGHT')) {
           const rightPaneDimensions = JSON.parse(localStorage.getItem(key));
           const { Size } = rightPaneDimensions;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                EventName: data?.Properties?.Event[0],
+                ID: data.ID,
+                Info: Posn,
+                Size: [3, Size[1]],
+              },
+            })
+          );
 
           localStorage.setItem(
             SplitObj1,
@@ -80,6 +79,18 @@ const Splitter = ({ data }) => {
         }
       });
     } else {
+      localStorage.setItem(
+        data?.ID,
+        JSON.stringify({
+          Event: {
+            EventName: data?.Properties?.Event[0],
+            ID: data.ID,
+            Info: Posn,
+            Size: [formHeight, 3],
+          },
+        })
+      );
+
       localStorage.setItem(
         SplitObj1,
         JSON.stringify({ Size: [formHeight, Posn[1]], Posn: [0, Posn[1]] })
@@ -105,12 +116,31 @@ const Splitter = ({ data }) => {
       JSON.stringify({ Size: [formHeight, rightWidth], Posn: [0, leftWidth + 3] })
     );
 
-    // Updated the position of top and bottom
+    // Updated the position of top and bottom in Horizontal Splitter
 
     const localStorageKeys = Object.keys(localStorage);
 
     localStorageKeys.forEach((key) => {
       const IDs = key.split('.');
+
+      // ******Updated the Width of the Horizontal Splitter on Moving Vertical Splitter
+      if (IDs.length == 3 && IDs.includes('SPLIT')) {
+        console.log({ key });
+        const { Event } = JSON.parse(localStorage.getItem(key));
+        const { Info } = Event;
+        console.log('Info', Event);
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            Event: {
+              EventName: data?.Properties?.Event[0],
+              ID: data.ID,
+              Info: Info,
+              Size: [3, rightWidth],
+            },
+          })
+        );
+      }
 
       if (IDs.length == 3 && IDs.includes('TOP') && IDs.includes('RIGHT')) {
         const topPreviousDimension = JSON.parse(localStorage.getItem(key));
@@ -133,6 +163,18 @@ const Splitter = ({ data }) => {
   const calculateHorizontalDimensions = (topHeight) => {
     const topDimensions = JSON.parse(localStorage.getItem(SplitObj1));
     const bottomDimensions = JSON.parse(localStorage.getItem(SplitObj2));
+
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          EventName: data?.Properties?.Event[0],
+          ID: data.ID,
+          Info: [topHeight, 0],
+          Size: [3, topDimensions.Size[1]],
+        },
+      })
+    );
 
     localStorage.setItem(
       SplitObj1,
@@ -183,17 +225,6 @@ const Splitter = ({ data }) => {
                   EventName: data?.Properties?.Event[0],
                   ID: data.ID,
                   Info: [Math.round(coordinates[0]), 0, 3, 494],
-                },
-              })
-            );
-
-            localStorage.setItem(
-              data?.ID,
-              JSON.stringify({
-                Event: {
-                  EventName: data?.Properties?.Event[0],
-                  ID: data.ID,
-                  Info: [Math.round(coordinates[0]), 0],
                 },
               })
             );
@@ -270,6 +301,7 @@ const Splitter = ({ data }) => {
               EventName: data?.Properties?.Event[0],
               ID: data.ID,
               Info: [0, Math.round(coordinates[0])],
+              Size: [formHeight, 3],
             },
           })
         );
