@@ -200,3 +200,18 @@ export const replaceDanishToNumber = (number) => {
   const originalNumber = parseFloat(cleanedNumberString);
   return originalNumber;
 };
+
+// Check for the supported Properties of WG or not
+
+export const checkSupportedProperties = (supportedProperties, array) => {
+  const notSupportedProperties = array.filter((item) => !supportedProperties.includes(item));
+  if (notSupportedProperties.length > 0) {
+    const result = {
+      NotSupported: notSupportedProperties,
+    };
+    return result;
+  } else {
+    return null; // No unsupported properties found
+  }
+};
+

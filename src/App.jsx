@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
-import { checkPeriod, getObjectById } from './utils';
+import { checkPeriod, getObjectById, checkSupportedProperties } from './utils';
 import './App.css';
 
 const App = () => {
@@ -132,6 +132,11 @@ const App = () => {
 
         if (Type == 'Grid') {
           const { Values } = Properties;
+
+          const supportedProperties = ['Values'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+
           if (!localStorage.getItem(serverEvent.ID)) {
             console.log(
               JSON.stringify({
@@ -509,6 +514,61 @@ const App = () => {
               WG: {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+              },
+            })
+          );
+        }
+
+        if (Type == 'Button') {
+          const { State } = Properties;
+
+          if (!localStorage.getItem(serverEvent.ID)) {
+            console.log(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: {
+                    State: State ? State : 0,
+                  },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+            return webSocket.send(
+              JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: {
+                    State: State ? State : 0,
+                  },
+                  WGID: serverEvent.WGID,
+                },
+              })
+            );
+          }
+
+          const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
+          const { Value } = Event;
+
+          console.log(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  State: Value,
+                },
+                WGID: serverEvent.WGID,
+              },
+            })
+          );
+          return webSocket.send(
+            JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: {
+                  State: Value,
+                },
                 WGID: serverEvent.WGID,
               },
             })
