@@ -12,9 +12,11 @@ const Splitter = ({ data }) => {
   let formWidth = 800;
   let formHeight = 800;
 
-  const { SplitObj1, SplitObj2, Style, Posn } = data?.Properties;
+  const { SplitObj1, SplitObj2, Style, Posn, Event } = data?.Properties;
   const [sizes, setSizes] = useState([100, '30%', 'auto']);
   const [horizontalSize, setHorizontalSize] = useState([100, 200, 'auto']);
+
+  const emitEvent = Event && Event[0];
 
   const periodSplitObj1 = checkPeriod(SplitObj1);
   const periodSplitObj2 = checkPeriod(SplitObj2);
@@ -57,7 +59,7 @@ const Splitter = ({ data }) => {
             data?.ID,
             JSON.stringify({
               Event: {
-                EventName: data?.Properties?.Event[0],
+                EventName: emitEvent && emitEvent[0],
                 ID: data.ID,
                 Info: Posn,
                 Size: [3, Size[1]],
@@ -83,7 +85,7 @@ const Splitter = ({ data }) => {
         data?.ID,
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data.ID,
             Info: Posn,
             Size: [formHeight, 3],
@@ -133,7 +135,7 @@ const Splitter = ({ data }) => {
           key,
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data.ID,
               Info: Info,
               Size: [3, rightWidth],
@@ -168,7 +170,7 @@ const Splitter = ({ data }) => {
       data?.ID,
       JSON.stringify({
         Event: {
-          EventName: data?.Properties?.Event[0],
+          EventName: emitEvent && emitEvent[0],
           ID: data.ID,
           Info: [topHeight, 0],
           Size: [3, topDimensions.Size[1]],
@@ -212,7 +214,7 @@ const Splitter = ({ data }) => {
             console.log(
               JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[0],
+                  EventName: emitEvent && emitEvent[0],
                   ID: data.ID,
                   Info: [Math.round(coordinates[0]), 0, 3, 494],
                 },
@@ -222,7 +224,7 @@ const Splitter = ({ data }) => {
             socket.send(
               JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[0],
+                  EventName: emitEvent && emitEvent[0],
                   ID: data.ID,
                   Info: [Math.round(coordinates[0]), 0, 3, 494],
                 },
@@ -277,7 +279,7 @@ const Splitter = ({ data }) => {
         console.log(
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data.ID,
               Info: [0, Math.round(coordinates[0]), 800, 3],
             },
@@ -298,7 +300,7 @@ const Splitter = ({ data }) => {
           data.ID,
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data.ID,
               Info: [0, Math.round(coordinates[0])],
               Size: [formHeight, 3],

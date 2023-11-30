@@ -7,7 +7,9 @@ import { useEffect } from 'react';
 const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   const { socket } = useAppData();
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems } = data?.Properties;
+  const { Items, SelItems, Event } = data?.Properties;
+
+  const emitEvent = Event && Event[0];
 
   const [comboInput, setComboInput] = useState('+');
 
@@ -70,7 +72,7 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
               data?.ID,
               JSON.stringify({
                 Event: {
-                  EventName: data?.Properties?.Event[0],
+                  EventName: emitEvent && emitEvent[0],
                   ID: data?.ID,
                   Info: parseInt(index + 1),
                 },
@@ -91,7 +93,7 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
                 })
               : JSON.stringify({
                   Event: {
-                    EventName: data?.Properties?.Event[0],
+                    EventName: emitEvent && emitEvent[0],
                     ID: data?.ID,
                     Info: parseInt(index + 1),
                   },

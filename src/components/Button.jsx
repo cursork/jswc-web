@@ -1,10 +1,13 @@
 import { setStyle, extractStringUntilSecondPeriod } from '../utils';
 import { useAppData } from '../hooks';
+import { useEffect, useState } from 'react';
 
 const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData } = useAppData();
-  const { Picture } = data?.Properties;
+  const { Picture, State } = data?.Properties;
+
+  const [checkInput, setCheckInput] = useState();
 
   const hasCaption = data.Properties.hasOwnProperty('Caption');
 
@@ -14,13 +17,24 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
 
+  const decideInput = () => {
+    if (event == 'CellChanged') {
+      return setCheckInput(inputValue);
+    }
+    setCheckInput(State && State);
+  };
+
+  useEffect(() => {
+    decideInput();
+  }, [data]);
+
   if (isCheckBox) {
     return (
       <div style={{ ...styles, marginLeft: '10px', zIndex: 1 }}>
         <input
           id={data?.ID}
           type='checkbox'
-          defaultChecked={inputValue}
+          defaultChecked={checkInput}
           onChange={(e) => {
             console.log(
               event == 'CellChanged'

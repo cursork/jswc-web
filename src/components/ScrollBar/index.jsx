@@ -5,11 +5,13 @@ import './ScrollBar.css';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event } = data?.Properties;
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
   const [showButtons, setShowButtons] = useState(false);
+
+  const emitEvent = Event && Event[0];
 
   const handleTrackMouseEnter = () => {
     setShowButtons(true);
@@ -66,7 +68,7 @@ const ScrollBar = ({ data }) => {
           'Event',
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -77,7 +79,7 @@ const ScrollBar = ({ data }) => {
           data.ID,
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -87,7 +89,7 @@ const ScrollBar = ({ data }) => {
         socket.send(
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -122,7 +124,7 @@ const ScrollBar = ({ data }) => {
           'Event',
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -133,7 +135,7 @@ const ScrollBar = ({ data }) => {
           data.ID,
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -161,7 +163,7 @@ const ScrollBar = ({ data }) => {
         socket.send(
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: [Math.round(scaledValue), Math.round(newScaledValue)],
             },
@@ -216,7 +218,7 @@ const ScrollBar = ({ data }) => {
         'Event',
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent&& emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },
@@ -227,7 +229,7 @@ const ScrollBar = ({ data }) => {
         data.ID,
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },
@@ -255,7 +257,7 @@ const ScrollBar = ({ data }) => {
       socket.send(
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },
@@ -271,7 +273,7 @@ const ScrollBar = ({ data }) => {
       console.log(
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },
@@ -282,7 +284,7 @@ const ScrollBar = ({ data }) => {
         data.ID,
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },
@@ -310,7 +312,7 @@ const ScrollBar = ({ data }) => {
       socket.send(
         JSON.stringify({
           Event: {
-            EventName: data?.Properties?.Event[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },

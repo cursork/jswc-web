@@ -4,6 +4,8 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
   const { socket } = useAppData();
   const { Caption, Event } = data?.Properties;
 
+  const emitEvent = Event && Event[0];
+
   return (
     <div
       style={{
@@ -23,7 +25,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
         console.log(
           JSON.stringify({
             Event: {
-              EventName: Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: Caption,
             },
@@ -34,7 +36,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
           'lastEvent',
           JSON.stringify({
             Event: {
-              EventName: Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: Caption,
             },
@@ -44,7 +46,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
         socket.send(
           JSON.stringify({
             Event: {
-              EventName: Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
               Info: Caption,
             },
