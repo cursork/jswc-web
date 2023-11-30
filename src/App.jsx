@@ -17,7 +17,12 @@ const App = () => {
 
     // If there's a key without a period, reset dataRef and build the structure again
     if (periodCount === 0) {
-      dataRef.current = {};
+      if (!dataRef.current.hasOwnProperty(data.ID)) {
+        // If it doesn't exist, add the object
+        dataRef.current[data.ID] = { ID: data.ID, ...data };
+      }
+      localStorage.clear();
+      dataRef.current[data.ID] = {};
     }
 
     let currentLevel = dataRef.current;
@@ -37,6 +42,7 @@ const App = () => {
     if (currentLevel.hasOwnProperty(finalKey)) {
       // Update the existing object with new properties
       currentLevel[finalKey] = {
+        ID: data.ID,
         ...currentLevel[finalKey],
         Properties: {
           ...currentLevel[finalKey].Properties,
@@ -46,6 +52,7 @@ const App = () => {
     } else {
       // Create a new object at the final level
       currentLevel[finalKey] = {
+        ID: data.ID,
         ...data,
       };
     }
@@ -589,7 +596,7 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-  // console.log('AppData', dataRef.current);
+  console.log('AppData', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
