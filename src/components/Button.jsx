@@ -17,6 +17,8 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
 
+  const hasEvent = data?.Properties.hasOwnProperty('Event');
+
   const decideInput = () => {
     if (event == 'CellChanged') {
       return setCheckInput(inputValue);
@@ -49,7 +51,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
                   })
                 : JSON.stringify({
                     Event: {
-                      EventName: buttonEvent[0],
+                      EventName: buttonEvent && buttonEvent[0],
                       ID: data?.ID,
                       Value: e.target.checked ? 1 : 0,
                     },
@@ -73,32 +75,36 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
                   data?.ID,
                   JSON.stringify({
                     Event: {
-                      EventName: buttonEvent[0],
+                      EventName: buttonEvent && buttonEvent[0],
                       ID: data?.ID,
                       Value: e.target.checked ? 1 : 0,
                     },
                   })
                 );
 
-            socket.send(
-              event == 'CellChanged'
-                ? JSON.stringify({
-                    Event: {
-                      EventName: event,
-                      ID: extractStringUntilSecondPeriod(data?.ID),
-                      Row: parseInt(row),
-                      Col: parseInt(column),
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-                : JSON.stringify({
-                    Event: {
-                      EventName: buttonEvent[0],
-                      ID: data?.ID,
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-            );
+            if (event == 'CellChanged') {
+              return socket.send(
+                JSON.stringify({
+                  Event: {
+                    EventName: event,
+                    ID: extractStringUntilSecondPeriod(data?.ID),
+                    Row: parseInt(row),
+                    Col: parseInt(column),
+                    Value: e.target.checked ? 1 : 0,
+                  },
+                })
+              );
+            } else if (hasEvent) {
+              socket.send(
+                JSON.stringify({
+                  Event: {
+                    EventName: buttonEvent && buttonEvent[0],
+                    ID: data?.ID,
+                    Value: e.target.checked ? 1 : 0,
+                  },
+                })
+              );
+            }
           }}
         />
       </div>
