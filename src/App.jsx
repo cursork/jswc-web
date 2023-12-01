@@ -151,12 +151,22 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: { Values: Values },
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
             return webSocket.send(
               JSON.stringify({
-                WG: { ID: serverEvent.ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
+                WG: {
+                  ID: serverEvent.ID,
+                  Properties: { Values: Values },
+                  WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
+                },
               })
             );
           }
@@ -167,7 +177,14 @@ const App = () => {
           Values[Row - 1][Col - 1] = Value;
           console.log(
             JSON.stringify({
-              WG: { ID: serverEvent.ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
+              WG: {
+                ID: serverEvent.ID,
+                Properties: { Values: Values },
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
             })
           );
 
@@ -194,13 +211,23 @@ const App = () => {
 
           webSocket.send(
             JSON.stringify({
-              WG: { ID: serverEvent.ID, Properties: { Values: Values }, WGID: serverEvent.WGID },
+              WG: {
+                ID: serverEvent.ID,
+                Properties: { Values: Values },
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
             })
           );
         }
 
         if (Type == 'Edit') {
           const { Text, Value } = Properties;
+          const supportedProperties = ['Text', 'Value'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const editValue = Text ? Text : Value;
@@ -219,6 +246,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -228,6 +258,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -242,18 +275,35 @@ const App = () => {
 
           console.log(
             JSON.stringify({
-              WG: { ID: serverEvent.ID, Properties: serverPropertiesObj, WGID: serverEvent.WGID },
+              WG: {
+                ID: serverEvent.ID,
+                Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
             })
           );
           webSocket.send(
             JSON.stringify({
-              WG: { ID: serverEvent.ID, Properties: serverPropertiesObj, WGID: serverEvent.WGID },
+              WG: {
+                ID: serverEvent.ID,
+                Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
             })
           );
         }
 
         if (Type == 'Combo') {
           const { SelItems, Items } = Properties;
+          const supportedProperties = ['Text', 'SelItems'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
@@ -266,6 +316,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -275,6 +328,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -298,6 +354,9 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -307,6 +366,9 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -314,6 +376,11 @@ const App = () => {
 
         if (Type == 'List') {
           const { SelItems } = Properties;
+
+          const supportedProperties = ['SelItems'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+
           if (!localStorage.getItem(serverEvent.ID)) {
             console.log(
               JSON.stringify({
@@ -322,6 +389,10 @@ const App = () => {
                   Properties: {
                     SelItems,
                   },
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
+
                   WGID: serverEvent.WGID,
                 },
               })
@@ -333,6 +404,10 @@ const App = () => {
                   Properties: {
                     SelItems,
                   },
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
+
                   WGID: serverEvent.WGID,
                 },
               })
@@ -347,6 +422,10 @@ const App = () => {
                 Properties: {
                   SelItems: Event['SelItems'],
                 },
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+
                 WGID: serverEvent.WGID,
               },
             })
@@ -358,6 +437,10 @@ const App = () => {
                 Properties: {
                   SelItems: Event['SelItems'],
                 },
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+
                 WGID: serverEvent.WGID,
               },
             })
@@ -366,6 +449,9 @@ const App = () => {
 
         if (Type == 'Scroll') {
           const { Thumb } = Properties;
+          const supportedProperties = ['Thumb'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             console.log(
@@ -376,6 +462,9 @@ const App = () => {
                     Thumb,
                   },
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -387,6 +476,9 @@ const App = () => {
                     Thumb,
                   },
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -403,6 +495,9 @@ const App = () => {
                   Thumb: Info[1],
                 },
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -414,6 +509,9 @@ const App = () => {
                   Thumb: Info[1],
                 },
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -421,6 +519,9 @@ const App = () => {
 
         if (Type == 'Splitter') {
           const { Posn } = Properties;
+          const supportedProperties = ['Posn', 'Size'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
@@ -434,6 +535,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -443,6 +547,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -462,6 +569,9 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -471,12 +581,19 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
         }
 
         if (Type == 'SubForm') {
+          const supportedProperties = ['Posn', 'Size'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
             serverEvent.Properties.map((key) => {
@@ -489,6 +606,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -498,6 +618,9 @@ const App = () => {
                   ID: serverEvent.ID,
                   Properties: serverPropertiesObj,
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -513,6 +636,9 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -522,6 +648,9 @@ const App = () => {
                 ID: serverEvent.ID,
                 Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -529,6 +658,9 @@ const App = () => {
 
         if (Type == 'Button') {
           const { State } = Properties;
+          const supportedProperties = ['State'];
+
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             console.log(
@@ -539,6 +671,9 @@ const App = () => {
                     State: State ? State : 0,
                   },
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -550,6 +685,9 @@ const App = () => {
                     State: State ? State : 0,
                   },
                   WGID: serverEvent.WGID,
+                  ...(result && result.NotSupported && result.NotSupported.length > 0
+                    ? { NotSupported: result.NotSupported }
+                    : null),
                 },
               })
             );
@@ -566,6 +704,9 @@ const App = () => {
                   State: Value,
                 },
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -577,6 +718,9 @@ const App = () => {
                   State: Value,
                 },
                 WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
               },
             })
           );
@@ -596,7 +740,7 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-  console.log('AppData', dataRef.current);
+  // console.log('AppData', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
