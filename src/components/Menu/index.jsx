@@ -12,7 +12,7 @@ const Menu = ({ data }) => {
   if (empty) {
     return (
       <div
-        style={{ fontSize: '12px', marginLeft: '10px', cursor: 'pointer' }}
+        style={{ fontSize: '12px', marginLeft: '7px', cursor: 'pointer' }}
         className='menu-item'
       >
         {data?.Properties?.Caption?.substring(1)}

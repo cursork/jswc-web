@@ -5,7 +5,7 @@ import { useAppData } from '../../hooks';
 const Dropdown = ({ title, data }) => {
   const { socket } = useAppData();
   return (
-    <div style={{ fontSize: '12px', marginLeft: '10px', cursor: 'pointer' }} className='menu-item'>
+    <div style={{ fontSize: '12px', marginLeft: '7px', cursor: 'pointer' }} className='menu-item'>
       {title}
 
       <div className='dropdown'>
