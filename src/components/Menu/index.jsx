@@ -10,7 +10,14 @@ const Menu = ({ data }) => {
   // Render the Caption if the Object didn't have any Keys
 
   if (empty) {
-    return <div className='menu-item'>{data?.Properties?.Caption?.substring(1)}</div>;
+    return (
+      <div
+        style={{ fontSize: '12px', marginLeft: '10px', cursor: 'pointer' }}
+        className='menu-item'
+      >
+        {data?.Properties?.Caption?.substring(1)}
+      </div>
+    );
   }
 
   // Render the DropDown if the Object have Menu Items

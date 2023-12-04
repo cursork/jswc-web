@@ -14,7 +14,6 @@
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
   padding: 10px;
   background-color: #f9f9f9;
   border: 1px solid #ccc;
@@ -28,7 +27,7 @@
 }
 
 .dropdown-item:hover {
-  background-color:  #E4E4E4   !important;
+  background-color: #e4e4e4 !important;
 }
 
 .menu-item:hover .dropdown {

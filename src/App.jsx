@@ -66,7 +66,7 @@ const App = () => {
       // webSocket.send('Initialise');
     };
     webSocket.onmessage = (event) => {
-      // Window Creation WC
+      // Window Creation WC 
 
       const keys = Object.keys(JSON.parse(event.data));
 
