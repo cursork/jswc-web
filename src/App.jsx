@@ -1,13 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
-import { checkPeriod, getObjectById, checkSupportedProperties } from './utils';
+import { checkPeriod, getObjectById, checkSupportedProperties, deleteObjectsById } from './utils';
 import './App.css';
 
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
   const [layout, setLayout] = useState('Initialise');
+
+  function useForceRerender() {
+    const [_state, setState] = useState(true);
+    const reRender = () => {
+      setState((prev) => !prev);
+    };
+    return { reRender };
+  }
+
+  const { reRender } = useForceRerender();
 
   const dataRef = useRef({});
 
@@ -56,6 +66,30 @@ const App = () => {
         ...data,
       };
     }
+  };
+
+  const deleteObjectsById = (data, idsToDelete) => {
+    function deleteById(obj, id) {
+      for (const key in obj) {
+        if (obj[key].ID === id) {
+          delete obj[key];
+          return true;
+        }
+        if (typeof obj[key] === 'object') {
+          if (deleteById(obj[key], id)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    idsToDelete.forEach((id) => {
+      deleteById(data, id);
+    });
+
+    dataRef.current = data;
+    socketData.filter((item) => idsToDelete.some((id) => item.ID.startsWith(id)));
+    reRender();
   };
 
   const fetchData = () => {
@@ -729,6 +763,10 @@ const App = () => {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
         element.focus();
+      } else if (keys[0] == 'EX') {
+        const serverEvent = JSON.parse(event.data).EX;
+        console.log({ socketData });
+        deleteObjectsById(dataRef.current, serverEvent?.ID);
       }
     };
   };
@@ -740,7 +778,7 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-   console.log('AppData', dataRef.current);
+  //console.log('AppData', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>

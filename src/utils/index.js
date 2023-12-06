@@ -175,8 +175,6 @@ export const calculateDateAfterDays = (days) => {
   // Format the date as YYYY-MM-DD
   var formattedDate = targetDate.toISOString().split('T')[0];
 
-  
-
   return formattedDate;
 };
 
@@ -217,3 +215,27 @@ export const checkSupportedProperties = (supportedProperties, array) => {
   }
 };
 
+export const deleteObjectsById = (data, idsToDelete) => {
+  // Recursive function to delete objects by ID
+  function deleteById(obj, id) {
+    for (const key in obj) {
+      if (obj[key].ID === id) {
+        delete obj[key];
+        return true;
+      }
+      if (typeof obj[key] === 'object') {
+        if (deleteById(obj[key], id)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  // Loop through the array of IDs to delete
+  idsToDelete.forEach((id) => {
+    deleteById(data, id);
+  });
+
+  return data;
+};

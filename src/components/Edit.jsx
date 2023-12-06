@@ -303,7 +303,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
               Event: {
                 EventName: 'KeyPress',
                 ID: data?.ID,
-                Info: [value.toString(), charCode, e.keyCode, shiftState],
+                Info: [e.key, charCode, e.keyCode, shiftState],
               },
             })
           );
@@ -313,7 +313,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
               Event: {
                 EventName: 'KeyPress',
                 ID: data?.ID,
-                Info: [value.toString(), charCode, e.keyCode, shiftState],
+                Info: [e.key, charCode, e.keyCode, shiftState],
               },
             })
           );
