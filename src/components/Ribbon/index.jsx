@@ -10,8 +10,10 @@ import SelectComponent from '../SelectComponent';
 const CustomRibbon = ({ data }) => {
   const updatedData = excludeKeys(data);
 
+  const { Visible } = data?.Properties;
+
   return (
-    <div className='row' style={{ height: '8rem'}}>
+    <div className='row' style={{ height: '8rem' }}>
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}

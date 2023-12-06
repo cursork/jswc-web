@@ -144,7 +144,6 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         ...styles,
         border: '1px solid black',
         textAlign: 'center',
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'white',
@@ -153,7 +152,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         fontSize: '11px',
         cursor: 'pointer',
         zIndex: 1,
-        display: Visible == 0 ? 'none' : 'block',
+        display: Visible == 0 ? 'none' : 'flex',
       }}
     >
       {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null}
