@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   const { socket } = useAppData();
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems, Event } = data?.Properties;
+  const { Items, SelItems, Event, Visible } = data?.Properties;
 
   const emitEvent = Event && Event[0];
 
@@ -19,7 +19,7 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
   }, [SelItems]);
 
   return (
-    <div style={{ ...styles, borderColor: '#ccc' }}>
+    <div style={{ ...styles, borderColor: '#ccc', display: Visible == 0 ? 'none' : 'block' }}>
       <select
         id={data?.ID}
         value={value ? value : comboInput}

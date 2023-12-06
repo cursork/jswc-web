@@ -5,7 +5,7 @@ import './ScrollBar.css';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event, Visible } = data?.Properties;
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -202,12 +202,14 @@ const ScrollBar = ({ data }) => {
     position: 'absolute',
     top: 0,
     right: 0,
+    display: Visible == 0 ? 'none' : 'block',
   };
 
   const horizontalPosition = {
     position: 'absolute',
     left: 0,
     bottom: 0,
+    display: Visible == 0 ? 'none' : 'block',
   };
 
   const incrementScale = () => {
@@ -218,7 +220,7 @@ const ScrollBar = ({ data }) => {
         'Event',
         JSON.stringify({
           Event: {
-            EventName: emitEvent&& emitEvent[0],
+            EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
             Info: [Math.round(scaledValue), Math.round(newScaledValue)],
           },

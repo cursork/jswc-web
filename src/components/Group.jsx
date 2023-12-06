@@ -4,10 +4,19 @@ import SelectComponent from './SelectComponent';
 const Group = ({ data }) => {
   const styles = setStyle(data?.Properties);
 
+  const { Visible } = data?.Properties;
+
   const updatedData = excludeKeys(data);
 
   return (
-    <div style={{ ...styles, border: '1px solid #F0F0F0', background: 'white' }}>
+    <div
+      style={{
+        ...styles,
+        border: '1px solid #F0F0F0',
+        background: 'white',
+        display: Visible == 0 ? 'none' : 'block',
+      }}
+    >
       {data?.Properties?.Caption && (
         <span
           style={{

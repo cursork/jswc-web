@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData } = useAppData();
-  const { Picture, State } = data?.Properties;
+  const { Picture, State, Visible } = data?.Properties;
 
   const [checkInput, setCheckInput] = useState();
 
@@ -32,7 +32,14 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 
   if (isCheckBox) {
     return (
-      <div style={{ ...styles, marginLeft: '10px', zIndex: 1 }}>
+      <div
+        style={{
+          ...styles,
+          marginLeft: '10px',
+          zIndex: 1,
+          display: Visible == 0 ? 'none' : 'block',
+        }}
+      >
         <input
           id={data?.ID}
           type='checkbox'
@@ -146,6 +153,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
         fontSize: '11px',
         cursor: 'pointer',
         zIndex: 1,
+        display: Visible == 0 ? 'none' : 'block',
       }}
     >
       {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null}

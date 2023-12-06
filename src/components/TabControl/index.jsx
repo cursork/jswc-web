@@ -6,12 +6,15 @@ import { useState } from 'react';
 const TabControl = ({ data }) => {
   const [activeTab, setActiveTab] = useState('F1.TC.T4');
 
+  const { Visible } = data?.Properties;
+
   const updatedData = excludeKeys(data);
 
   let styles = setStyle(data?.Properties);
 
   const updatedStyles = {
     ...styles,
+    display: Visible == 0 ? 'none' : 'block',
   };
 
   const handleTabClick = (ID) => {

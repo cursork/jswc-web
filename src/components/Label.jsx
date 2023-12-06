@@ -6,6 +6,8 @@ const Label = ({ data }) => {
   const haveColor = data?.Properties.hasOwnProperty('FCol');
   const haveFontProperty = data?.Properties.hasOwnProperty('Font');
 
+  const { Visible } = data?.Properties;
+
   styles = { ...styles, fontSize: '11px' };
 
   if (haveColor) {
@@ -24,7 +26,11 @@ const Label = ({ data }) => {
     };
   }
 
-  return <div style={{ ...styles }}>{data?.Properties?.Caption}</div>;
+  return (
+    <div style={{ ...styles, display: Visible == 0 ? 'none' : 'block' }}>
+      {data?.Properties?.Caption}
+    </div>
+  );
 };
 
 export default Label;

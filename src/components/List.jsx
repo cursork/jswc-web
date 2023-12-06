@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 const List = ({ data }) => {
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems } = data?.Properties;
+  const { Items, SelItems, Visible } = data?.Properties;
   const [selectedItem, _] = useState(1);
   const [items, setItems] = useState(SelItems);
 
@@ -33,7 +33,7 @@ const List = ({ data }) => {
   };
 
   return (
-    <div style={{ ...styles, border: '1px solid black' }}>
+    <div style={{ ...styles, border: '1px solid black', display: Visible == 0 ? 'none' : 'block' }}>
       {Items &&
         Items.map((item, index) =>
           selectedItem == items[index] ? (

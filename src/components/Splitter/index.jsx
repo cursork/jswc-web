@@ -12,7 +12,7 @@ const Splitter = ({ data }) => {
   let formWidth = 800;
   let formHeight = 800;
 
-  const { SplitObj1, SplitObj2, Style, Posn, Event } = data?.Properties;
+  const { SplitObj1, SplitObj2, Style, Posn, Event, Visible } = data?.Properties;
   const [sizes, setSizes] = useState([100, '30%', 'auto']);
   const [horizontalSize, setHorizontalSize] = useState([100, 200, 'auto']);
 
@@ -199,7 +199,7 @@ const Splitter = ({ data }) => {
 
   if (Style && Style == 'Horz') {
     return (
-      <div style={{ height: 800, background: 'white' }}>
+      <div style={{ height: 800, background: 'white', display: Visible == 0 ? 'none' : 'block' }}>
         <SplitPane
           split='horizontal'
           sizes={horizontalSize}
@@ -308,6 +308,7 @@ const Splitter = ({ data }) => {
           })
         );
       }}
+      style={{ display: Visible == 0 ? 'none' : 'block' }}
     >
       {/* left Subform */}
       <Pane minSize={0} maxSize='100%'>

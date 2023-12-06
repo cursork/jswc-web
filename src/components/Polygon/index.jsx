@@ -3,7 +3,7 @@ import { rgbColor } from '../../utils';
 import { useRef, useEffect } from 'react';
 
 const Poly = ({ data }) => {
-  const { FCol, FillCol, LWidth, Points, FStyle } = data?.Properties;
+  const { FCol, FillCol, LWidth, Points, FStyle, Visible } = data?.Properties;
 
   const svgRef = useRef(null);
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
@@ -18,7 +18,7 @@ const Poly = ({ data }) => {
   }, [Points, FStyle, FillCol, FCol, LWidth]);
 
   return (
-    <div style={{ position: 'absolute' }}>
+    <div style={{ position: 'absolute', display: Visible == 0 ? 'none' : 'block' }}>
       <svg height={parentSize[0]} width={parentSize[1]}>
         {Points.map((polygonPoints, index) => {
           const flatArray = polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);

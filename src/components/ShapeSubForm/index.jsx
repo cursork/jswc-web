@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { excludeKeys } from '../../utils';
 import Rectangle from '../Rectangle';
-import SelectComponent from '../SelectComponent';
 
 const ShapeSubForm = ({ data }) => {
-  const { Posn, Size } = data?.Properties;
+  const { Posn, Size, Visible } = data?.Properties;
 
   const updatedData = excludeKeys(data);
   return (
-    <div style={{ background: 'white' }}>
+    <div style={{ background: 'white', display: Visible == 0 ? 'none' : 'block' }}>
       {Object.keys(updatedData).map((key) => {
         if (updatedData[key].Properties.Type == 'Rect') {
           return <Rectangle parentSize={Size} posn={Posn} data={updatedData[key]} />;

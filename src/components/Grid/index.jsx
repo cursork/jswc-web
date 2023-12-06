@@ -34,7 +34,7 @@ const Grid = ({ data }) => {
 
   let size = 0;
 
-  const { Values, Input, ColTitles, RowTitles, CellWidths } = data?.Properties;
+  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible } = data?.Properties;
 
   const style = setStyle(data?.Properties);
 
@@ -52,6 +52,7 @@ const Grid = ({ data }) => {
         border: '1px solid black',
         overflow: !ColTitles ? 'auto' : 'hidden',
         background: 'white',
+        display: Visible == 0 ? 'none' : 'block',
       }}
     >
       {/* Table have column */}

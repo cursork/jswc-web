@@ -6,7 +6,7 @@ const Form = ({ data }) => {
   const { findDesiredData } = useAppData();
   const styles = setStyle(data?.Properties, 'relative');
 
-  const { BCol, Picture, Size } = data?.Properties;
+  const { BCol, Picture, Size, Visible } = data?.Properties;
 
   const decideImageStyle = Picture && Picture[1];
 
@@ -34,6 +34,7 @@ const Form = ({ data }) => {
         background: BCol ? rgbColor(BCol) : '#F0F0F0',
         position: 'relative',
         border: '1px solid #F0F0F0',
+        display: Visible == 0 ? 'none' : 'block',
       }}
     >
       {ImageData ? (

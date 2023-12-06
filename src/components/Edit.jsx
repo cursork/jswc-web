@@ -20,7 +20,7 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
   const [emitValue, setEmitValue] = useState('');
   const [initialValue, setInitialValue] = useState('');
 
-  const { FieldType, MaxLength, FCol, Decimal } = data?.Properties;
+  const { FieldType, MaxLength, FCol, Decimal, Visible } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
@@ -319,7 +319,13 @@ const Edit = ({ data, value, event = '', row = '', column = '' }) => {
           );
         }, 0);
       }}
-      style={{ ...styles, borderRadius: '2px', fontSize: '12px', zIndex: 1 }}
+      style={{
+        ...styles,
+        borderRadius: '2px',
+        fontSize: '12px',
+        zIndex: 1,
+        display: Visible == 0 ? 'none' : 'block',
+      }}
       maxLength={MaxLength}
     />
   );

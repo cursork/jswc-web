@@ -13,7 +13,7 @@ import 'rc-tree/assets/index.css';
 import './TreeView.css';
 
 const Treeview = ({ data }) => {
-  const { Depth, Items, ImageListObj, ImageIndex } = data?.Properties;
+  const { Depth, Items, ImageListObj, ImageIndex, Visible } = data?.Properties;
 
   const hasEvent = data?.Properties.hasOwnProperty('Event');
 
@@ -139,6 +139,7 @@ const Treeview = ({ data }) => {
         background: 'white',
         paddingLeft: '2px',
         paddingTop: '3px',
+        display: Visible == 0 ? 'none' : 'block',
       }}
     >
       <Tree
