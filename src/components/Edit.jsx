@@ -117,7 +117,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
-          inputElement.focus();
+          inputElement.select();
         }
       });
   };
