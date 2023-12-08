@@ -39,7 +39,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '' }
       Event: {
         EventName: 'Select',
         ID: data?.ID,
-        Info: value,
+        Info: parseInt(value + 1),
       },
     });
     localStorage.setItem(data?.ID, triggerEvent);

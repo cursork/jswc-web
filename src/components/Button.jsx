@@ -2,10 +2,10 @@ import { setStyle, extractStringUntilSecondPeriod } from '../utils';
 import { useAppData } from '../hooks';
 import { useEffect, useState } from 'react';
 
-const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
+const Button = ({ data, inputValue, event = '', row = '', column = '', location = '' }) => {
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData } = useAppData();
-  const { Picture, State, Visible } = data?.Properties;
+  const { Picture, State, Visible, Event } = data?.Properties;
 
   const [checkInput, setCheckInput] = useState();
 
@@ -20,7 +20,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
   const hasEvent = data?.Properties.hasOwnProperty('Event');
 
   const decideInput = () => {
-    if (event == 'CellChanged') {
+    if (location == 'inGrid') {
       return setCheckInput(inputValue);
     }
     setCheckInput(State && State);
@@ -29,6 +29,47 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
   useEffect(() => {
     decideInput();
   }, [data]);
+
+  const handleCellChangedEvent = (value) => {
+    const triggerEvent = JSON.stringify({
+      Event: {
+        EventName: 'CellChanged',
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Row: parseInt(row),
+        Col: parseInt(column),
+        Value: value ? 1 : 0,
+      },
+    });
+    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), triggerEvent);
+    const exists = event && event.some((item) => item[0] === 'CellChanged');
+    if (!exists) return;
+    console.log(triggerEvent);
+    socket.send(triggerEvent);
+  };
+
+  const handleSelectEvent = (value) => {
+    const triggerEvent = JSON.stringify({
+      Event: {
+        EventName: 'Select',
+        ID: data?.ID,
+        Value: value ? 1 : 0,
+      },
+    });
+    localStorage.setItem(data?.ID, triggerEvent);
+    const exists = Event && Event.some((item) => item[0] === 'Select');
+    if (!exists) return;
+    console.log(triggerEvent);
+    socket.send(triggerEvent);
+  };
+
+  const handleCheckBoxEvent = (value) => {
+    if (location == 'inGrid') {
+      handleSelectEvent(value);
+      handleCellChangedEvent(value);
+    } else {
+      handleSelectEvent(value);
+    }
+  };
 
   if (isCheckBox) {
     return (
@@ -45,73 +86,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
           type='checkbox'
           defaultChecked={checkInput}
           onChange={(e) => {
-            console.log(
-              event == 'CellChanged'
-                ? JSON.stringify({
-                    Event: {
-                      EventName: event,
-                      ID: extractStringUntilSecondPeriod(data?.ID),
-                      Row: parseInt(row),
-                      Col: parseInt(column),
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-                : JSON.stringify({
-                    Event: {
-                      EventName: buttonEvent && buttonEvent[0],
-                      ID: data?.ID,
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-            );
-
-            event == 'CellChanged'
-              ? localStorage.setItem(
-                  extractStringUntilSecondPeriod(data?.ID),
-                  JSON.stringify({
-                    Event: {
-                      EventName: event,
-                      ID: extractStringUntilSecondPeriod(data?.ID),
-                      Row: parseInt(row),
-                      Col: parseInt(column),
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-                )
-              : localStorage.setItem(
-                  data?.ID,
-                  JSON.stringify({
-                    Event: {
-                      EventName: buttonEvent && buttonEvent[0],
-                      ID: data?.ID,
-                      Value: e.target.checked ? 1 : 0,
-                    },
-                  })
-                );
-
-            if (event == 'CellChanged') {
-              return socket.send(
-                JSON.stringify({
-                  Event: {
-                    EventName: event,
-                    ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row),
-                    Col: parseInt(column),
-                    Value: e.target.checked ? 1 : 0,
-                  },
-                })
-              );
-            } else if (hasEvent) {
-              socket.send(
-                JSON.stringify({
-                  Event: {
-                    EventName: buttonEvent && buttonEvent[0],
-                    ID: data?.ID,
-                    Value: e.target.checked ? 1 : 0,
-                  },
-                })
-              );
-            }
+            handleCheckBoxEvent(e.target.checked);
           }}
         />
       </div>
@@ -162,3 +137,71 @@ const Button = ({ data, inputValue, event = '', row = '', column = '' }) => {
 };
 
 export default Button;
+
+// console.log(
+//   event == 'CellChanged'
+//     ? JSON.stringify({
+//         Event: {
+//           EventName: event,
+//           ID: extractStringUntilSecondPeriod(data?.ID),
+//           Row: parseInt(row),
+//           Col: parseInt(column),
+//           Value: e.target.checked ? 1 : 0,
+//         },
+//       })
+//     : JSON.stringify({
+//         Event: {
+//           EventName: buttonEvent && buttonEvent[0],
+//           ID: data?.ID,
+//           Value: e.target.checked ? 1 : 0,
+//         },
+//       })
+// );
+
+// event == 'CellChanged'
+//   ? localStorage.setItem(
+//       extractStringUntilSecondPeriod(data?.ID),
+//       JSON.stringify({
+//         Event: {
+//           EventName: event,
+//           ID: extractStringUntilSecondPeriod(data?.ID),
+//           Row: parseInt(row),
+//           Col: parseInt(column),
+//           Value: e.target.checked ? 1 : 0,
+//         },
+//       })
+//     )
+//   : localStorage.setItem(
+//       data?.ID,
+//       JSON.stringify({
+//         Event: {
+//           EventName: buttonEvent && buttonEvent[0],
+//           ID: data?.ID,
+//           Value: e.target.checked ? 1 : 0,
+//         },
+//       })
+//     );
+
+// if (event == 'CellChanged') {
+//   return socket.send(
+//     JSON.stringify({
+//       Event: {
+//         EventName: event,
+//         ID: extractStringUntilSecondPeriod(data?.ID),
+//         Row: parseInt(row),
+//         Col: parseInt(column),
+//         Value: e.target.checked ? 1 : 0,
+//       },
+//     })
+//   );
+// } else if (hasEvent) {
+//   socket.send(
+//     JSON.stringify({
+//       Event: {
+//         EventName: buttonEvent && buttonEvent[0],
+//         ID: data?.ID,
+//         Value: e.target.checked ? 1 : 0,
+//       },
+//     })
+//   );
+// }

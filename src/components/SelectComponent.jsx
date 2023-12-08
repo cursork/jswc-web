@@ -67,7 +67,16 @@ const SelectComponent = ({
       </div>
     );
   if (data?.Properties?.Type == 'Button')
-    return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />;
+    return (
+      <Button
+        data={data}
+        location={location}
+        inputValue={inputValue}
+        event={event}
+        row={row}
+        column={column}
+      />
+    );
   if (data?.Properties?.Type == 'Combo')
     return (
       <Combo

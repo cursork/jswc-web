@@ -778,8 +778,6 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-  //console.log('AppData', dataRef.current);
-
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
       <SelectComponent data={dataRef.current['F1']} />
