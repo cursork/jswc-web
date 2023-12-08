@@ -108,10 +108,11 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   }
 
   const handleCellMove = () => {
+    if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
-    const nextSibling = superParent.nextSibling;  
+    const nextSibling = superParent.nextSibling;
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {

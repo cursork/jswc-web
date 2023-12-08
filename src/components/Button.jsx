@@ -74,6 +74,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
   };
 
   const handleCellMove = () => {
+    if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
