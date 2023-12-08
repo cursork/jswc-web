@@ -107,7 +107,22 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     };
   }
 
+  const handleCellMove = () => {
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const superParent = grandParent.parentElement;
+    const nextSibling = superParent.nextSibling;  
+    const element = nextSibling?.querySelectorAll('input');
+    element &&
+      element.forEach((inputElement) => {
+        if (inputElement.id === data?.ID) {
+          inputElement.focus();
+        }
+      });
+  };
+
   const handleKeyPress = (e) => {
+    if (e.key == 'Enter') handleCellMove();
     const exists = Event && Event.some((item) => item[0] === 'KeyPress');
     if (!exists) return;
 
@@ -116,6 +131,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     const isShiftPressed = e.shiftKey ? 1 : 0;
     const charCode = e.key.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
     console.log(
       JSON.stringify({
         Event: {
@@ -233,6 +249,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
         fontSize: '12px',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'block',
+        paddingLeft: '5px',
       }}
       maxLength={MaxLength}
     />

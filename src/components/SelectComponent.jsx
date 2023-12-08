@@ -53,7 +53,7 @@ const SelectComponent = ({
       <div
         style={{
           textAlign: data?.Properties?.FieldType == 'Numeric' ? 'right' : 'null',
-          marginLeft: '10px',
+         
         }}
       >
         <Edit

@@ -1,11 +1,13 @@
 import { setStyle, extractStringUntilSecondPeriod } from '../utils';
 import { useAppData } from '../hooks';
 import { useEffect, useState } from 'react';
+import { useRef } from 'react';
 
 const Button = ({ data, inputValue, event = '', row = '', column = '', location = '' }) => {
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData } = useAppData();
   const { Picture, State, Visible, Event } = data?.Properties;
+  const inputRef = useRef();
 
   const [checkInput, setCheckInput] = useState();
 
@@ -71,6 +73,24 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     }
   };
 
+  const handleCellMove = () => {
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const superParent = grandParent.parentElement;
+    const nextSibling = superParent.nextSibling;
+    const element = nextSibling?.querySelectorAll('input');
+    element &&
+      element.forEach((inputElement) => {
+        if (inputElement.id === data?.ID) {
+          inputElement.focus();
+        }
+      });
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key == 'Enter') handleCellMove();
+  };
+
   if (isCheckBox) {
     return (
       <div
@@ -82,6 +102,8 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
         }}
       >
         <input
+          ref={inputRef}
+          onKeyDown={(e) => handleKeyPress(e)}
           id={data?.ID}
           type='checkbox'
           defaultChecked={checkInput}
