@@ -69,7 +69,16 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Button')
     return <Button data={data} inputValue={inputValue} event={event} row={row} column={column} />;
   if (data?.Properties?.Type == 'Combo')
-    return <Combo data={data} value={inputValue} event={event} row={row} column={column} />;
+    return (
+      <Combo
+        data={data}
+        location={location}
+        value={inputValue}
+        event={event}
+        row={row}
+        column={column}
+      />
+    );
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
   if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))

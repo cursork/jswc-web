@@ -4,12 +4,10 @@ import { useAppData } from '../hooks';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const Combo = ({ data, value, event = '', row = '', column = '' }) => {
+const Combo = ({ data, value, event = '', row = '', column = '', location = '' }) => {
   const { socket } = useAppData();
   const styles = setStyle(data?.Properties);
   const { Items, SelItems, Event, Visible } = data?.Properties;
-
-  const emitEvent = Event && Event[0];
 
   const [comboInput, setComboInput] = useState('+');
 
@@ -17,6 +15,50 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
     const index = SelItems?.findIndex((element) => element == 1);
     setComboInput(Items[index]);
   }, [SelItems]);
+
+  const handleCellChangeEvent = (value) => {
+    const triggerEvent = JSON.stringify({
+      Event: {
+        EventName: 'CellChanged',
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Row: parseInt(row),
+        Col: parseInt(column),
+        Value: value,
+      },
+    });
+    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), triggerEvent);
+    const exists = event && event.some((item) => item[0] === 'CellChanged');
+    if (!exists) return;
+
+    console.log(triggerEvent);
+    socket.send(triggerEvent);
+  };
+
+  const handleSelectEvent = (value) => {
+    const triggerEvent = JSON.stringify({
+      Event: {
+        EventName: 'Select',
+        ID: data?.ID,
+        Info: value,
+      },
+    });
+    localStorage.setItem(data?.ID, triggerEvent);
+    const exists = Event && Event.some((item) => item[0] === 'Select');
+    if (!exists) return;
+    console.log(triggerEvent);
+    socket.send(triggerEvent);
+  };
+
+  const handleSelItemsEvent = (value) => {
+    const index = Items.indexOf(value);
+
+    if (location == 'inGrid') {
+      handleSelectEvent(index);
+      handleCellChangeEvent(value);
+    } else {
+      handleSelectEvent(index);
+    }
+  };
 
   return (
     <div style={{ ...styles, borderColor: '#ccc', display: Visible == 0 ? 'none' : 'block' }}>
@@ -27,78 +69,12 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
           width: '100%',
           border: 0,
           fontSize: '12px',
-          height: event === 'CellChanged' ? null : '100%',
+          height: location === 'inGrid' ? null : '100%',
           zIndex: 1,
         }}
         onChange={(e) => {
-          const index = Items.indexOf(e.target.value);
-
           setComboInput(e.target.value);
-          console.log(
-            event == 'CellChanged'
-              ? JSON.stringify({
-                  Event: {
-                    EventName: event,
-                    ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row),
-                    Col: parseInt(column),
-                    Value: e.target.value,
-                  },
-                })
-              : JSON.stringify({
-                  Event: {
-                    EventName: data?.Properties?.Event[0],
-                    ID: data?.ID,
-                    Info: parseInt(index + 1),
-                  },
-                })
-          );
-
-          if (event == 'CellChanged') {
-            localStorage.setItem(
-              extractStringUntilSecondPeriod(data?.ID),
-              JSON.stringify({
-                Event: {
-                  EventName: event,
-                  ID: extractStringUntilSecondPeriod(data?.ID),
-                  Row: parseInt(row),
-                  Col: parseInt(column),
-                  Value: e.target.value,
-                },
-              })
-            );
-          } else {
-            localStorage.setItem(
-              data?.ID,
-              JSON.stringify({
-                Event: {
-                  EventName: emitEvent && emitEvent[0],
-                  ID: data?.ID,
-                  Info: parseInt(index + 1),
-                },
-              })
-            );
-          }
-
-          socket.send(
-            event == 'CellChanged'
-              ? JSON.stringify({
-                  Event: {
-                    EventName: event,
-                    ID: extractStringUntilSecondPeriod(data?.ID),
-                    Row: parseInt(row),
-                    Col: parseInt(column),
-                    Value: e.target.value,
-                  },
-                })
-              : JSON.stringify({
-                  Event: {
-                    EventName: emitEvent && emitEvent[0],
-                    ID: data?.ID,
-                    Info: parseInt(index + 1),
-                  },
-                })
-          );
+          handleSelItemsEvent(e.target.value);
         }}
       >
         {Items && Items.map((item, i) => <option value={item}>{item}</option>)}
@@ -108,3 +84,69 @@ const Combo = ({ data, value, event = '', row = '', column = '' }) => {
 };
 
 export default Combo;
+
+//  console.log(
+//    event == 'CellChanged'
+//      ? JSON.stringify({
+//          Event: {
+//            EventName: event,
+//            ID: extractStringUntilSecondPeriod(data?.ID),
+//            Row: parseInt(row),
+//            Col: parseInt(column),
+//            Value: e.target.value,
+//          },
+//        })
+//      : JSON.stringify({
+//          Event: {
+//            EventName: data?.Properties?.Event[0],
+//            ID: data?.ID,
+//            Info: parseInt(index + 1),
+//          },
+//        })
+//  );
+
+//  if (event == 'CellChanged') {
+//    localStorage.setItem(
+//      extractStringUntilSecondPeriod(data?.ID),
+//      JSON.stringify({
+//        Event: {
+//          EventName: event,
+//          ID: extractStringUntilSecondPeriod(data?.ID),
+//          Row: parseInt(row),
+//          Col: parseInt(column),
+//          Value: e.target.value,
+//        },
+//      })
+//    );
+//  } else {
+//    localStorage.setItem(
+//      data?.ID,
+//      JSON.stringify({
+//        Event: {
+//          EventName: emitEvent && emitEvent[0],
+//          ID: data?.ID,
+//          Info: parseInt(index + 1),
+//        },
+//      })
+//    );
+//  }
+
+//  socket.send(
+//    event == 'CellChanged'
+//      ? JSON.stringify({
+//          Event: {
+//            EventName: event,
+//            ID: extractStringUntilSecondPeriod(data?.ID),
+//            Row: parseInt(row),
+//            Col: parseInt(column),
+//            Value: e.target.value,
+//          },
+//        })
+//      : JSON.stringify({
+//          Event: {
+//            EventName: emitEvent && emitEvent[0],
+//            ID: data?.ID,
+//            Info: parseInt(index + 1),
+//          },
+//        })
+//  );
