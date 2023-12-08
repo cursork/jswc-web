@@ -3,6 +3,7 @@ import SelectComponent from '../SelectComponent';
 const Cell = ({
   title,
   type = '',
+  location = '',
   parent = '',
   row = '',
   column = '',
@@ -73,7 +74,14 @@ const Cell = ({
       }}
       onClick={() => onClick(row, column)}
     >
-      <SelectComponent data={type} inputValue={title} event={parent} row={row} column={column} />
+      <SelectComponent
+        location={location}
+        data={type}
+        inputValue={title}
+        event={parent}
+        row={row}
+        column={column}
+      />
     </div>
   );
 };

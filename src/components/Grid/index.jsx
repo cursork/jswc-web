@@ -152,7 +152,7 @@ const Grid = ({ data }) => {
             ) : null}
             {tableValues.map((value, column) => {
               const type = findDesiredData(Input && Input[column]);
-              const event = data?.Properties?.Event && data?.Properties?.Event[0];
+              const event = data?.Properties?.Event && data?.Properties?.Event;
 
               return (
                 <Cell
@@ -160,8 +160,9 @@ const Grid = ({ data }) => {
                   cellWidth={CellWidths}
                   title={value}
                   type={type}
-                  parent={event && event[0]}
+                  parent={event}
                   row={row + 1}
+                  location='inGrid'
                   column={column + 1}
                   selectedGrid={selectedGrid}
                   onClick={(row, column) => handleGridClick(row, column, 'body')}

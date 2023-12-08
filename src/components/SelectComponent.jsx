@@ -24,9 +24,15 @@ import Poly from './Polygon';
 import Rectangle from './Rectangle';
 import ImageSubForm from './ImgSubForm';
 import ShapeSubForm from './ShapeSubForm';
-import { excludeKeys } from '../utils';
 
-const SelectComponent = ({ data, inputValue = '', event = '', row = '', column = '' }) => {
+const SelectComponent = ({
+  data,
+  inputValue = '',
+  event = '',
+  row = '',
+  column = '',
+  location,
+}) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
   if (data?.Properties?.Type == 'MenuBar')
     return (
@@ -50,7 +56,14 @@ const SelectComponent = ({ data, inputValue = '', event = '', row = '', column =
           marginLeft: '10px',
         }}
       >
-        <Edit data={data} value={inputValue} event={event} row={row} column={column} />
+        <Edit
+          location={location}
+          data={data}
+          value={inputValue}
+          event={event}
+          row={row}
+          column={column}
+        />
       </div>
     );
   if (data?.Properties?.Type == 'Button')
