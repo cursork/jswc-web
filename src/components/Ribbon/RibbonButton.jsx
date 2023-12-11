@@ -1,17 +1,20 @@
 import * as Icons from './RibbonIcons';
 import { RibbonButton } from 'react-bootstrap-ribbon';
+import { Row, Col } from 'reactstrap';
 
 const CustomRibbonButton = ({ data }) => {
   const { Icon, Caption } = data?.Properties;
 
   const IconComponent = Icons[Icon];
   return (
-    <div className='d-flex align-items-center justify-content-center'>
-      <div className='d-flex align-items-center flex-column justify-content-center'>
-        <IconComponent size={25} />
-        <div style={{ fontSize: '11px', fontWeight: 'bolder',textAlign:"center" }}>{Caption}</div>
-      </div>
-    </div>
+    <Row>
+      <Col md={12}>
+        <div className='d-flex align-items-center flex-column justify-content-center'>
+          <IconComponent size={35} />
+          <div className='text-center' style={{fontSize:'12px'}}>{Caption}</div>
+        </div>
+      </Col>
+    </Row>
   );
 };
 

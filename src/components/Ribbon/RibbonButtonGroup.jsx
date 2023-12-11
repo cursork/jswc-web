@@ -1,4 +1,5 @@
 import * as AppIcons from './RibbonIcons';
+import { Row, Col } from 'reactstrap';
 
 const CustomRibbonButtonGroup = ({ data }) => {
   const dataSplit = (title) => {
@@ -6,28 +7,20 @@ const CustomRibbonButtonGroup = ({ data }) => {
   };
   const { Captions, Icons } = data?.Properties;
 
+  const colSize = Captions?.length == 4 ? 6 : 12;
+
   return (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-      }}
-    >
+    <Row>
       {Captions.map((title, i) => {
         let IconComponent = AppIcons[Icons[i]];
         return (
-          <div>
+          <Col md={colSize} className='d-flex align-items-center justify-content-center '>
             <IconComponent size={25} />
-
-            <p style={{ fontSize: '11px', fontWeight: 'bolder' }}>{dataSplit(title)}</p>
-            {/* <div style={{ fontSize: '12px', textAlign: 'center' }}>{title}</div> */}
-          </div>
+            <div style={{ fontSize: '12px', textAlign: 'center' }}>{title?.slice(0, 10)}</div>
+          </Col>
         );
       })}
-    </div>
+    </Row>
   );
 };
 
