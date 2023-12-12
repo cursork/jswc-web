@@ -103,6 +103,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           marginLeft: '10px',
           zIndex: 1,
           display: Visible == 0 ? 'none' : 'flex',
+          alignItems: 'center',
         }}
       >
         {Align && Align == 'Left' ? (
@@ -167,7 +168,14 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     }, [data]);
 
     return (
-      <div style={{ ...styles, zIndex: 1, display: Visible == 0 ? 'none' : 'flex',alignItems:'center' }}>
+      <div
+        style={{
+          ...styles,
+          zIndex: 1,
+          display: Visible == 0 ? 'none' : 'flex',
+          alignItems: 'center',
+        }}
+      >
         {Align && Align == 'Left' ? (
           <div className='me-1' style={{ fontSize: '12px' }}>
             {Caption}
