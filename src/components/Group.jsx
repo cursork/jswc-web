@@ -22,7 +22,7 @@ const Group = ({ data }) => {
           style={{
             fontSize: '12px',
             position: 'relative',
-            bottom: 10,
+            bottom: 14,
             left: 10,
             background: '#F1F1F1 ',
           }}
