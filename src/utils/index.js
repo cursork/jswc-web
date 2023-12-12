@@ -239,3 +239,11 @@ export const deleteObjectsById = (data, idsToDelete) => {
 
   return data;
 };
+
+export const getElementPosition = (Properties, position = 'absolute', background) => {
+  return {
+    position: Properties?.Posn ? 'absolute' : 'relative',
+    top: Properties?.Posn && Properties?.Posn[0],
+    left: Properties?.Posn && Properties?.Posn[1],
+  };
+};

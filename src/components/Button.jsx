@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilSecondPeriod } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, getElementPosition } from '../utils';
 import { useAppData } from '../hooks';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
@@ -96,35 +96,39 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
   };
 
   if (isCheckBox) {
+    let checkBoxPosition = null;
+    if (Align && Align == 'Left') {
+      checkBoxPosition = { position: 'absolute', right: 0, top: 3 };
+    } else if (!Align || Align == 'Right') {
+      checkBoxPosition = { position: 'absolute', left: 0, top: 3 };
+    }
     return (
       <div
         style={{
           ...styles,
-          marginLeft: '10px',
           zIndex: 1,
-          display: Visible == 0 ? 'none' : 'flex',
+          display: Visible == 0 ? 'none' : 'block',
           alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         {Align && Align == 'Left' ? (
-          <div className='me-1' style={{ fontSize: '12px' }}>
-            {Caption}
-          </div>
+          <div style={{ fontSize: '12px', position: 'absolute', top: 0, left: 0 }}>{Caption}</div>
         ) : null}
+
         <input
           ref={inputRef}
           onKeyDown={(e) => handleKeyPress(e)}
           id={data?.ID}
           type='checkbox'
+          style={checkBoxPosition}
           defaultChecked={checkInput}
           onChange={(e) => {
             handleCheckBoxEvent(e.target.checked);
           }}
         />
         {!Align || Align == 'Right' ? (
-          <div className='ms-1' style={{ fontSize: '12px' }}>
-            {Caption}
-          </div>
+          <div style={{ fontSize: '12px', position: 'absolute', top: 0, right: 0 }}>{Caption}</div>
         ) : null}
       </div>
     );
@@ -244,3 +248,12 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
 };
 
 export default Button;
+
+//  <div
+//     style={{
+//       ...styles,
+//       zIndex: 1,
+//       display: Visible == 0 ? 'none' : 'block',
+//     }}
+//   >
+//
