@@ -140,7 +140,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
       });
       const exists = Event && Event.some((item) => item[0] === 'Select');
       if (!exists) return;
-      console.log({ emitEvent });
+      console.log(emitEvent);
       socket.send(emitEvent);
     };
 
@@ -177,7 +177,6 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           value={Caption}
           onChange={(e) => {
             handleRadioButton(data?.ID, e.target.checked);
-            // handleCheckBoxEvent(e.target.checked);
           }}
         />
         {!Align || Align == 'Right' ? <div className='ms-1'>{Caption}</div> : null}
