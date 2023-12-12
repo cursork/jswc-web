@@ -17,7 +17,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
       Event: {
         EventName: 'Select',
         ID: data?.ID,
-        Info: info,
+        Info: [info],
       },
     });
     const exists = Event && Event.some((item) => item[0] === 'Select');
