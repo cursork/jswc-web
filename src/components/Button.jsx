@@ -108,8 +108,6 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           ...styles,
           zIndex: 1,
           display: Visible == 0 ? 'none' : 'block',
-          alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
         {Align && Align == 'Left' ? (
@@ -128,13 +126,20 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           }}
         />
         {!Align || Align == 'Right' ? (
-          <div style={{ fontSize: '12px', position: 'absolute', top: 0, right: 0 }}>{Caption}</div>
+          <div style={{ fontSize: '12px', position: 'absolute', top: 0, left: 16 }}>{Caption}</div>
         ) : null}
       </div>
     );
   }
 
   if (isRadio) {
+    let radioPosition = null;
+    if (Align && Align == 'Left') {
+      radioPosition = { position: 'absolute', right: 0, top: 3 };
+    } else if (!Align || Align == 'Right') {
+      radioPosition = { position: 'absolute', left: 0, top: 3 };
+    }
+
     const handleRadioSelectEvent = (value) => {
       const emitEvent = JSON.stringify({
         Event: {
@@ -176,14 +181,11 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
         style={{
           ...styles,
           zIndex: 1,
-          display: Visible == 0 ? 'none' : 'flex',
-          alignItems: 'center',
+          display: Visible == 0 ? 'none' : 'block',
         }}
       >
         {Align && Align == 'Left' ? (
-          <div className='me-1' style={{ fontSize: '12px' }}>
-            {Caption}
-          </div>
+          <div style={{ fontSize: '12px', position: 'absolute', top: 2, left: 0 }}>{Caption}</div>
         ) : null}
         <input
           name={extractStringUntilSecondPeriod(data?.ID)}
@@ -196,9 +198,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           }}
         />
         {!Align || Align == 'Right' ? (
-          <div className='ms-1' style={{ fontSize: '12px' }}>
-            {Caption}
-          </div>
+          <div style={{ fontSize: '12px', position: 'absolute', top: 2, left: 16 }}>{Caption}</div>
         ) : null}
       </div>
     );
@@ -248,12 +248,3 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
 };
 
 export default Button;
-
-//  <div
-//     style={{
-//       ...styles,
-//       zIndex: 1,
-//       display: Visible == 0 ? 'none' : 'block',
-//     }}
-//   >
-//
