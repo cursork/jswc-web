@@ -116,7 +116,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
-        if (inputElement.id === data?.ID) {
+      if (inputElement.id === data?.ID) {
           inputElement.select();
         }
       });

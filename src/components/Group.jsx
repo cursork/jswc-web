@@ -12,10 +12,10 @@ const Group = ({ data }) => {
     <div
       style={{
         ...styles,
-        border: '1px solid #F0F0F0',
-        background: 'white',
+        border: '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
       }}
+      id={data?.ID}
     >
       {data?.Properties?.Caption && (
         <span

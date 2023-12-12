@@ -7,7 +7,7 @@ import './App.css';
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [layout, setLayout] = useState('Initialise');
+  const [layout, setLayo6ut] = useState('Initialise');
 
   function useForceRerender() {
     const [_state, setState] = useState(true);
@@ -22,6 +22,7 @@ const App = () => {
   const dataRef = useRef({});
 
   const handleData = (data) => {
+    
     const periodCount = checkPeriod(data.ID);
     const splitID = data.ID.split('.');
 
@@ -66,6 +67,7 @@ const App = () => {
         ...data,
       };
     }
+    reRender()
   };
 
   const deleteObjectsById = (data, idsToDelete) => {
@@ -778,10 +780,10 @@ const App = () => {
     fetchData();
   }, [layout]);
 
-  console.log('App', dataRef.current);
+  // console.log('App', dataRef.current);
 
   return (
-    <AppDataContext.Provider value={{ socketData, dataRef, socket }}>
+    <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>
       <SelectComponent data={dataRef.current['F1']} />
     </AppDataContext.Provider>
   );
