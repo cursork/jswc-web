@@ -167,8 +167,12 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     }, [data]);
 
     return (
-      <div style={{ ...styles, zIndex: 1, display: Visible == 0 ? 'none' : 'flex' }}>
-        {Align && Align == 'Left' ? <div className='me-1'>{Caption}</div> : null}
+      <div style={{ ...styles, zIndex: 1, display: Visible == 0 ? 'none' : 'flex',alignItems:'center' }}>
+        {Align && Align == 'Left' ? (
+          <div className='me-1' style={{ fontSize: '12px' }}>
+            {Caption}
+          </div>
+        ) : null}
         <input
           name={extractStringUntilSecondPeriod(data?.ID)}
           id={data?.ID}
@@ -179,7 +183,11 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
             handleRadioButton(data?.ID, e.target.checked);
           }}
         />
-        {!Align || Align == 'Right' ? <div className='ms-1'>{Caption}</div> : null}
+        {!Align || Align == 'Right' ? (
+          <div className='ms-1' style={{ fontSize: '12px' }}>
+            {Caption}
+          </div>
+        ) : null}
       </div>
     );
   }
