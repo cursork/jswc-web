@@ -193,9 +193,9 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       if (value != emitValue) {
         triggerChangeEvent();
         triggerCellChangedEvent();
-      } else {
-        if (initialValue != emitValue) triggerChangeEvent();
       }
+    } else {
+      if (initialValue != emitValue) triggerChangeEvent();
     }
   };
 
