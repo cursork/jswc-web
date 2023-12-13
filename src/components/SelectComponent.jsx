@@ -50,11 +50,15 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Grid') return <Grid data={data} />;
   if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style !== 'Multi')
     return (
-      <div
-        style={{
-          textAlign: data?.Properties?.FieldType == 'Numeric' ? 'right' : 'null',
-         
-        }}
+      <div  
+        style={
+          location == 'inGrid'
+            ? {
+                display: 'flex',
+                justifyContent: data?.Properties?.FieldType == 'Numeric' ? 'end' : 'start',
+              }
+            : null
+        }
       >
         <Edit
           location={location}

@@ -102,6 +102,11 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     } else if (!Align || Align == 'Right') {
       checkBoxPosition = { position: 'absolute', left: 0, top: 3 };
     }
+
+    if (location == 'inGrid') {
+      checkBoxPosition = { ...checkBoxPosition, marginLeft: '10px' };
+    }
+
     return (
       <div
         style={{
