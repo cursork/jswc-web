@@ -8,23 +8,23 @@ const Form = ({ data }) => {
 
   const { BCol, Picture, Size, Visible } = data?.Properties;
 
-  const decideImageStyle = Picture && Picture[1];
+  // const decideImageStyle = Picture && Picture[1];
 
   const updatedData = excludeKeys(data);
 
-  const ImageData = findDesiredData(Picture && Picture[0]);
+  // const ImageData = findDesiredData(Picture && Picture[0]);
 
   localStorage.setItem('formDimension', JSON.stringify(Size));
 
-  let imageStyles = null;
+  // let imageStyles = null;
 
-  if (decideImageStyle == 1) {
-    imageStyles = {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-    };
-  }
+  // if (decideImageStyle == 1) {
+  //   imageStyles = {
+  //     position: 'absolute',
+  //     top: 0,
+  //     left: 0,
+  //   };
+  // }
 
   return (
     <div
@@ -37,9 +37,9 @@ const Form = ({ data }) => {
         display: Visible == 0 ? 'none' : 'block',
       }}
     >
-      {ImageData ? (
+      {/* {ImageData ? (
         <img style={imageStyles} src={`http://localhost:22322/${ImageData?.Properties?.File}`} />
-      ) : null}
+      ) : null} */}
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}

@@ -30,9 +30,17 @@ const App = () => {
       if (!dataRef.current.hasOwnProperty(data.ID)) {
         // If it doesn't exist, add the object
         dataRef.current[data.ID] = { ID: data.ID, ...data };
+      } else if (dataRef.current[data.ID] && !data.Properties.hasOwnProperty('Type')) {
+        // Check when the ID already exists in the ref and you want to add the properties in it
+        dataRef.current[data.ID] = {
+          ID: data.ID,
+          Properties: { ...dataRef.current[data.ID].Properties, ...data.Properties },
+        };
+      } else if (dataRef.current[data.ID] && data.Properties.hasOwnProperty('Type')) {
+        // When creating the new layout for the app it clears the ref value
+        localStorage.clear();
+        dataRef.current[data.ID] = {};
       }
-      localStorage.clear();
-      dataRef.current[data.ID] = {};
     }
 
     let currentLevel = dataRef.current;
@@ -55,8 +63,8 @@ const App = () => {
         ID: data.ID,
         ...currentLevel[finalKey],
         Properties: {
-          ...currentLevel[finalKey].Properties,
-          ...data.Properties,
+          ...(currentLevel[finalKey].Properties || {}), // Ensure Properties exists
+          ...(data.Properties || {}),
         },
       };
     } else {
@@ -778,8 +786,6 @@ const App = () => {
     localStorage.clear();
     fetchData();
   }, [layout]);
-
-  // console.log('App', dataRef.current);
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>
