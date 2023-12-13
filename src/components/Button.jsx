@@ -104,7 +104,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     }
 
     if (location == 'inGrid') {
-      checkBoxPosition = { ...checkBoxPosition, marginLeft: '10px' };
+      checkBoxPosition = { ...checkBoxPosition, marginLeft: '5px' };
     }
 
     return (

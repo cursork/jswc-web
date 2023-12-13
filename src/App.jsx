@@ -7,7 +7,7 @@ import './App.css';
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [layout, setLayo6ut] = useState('Initialise');
+  const [layout, setLayout] = useState('Initialise');
 
   function useForceRerender() {
     const [_state, setState] = useState(true);

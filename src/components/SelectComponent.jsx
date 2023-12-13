@@ -50,12 +50,16 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Grid') return <Grid data={data} />;
   if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style !== 'Multi')
     return (
-      <div  
+      <div
         style={
           location == 'inGrid'
             ? {
                 display: 'flex',
-                justifyContent: data?.Properties?.FieldType == 'Numeric' ? 'end' : 'start',
+                justifyContent:
+                  data?.Properties?.FieldType == 'Numeric' ||
+                  data?.Properties?.FieldType == 'LongNumeric'
+                    ? 'end'
+                    : 'start',
               }
             : null
         }
