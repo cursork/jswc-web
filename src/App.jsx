@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
-import { checkPeriod, getObjectById, checkSupportedProperties, deleteObjectsById } from './utils';
+import {
+  checkPeriod,
+  getObjectById,
+  checkSupportedProperties,
+  deleteObjectsById,
+  findKeyWithFormType,
+} from './utils';
 import './App.css';
 
 const App = () => {
@@ -787,9 +793,11 @@ const App = () => {
     fetchData();
   }, [layout]);
 
+  console.log('App', dataRef.current);
+
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>
-      <SelectComponent data={dataRef.current['F1']} />
+      {dataRef && <SelectComponent data={dataRef.current['F1']} />}
     </AppDataContext.Provider>
   );
 };

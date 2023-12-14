@@ -14,9 +14,9 @@ const Rectangle = ({
   return (
     <div
       style={{
-        position: 'absolute',
-        top: posn[0],
-        left: posn[1],
+        // position: 'absolute',
+        // top: posn[0],
+        // left: posn[1],
         display: Visible == 0 ? 'none' : 'block',
       }}
     >

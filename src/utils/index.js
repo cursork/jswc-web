@@ -247,3 +247,15 @@ export const getElementPosition = (Properties, position = 'absolute', background
     left: Properties?.Posn && Properties?.Posn[1],
   };
 };
+
+export const findKeyWithFormType = (inputObject) => {
+  let mykey = null;
+  const keys = Object.keys(inputObject);
+  keys?.forEach((key) => {
+    if (inputObject[key]['Properties']['Type'] == 'Form') {
+      mykey = key;
+    }
+  });
+
+  return mykey;
+};

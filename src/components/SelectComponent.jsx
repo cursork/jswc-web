@@ -32,6 +32,7 @@ const SelectComponent = ({
   row = '',
   column = '',
   location,
+  inSplitter = null,
 }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
   if (data?.Properties?.Type == 'MenuBar')
@@ -121,7 +122,9 @@ const SelectComponent = ({
 
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
-  if (data?.Properties?.Type == 'SubForm') return <ShapeSubForm data={data} />;
+  if (data?.Properties?.Type == 'SubForm') {
+    return <ShapeSubForm name={inSplitter} data={data} />;
+  }
 };
 
 export default SelectComponent;

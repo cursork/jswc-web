@@ -241,14 +241,14 @@ const Splitter = ({ data }) => {
               }}
             >
               {Object.keys(updatedFirstForm).map((key) => (
-                <SelectComponent data={updatedFirstForm[key]} />
+                <SelectComponent inSplitter={'inSplitter'} data={updatedFirstForm[key]} />
               ))}
             </div>
           </div>
           <div style={{ border: '1px solid #F0F0F0' }}>
             <div style={{ position: 'absolute', flex: 1, background: 'white' }}>
               {Object.keys(updatedSecondForm).map((key) => (
-                <SelectComponent data={updatedSecondForm[key]} />
+                <SelectComponent inSplitter={'inSplitter'} data={updatedSecondForm[key]} />
               ))}
             </div>
           </div>
@@ -321,7 +321,7 @@ const Splitter = ({ data }) => {
             }}
           >
             {Object.keys(updatedFirstForm).map((key) => (
-              <SelectComponent data={updatedFirstForm[key]} />
+              <SelectComponent inSplitter={'inSplitter'} data={updatedFirstForm[key]} />
             ))}
           </div>
         </div>
@@ -330,7 +330,7 @@ const Splitter = ({ data }) => {
       <div style={{ ...layoutCSS, background: 'white' }}>
         <div style={{ background: 'white' }}>
           {Object.keys(updatedSecondForm).map((key) => (
-            <SelectComponent data={updatedSecondForm[key]} />
+            <SelectComponent inSplitter={'inSplitter'} isSubForm={true} data={updatedSecondForm[key]} />
           ))}
         </div>
       </div>
