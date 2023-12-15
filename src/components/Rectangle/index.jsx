@@ -6,7 +6,7 @@ const Rectangle = ({
   parentSize = JSON.parse(localStorage.getItem('formDimension')),
   posn = [0, 0],
 }) => {
-  const { Points, Size, FCol, Radius, Visible } = data?.Properties;
+  const { Points, Size, FCol, Radius, Visible, FStyle, FillCol } = data?.Properties;
 
   const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
   const sizeArray = Size && Size[0].map((y, i) => [Size[1][i], y]);
@@ -32,7 +32,7 @@ const Rectangle = ({
               y={rectanglePoints[1]}
               width={sizeArray && sizeArray[index][0]}
               height={sizeArray && sizeArray[index][1]}
-              fill='none'
+              fill={FStyle && FStyle[index] == '-1' ? 'none' : rgbColor(FillCol && FillCol[index])}
               stroke={hasFCol ? FCol && rgbColor(FCol[index]) : 'rgb(0,0,0)'}
               strokeWidth={'1px'}
             />
