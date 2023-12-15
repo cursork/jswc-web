@@ -27,7 +27,7 @@ const App = () => {
 
   const dataRef = useRef({});
 
-  const handleData = (data) => {
+  const handleData = (data, mode) => {
     const periodCount = checkPeriod(data.ID);
     const splitID = data.ID.split('.');
 
