@@ -42,7 +42,9 @@ const CustomRibbonButtonGroup = ({ data }) => {
             onClick={() => handleButtonEvent(i + 1)}
           >
             <IconComponent size={25} />
-            <div style={{ fontSize: '12px', textAlign: 'center' }}>{title?.slice(0, 10)}</div>
+            <div style={{ fontSize: '12px', textAlign: 'center', textOverflow: 'ellipsis' }}>
+              {title}
+            </div>
           </Col>
         );
       })}
