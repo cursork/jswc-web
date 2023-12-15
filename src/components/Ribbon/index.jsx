@@ -13,7 +13,7 @@ const CustomRibbon = ({ data }) => {
   const { Visible } = data?.Properties;
 
   return (
-    <div className='row' style={{ height: '8rem' }}>
+    <div className='row' style={{ height: '8rem',width:'1150px' }}>
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}

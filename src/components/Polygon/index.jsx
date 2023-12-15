@@ -7,6 +7,7 @@ const Poly = ({ data }) => {
 
   const svgRef = useRef(null);
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+  const hasFCol = data?.Properties.hasOwnProperty('FCol');
 
   useEffect(() => {
     if (svgRef.current) {
@@ -20,16 +21,17 @@ const Poly = ({ data }) => {
   return (
     <div style={{ position: 'absolute', display: Visible == 0 ? 'none' : 'block' }}>
       <svg height={parentSize[0]} width={parentSize[1]}>
-        {Points.map((polygonPoints, index) => {
-          const flatArray = polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);
+        {Points?.map((polygonPoints, index) => {
+          const flatArray =
+            polygonPoints && polygonPoints[0].map((x, i) => [polygonPoints[1][i], x]);
 
           return (
             <polygon
               key={index}
-              points={flatArray.flat().join(' ')}
-              fill={FStyle[index] == '-1' ? 'none' : rgbColor(FillCol[index])}
-              stroke={rgbColor(FCol[index])}
-              stroke-width={LWidth[index]}
+              points={flatArray && flatArray.flat().join(' ')}
+              fill={FStyle && FStyle[index] == '-1' ? 'none' : FillCol && rgbColor(FillCol[index])}
+              stroke={hasFCol ? FCol && rgbColor(FCol[index]) : 'rgb(0,0,0)'}
+              stroke-width={LWidth && LWidth[index]}
             />
           );
         })}

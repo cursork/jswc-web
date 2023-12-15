@@ -157,8 +157,8 @@ export const findParentIndex = (depthArray, parentNumber) => {
 };
 
 export const rgbColor = (rgbArray) => {
-  if (rgbArray.length !== 3) {
-    throw new Error('RGB array must have exactly 3 values.');
+  if (rgbArray?.length !== 3) {
+    return;
   }
 
   const [r, g, b] = rgbArray;
