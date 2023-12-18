@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
-import {
-  checkPeriod,
-  getObjectById,
-  checkSupportedProperties,
-  deleteObjectsById,
-  findKeyWithFormType,
-} from './utils';
+import { getObjectById, checkSupportedProperties, findFormParentID } from './utils';
 import './App.css';
 
 const App = () => {
@@ -28,30 +22,10 @@ const App = () => {
   const dataRef = useRef({});
 
   const handleData = (data, mode) => {
-    const periodCount = checkPeriod(data.ID);
     const splitID = data.ID.split('.');
-
-    // If there's a key without a period, reset dataRef and build the structure again
-    if (periodCount === 0) {
-      if (!dataRef.current.hasOwnProperty(data.ID)) {
-        // If it doesn't exist, add the object
-        dataRef.current[data.ID] = { ID: data.ID, ...data };
-      } else if (dataRef.current[data.ID] && !data.Properties.hasOwnProperty('Type')) {
-        // Check when the ID already exists in the ref and you want to add the properties in it
-        dataRef.current[data.ID] = {
-          ID: data.ID,
-          Properties: { ...dataRef.current[data.ID].Properties, ...data.Properties },
-        };
-      } else if (dataRef.current[data.ID] && data.Properties.hasOwnProperty('Type')) {
-        // When creating the new layout for the app it clears the ref value
-        localStorage.clear();
-        dataRef.current[data.ID] = {};
-      }
-    }
-
     let currentLevel = dataRef.current;
 
-    for (let i = 0; i < periodCount; i++) {
+    for (let i = 0; i < splitID.length - 1; i++) {
       const key = splitID[i];
 
       if (!currentLevel[key]) {
@@ -62,17 +36,28 @@ const App = () => {
     }
 
     // Check if the key already exists at the final level
-    const finalKey = splitID[periodCount];
+    const finalKey = splitID[splitID.length - 1];
     if (currentLevel.hasOwnProperty(finalKey)) {
-      // Update the existing object with new properties
-      currentLevel[finalKey] = {
-        ID: data.ID,
-        ...currentLevel[finalKey],
-        Properties: {
-          ...(currentLevel[finalKey].Properties || {}), // Ensure Properties exists
-          ...(data.Properties || {}),
-        },
-      };
+      if (mode === 'WC') {
+        if (data.Properties && data.Properties.Type === 'Form') {
+          localStorage.clear();
+        }
+        // Overwrite the existing object with new properties
+        currentLevel[finalKey] = {
+          ID: data.ID,
+          ...data,
+        };
+      } else if (mode === 'WS') {
+        // Merge the existing object with new properties
+        currentLevel[finalKey] = {
+          ID: data.ID,
+          ...currentLevel[finalKey],
+          Properties: {
+            ...(currentLevel[finalKey].Properties || {}),
+            ...(data.Properties || {}),
+          },
+        };
+      }
     } else {
       // Create a new object at the final level
       currentLevel[finalKey] = {
@@ -80,6 +65,7 @@ const App = () => {
         ...data,
       };
     }
+
     reRender();
   };
 
@@ -116,14 +102,11 @@ const App = () => {
     };
     webSocket.onmessage = (event) => {
       // Window Creation WC
-
       const keys = Object.keys(JSON.parse(event.data));
-
       if (keys[0] == 'WC') {
         // console.log('event from server WC', JSON.parse(event.data).WC);
-
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
-        handleData(JSON.parse(event.data).WC);
+        handleData(JSON.parse(event.data).WC, 'WC');
       } else if (keys[0] == 'WS') {
         const serverEvent = JSON.parse(event.data).WS;
 
@@ -140,20 +123,26 @@ const App = () => {
           // Check that the Already Present Data have Text Key or Value Key
           if (data?.Properties.hasOwnProperty('Text')) {
             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-            return handleData({
-              ID: serverEvent.ID,
-              Properties: {
-                Text: value,
+            return handleData(
+              {
+                ID: serverEvent.ID,
+                Properties: {
+                  Text: value,
+                },
               },
-            });
+              'WS'
+            );
           } else if (data?.Properties.hasOwnProperty('Value')) {
             setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-            return handleData({
-              ID: serverEvent.ID,
-              Properties: {
-                Value: value,
+            return handleData(
+              {
+                ID: serverEvent.ID,
+                Properties: {
+                  Value: value,
+                },
               },
-            });
+              'WS'
+            );
           }
         }
 
@@ -163,19 +152,22 @@ const App = () => {
             value = serverEvent?.Properties.SelItems;
             const indextoFind = value.indexOf(1);
             let Text = data?.Properties?.Items[indextoFind];
-            return handleData({
-              ID: serverEvent.ID,
-              Properties: {
-                ...data?.Properties,
-                SelItems: value,
-                Text,
+            return handleData(
+              {
+                ID: serverEvent.ID,
+                Properties: {
+                  ...data?.Properties,
+                  SelItems: value,
+                  Text,
+                },
               },
-            });
+              'WS'
+            );
           }
         }
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-        handleData(JSON.parse(event.data).WS);
+        handleData(JSON.parse(event.data).WS, 'WS');
       } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
 
@@ -795,9 +787,11 @@ const App = () => {
 
   console.log('App', dataRef.current);
 
+  const formParentID = findFormParentID(dataRef.current);
+
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>
-      {dataRef && <SelectComponent data={dataRef.current['F1']} />}
+      {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
     </AppDataContext.Provider>
   );
 };

@@ -248,14 +248,12 @@ export const getElementPosition = (Properties, position = 'absolute', background
   };
 };
 
-export const findKeyWithFormType = (inputObject) => {
-  let mykey = null;
-  const keys = Object.keys(inputObject);
-  keys?.forEach((key) => {
-    if (inputObject[key]['Properties']['Type'] == 'Form') {
-      mykey = key;
-    }
+export const findFormParentID = (data) => {
+  // Replace the condition inside the find function with your specific criteria
+  const formParentID = Object.keys(data).find((key) => {
+    const item = data[key];
+    return item && item.Properties && item.Properties.Type === 'Form';
   });
 
-  return mykey;
+  return formParentID;
 };
