@@ -13,6 +13,7 @@ import 'rc-tree/assets/index.css';
 import './TreeView.css';
 
 const Treeview = ({ data }) => {
+  const PORT = localStorage.getItem('PORT');
   const { Depth, Items, ImageListObj, ImageIndex, Visible } = data?.Properties;
 
   const hasEvent = data?.Properties.hasOwnProperty('Event');
@@ -102,7 +103,7 @@ const Treeview = ({ data }) => {
 
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={`http://localhost:22322/${ImageList?.Properties?.Files[index - 1]}`} />
+        <img src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[index - 1]}`} />
         <div>{title}</div>
       </div>
     );

@@ -96,11 +96,13 @@ const App = () => {
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
 
+    localStorage.setItem('PORT', runningPort);
+
     const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
     setSocket(webSocket);
     webSocket.onopen = () => {
       webSocket.send(layout);
-      // webSocket.send('Initialise');
+      // webSocket.send('Initialise');4
     };
     webSocket.onmessage = (event) => {
       // Window Creation WC

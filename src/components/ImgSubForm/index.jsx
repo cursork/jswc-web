@@ -2,6 +2,8 @@ import { setStyle } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const ImageSubForm = ({ data }) => {
+  const PORT = localStorage.getItem('PORT');
+
   const { findDesiredData } = useAppData();
 
   const styles = setStyle(data?.Properties);
@@ -15,7 +17,7 @@ const ImageSubForm = ({ data }) => {
   if (Picture && Picture[1] == 1) {
     updatedStyles = {
       ...styles,
-      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       backgroundRepeat: 'repeat',
     };
   }
@@ -25,7 +27,7 @@ const ImageSubForm = ({ data }) => {
   if (Picture && Picture[1] == 0) {
     updatedStyles = {
       ...styles,
-      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       position: 'absolute',
       top: 0,
       left: 0,
@@ -37,7 +39,7 @@ const ImageSubForm = ({ data }) => {
   if (Picture && Picture[1] == 3) {
     updatedStyles = {
       ...styles,
-      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       backgroundPosition:
         'center center' /* Center the background image horizontally and vertically */,
       display: 'flex',
@@ -52,7 +54,7 @@ const ImageSubForm = ({ data }) => {
   if (Picture && Picture[1] == 2) {
     updatedStyles = {
       ...styles,
-      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       backgroundSize: '100% 100%',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center center',
