@@ -93,8 +93,10 @@ const App = () => {
     reRender();
   };
 
-  const fetchData = () => {
-    const webSocket = new WebSocket('ws://localhost:22322/');
+  const fetchData = (port) => {
+    const runningPort = port == '5173' ? '22322' : port;
+
+    const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
     setSocket(webSocket);
     webSocket.onopen = () => {
       webSocket.send(layout);
@@ -782,7 +784,11 @@ const App = () => {
     dataRef.current = {};
     setSocketData([]);
     localStorage.clear();
-    fetchData();
+
+    const currentPort = window.location.port;
+    console.log({ currentPort });
+
+    fetchData(currentPort);
   }, [layout]);
 
   console.log('App', dataRef.current);
