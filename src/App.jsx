@@ -96,7 +96,7 @@ const App = () => {
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
 
-    localStorage.setItem('PORT', runningPort);
+   
 
     const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
     setSocket(webSocket);
@@ -105,6 +105,9 @@ const App = () => {
       // webSocket.send('Initialise');4
     };
     webSocket.onmessage = (event) => {
+
+       localStorage.setItem('PORT', runningPort);
+
       // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
