@@ -7,8 +7,8 @@ import { useRef, useState } from 'react';
 import { useEffect } from 'react';
 
 const Splitter = ({ data }) => {
-  const { dataRef } = useAppData();
-  const { socket } = useAppData();
+  const { dataRef, socket, findDesiredData } = useAppData();
+
   let formWidth = 800;
   let formHeight = 800;
 
@@ -173,14 +173,17 @@ const Splitter = ({ data }) => {
           EventName: emitEvent && emitEvent[0],
           ID: data.ID,
           Info: [topHeight, 0],
-          Size: [3, topDimensions.Size[1]],
+          Size: [3, topDimensions?.Size[1]],
         },
       })
     );
 
     localStorage.setItem(
       SplitObj1,
-      JSON.stringify({ Size: [topHeight, topDimensions.Size[1]], Posn: [topHeight, 0] })
+      JSON.stringify({
+        Size: [topHeight, topDimensions?.Size[1]],
+        Posn: [topHeight && topHeight, 0],
+      })
     );
     localStorage.setItem(
       SplitObj2,
@@ -198,6 +201,10 @@ const Splitter = ({ data }) => {
   // Horizontal Split
 
   if (Style && Style == 'Horz') {
+    const isTopVisible = firstFormData && firstFormData?.Properties?.Visible;
+
+    const isBottomVisible = secondFormData && secondFormData?.Properties?.Visible;
+
     return (
       <div style={{ height: 800, background: 'white', display: Visible == 0 ? 'none' : 'block' }}>
         <SplitPane
@@ -238,6 +245,7 @@ const Splitter = ({ data }) => {
                 height: data?.Properties?.Posn[0],
                 position: 'relative',
                 background: 'white',
+                display: isTopVisible == 0 ? 'none' : 'block',
               }}
             >
               {Object.keys(updatedFirstForm).map((key) => (
@@ -246,7 +254,14 @@ const Splitter = ({ data }) => {
             </div>
           </div>
           <div style={{ border: '1px solid #F0F0F0' }}>
-            <div style={{ position: 'absolute', flex: 1, background: 'white' }}>
+            <div
+              style={{
+                position: 'absolute',
+                flex: 1,
+                background: 'white',
+                display: isBottomVisible == 0 ? 'none' : 'block',
+              }}
+            >
               {Object.keys(updatedSecondForm).map((key) => (
                 <SelectComponent inSplitter={'inSplitter'} data={updatedSecondForm[key]} />
               ))}
@@ -264,6 +279,10 @@ const Splitter = ({ data }) => {
   // Info [0,left,800,3]
   // 800 is the height of the Splitter and 3 is the width of the splitter
   //0 is the top position of the Splitter and left is the left position of the Splitter
+
+  const isLeftVisible = firstFormData && firstFormData?.Properties?.Visible;
+
+  const isRightVisible = secondFormData && secondFormData?.Properties?.Visible;
 
   return (
     <SplitPane
@@ -312,7 +331,14 @@ const Splitter = ({ data }) => {
     >
       {/* left Subform */}
       <Pane minSize={0} maxSize='100%'>
-        <div style={{ ...layoutCSS, border: '1px solid #F0F0F0', background: 'white' }}>
+        <div
+          style={{
+            ...layoutCSS,
+            border: '1px solid #F0F0F0',
+            background: 'white',
+            display: isLeftVisible == 0 ? 'none' : 'block',
+          }}
+        >
           <div
             style={{
               width: data?.Properties?.Posn[1],
@@ -328,9 +354,13 @@ const Splitter = ({ data }) => {
       </Pane>
       {/* Right SubForm */}
       <div style={{ ...layoutCSS, background: 'white' }}>
-        <div style={{ background: 'white' }}>
+        <div style={{ background: 'white', display: isRightVisible == 0 ? 'none' : 'block' }}>
           {Object.keys(updatedSecondForm).map((key) => (
-            <SelectComponent inSplitter={'inSplitter'} isSubForm={true} data={updatedSecondForm[key]} />
+            <SelectComponent
+              inSplitter={'inSplitter'}
+              isSubForm={true}
+              data={updatedSecondForm[key]}
+            />
           ))}
         </div>
       </div>
