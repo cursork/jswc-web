@@ -32,6 +32,36 @@ const ImageSubForm = ({ data }) => {
     };
   }
 
+  // Make the image center in the subform
+
+  if (Picture && Picture[1] == 3) {
+    updatedStyles = {
+      ...styles,
+      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundPosition:
+        'center center' /* Center the background image horizontally and vertically */,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundRepeat: 'no-repeat',
+    };
+  }
+
+  // Image is Scalar means Image fit exactly horizontally and vertically
+
+  if (Picture && Picture[1] == 2) {
+    updatedStyles = {
+      ...styles,
+      backgroundImage: `url(http://localhost:22322${ImageData?.Properties?.File})`,
+      backgroundSize: '100% 100%',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+  }
+
   return <div style={updatedStyles}></div>;
 };
 
