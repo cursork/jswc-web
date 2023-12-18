@@ -32,7 +32,7 @@ const Rectangle = ({
               y={rectanglePoints[1]}
               width={sizeArray && sizeArray[index][0]}
               height={sizeArray && sizeArray[index][1]}
-              fill={FStyle && !FStyle[index] ? 'none' : rgbColor(FillCol && FillCol[index])}
+              fill={FStyle && FStyle[index] == '-1' ? 'none' : rgbColor(FillCol && FillCol[index])}
               stroke={hasFCol ? FCol && rgbColor(FCol[index]) : 'rgb(0,0,0)'}
               strokeWidth={'1px'}
             />
