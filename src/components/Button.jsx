@@ -165,13 +165,16 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
       for (var i = 0; i < radioInputs.length; i++) {
         var radioId = radioInputs[i].id;
         const button = JSON.parse(getObjectById(dataRef.current, radioId));
-        handleData({
-          ID: button.ID,
-          Properties: {
-            ...button?.Properties,
-            State: data?.ID == button?.ID ? 1 : 0,
+        handleData(
+          {
+            ID: button.ID,
+            Properties: {
+              ...button?.Properties,
+              State: data?.ID == button?.ID ? 1 : 0,
+            },
           },
-        });
+          'WS'
+        );
       }
 
       handleRadioSelectEvent(value);
