@@ -119,11 +119,12 @@ export const generateAsteriskString = (length) => {
 };
 
 export const getStringafterPeriod = (ID) => {
+
   const parts = ID?.split('.');
   if (parts?.length > 1) {
     return parts[1];
   } else {
-    return '';
+    return ID;
   }
 };
 

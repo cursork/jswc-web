@@ -18,7 +18,7 @@ const Treeview = ({ data }) => {
 
   const [nodeData, setNodeData] = useState([]);
 
-  const { dataRef, socket } = useAppData();
+  const { dataRef, socket, findDesiredData } = useAppData();
 
   const styles = setStyle(data?.Properties);
   const treeData = [];
@@ -26,13 +26,9 @@ const Treeview = ({ data }) => {
 
   let childIndex = 0;
 
-  console.log({ ImageListObj });
-
   const ID = getStringafterPeriod(ImageListObj);
 
   const ImageList = JSON.parse(getObjectById(dataRef.current, ID));
-
-  console.log({ ImageList });
 
   const eventEmit = (treeState) => {
     if (treeState.length > nodeData.length) {
