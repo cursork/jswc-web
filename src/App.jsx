@@ -776,7 +776,7 @@ const App = () => {
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
-        element.focus();
+        element &&  element.focus();
       } else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;
         console.log({ socketData });
@@ -796,7 +796,7 @@ const App = () => {
     fetchData(currentPort);
   }, [layout]);
 
-  console.log('App', dataRef.current);
+  // console.log('App', dataRef.current);
 
   const formParentID = findFormParentID(dataRef.current);
 

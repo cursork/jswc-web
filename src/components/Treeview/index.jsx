@@ -14,9 +14,7 @@ import './TreeView.css';
 
 const Treeview = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const { Depth, Items, ImageListObj, ImageIndex, Visible } = data?.Properties;
-
-  const hasEvent = data?.Properties.hasOwnProperty('Event');
+  const { Depth, Items, ImageListObj, ImageIndex, Visible, Event } = data?.Properties;
 
   const [nodeData, setNodeData] = useState([]);
 
@@ -25,6 +23,8 @@ const Treeview = ({ data }) => {
   const styles = setStyle(data?.Properties);
   const treeData = [];
   let parentIndex = -1;
+
+  let childIndex = 0;
 
   const ID = getStringafterPeriod(ImageListObj);
 
@@ -37,30 +37,19 @@ const Treeview = ({ data }) => {
 
       // Only Emit the Event when the event is Present
 
-      if (hasEvent) {
-        // Print the Event
-        console.log(
-          JSON.stringify({
-            Event: {
-              EventName: 'Expanding',
-              ID: data?.ID,
-              Info: Info + 1,
-            },
-          })
-        );
+      const expandEvent = JSON.stringify({
+        Event: {
+          EventName: 'Expanding',
+          ID: data?.ID,
+          Info: Info + 1,
+        },
+      });
 
-        //sending the Event
+      const exists = Event && Event.some((item) => item[0] === 'Expanding');
+      if (!exists) return;
 
-        socket.send(
-          JSON.stringify({
-            Event: {
-              EventName: 'Expanding',
-              ID: data?.ID,
-              Info: Info + 1,
-            },
-          })
-        );
-      }
+      console.log(expandEvent);
+      socket.send(expandEvent);
     } else if (treeState.length < nodeData.length) {
       const missingPart = nodeData.filter((item) => !treeState.includes(item));
 
@@ -68,30 +57,19 @@ const Treeview = ({ data }) => {
 
       // Check that if it has Event or not
 
-      if (hasEvent) {
-        // Print the event
-        console.log(
-          JSON.stringify({
-            Event: {
-              EventName: 'Retracting',
-              ID: data?.ID,
-              Info: Info + 1,
-            },
-          })
-        );
+      const retractEvent = JSON.stringify({
+        Event: {
+          EventName: 'Retracting',
+          ID: data?.ID,
+          Info: Info + 1,
+        },
+      });
 
-        // sending the event
+      const exists = Event && Event.some((item) => item[0] === 'Retracting');
+      if (!exists) return;
 
-        socket.send(
-          JSON.stringify({
-            Event: {
-              EventName: 'Retracting',
-              ID: data?.ID,
-              Info: Info + 1,
-            },
-          })
-        );
-      }
+      console.log(retractEvent);
+      socket.send(retractEvent);
     } else {
       console.log('Equal');
     }
@@ -99,7 +77,7 @@ const Treeview = ({ data }) => {
   };
 
   const createNode = (title, index) => {
-    if (!index) return <span>{title}</span>;
+    if (!index) return <span onKeyDown={(e) => console.log({ e })}>{title}</span>;
 
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -116,21 +94,54 @@ const Treeview = ({ data }) => {
 
     if (depthValue === 0) {
       parentIndex++;
+      childIndex++;
       treeData.push({
-        id: parentIndex + 1,
+        id: childIndex,
         title: title,
         children: [],
       });
     } else if (depthValue === 1) {
+      childIndex++;
       treeData[parentIndex].children.push({
-        id: parentIndex * 10 + treeData[parentIndex].children.length + 1,
+        id: childIndex,
         title,
         isLeaf: true,
       });
     }
   }
 
-  // console.log({ treeData });
+  const handleItemDownEvent = (index, shiftState) => {
+    // Info
+    //[0] index of the node
+    //[1] Mouse Buttons left 1 right 2 center 4
+    //[2] shift state
+    //[3] Position: 2 over icon, 4 over label, 8 over line, 16 over symbol, 32 to right of label
+
+    const event = JSON.stringify({
+      Event: {
+        EventName: 'ItemDown',
+        ID: data?.ID,
+        Info: [index, 1, shiftState ? 1 : 0, 4],
+      },
+    });
+
+    localStorage.setItem(data?.ID, event);
+    const exists = Event && Event.some((item) => item[0] === 'ItemDown');
+    if (!exists) return;
+    console.log(event);
+    socket.send(event);
+  };
+
+  const handleSelect = (_, info) => {
+    const { selectedNodes, nativeEvent } = info;
+
+    const shiftKeyPressed = nativeEvent.shiftKey;
+    const mouseButton = nativeEvent.button;
+
+    if (selectedNodes.length == 0) return;
+
+    handleItemDownEvent(selectedNodes[0]?.id, shiftKeyPressed);
+  };
 
   return (
     <div
@@ -144,6 +155,8 @@ const Treeview = ({ data }) => {
       }}
     >
       <Tree
+        onSelect={handleSelect}
+        onKeyDown={(e) => console.log('keydown', { e })}
         onExpand={(d) => eventEmit(d)}
         expandAction='click'
         treeData={treeData}
