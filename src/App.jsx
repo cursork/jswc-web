@@ -96,8 +96,6 @@ const App = () => {
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
 
-   
-
     const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
     setSocket(webSocket);
     webSocket.onopen = () => {
@@ -105,8 +103,7 @@ const App = () => {
       // webSocket.send('Initialise');4
     };
     webSocket.onmessage = (event) => {
-
-       localStorage.setItem('PORT', runningPort);
+      localStorage.setItem('PORT', runningPort);
 
       // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
@@ -776,7 +773,7 @@ const App = () => {
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
-        element &&  element.focus();
+        element && element.focus();
       } else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;
         console.log({ socketData });
@@ -796,7 +793,7 @@ const App = () => {
     fetchData(currentPort);
   }, [layout]);
 
-  // console.log('App', dataRef.current);
+  console.log('App', dataRef.current);
 
   const formParentID = findFormParentID(dataRef.current);
 
