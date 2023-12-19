@@ -121,7 +121,7 @@ const Treeview = ({ data }) => {
       Event: {
         EventName: 'ItemDown',
         ID: data?.ID,
-        Info: [index, 1, shiftState ? 1 : 0, 4],
+        Info: [index, 1, shiftState, 4],
       },
     });
 
@@ -135,12 +135,14 @@ const Treeview = ({ data }) => {
   const handleSelect = (_, info) => {
     const { selectedNodes, nativeEvent } = info;
 
-    const shiftKeyPressed = nativeEvent.shiftKey;
+    const isAltPressed = nativeEvent.altKey ? 4 : 0;
+    const isCtrlPressed = nativeEvent.ctrlKey ? 2 : 0;
+    const isShiftPressed = nativeEvent.shiftKey ? 1 : 0;
     const mouseButton = nativeEvent.button;
-
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
     if (selectedNodes.length == 0) return;
 
-    handleItemDownEvent(selectedNodes[0]?.id, shiftKeyPressed);
+    handleItemDownEvent(selectedNodes[0]?.id, shiftState);
   };
 
   return (
