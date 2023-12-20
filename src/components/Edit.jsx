@@ -6,15 +6,21 @@ import {
   calculateDaysFromDate,
   replaceDanishToNumber,
   rgbColor,
+  getObjectById,
 } from '../utils';
 import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../hooks';
+import dayjs from 'dayjs';
 
 const Edit = ({ data, value, event = '', row = '', column = '', location = '' }) => {
+  const { socket, dataRef } = useAppData();
   const currentLocale = navigator.language || navigator.userLanguage;
 
+  const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
+
+  const { ShortDate } = dateFormat?.Properties;
+
   let styles = { ...setStyle(data?.Properties) };
-  const { socket } = useAppData();
   const [inputType, setInputType] = useState('text');
   const [inputValue, setInputValue] = useState('');
   const [emitValue, setEmitValue] = useState('');
@@ -34,7 +40,10 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       if (FieldType == 'Date') {
         setEmitValue(value);
         setInitialValue(value);
-        return setInputValue(calculateDateAfterDays(value));
+
+        const date = calculateDateAfterDays(value);
+
+        return setInputValue(dayjs(date).format(ShortDate));
       }
 
       if (FieldType == 'LongNumeric') {
@@ -201,32 +210,35 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     }
   };
 
+  // Date Picker component
+
   if (inputType == 'date') {
     const handleTextClick = () => {
-      // Trigger the hidden date input
+      dateInputRef.current.select();
       dateInputRef.current.showPicker();
     };
 
     const handleDateChange = (event) => {
-      const selectedDate = event.target.value;
-      // console.log({ selectedDate });
-      setSelectedDate(selectedDate);
-      // const formattedDate = new Date(selectedDate).toLocaleDateString();
-
-      // // Update the text input with the formatted date
-      // dateInputRef.current.previousSibling.value = formattedDate;
+      const selectedDate = dayjs(event.target.value).format(ShortDate);
+      let value = calculateDaysFromDate(event.target.value) + 1;
+      setInputValue(selectedDate);
+      setEmitValue(value);
     };
 
     return (
-      <>
+      <div style={{ position: 'relative' }}>
         <input
           type='date'
           ref={dateInputRef}
           onChange={handleDateChange}
-          style={{ display: 'none' }}
+          style={{
+            ...styles,
+            position: 'absolute',
+            zIndex: 1,
+            display: 'none',
+          }}
         />
 
-        {/* Visible text input */}
         <input
           style={{
             ...styles,
@@ -236,12 +248,16 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
             display: Visible == 0 ? 'none' : 'block',
             paddingLeft: '5px',
           }}
-          value={selectedDate}
+          value={inputValue}
           type='text'
           readOnly
           onClick={handleTextClick}
+          onBlur={() => {
+            handleEditEvents();
+          }}
+          onKeyDown={(e) => handleKeyPress(e)}
         />
-      </>
+      </div>
     );
   }
 
