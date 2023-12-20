@@ -282,7 +282,13 @@ const App = () => {
             const serverPropertiesObj = {};
             serverEvent.Properties.map((key) => {
               return (serverPropertiesObj[key] =
-                key == 'Text' ? editValue.toString() : isNumber ? parseInt(editValue) : editValue);
+                key == 'Text'
+                  ? !editValue
+                    ? ''
+                    : editValue?.toString()
+                  : isNumber
+                  ? parseInt(editValue)
+                  : editValue);
             });
 
             console.log(
