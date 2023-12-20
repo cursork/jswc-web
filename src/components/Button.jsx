@@ -2,9 +2,11 @@ import { setStyle, extractStringUntilSecondPeriod, getElementPosition } from '..
 import { useAppData } from '../hooks';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
-import { getObjectById } from '../utils';
+import { getObjectById, getImageStyles } from '../utils';
 
 const Button = ({ data, inputValue, event = '', row = '', column = '', location = '' }) => {
+  const PORT = localStorage.getItem('PORT');
+
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData } = useAppData();
   const { Picture, State, Visible, Event, Caption, Align } = data?.Properties;
@@ -20,9 +22,11 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
 
   const isRadio = data?.Properties?.Style && data?.Properties?.Style == 'Radio';
 
-  const ImageData = findDesiredData(Picture && Picture);
+  const ImageData = findDesiredData(Picture && Picture[0]);
 
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
+
+  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
   const decideInput = () => {
     if (location == 'inGrid') {
@@ -247,9 +251,10 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
         cursor: 'pointer',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'flex',
+        ...imageStyles,
       }}
     >
-      {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null}
+      {/* {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null} */}
       {hasCaption ? data?.Properties?.Caption : null}
     </div>
   );

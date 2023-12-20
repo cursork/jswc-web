@@ -1,3 +1,5 @@
+export * from './imageStyles';
+
 export const setStyle = (Properties, position = 'absolute', background) => {
   return {
     position: Properties?.Posn ? 'absolute' : 'relative',
@@ -119,7 +121,6 @@ export const generateAsteriskString = (length) => {
 };
 
 export const getStringafterPeriod = (ID) => {
-
   const parts = ID?.split('.');
   if (parts?.length > 1) {
     return parts[1];
