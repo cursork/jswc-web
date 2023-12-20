@@ -251,10 +251,10 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
         cursor: 'pointer',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'flex',
-        ...imageStyles,
       }}
     >
-      {/* {ImageData ? <img src={`http://localhost:22322/${ImageData?.Properties?.File}`} /> : null} */}
+      {ImageData ? <div style={{ ...imageStyles, width: '100%', height: '100%' }}></div> : null}
+
       {hasCaption ? data?.Properties?.Caption : null}
     </div>
   );

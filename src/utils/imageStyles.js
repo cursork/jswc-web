@@ -8,6 +8,8 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
       top: 0,
       left: 0,
       backgroundRepeat: 'no-repeat',
+      height: '100%',
+      width: '100%',
     };
   }
 
@@ -45,55 +47,53 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
   return imageStyles;
 };
 
+// Image is Tile
+// if (Picture && Picture[1] == 1) {
+//   updatedStyles = {
+//     ...styles,
+//     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
+//     backgroundRepeat: 'repeat',
+//   };
+// }
 
+// // Align the Image in the top left Corner
 
-  // Image is Tile
-  // if (Picture && Picture[1] == 1) {
-  //   updatedStyles = {
-  //     ...styles,
-  //     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
-  //     backgroundRepeat: 'repeat',
-  //   };
-  // }
+// if (Picture && Picture[1] == 0) {
+//   updatedStyles = {
+//     ...styles,
+//     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//   };
+// }
 
-  // // Align the Image in the top left Corner
+// // Make the image center in the subform
 
-  // if (Picture && Picture[1] == 0) {
-  //   updatedStyles = {
-  //     ...styles,
-  //     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
-  //     position: 'absolute',
-  //     top: 0,
-  //     left: 0,
-  //   };
-  // }
+// if (Picture && Picture[1] == 3) {
+//   updatedStyles = {
+//     ...styles,
+//     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
+//     backgroundPosition:
+//       'center center' /* Center the background image horizontally and vertically */,
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundRepeat: 'no-repeat',
+//   };
+// }
 
-  // // Make the image center in the subform
+// // Image is Scalar means Image fit exactly horizontally and vertically
 
-  // if (Picture && Picture[1] == 3) {
-  //   updatedStyles = {
-  //     ...styles,
-  //     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
-  //     backgroundPosition:
-  //       'center center' /* Center the background image horizontally and vertically */,
-  //     display: 'flex',
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //     backgroundRepeat: 'no-repeat',
-  //   };
-  // }
-
-  // // Image is Scalar means Image fit exactly horizontally and vertically
-
-  // if (Picture && Picture[1] == 2) {
-  //   updatedStyles = {
-  //     ...styles,
-  //     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
-  //     backgroundSize: '100% 100%',
-  //     backgroundRepeat: 'no-repeat',
-  //     backgroundPosition: 'center center',
-  //     display: 'flex',
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //   };
-  // }
+// if (Picture && Picture[1] == 2) {
+//   updatedStyles = {
+//     ...styles,
+//     backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
+//     backgroundSize: '100% 100%',
+//     backgroundRepeat: 'no-repeat',
+//     backgroundPosition: 'center center',
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   };
+// }
