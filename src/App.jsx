@@ -776,8 +776,10 @@ const App = () => {
         element && element.focus();
       } else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;
-        console.log({ socketData });
+
         deleteObjectsById(dataRef.current, serverEvent?.ID);
+      } else if (keys[0] == 'Options') {
+        handleData(JSON.parse(event.data).Options, 'WC');
       }
     };
   };

@@ -116,7 +116,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
-      if (inputElement.id === data?.ID) {
+        if (inputElement.id === data?.ID) {
           inputElement.select();
         }
       });
@@ -198,6 +198,10 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       if (initialValue != emitValue) triggerChangeEvent();
     }
   };
+
+  if (inputType == 'date') {
+    return <div>Date Edit</div>;
+  }
 
   return (
     <input

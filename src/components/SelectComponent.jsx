@@ -24,6 +24,7 @@ import Poly from './Polygon';
 import Rectangle from './Rectangle';
 import ImageSubForm from './ImgSubForm';
 import ShapeSubForm from './ShapeSubForm';
+import Text from './Text';
 
 const SelectComponent = ({
   data,
@@ -125,6 +126,8 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'SubForm') {
     return <ShapeSubForm name={inSplitter} data={data} />;
   }
+
+  if (data?.Properties?.Type == 'Text') return <Text data={data} />;
 };
 
 export default SelectComponent;
