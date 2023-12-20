@@ -19,6 +19,8 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   const [inputValue, setInputValue] = useState('');
   const [emitValue, setEmitValue] = useState('');
   const [initialValue, setInitialValue] = useState('');
+  const dateInputRef = useRef();
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const { FieldType, MaxLength, FCol, Decimal, Visible, Event } = data?.Properties;
 
@@ -200,7 +202,47 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   };
 
   if (inputType == 'date') {
-    return <div>Date Edit</div>;
+    const handleTextClick = () => {
+      // Trigger the hidden date input
+      dateInputRef.current.showPicker();
+    };
+
+    const handleDateChange = (event) => {
+      const selectedDate = event.target.value;
+      // console.log({ selectedDate });
+      setSelectedDate(selectedDate);
+      // const formattedDate = new Date(selectedDate).toLocaleDateString();
+
+      // // Update the text input with the formatted date
+      // dateInputRef.current.previousSibling.value = formattedDate;
+    };
+
+    return (
+      <>
+        <input
+          type='date'
+          ref={dateInputRef}
+          onChange={handleDateChange}
+          style={{ display: 'none' }}
+        />
+
+        {/* Visible text input */}
+        <input
+          style={{
+            ...styles,
+            borderRadius: '2px',
+            fontSize: '12px',
+            zIndex: 1,
+            display: Visible == 0 ? 'none' : 'block',
+            paddingLeft: '5px',
+          }}
+          value={selectedDate}
+          type='text'
+          readOnly
+          onClick={handleTextClick}
+        />
+      </>
+    );
   }
 
   return (
