@@ -776,6 +776,29 @@ const App = () => {
             })
           );
         }
+
+        if (Type == 'TreeView') {
+          const supportedProperties = ['SelItems'];
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+          const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
+          const { SelItems } = Event;
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              Properties: {
+                SelItems,
+              },
+              WGID: serverEvent.WGID,
+              ...(result && result.NotSupported && result.NotSupported.length > 0
+                ? { NotSupported: result.NotSupported }
+                : null),
+            },
+          });
+
+          console.log(event);
+          return webSocket.send(event);
+        }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);

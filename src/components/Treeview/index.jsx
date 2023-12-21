@@ -125,7 +125,18 @@ const Treeview = ({ data }) => {
       },
     });
 
-    localStorage.setItem(data?.ID, event);
+    // Stored in local storage to handle the WG of TreeView
+    const SelItems = new Array(childIndex).fill(0);
+
+    SelItems[index - 1] = 1;
+
+    //WG SelItems
+    const storedFocusedIndex = JSON.stringify({
+      Event: {
+        SelItems: SelItems,
+      },
+    });
+    localStorage.setItem(data?.ID, storedFocusedIndex);
     const exists = Event && Event.some((item) => item[0] === 'ItemDown');
     if (!exists) return;
     console.log(event);
