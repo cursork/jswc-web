@@ -170,10 +170,18 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       Event: {
         EventName: 'Change',
         ID: data?.ID,
+        Info: [emitValue],
+      },
+    });
+
+    const event2 = JSON.stringify({
+      Event: {
+        EventName: 'Change',
+        ID: data?.ID,
         Info: emitValue,
       },
     });
-    localStorage.setItem(data?.ID, event);
+    localStorage.setItem(data?.ID, event2);
     const exists = Event && Event.some((item) => item[0] === 'Change');
     if (!exists) return;
     console.log(event);
@@ -260,8 +268,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       </div>
     );
   }
-
-  
 
   return (
     <input

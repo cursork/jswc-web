@@ -37,3 +37,5 @@ const Text = ({ data }) => {
   );
 };
 export default Text;
+
+
