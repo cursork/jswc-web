@@ -20,6 +20,8 @@ const Text = ({ data }) => {
         {pointsArray?.map((textPoints, index) => {
           return (
             <text
+              alignment-baseline='middle'
+              dy='0.7em'
               x={textPoints[0]}
               y={textPoints[1]}
               font-family='Arial'
