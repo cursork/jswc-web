@@ -10,10 +10,18 @@ import SelectComponent from '../SelectComponent';
 const CustomRibbon = ({ data }) => {
   const updatedData = excludeKeys(data);
 
-  const { Visible } = data?.Properties;
+  const { Visible, Size } = data?.Properties;
+  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
   return (
-    <div className='row' style={{ height: '8rem',width:'1150px' }}>
+    <div
+      className='row'
+      style={{
+        height: !Size ? '8rem' : Size[0],
+        width: !Size ? parentSize[1] : Size[1],
+        display: Visible == 0 ? 'none' : 'flex',
+      }}
+    >
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}
