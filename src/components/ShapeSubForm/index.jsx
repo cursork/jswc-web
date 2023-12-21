@@ -5,20 +5,45 @@ import Treeview from '../Treeview';
 import Edit from '../Edit';
 import TextArea from '../TextArea';
 import Text from '../Text';
+import { useEffect } from 'react';
 
-const ShapeSubForm = ({ data }) => {
+const ShapeSubForm = ({ data, inSplitter }) => {
   const { Posn, Size, Visible } = data?.Properties;
-  const styles = setStyle(data?.Properties);
+  let styles = setStyle(data?.Properties);
   const updatedData = excludeKeys(data);
+
+  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+
+  if (!Size) {
+    styles = {
+      width: parentSize[1],
+      height: parentSize[0],
+    };
+  }
+
+  if (!Posn) {
+    styles = {
+      top: 0,
+      left: 0,
+    };
+  }
+
+  useEffect(() => {
+    localStorage.setItem(
+      data.ID,
+      JSON.stringify({
+        Size: !Size ? [parentSize[0], parentSize[1]] : Size,
+        Posn: !Posn ? [0, 0] : Posn,
+      })
+    );
+  }, []);
 
   return (
     <div
       style={{
         display: Visible == 0 ? 'none' : 'block',
         ...styles,
-        background: '#F0F0F0',
-        border: '1px solid black',
-        zIndex: 1,
+        background: inSplitter ? null : '#F0F0F0',
       }}
     >
       {Object.keys(updatedData).map((key) => {

@@ -124,7 +124,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
   if (data?.Properties?.Type == 'SubForm') {
-    return <ShapeSubForm data={data} />;
+    return <ShapeSubForm inSplitter={inSplitter} data={data} />;
   }
 
   if (data?.Properties?.Type == 'Text') return <Text data={data} />;
