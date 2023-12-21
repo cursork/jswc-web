@@ -255,7 +255,11 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     >
       {ImageData ? <div style={{ ...imageStyles, width: '100%', height: '100%' }}></div> : null}
 
-      {hasCaption ? data?.Properties?.Caption : null}
+      {hasCaption
+        ? data?.Properties?.Caption?.includes('&')
+          ? data?.Properties?.Caption?.substring(1)
+          : data?.Properties?.Caption
+        : null}
     </div>
   );
 };
