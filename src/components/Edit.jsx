@@ -170,7 +170,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       Event: {
         EventName: 'Change',
         ID: data?.ID,
-        Info: [emitValue],
+        Info: [''],
       },
     });
 
