@@ -261,6 +261,8 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     );
   }
 
+  
+
   return (
     <input
       id={data.ID}

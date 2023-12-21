@@ -41,7 +41,6 @@ const App = () => {
       if (mode === 'WC') {
         if (data.Properties && data.Properties.Type === 'Form') {
           localStorage.clear();
-          
         }
         // Overwrite the existing object with new properties
         currentLevel[finalKey] = {
@@ -805,8 +804,6 @@ const App = () => {
   console.log('App', dataRef.current);
 
   const formParentID = findFormParentID(dataRef.current);
-
-  console.log({ formParentID });
 
   return (
     <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>

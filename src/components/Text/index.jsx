@@ -9,7 +9,12 @@ const Text = ({ data }) => {
 
   return (
     <div
-      style={{ position: 'absolute', display: Visible == 0 ? 'none' : 'block', top: 0, left: 0 }}
+      style={{
+        position: 'absolute',
+        display: Visible == 0 ? 'none' : 'block',
+        top: 0,
+        left: 0,
+      }}
     >
       <svg height={parentSize[0]} width={parentSize[1]}>
         {pointsArray?.map((textPoints, index) => {
@@ -19,7 +24,7 @@ const Text = ({ data }) => {
               y={textPoints[1]}
               font-family='Arial'
               font-size='12'
-              fill={rgbColor(FCol && FCol[index])}
+              fill={FCol ? rgbColor(FCol && FCol[index]) : 'black'}
             >
               {Text[index]}
             </text>
