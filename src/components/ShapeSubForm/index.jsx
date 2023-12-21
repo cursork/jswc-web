@@ -2,6 +2,9 @@ import { excludeKeys, setStyle } from '../../utils';
 import Rectangle from '../Rectangle';
 import Button from '../Button';
 import Treeview from '../Treeview';
+import Edit from '../Edit';
+import TextArea from '../TextArea';
+import Text from '../Text';
 
 const ShapeSubForm = ({ data, name }) => {
   const { Posn, Size, Visible } = data?.Properties;
@@ -17,6 +20,15 @@ const ShapeSubForm = ({ data, name }) => {
           return <Button data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'TreeView') {
           return <Treeview data={updatedData[key]} />;
+        } else if (updatedData[key].Properties.Type == 'Edit') {
+          return <Edit data={data} />;
+        } else if (
+          updatedData[key].Properties.Type == 'Edit' &&
+          updatedData[key].Properties.Style == 'Multi'
+        ) {
+          return <TextArea data={data} />;
+        } else if (updatedData[key].Properties.Type == 'Text') {
+          return <Text data={data} />;
         }
       })}
     </div>
