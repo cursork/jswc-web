@@ -6,7 +6,7 @@ import {
   findParentIndex,
 } from '../../utils';
 import { useAppData } from '../../hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Tree from 'rc-tree';
 import 'rc-tree/assets/index.css';
@@ -155,6 +155,19 @@ const Treeview = ({ data }) => {
 
     handleItemDownEvent(selectedNodes[0]?.id, shiftState);
   };
+
+  // Set the initial localstorage if no item is selected
+
+  useEffect(() => {
+    localStorage.setItem(
+      data.ID,
+      JSON.stringify({
+        Event: {
+          SelItems: new Array(Items.length).fill(0),
+        },
+      })
+    );
+  }, []);
 
   return (
     <div
