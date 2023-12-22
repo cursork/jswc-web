@@ -258,8 +258,9 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
             },
           })
         );
+
+        handleGotFocus();
       }}
-      onFocus={handleGotFocus}
       style={{
         ...styles,
         border: '1px solid black',
