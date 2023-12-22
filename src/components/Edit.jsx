@@ -224,7 +224,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       Event: {
         EventName: 'GotFocus',
         ID: data?.ID,
-        Info: !previousFocusedId ? [] : [previousFocusedId],
+        Info: !previousFocusedId ? [""] : [previousFocusedId],
       },
     });
     localStorage.setItem('current-focus', data?.ID);
