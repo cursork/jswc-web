@@ -25,6 +25,7 @@ import Rectangle from './Rectangle';
 import ImageSubForm from './ImgSubForm';
 import ShapeSubForm from './ShapeSubForm';
 import Text from './Text';
+import Timer from './Timer';
 
 const SelectComponent = ({
   data,
@@ -128,6 +129,8 @@ const SelectComponent = ({
   }
 
   if (data?.Properties?.Type == 'Text') return <Text data={data} />;
+
+  if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
 };
 
 export default SelectComponent;
