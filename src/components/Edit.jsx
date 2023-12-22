@@ -218,6 +218,23 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     }
   };
 
+  const handleGotFocus = () => {
+    const previousFocusedId = localStorage.getItem('current-focus');
+    const gotFocusEvent = JSON.stringify({
+      Event: {
+        EventName: 'GotFocus',
+        ID: data?.ID,
+        Info: !previousFocusedId ? [] : [previousFocusedId],
+      },
+    });
+    localStorage.setItem('current-focus', data?.ID);
+    const exists = Event && Event.some((item) => item[0] === 'GotFocus');
+
+    if (!exists) return;
+    console.log(gotFocusEvent);
+    socket.send(gotFocusEvent);
+  };
+
   // Date Picker component
 
   if (inputType == 'date') {
@@ -323,6 +340,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
         paddingLeft: '5px',
       }}
       maxLength={MaxLength}
+      onFocus={handleGotFocus}
     />
   );
 };

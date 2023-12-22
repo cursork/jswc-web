@@ -99,6 +99,24 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
     if (e.key == 'Enter') handleCellMove();
   };
 
+  //handle got focus event on all controls
+  const handleGotFocus = () => {
+    const previousFocusedId = localStorage.getItem('current-focus');
+    const gotFocusEvent = JSON.stringify({
+      Event: {
+        EventName: 'GotFocus',
+        ID: data?.ID,
+        Info: !previousFocusedId ? [] : [previousFocusedId],
+      },
+    });
+    localStorage.setItem('current-focus', data?.ID);
+    const exists = Event && Event.some((item) => item[0] === 'GotFocus');
+
+    if (!exists) return;
+    console.log(gotFocusEvent);
+    socket.send(gotFocusEvent);
+  };
+
   if (isCheckBox) {
     let checkBoxPosition = null;
     if (Align && Align == 'Left') {
@@ -124,6 +142,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
         ) : null}
 
         <input
+          onFocus={handleGotFocus}
           ref={inputRef}
           onKeyDown={(e) => handleKeyPress(e)}
           id={data?.ID}
@@ -201,6 +220,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           <div style={{ fontSize: '12px', position: 'absolute', top: 2, left: 0 }}>{Caption}</div>
         ) : null}
         <input
+          onFocus={handleGotFocus}
           name={extractStringUntilSecondPeriod(data?.ID)}
           id={data?.ID}
           checked={radioValue}
@@ -239,6 +259,7 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           })
         );
       }}
+      onFocus={handleGotFocus}
       style={{
         ...styles,
         border: '1px solid black',
