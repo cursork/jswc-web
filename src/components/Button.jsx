@@ -129,8 +129,9 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
           id={data?.ID}
           type='checkbox'
           style={checkBoxPosition}
-          defaultChecked={checkInput}
+          checked={checkInput}
           onChange={(e) => {
+            setCheckInput(e.target.checked);
             handleCheckBoxEvent(e.target.checked);
           }}
         />

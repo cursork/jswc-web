@@ -5,9 +5,12 @@ const Timer = ({ data }) => {
   const { socket } = useAppData();
 
   const { Interval, FireOnce, Active, Event } = data?.Properties;
+
+  console.log({ Active });
+
   const [fire, setFire] = useState(!FireOnce ? 0 : FireOnce);
   useEffect(() => {
-    if (Active === 1 && fire !== 2) {   
+    if (Active === 1 && fire !== 2) {
       // Fire the timer event
       const timerEvent = JSON.stringify({
         Event: { EventName: 'Timer', ID: data?.ID, Info: [] },
