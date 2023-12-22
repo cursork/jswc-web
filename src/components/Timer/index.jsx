@@ -6,33 +6,35 @@ const Timer = ({ data }) => {
 
   const { Interval, FireOnce, Active, Event } = data?.Properties;
 
-  const [fireOnce, setFireOnce] = useState(data?.Properties.FireOnce);
+  let eventFire = !FireOnce ? 0 : FireOnce;
+  let activeTimer = !Active ? 1 : Active;
 
   useEffect(() => {
     let intervalId;
+    let timeoutId;
     const timerEvent = JSON.stringify({
       Event: { EventName: 'Timer', ID: data?.ID, Info: [] },
     });
-
     // check Active is 1
-    if (Active == 1) {
-      if (fireOnce == 1) {
-        intervalId = setInterval(() => {
+    if (activeTimer == 1) {
+      if (eventFire == 1) {
+        if (intervalId) clearInterval(intervalId);
+        timeoutId = setTimeout(() => {
           socket.send(timerEvent);
-          setFireOnce(2);
         }, Interval && Interval);
-        return () => {
-          clearInterval(intervalId);
-        };
-      } else if (fireOnce == 2) {
+      } else if (eventFire == 2) {
+        if (intervalId) clearInterval(intervalId);
+        if (timeoutId) clearTimeout(timeoutId);
         clearInterval(intervalId);
-      } else if (fireOnce == 0) {
+        clearTimeout(timeoutId);
+      } else if (eventFire == 0) {
         intervalId = setInterval(() => {
           socket.send(timerEvent);
         }, Interval && Interval);
       }
       return () => {
         clearInterval(intervalId);
+        clearTimeout(timeoutId);
       };
     }
   }, [data]);
