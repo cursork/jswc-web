@@ -7,7 +7,11 @@ const Timer = ({ data }) => {
   const { Interval, FireOnce, Active, Event } = data?.Properties;
 
   let eventFire = !FireOnce ? 0 : FireOnce;
-  let activeTimer = !Active ? 1 : Active;
+
+  const hasActive = data?.Properties.hasOwnProperty('Active');
+  let activeTimer = hasActive ? Active : 1;
+
+  console.log({ activeTimer });
 
   useEffect(() => {
     let intervalId;
