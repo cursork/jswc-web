@@ -11,8 +11,6 @@ const Timer = ({ data }) => {
   const hasActive = data?.Properties.hasOwnProperty('Active');
   let activeTimer = hasActive ? Active : 1;
 
-  console.log({ activeTimer });
-
   useEffect(() => {
     let intervalId;
     let timeoutId;
@@ -26,12 +24,20 @@ const Timer = ({ data }) => {
         timeoutId = setTimeout(() => {
           socket.send(timerEvent);
         }, Interval && Interval);
+        localStorage.setItem(
+          data.ID,
+          JSON.stringify({ Event: { EventName: 'Timer', ID: data?.ID, FireOnce: 2 } })
+        );
       } else if (eventFire == 2) {
         if (intervalId) clearInterval(intervalId);
         if (timeoutId) clearTimeout(timeoutId);
         clearInterval(intervalId);
         clearTimeout(timeoutId);
       } else if (eventFire == 0) {
+        localStorage.setItem(
+          data.ID,
+          JSON.stringify({ Event: { EventName: 'Timer', ID: data?.ID, FireOnce: 0 } })
+        );
         intervalId = setInterval(() => {
           socket.send(timerEvent);
         }, Interval && Interval);

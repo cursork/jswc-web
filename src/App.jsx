@@ -799,6 +799,28 @@ const App = () => {
           console.log(event);
           return webSocket.send(event);
         }
+
+        if (Type == 'Timer') {
+          const supportedProperties = ['FireOnce'];
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+          const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
+          const { FireOnce } = Event;
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              Properties: {
+                FireOnce,
+              },
+              WGID: serverEvent.WGID,
+              ...(result && result.NotSupported && result.NotSupported.length > 0
+                ? { NotSupported: result.NotSupported }
+                : null),
+            },
+          });
+          console.log(event);
+          return webSocket.send(event);
+        }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const element = document.getElementById(nqEvent.ID);
