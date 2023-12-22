@@ -106,13 +106,13 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
       Event: {
         EventName: 'GotFocus',
         ID: data?.ID,
-        Info: !previousFocusedId ? [""] : [previousFocusedId],
+        Info: !previousFocusedId ? [''] : [previousFocusedId],
       },
     });
     localStorage.setItem('current-focus', data?.ID);
     const exists = Event && Event.some((item) => item[0] === 'GotFocus');
 
-    if (!exists) return;
+    if (!exists || previousFocusedId == data?.ID) return;
     console.log(gotFocusEvent);
     socket.send(gotFocusEvent);
   };

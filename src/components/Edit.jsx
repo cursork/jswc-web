@@ -230,7 +230,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     localStorage.setItem('current-focus', data?.ID);
     const exists = Event && Event.some((item) => item[0] === 'GotFocus');
 
-    if (!exists) return;
+    if (!exists || previousFocusedId==data?.ID) return;
     console.log(gotFocusEvent);
     socket.send(gotFocusEvent);
   };
