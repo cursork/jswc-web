@@ -1,6 +1,7 @@
 import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
 import { useAppData } from '../hooks';
+import { useEffect } from 'react';
 
 const Form = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
@@ -14,6 +15,10 @@ const Form = ({ data }) => {
   localStorage.setItem('formDimension', JSON.stringify(Size));
 
   let imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+
+  useEffect(() => {
+    localStorage.setItem('current-focus', data.ID);
+  }, []);
 
   return (
     <div

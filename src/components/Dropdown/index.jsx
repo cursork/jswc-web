@@ -4,6 +4,21 @@ import { useAppData } from '../../hooks';
 
 const Dropdown = ({ title, data }) => {
   const { socket } = useAppData();
+
+  const handleSelectEvent = (id, Properties) => {
+    const { Event } = Properties;
+    const selectEvent = JSON.stringify({
+      Event: {
+        EventName: 'Select',
+        ID: id,
+      },
+    });
+    const exists = Event && Event.some((item) => item[0] === 'Select');
+    if (!exists) return;
+    console.log(selectEvent);
+    socket.send(selectEvent);
+  };
+
   return (
     <div style={{ fontSize: '12px', marginLeft: '7px', cursor: 'pointer' }} className='menu-item'>
       {title}
@@ -14,25 +29,7 @@ const Dropdown = ({ title, data }) => {
             <div
               id={data[key]?.ID}
               className='dropdown-item'
-              onClick={() => {
-                console.log(
-                  JSON.stringify({
-                    Event: {
-                      EventName: data[key]?.Properties?.Event[0],
-                      ID: data[key]?.ID,
-                    },
-                  })
-                );
-
-                socket.send(
-                  JSON.stringify({
-                    Event: {
-                      EventName: data[key]?.Properties?.Event[0],
-                      ID: data[key]?.ID,
-                    },
-                  })
-                );
-              }}
+              onClick={() => handleSelectEvent(data[key]?.ID, data[key]?.Properties)}
             >
               {data[key]?.Properties?.Caption?.substring(1)}
             </div>
