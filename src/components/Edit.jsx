@@ -166,11 +166,13 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   };
 
   const triggerChangeEvent = () => {
+    const focusedId = localStorage.getItem('current-focus');
+
     const event = JSON.stringify({
       Event: {
         EventName: 'Change',
         ID: data?.ID,
-        Info: [''],
+        Info: [!focusedId ? '' : focusedId],
       },
     });
 
@@ -224,13 +226,13 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       Event: {
         EventName: 'GotFocus',
         ID: data?.ID,
-        Info: !previousFocusedId ? [""] : [previousFocusedId],
+        Info: !previousFocusedId ? [''] : [previousFocusedId],
       },
     });
     localStorage.setItem('current-focus', data?.ID);
     const exists = Event && Event.some((item) => item[0] === 'GotFocus');
 
-    if (!exists || previousFocusedId==data?.ID) return;
+    if (!exists || previousFocusedId == data?.ID) return;
     console.log(gotFocusEvent);
     socket.send(gotFocusEvent);
   };
