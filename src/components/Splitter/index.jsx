@@ -127,10 +127,10 @@ const Splitter = ({ data }) => {
 
       // ******Updated the Width of the Horizontal Splitter on Moving Vertical Splitter
       if (IDs.length == 3 && IDs.includes('SPLIT')) {
-        console.log({ key });
         const { Event } = JSON.parse(localStorage.getItem(key));
         const { Info } = Event;
-        console.log('Info', Event);
+
+        
         localStorage.setItem(
           key,
           JSON.stringify({

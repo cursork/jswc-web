@@ -26,6 +26,7 @@ import ImageSubForm from './ImgSubForm';
 import ShapeSubForm from './ShapeSubForm';
 import Text from './Text';
 import Timer from './Timer';
+import ListView from './ListView';
 
 const SelectComponent = ({
   data,
@@ -131,6 +132,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Text') return <Text data={data} />;
 
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
+  if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
 };
 
 export default SelectComponent;
