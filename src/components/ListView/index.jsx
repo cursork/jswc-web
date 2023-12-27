@@ -34,7 +34,7 @@ const ListView = ({ data }) => {
           return (
             <div
               style={{ width, height }}
-              className={`d-flex flex-${orientation} justify-content-center align-items-center`}
+              className={`d-flex flex-${orientation} align-items-center`}
             >
               <img
                 style={{ width: imageWidth, height: imageHeight }}
