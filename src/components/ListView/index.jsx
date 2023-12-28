@@ -1,4 +1,4 @@
-import { setStyle } from '../../utils';
+import { setStyle, createListViewObjects } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const ListView = ({ data }) => {
@@ -10,10 +10,6 @@ const ListView = ({ data }) => {
     data && data?.Properties;
 
   const styles = setStyle(data?.Properties);
-
-  console.log({ ColTitles });
-  console.log({ Items });
-  console.log({ ReportInfo });
 
   //   console.log({ View });
 
@@ -103,12 +99,48 @@ const ListView = ({ data }) => {
   if (View && View == 'Report') {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
-    console.log({ Images });
-    // console.log({ ColTitles });
+
+    const reportsData = createListViewObjects(Images, Items, ReportInfo);
 
     return (
       <div style={{ ...styles, border: !Border ? null : '1px solid black' }}>
-        {/* Develop the Header of the list  */}
+        {/* Header of the component */}
+        <div className='d-flex align-items-center'>
+          {ColTitles?.map((title, index, array) => {
+            return (
+              <div
+                style={{
+                  borderRight: index !== array.length - 1 ? '1px solid #F0F0F0' : 'none',
+                  flex: 1,
+                  fontSize: '12px',
+                  paddingLeft: '5px',
+                }}
+              >
+                {title}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className='mt-1'>
+          {/* Report */}
+          {reportsData?.map((report) => {
+            return (
+              <div className='d-flex align-items-center'>
+                <div style={{ flex: 1, paddingLeft: '5px' }}>
+                  <div className='d-flex align-items-center'>
+                    <img src={`http://localhost:${PORT}${report?.image}`} />
+                    <span style={{ fontSize: '12px' }}>{report?.title}</span>
+                  </div>
+                </div>
+                <div style={{ flex: 1, fontSize: '12px', paddingLeft: '5px' }}>
+                  {report?.description}
+                </div>
+                <div style={{ flex: 1, fontSize: '12px', paddingLeft: '5px' }}>{report?.index}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

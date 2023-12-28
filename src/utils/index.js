@@ -260,3 +260,20 @@ export const findFormParentID = (data) => {
 
   return formParentID;
 };
+
+export const createListViewObjects = (images, codes, descriptions) => {
+  if (images.length !== codes.length || codes.length !== descriptions.length) {
+    console.error('Arrays must have the same length');
+    return [];
+  }
+
+  // Create an array of objects
+  const result = codes.map((code, index) => ({
+    index: index + 1,
+    title: code,
+    description: descriptions[index][0],
+    image: images[index] || '', // Set image to an empty string if it's undefined
+  }));
+
+  return result;
+};
