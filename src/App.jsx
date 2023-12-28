@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
-import { getObjectById, checkSupportedProperties, findFormParentID } from './utils';
+import {
+  getObjectById,
+  checkSupportedProperties,
+  findFormParentID,
+  deleteFormAndSiblings,
+} from './utils';
 import './App.css';
 
 const App = () => {
@@ -41,8 +46,10 @@ const App = () => {
       if (mode === 'WC') {
         if (data.Properties && data.Properties.Type === 'Form') {
           localStorage.clear();
+          console.log('current Level', currentLevel[finalKey]);
         }
         // Overwrite the existing object with new properties
+
         currentLevel[finalKey] = {
           ID: data.ID,
           ...data,
@@ -104,10 +111,19 @@ const App = () => {
     };
     webSocket.onmessage = (event) => {
       localStorage.setItem('PORT', runningPort);
-
       // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
+        let windowCreationEvent = JSON.parse(event.data).WC;
+        if (windowCreationEvent?.Properties?.Type == 'Form') {
+          localStorage.clear();
+          const updatedData = deleteFormAndSiblings(dataRef.current);
+          dataRef.current = {};
+          dataRef.current = updatedData;
+          handleData(JSON.parse(event.data).WC, 'WC');
+          return;
+        }
+
         // console.log('event from server WC', JSON.parse(event.data).WC);
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
         handleData(JSON.parse(event.data).WC, 'WC');

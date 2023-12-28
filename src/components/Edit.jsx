@@ -43,7 +43,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
 
         const date = calculateDateAfterDays(value);
 
-        return setInputValue(dayjs(date).format(ShortDate));
+        return setInputValue(dayjs(date).format(ShortDate && ShortDate));
       }
 
       if (FieldType == 'LongNumeric') {

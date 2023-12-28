@@ -1,4 +1,5 @@
 export * from './imageStyles';
+export * from './deleteForm';
 
 export const setStyle = (Properties, position = 'absolute', background) => {
   return {

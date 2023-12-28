@@ -67,7 +67,7 @@ const ShapeSubForm = ({ data, inSplitter }) => {
         } else if (updatedData[key].Properties.Type == 'Label') {
           return <Label data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'ListView') {
-          return <ListView data={updatedData} />;
+          return <ListView data={updatedData[key]} />;
         }
       })}
     </div>

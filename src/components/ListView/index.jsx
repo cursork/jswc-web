@@ -6,7 +6,8 @@ const ListView = ({ data }) => {
 
   const { findDesiredData } = useAppData();
 
-  const { View, Border, ColTitles, ImageIndex, ImageListObj, Items, ReportInfo } = data?.Properties;
+  const { View, Border, ColTitles, ImageIndex, ImageListObj, Items, ReportInfo } =
+    data && data?.Properties;
 
   const styles = setStyle(data?.Properties);
 
@@ -52,54 +53,54 @@ const ListView = ({ data }) => {
     );
   };
 
-  if (View == 'Icon') {
+  if (View && View == 'Icon') {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[0]);
     const Images = ImageData?.Properties?.Files;
-    const ImageSize = ImageData?.Properties?.Size;
+    const ImageSize = ImageData && ImageData?.Properties?.Size;
     return (
       <ImageListView
         orientation='column'
-        height={`${ImageSize[0] + 15}px`}
-        width={`${ImageSize[1] + 30}px`}
+        height={`${ImageSize && ImageSize[0] + 15}px`}
+        width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
-        imageHeight={`${ImageSize[0]}px`}
-        imageWidth={`${ImageSize[1]}px`}
+        imageHeight={`${ImageSize && ImageSize[0]}px`}
+        imageWidth={`${ImageSize && ImageSize[1]}px`}
       />
     );
   }
 
-  if (View == 'SmallIcon') {
+  if (View && View == 'SmallIcon') {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
     const ImageSize = ImageData?.Properties?.Size;
     return (
       <ImageListView
-        imageHeight={`${ImageSize[0]}px`}
-        imageWidth={`${ImageSize[1]}px`}
+        imageHeight={`${ImageSize && ImageSize[0]}px`}
+        imageWidth={`${ImageSize && ImageSize[1]}px`}
         orientation='row'
-        height={`${ImageSize[0] + 15}px`}
-        width={`${ImageSize[1] + 30}px`}
+        height={`${ImageSize && ImageSize[0] + 15}px`}
+        width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
       />
     );
   }
-  if (View == 'List') {
+  if (View && View == 'List') {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
     const ImageSize = ImageData?.Properties?.Size;
     return (
       <ImageListView
-        imageHeight={`${ImageSize[0]}px`}
-        imageWidth={`${ImageSize[1]}px`}
+        imageHeight={`${ImageSize && ImageSize[0]}px`}
+        imageWidth={`${ImageSize && ImageSize[1]}px`}
         parentOrientation={'column'}
         orientation='row'
-        height={`${ImageSize[0]}px`}
-        width={`${ImageSize[1] + 30}px`}
+        height={`${ImageSize && ImageSize[0]}px`}
+        width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
       />
     );
   }
-  if (View == 'Report') {
+  if (View && View == 'Report') {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
     console.log({ Images });
@@ -108,7 +109,6 @@ const ListView = ({ data }) => {
     return (
       <div style={{ ...styles, border: !Border ? null : '1px solid black' }}>
         {/* Develop the Header of the list  */}
-        {}
       </div>
     );
   }
