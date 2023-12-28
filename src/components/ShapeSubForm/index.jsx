@@ -5,7 +5,9 @@ import Treeview from '../Treeview';
 import Edit from '../Edit';
 import TextArea from '../TextArea';
 import Text from '../Text';
+import Label from '../Label';
 import { useEffect } from 'react';
+import ListView from '../ListView';
 
 const ShapeSubForm = ({ data, inSplitter }) => {
   const { Posn, Size, Visible } = data?.Properties;
@@ -62,6 +64,10 @@ const ShapeSubForm = ({ data, inSplitter }) => {
           return <TextArea data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'Text') {
           return <Text data={updatedData[key]} />;
+        } else if (updatedData[key].Properties.Type == 'Label') {
+          return <Label data={updatedData[key]} />;
+        } else if (updatedData[key].Properties.Type == 'ListView') {
+          return <ListView data={updatedData} />;
         }
       })}
     </div>

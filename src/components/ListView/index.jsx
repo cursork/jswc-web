@@ -10,6 +10,10 @@ const ListView = ({ data }) => {
 
   const styles = setStyle(data?.Properties);
 
+  console.log({ ColTitles });
+  console.log({ Items });
+  console.log({ ReportInfo });
+
   //   console.log({ View });
 
   //   console.log({ data });
@@ -96,12 +100,15 @@ const ListView = ({ data }) => {
     );
   }
   if (View == 'Report') {
+    const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
+    const Images = ImageData?.Properties?.Files;
+    console.log({ Images });
     // console.log({ ColTitles });
 
     return (
       <div style={{ ...styles, border: !Border ? null : '1px solid black' }}>
-        {/* Header of the Report */}
-        Report
+        {/* Develop the Header of the list  */}
+        {}
       </div>
     );
   }
