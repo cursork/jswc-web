@@ -102,7 +102,7 @@ const Treeview = ({ data }) => {
       });
     } else if (depthValue === 1) {
       childIndex++;
-      treeData[parentIndex].children.push({
+      treeData[parentIndex]?.children?.push({
         id: childIndex,
         title,
         isLeaf: true,
