@@ -12,9 +12,12 @@ const Splitter = ({ data }) => {
   let formWidth = 800;
   let formHeight = 800;
 
-  const { SplitObj1, SplitObj2, Style, Posn, Event, Visible } = data?.Properties;
-  const [sizes, setSizes] = useState([100, '30%', 'auto']);
-  const [horizontalSize, setHorizontalSize] = useState([100, 200, 'auto']);
+  const { SplitObj1, SplitObj2, Style, Posn, Event, Visible, Size } = data?.Properties;
+
+  console.log({ Posn });
+
+  const [sizes, setSizes] = useState([Posn && Posn[1]]);
+  const [horizontalSize, setHorizontalSize] = useState([Posn && Posn[0]]);
 
   const emitEvent = Event && Event[0];
 
@@ -130,7 +133,6 @@ const Splitter = ({ data }) => {
         const { Event } = JSON.parse(localStorage.getItem(key));
         const { Info } = Event;
 
-        
         localStorage.setItem(
           key,
           JSON.stringify({
