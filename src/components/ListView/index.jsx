@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { setStyle, createListViewObjects } from '../../utils';
 import { useAppData } from '../../hooks';
 
@@ -11,10 +12,21 @@ const ListView = ({ data }) => {
 
   const styles = setStyle(data?.Properties);
 
-  const handleDoubleClickEvent = (index, shiftState) => {
+  useEffect(() => {
+    localStorage.setItem(
+      data.ID,
+      JSON.stringify({
+        Event: {
+          SelItems: new Array(Items.length).fill(0),
+        },
+      })
+    );
+  }, []);
+
+  const handleListViewEvent = (index, shiftState, eventName) => {
     const event = JSON.stringify({
       Event: {
-        EventName: 'ItemDblClick',
+        EventName: eventName,
         ID: data?.ID,
         Info: [index, 1, shiftState, 4],
       },
@@ -32,20 +44,20 @@ const ListView = ({ data }) => {
       },
     });
     localStorage.setItem(data?.ID, storedFocusedIndex);
-    const exists = Event && Event.some((item) => item[0] === 'ItemDblClick');
+    const exists = Event && Event.some((item) => item[0] === eventName);
     if (!exists) return;
     console.log(event);
     socket.send(event);
   };
 
-  const handleDoubleClick = (nativeEvent, index) => {
+  const handleEvent = (nativeEvent, index, eventName) => {
     const isAltPressed = nativeEvent?.altKey ? 4 : 0;
     const isCtrlPressed = nativeEvent?.ctrlKey ? 2 : 0;
     const isShiftPressed = nativeEvent?.shiftKey ? 1 : 0;
     const mouseButton = nativeEvent?.button;
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    handleDoubleClickEvent(index, shiftState);
+    handleListViewEvent(index, shiftState, eventName);
   };
 
   const ImageListView = ({
@@ -65,7 +77,8 @@ const ListView = ({ data }) => {
         {Items?.map((item, index) => {
           return (
             <div
-              onDoubleClick={(e) => handleDoubleClick(e.nativeEvent, index + 1)}
+              onDoubleClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDblClick')}
+              onClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDown')}
               style={{ width, height, cursor: 'pointer' }}
               className={`d-flex flex-${orientation} align-items-center `}
             >
@@ -161,7 +174,8 @@ const ListView = ({ data }) => {
               <div className='d-flex align-items-center'>
                 <div
                   style={{ flex: 1, paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleDoubleClick(e.nativeEvent, index)}
+                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
                 >
                   <div className='d-flex align-items-center'>
                     <img src={`http://localhost:${PORT}${report?.image}`} />
@@ -170,13 +184,15 @@ const ListView = ({ data }) => {
                 </div>
                 <div
                   style={{ flex: 1, fontSize: '12px', paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleDoubleClick(e.nativeEvent, index)}
+                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
                 >
                   {report?.description}
                 </div>
                 <div
                   style={{ flex: 1, fontSize: '12px', paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleDoubleClick(e.nativeEvent, index)}
+                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
                 >
                   {report?.index}
                 </div>
