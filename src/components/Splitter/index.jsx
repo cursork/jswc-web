@@ -14,8 +14,6 @@ const Splitter = ({ data }) => {
 
   const { SplitObj1, SplitObj2, Style, Posn, Event, Visible, Size } = data?.Properties;
 
-  console.log({ Posn });
-
   const [sizes, setSizes] = useState([Posn && Posn[1]]);
   const [horizontalSize, setHorizontalSize] = useState([Posn && Posn[0]]);
 
@@ -310,7 +308,7 @@ const Splitter = ({ data }) => {
         socket.send(
           JSON.stringify({
             Event: {
-              EventName: data?.Properties?.Event[0],
+              EventName: emitEvent && emitEvent[0],
               ID: data.ID,
               Info: [0, Math.round(coordinates[0]), 800, 3],
             },
