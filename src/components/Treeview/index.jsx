@@ -152,8 +152,45 @@ const Treeview = ({ data }) => {
     const mouseButton = nativeEvent.button;
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
     if (selectedNodes.length == 0) return;
-
     handleItemDownEvent(selectedNodes[0]?.id, shiftState);
+  };
+
+  const handleDoubleClickEvent = (index, shiftState) => {
+    const event = JSON.stringify({
+      Event: {
+        EventName: 'ItemDblClick',
+        ID: data?.ID,
+        Info: [index, 1, shiftState, 4],
+      },
+    });
+
+    // Stored in local storage to handle the WG of TreeView
+    const SelItems = new Array(childIndex).fill(0);
+
+    SelItems[index - 1] = 1;
+
+    //WG SelItems
+    const storedFocusedIndex = JSON.stringify({
+      Event: {
+        SelItems: SelItems,
+      },
+    });
+    localStorage.setItem(data?.ID, storedFocusedIndex);
+    const exists = Event && Event.some((item) => item[0] === 'ItemDblClick');
+    if (!exists) return;
+    console.log(event);
+    socket.send(event);
+  };
+
+  const handleDoubleClick = (_, info) => {
+    const { nativeEvent } = info;
+
+    const isAltPressed = nativeEvent?.altKey ? 4 : 0;
+    const isCtrlPressed = nativeEvent?.ctrlKey ? 2 : 0;
+    const isShiftPressed = nativeEvent?.shiftKey ? 1 : 0;
+    const mouseButton = nativeEvent?.button;
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+    handleDoubleClickEvent(info.id, shiftState);
   };
 
   // Set the initial localstorage if no item is selected
@@ -181,6 +218,7 @@ const Treeview = ({ data }) => {
       }}
     >
       <Tree
+        onDoubleClick={handleDoubleClick}
         onSelect={handleSelect}
         onKeyDown={(e) => console.log('keydown', { e })}
         onExpand={(d) => eventEmit(d)}
