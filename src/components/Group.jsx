@@ -1,10 +1,16 @@
-import { setStyle, excludeKeys } from '../utils';
+import { setStyle, excludeKeys, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
+import { useAppData } from '../hooks';
 
 const Group = ({ data }) => {
+  const PORT = localStorage.getItem('PORT');
   const styles = setStyle(data?.Properties);
+  const { Visible, Picture } = data?.Properties;
+  const { findDesiredData } = useAppData();
 
-  const { Visible } = data?.Properties;
+  const ImageData = findDesiredData(Picture && Picture[0]);
+
+  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
   const updatedData = excludeKeys(data);
 
@@ -14,6 +20,7 @@ const Group = ({ data }) => {
         ...styles,
         border: '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
+        ...imageStyles,
       }}
       id={data?.ID}
     >

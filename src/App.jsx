@@ -855,9 +855,7 @@ const App = () => {
     dataRef.current = {};
     setSocketData([]);
     localStorage.clear();
-
     const currentPort = window.location.port;
-    console.log({ currentPort });
 
     fetchData(currentPort);
   }, [layout]);
