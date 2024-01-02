@@ -887,7 +887,7 @@ const App = () => {
     const handleBeforeUnload = () => {
       // Attempt to send a closing message before the tab is closed
       if (webSocketRef.current) {
-        webSocketRef.current.send(JSON.stringify({ Signal: 'Close' }));
+        webSocketRef.current.send(JSON.stringify({ Signal: { Name: 'Close' } }));
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -895,7 +895,6 @@ const App = () => {
     return () => {
       // Remove the event listener when the component is unmounted
       window.removeEventListener('beforeunload', handleBeforeUnload);
-
       // Close the WebSocket if it's still open
       if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
         webSocketRef.current.close();
