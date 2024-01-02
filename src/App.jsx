@@ -881,8 +881,9 @@ const App = () => {
     const currentPort = window.location.port;
     fetchData(currentPort);
     return () => {
-      if (socket) {
-        socket.close();
+      const webSocket = new WebSocket(`ws://localhost:${currentPort}/`);
+      if (webSocket) {
+        webSocket.close();
       }
     };
   }, [layout]);
