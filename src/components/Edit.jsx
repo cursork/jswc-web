@@ -18,7 +18,26 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
-  const { ShortDate } = dateFormat?.Properties;
+  const { ShortDate, Thousand } = dateFormat?.Properties;
+
+  const formatNumber = (
+    number,
+    decimalSeparator = !dateFormat?.Properties?.Decimal ? '.' : dateFormat?.Properties?.Decimal,
+    thousandSeparator = !Thousand ? ',' : Thousand
+  ) => {
+    const formattedNumber = number.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true,
+    });
+
+    // Replace the default separators with the specified separators
+    const formattedWithCustomSeparators = formattedNumber
+      .replace('.', decimalSeparator)
+      .replace(/,/g, thousandSeparator);
+
+    return formattedWithCustomSeparators;
+  };
 
   let styles = { ...setStyle(data?.Properties) };
   const [inputType, setInputType] = useState('text');
@@ -50,7 +69,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       if (FieldType == 'LongNumeric') {
         setEmitValue(value);
         setInitialValue(value);
-        return setInputValue(value.toLocaleString(currentLocale));
+        return setInputValue(formatNumber(value));
       }
       setEmitValue(value);
       setInitialValue(value);
@@ -332,7 +351,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
         if (FieldType == 'LongNumeric') {
           value = replaceDanishToNumber(e.target.value);
 
-          setInputValue(e.target.value.toLocaleString(currentLocale));
+          setInputValue(formatNumber(e.target.value));
           setEmitValue(value);
         }
 
@@ -343,7 +362,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       }}
       onBlur={() => {
         if (FieldType == 'LongNumeric') {
-          setInputValue(emitValue.toLocaleString(currentLocale));
+          setInputValue(formatNumber(emitValue));
         }
         handleEditEvents();
       }}
