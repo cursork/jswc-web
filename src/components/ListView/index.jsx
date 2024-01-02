@@ -68,24 +68,27 @@ const ListView = ({ data }) => {
     width,
     imageHeight,
     imageWidth,
+    style = '',
   }) => {
     return (
       <div
-        className={`d-flex flex-${parentOrientation}`}
-        style={{ ...styles, border: !Border ? null : '1px solid black' }}
+        className={`d-flex flex-wrap flex-${parentOrientation}`}
+        style={{ ...styles, border: !Border ? null : '1px solid black', ...style }}
       >
         {Items?.map((item, index) => {
           return (
             <div
               onDoubleClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDblClick')}
               onClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDown')}
-              style={{ width, height, cursor: 'pointer' }}
-              className={`d-flex flex-${orientation} align-items-center `}
+              style={{ width: '50px' }}
+              className={`d-flex flex-${orientation}`}
             >
-              <img
-                style={{ width: imageWidth, height: imageHeight }}
-                src={`http://localhost:${PORT}${Images[index]}`}
-              />
+              {Images[index] ? (
+                <img
+                  style={{ width: imageWidth, height: imageHeight }}
+                  src={`http://localhost:${PORT}${Images[index]}`}
+                />
+              ) : null}
               <span style={{ fontSize: '12px' }}>{item}</span>
             </div>
           );
@@ -100,6 +103,7 @@ const ListView = ({ data }) => {
     const ImageSize = ImageData && ImageData?.Properties?.Size;
     return (
       <ImageListView
+        style={{ overflowY: 'scroll' }}
         orientation='column'
         height={`${ImageSize && ImageSize[0] + 15}px`}
         width={`${ImageSize && ImageSize[1] + 30}px`}
@@ -148,7 +152,7 @@ const ListView = ({ data }) => {
     const reportsData = createListViewObjects(Images, Items, ReportInfo);
 
     return (
-      <div style={{ ...styles, border: !Border ? null : '1px solid black' }}>
+      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' }}>
         {/* Header of the component */}
         <div className='d-flex align-items-center'>
           {ColTitles?.map((title, index, array) => {
@@ -178,7 +182,9 @@ const ListView = ({ data }) => {
                   onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
                 >
                   <div className='d-flex align-items-center'>
-                    <img src={`http://localhost:${PORT}${report?.image}`} />
+                    {report?.image ? (
+                      <img src={`http://localhost:${PORT}${report?.image}`} />
+                    ) : null}
                     <span style={{ fontSize: '12px' }}>{report?.title}</span>
                   </div>
                 </div>
