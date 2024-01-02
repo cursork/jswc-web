@@ -13,6 +13,7 @@ const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
   const [layout, setLayout] = useState('Initialise');
+  const webSocketRef = useRef(null);
 
   function useForceRerender() {
     const [_state, setState] = useState(true);
@@ -102,6 +103,8 @@ const App = () => {
 
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
+
+    webSocketRef.current = new WebSocket(`ws://localhost:${runningPort}/`);
 
     const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
     setSocket(webSocket);
@@ -880,10 +883,22 @@ const App = () => {
     localStorage.clear();
     const currentPort = window.location.port;
     fetchData(currentPort);
+
+    const handleBeforeUnload = () => {
+      // Attempt to send a closing message before the tab is closed
+      if (webSocketRef.current) {
+        webSocketRef.current.send(JSON.stringify({ Signal: 'Close' }));
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
-      const webSocket = new WebSocket(`ws://localhost:${currentPort}/`);
-      if (webSocket) {
-        webSocket.close();
+      // Remove the event listener when the component is unmounted
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      // Close the WebSocket if it's still open
+      if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
+        webSocketRef.current.close();
       }
     };
   }, [layout]);
