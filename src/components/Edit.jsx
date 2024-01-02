@@ -13,7 +13,7 @@ import { useAppData } from '../hooks';
 import dayjs from 'dayjs';
 
 const Edit = ({ data, value, event = '', row = '', column = '', location = '' }) => {
-  const { socket, dataRef } = useAppData();
+  const { socket, dataRef, findDesiredData } = useAppData();
   const currentLocale = navigator.language || navigator.userLanguage;
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
@@ -26,14 +26,15 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   const [emitValue, setEmitValue] = useState('');
   const [initialValue, setInitialValue] = useState('');
   const dateInputRef = useRef();
-  const [selectedDate, setSelectedDate] = useState(null);
 
-  const { FieldType, MaxLength, FCol, Decimal, Visible, Event } = data?.Properties;
+  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
   const isPassword = data?.Properties.hasOwnProperty('Password');
   const inputRef = useRef(null);
+  const font = findDesiredData(FontObj && FontObj);
+  const fontProperties = font && font?.Properties;
 
   const decideInputValue = () => {
     if (location == 'inGrid') {
@@ -237,6 +238,20 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     socket.send(gotFocusEvent);
   };
 
+  // updating the styles depending upon the FontObj
+  styles = {
+    ...styles,
+    fontFamily: fontProperties?.PName,
+    fontSize: !fontProperties?.Size ? '12px' : `${fontProperties?.Size}px`,
+    textDecoration: !fontProperties?.Underline
+      ? 'none'
+      : fontProperties?.Underline == 1
+      ? 'underline'
+      : 'none',
+    fontStyle: !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none',
+    fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
+  };
+
   // Date Picker component
 
   if (inputType == 'date') {
@@ -336,7 +351,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       style={{
         ...styles,
         borderRadius: '2px',
-        fontSize: '12px',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'block',
         paddingLeft: '5px',

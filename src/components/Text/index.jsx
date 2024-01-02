@@ -1,11 +1,18 @@
 import { rgbColor } from '../../utils';
+import { useAppData } from '../../hooks';
 
 const Text = ({ data }) => {
-  const { Visible, Points, Text, FCol } = data?.Properties;
+  const { Visible, Points, Text, FCol, FontObj } = data?.Properties;
+  const { findDesiredData } = useAppData();
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
   const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
+
+  const font = findDesiredData(FontObj && FontObj);
+  const fontProperties = font && font?.Properties;
+
+  console.log({ fontProperties });
 
   return (
     <div
@@ -24,9 +31,20 @@ const Text = ({ data }) => {
               dy='0.7em'
               x={textPoints[0]}
               y={textPoints[1]}
-              font-family='Arial'
-              font-size='12'
+              font-family={fontProperties?.PName}
+              font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
               fill={FCol ? rgbColor(FCol && FCol[index]) : 'black'}
+              font-style={
+                !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none'
+              }
+              font-weight={!fontProperties?.Weight ? 0 : fontProperties?.Weight}
+              text-decoration={
+                !fontProperties?.Underline
+                  ? 'none'
+                  : fontProperties?.Underline == 1
+                  ? 'underline'
+                  : 'none'
+              }
             >
               {Text[index]}
             </text>
@@ -37,5 +55,3 @@ const Text = ({ data }) => {
   );
 };
 export default Text;
-
-
