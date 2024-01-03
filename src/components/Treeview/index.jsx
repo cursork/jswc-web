@@ -30,10 +30,11 @@ const Treeview = ({ data }) => {
 
   const ImageList = JSON.parse(getObjectById(dataRef.current, ID));
 
-  const eventEmit = (treeState) => {
+  const eventEmit = (treeState, info) => {
+    const { node } = info;
+
     if (treeState.length > nodeData.length) {
       const missingPart = treeState.filter((item) => !nodeData.includes(item));
-      const Info = findParentIndex(Depth, 1 + calculateSumFromString(missingPart));
 
       // Only Emit the Event when the event is Present
 
@@ -41,7 +42,7 @@ const Treeview = ({ data }) => {
         Event: {
           EventName: 'Expanding',
           ID: data?.ID,
-          Info: Info + 1,
+          Info: node?.id,
         },
       });
 
@@ -61,7 +62,7 @@ const Treeview = ({ data }) => {
         Event: {
           EventName: 'Retracting',
           ID: data?.ID,
-          Info: Info + 1,
+          Info: node?.id,
         },
       });
 
@@ -228,7 +229,7 @@ const Treeview = ({ data }) => {
         onDoubleClick={handleDoubleClick}
         onSelect={handleSelect}
         onKeyDown={(e) => console.log('keydown', { e })}
-        onExpand={(d) => eventEmit(d)}
+        onExpand={eventEmit}
         expandAction='click'
         treeData={treeData}
         showIcon={false}
