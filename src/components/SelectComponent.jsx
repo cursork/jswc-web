@@ -36,6 +36,7 @@ const SelectComponent = ({
   column = '',
   location,
   inSplitter = null,
+  values = [],
 }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
   if (data?.Properties?.Type == 'MenuBar')
@@ -69,6 +70,7 @@ const SelectComponent = ({
         }
       >
         <Edit
+          values={values}
           location={location}
           data={data}
           value={inputValue}
@@ -87,6 +89,7 @@ const SelectComponent = ({
         event={event}
         row={row}
         column={column}
+        values={values}
       />
     );
   if (data?.Properties?.Type == 'Combo')
@@ -98,6 +101,7 @@ const SelectComponent = ({
         event={event}
         row={row}
         column={column}
+        values={values}
       />
     );
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;

@@ -12,8 +12,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../hooks';
 import dayjs from 'dayjs';
 
-const Edit = ({ data, value, event = '', row = '', column = '', location = '' }) => {
-  const { socket, dataRef, findDesiredData } = useAppData();
+const Edit = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
+  const { socket, dataRef, findDesiredData, handleData } = useAppData();
   const currentLocale = navigator.language || navigator.userLanguage;
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
@@ -211,6 +211,19 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
   };
 
   const triggerCellChangedEvent = () => {
+    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    values[parseInt(row) - 1][parseInt(column) - 1] = emitValue;
+    handleData(
+      {
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Properties: {
+          ...gridEvent.Properties,
+          Values: values,
+        },
+      },
+      'WS'
+    );
+
     const cellChangedEvent = JSON.stringify({
       Event: {
         EventName: 'CellChanged',
@@ -220,6 +233,14 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
         Value: emitValue,
       },
     });
+
+    const updatedGridValues = JSON.stringify({
+      Event: {
+        Values: values,
+      },
+    });
+
+    // localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
 
     localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), cellChangedEvent);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
@@ -321,12 +342,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
       </div>
     );
   }
-
-
-  if (inputType == 'LongNumeric')
-  {
-    
-    }
 
   return (
     <input

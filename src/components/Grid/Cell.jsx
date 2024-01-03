@@ -15,6 +15,7 @@ const Cell = ({
   isRow = false,
   isBody = false,
   highLightMe = false,
+  values = [],
 }) => {
   if (!type) {
     return (
@@ -81,6 +82,7 @@ const Cell = ({
         event={parent}
         row={row}
         column={column}
+        values={values}
       />
     </div>
   );

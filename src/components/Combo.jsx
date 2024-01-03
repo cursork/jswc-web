@@ -4,8 +4,8 @@ import { useAppData } from '../hooks';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const Combo = ({ data, value, event = '', row = '', column = '', location = '' }) => {
-  const { socket } = useAppData();
+const Combo = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
+  const { socket, handleData, findDesiredData } = useAppData();
   const styles = setStyle(data?.Properties);
   const { Items, SelItems, Event, Visible } = data?.Properties;
 
@@ -17,6 +17,19 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '' }
   }, [SelItems]);
 
   const handleCellChangeEvent = (value) => {
+    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    values[parseInt(row) - 1][parseInt(column) - 1] = value;
+    handleData(
+      {
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Properties: {
+          ...gridEvent.Properties,
+          Values: values,
+        },
+      },
+      'WS'
+    );
+
     const triggerEvent = JSON.stringify({
       Event: {
         EventName: 'CellChanged',

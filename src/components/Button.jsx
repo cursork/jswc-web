@@ -4,7 +4,15 @@ import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { getObjectById, getImageStyles } from '../utils';
 
-const Button = ({ data, inputValue, event = '', row = '', column = '', location = '' }) => {
+const Button = ({
+  data,
+  inputValue,
+  event = '',
+  row = '',
+  column = '',
+  location = '',
+  values = [],
+}) => {
   const PORT = localStorage.getItem('PORT');
 
   const styles = setStyle(data?.Properties);
@@ -40,6 +48,19 @@ const Button = ({ data, inputValue, event = '', row = '', column = '', location 
   }, [data]);
 
   const handleCellChangedEvent = (value) => {
+    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    (values[parseInt(row) - 1][parseInt(column) - 1] = value ? 1 : 0),
+      handleData(
+        {
+          ID: extractStringUntilSecondPeriod(data?.ID),
+          Properties: {
+            ...gridEvent.Properties,
+            Values: values,
+          },
+        },
+        'WS'
+      );
+
     const triggerEvent = JSON.stringify({
       Event: {
         EventName: 'CellChanged',

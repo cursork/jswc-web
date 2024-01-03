@@ -169,6 +169,7 @@ const Grid = ({ data }) => {
                   isColumn={tableProperty.column}
                   isRow={tableProperty.row}
                   isBody={tableProperty.body}
+                  values={Values}
                 />
               );
             })}
