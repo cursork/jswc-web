@@ -100,7 +100,7 @@ const Treeview = ({ data }) => {
         title: title,
         children: [],
       });
-    } else if (depthValue === 1) {
+    } else if (depthValue >= 1) {
       childIndex++;
       treeData[parentIndex]?.children?.push({
         id: childIndex,
