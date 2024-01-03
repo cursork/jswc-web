@@ -89,9 +89,7 @@ const Treeview = ({ data }) => {
 
   for (let i = 0; i < Depth.length; i++) {
     const depthValue = Depth[i];
-
     const title = createNode(Items[i], ImageIndex && ImageIndex[i]);
-
     if (depthValue === 0) {
       parentIndex++;
       childIndex++;
@@ -102,11 +100,19 @@ const Treeview = ({ data }) => {
       });
     } else if (depthValue >= 1) {
       childIndex++;
-      treeData[parentIndex]?.children?.push({
+
+      const newNode = {
         id: childIndex,
-        title,
-        isLeaf: true,
-      });
+        title: title,
+      };
+      let parent = treeData[treeData.length - 1];
+      for (let j = 1; j < depthValue; j++) {
+        parent = parent.children[parent.children.length - 1];
+      }
+      if (!parent.children) {
+        parent.children = [];
+      }
+      parent.children.push(newNode);
     }
   }
 
@@ -215,6 +221,7 @@ const Treeview = ({ data }) => {
         paddingLeft: '2px',
         paddingTop: '3px',
         display: Visible == 0 ? 'none' : 'block',
+        overflowY: 'scroll',
       }}
     >
       <Tree
