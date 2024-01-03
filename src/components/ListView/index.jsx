@@ -85,10 +85,10 @@ const ListView = ({ data }) => {
               style={{ width: '50px' }}
               className={`d-flex flex-${orientation}`}
             >
-              {Images[index] ? (
+              {Images.length > 0 ? (
                 <img
                   style={{ width: imageWidth, height: imageHeight }}
-                  src={`http://localhost:${PORT}${Images[index]}`}
+                  src={`http://localhost:${PORT}${Images[ImageIndex[index] - 1]}`}
                 />
               ) : null}
               <span style={{ fontSize: '12px' }}>{item}</span>
@@ -154,7 +154,8 @@ const ListView = ({ data }) => {
     const reportsData = createListViewObjects(
       !Images ? [] : Images,
       !Items ? [] : Items,
-      !ReportInfo ? [] : ReportInfo
+      !ReportInfo ? [] : ReportInfo,
+      !ImageIndex ? [] : ImageIndex
     );
 
     return (

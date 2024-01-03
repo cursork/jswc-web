@@ -261,12 +261,12 @@ export const findFormParentID = (data) => {
   return formParentID;
 };
 
-export const createListViewObjects = (images, codes, descriptions) => {
+export const createListViewObjects = (images, codes, descriptions, imagesIndexes) => {
   const result = codes.map((code, index) => ({
     index: index + 1,
     title: code,
     description: descriptions && descriptions[index][0],
-    image: (images && images[index]) || '', // Set image to an empty string if it's undefined
+    image: (images && images[imagesIndexes[index]-1]) || '', // Set image to an empty string if it's undefined
   }));
 
   return result;
