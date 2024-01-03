@@ -17,7 +17,7 @@ const ListView = ({ data }) => {
       data.ID,
       JSON.stringify({
         Event: {
-          SelItems: new Array(Items.length).fill(0),
+          SelItems: !Items ? [] : new Array(Items.length).fill(0),
         },
       })
     );
