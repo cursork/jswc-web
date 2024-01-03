@@ -70,12 +70,14 @@ const ListView = ({ data }) => {
     imageWidth,
     style = '',
   }) => {
+    const listViewItems = !Items ? [] : Items;
+
     return (
       <div
         className={`d-flex flex-wrap flex-${parentOrientation}`}
         style={{ ...styles, border: !Border ? null : '1px solid black', ...style }}
       >
-        {Items?.map((item, index) => {
+        {listViewItems?.map((item, index) => {
           return (
             <div
               onDoubleClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDblClick')}
@@ -149,7 +151,11 @@ const ListView = ({ data }) => {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
 
-    const reportsData = createListViewObjects(Images, Items, ReportInfo);
+    const reportsData = createListViewObjects(
+      !Images ? [] : Images,
+      !Items ? [] : Items,
+      !ReportInfo ? [] : ReportInfo
+    );
 
     return (
       <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' }}>
