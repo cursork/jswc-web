@@ -106,7 +106,7 @@ const App = () => {
 
     webSocketRef.current = new WebSocket(`ws://localhost:${runningPort}/`);
 
-    const webSocket = new WebSocket(`ws://localhost:${runningPort}/`);
+    const webSocket = webSocketRef.current;
     setSocket(webSocket);
     webSocket.onopen = () => {
       webSocket.send(layout);

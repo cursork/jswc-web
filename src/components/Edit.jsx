@@ -322,6 +322,12 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '' })
     );
   }
 
+
+  if (inputType == 'LongNumeric')
+  {
+    
+    }
+
   return (
     <input
       id={data.ID}
