@@ -7,7 +7,7 @@ const SubForm = ({ data }) => {
   const updatedData = excludeKeys(data);
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const { Size, Posn } = data?.Properties;
+  const { Size, Posn, Visible } = data?.Properties;
 
   useEffect(() => {
     localStorage.setItem(

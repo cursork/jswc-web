@@ -7,7 +7,7 @@ import { useAppData } from '../../hooks';
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
-  const { Size, Posn, Picture } = data?.Properties;
+  const { Size, Posn, Picture, Visible } = data?.Properties;
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
   const styles = setStyle(data?.Properties);
@@ -38,6 +38,7 @@ const SubForm = ({ data }) => {
         top: !Posn ? 0 : Posn[0],
         left: !Posn ? 0 : Posn[1],
         position: 'absolute',
+        display: Visible == 0 ? 'none' : 'block',
       }}
     >
       {Object.keys(updatedData).map((key) => {
