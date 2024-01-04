@@ -58,19 +58,18 @@ const Grid = ({ data }) => {
       {/* Table have column */}
       {ColTitles && (
         <div style={{ display: 'flex' }}>
-          {data.ID.includes('VGRID') ? (
-            <Cell
-              cellWidth={CellWidths + 50}
-              title={''}
-              column={0}
-              row={0}
-              isColumn={tableProperty.column}
-              isRow={tableProperty.row}
-              isBody={tableProperty.body}
-              selectedGrid={selectedGrid}
-              onClick={(row, column) => handleGridClick(row, column, 'column')}
-            />
-          ) : null}
+          <Cell
+            cellWidth={CellWidths + 50}
+            title={''}
+            column={0}
+            row={0}
+            isColumn={tableProperty.column}
+            isRow={tableProperty.row}
+            isBody={tableProperty.body}
+            selectedGrid={selectedGrid}
+            onClick={(row, column) => handleGridClick(row, column, 'column')}
+          />
+
           {ColTitles.map((heading, column) => {
             return (
               <Cell
