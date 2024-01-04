@@ -664,8 +664,12 @@ const App = () => {
 
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
+          console.log('server', serverEvent);
+          console.log('getValue', localStorage.getItem(serverEvent.ID));
+
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
+            console.log('Sarim');
             serverEvent.Properties.map((key) => {
               return (serverPropertiesObj[key] = Properties[key]);
             });
@@ -700,6 +704,7 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             return (serverPropertiesObj[key] = SubForm[key]);
           });
+
           console.log(
             JSON.stringify({
               WG: {

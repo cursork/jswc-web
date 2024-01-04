@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import ListView from '../ListView';
 import Group from '../Group';
 import Grid from '../Grid';
+import SelectComponent from '../SelectComponent';
 
 const ShapeSubForm = ({ data, inSplitter }) => {
   const { Posn, Size, Visible } = data?.Properties;
@@ -72,6 +73,8 @@ const ShapeSubForm = ({ data, inSplitter }) => {
           return <ListView data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'Group') {
           if (!inSplitter) return <Group data={updatedData[key]} />;
+        } else if (updatedData[key].Properties.Type == 'SubForm') {
+          return  <SelectComponent data={updatedData[key]} />;
         }
       })}
     </div>
