@@ -219,6 +219,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
         Properties: {
           ...gridEvent.Properties,
           Values: values,
+          CurCell: [parseInt(row), parseInt(column)],
         },
       },
       'WS'
@@ -236,13 +237,15 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
 
     const updatedGridValues = JSON.stringify({
       Event: {
+        EventName: 'CellChanged',
         Values: values,
+        CurCell: [row, column],
       },
     });
 
-    // localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
+    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
 
-    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), cellChangedEvent);
+    // localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), cellChangedEvent);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(cellChangedEvent);

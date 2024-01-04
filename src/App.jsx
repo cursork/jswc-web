@@ -204,46 +204,43 @@ const App = () => {
         if (Type == 'Grid') {
           const { Values } = Properties;
 
-          const supportedProperties = ['Values'];
+          const supportedProperties = ['Values', 'CurCell'];
 
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: { Values: Values },
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
-            return webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: { Values: Values },
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
+            const serverPropertiesObj = {};
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] = Properties[key]);
+            });
+
+            const event = JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
+            });
+
+            console.log(event);
+            return webSocket.send(event);
           }
 
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
-          const { Row, Col, Value } = Event;
+          const serverPropertiesObj = {};
+          serverEvent.Properties.map((key) => {
+            return (serverPropertiesObj[key] = Event[key]);
+          });
 
-          Values[Row - 1][Col - 1] = Value;
+          // Values[Row - 1][Col - 1] = Value;
           console.log(
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: { Values: Values },
+                Properties: { serverPropertiesObj },
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
                   ? { NotSupported: result.NotSupported }
@@ -277,7 +274,7 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: { Values: Values },
+                Properties: { Values: Values, CurCell },
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
                   ? { NotSupported: result.NotSupported }

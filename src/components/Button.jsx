@@ -56,6 +56,7 @@ const Button = ({
           Properties: {
             ...gridEvent.Properties,
             Values: values,
+            CurCell:[row,column]
           },
         },
         'WS'
@@ -70,7 +71,16 @@ const Button = ({
         Value: value ? 1 : 0,
       },
     });
-    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), triggerEvent);
+
+    const updatedGridValues = JSON.stringify({
+      Event: {
+        EventName: 'CellChanged',
+        Values: values,
+        CurCell: [row, column],
+      },
+    });
+
+    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(triggerEvent);

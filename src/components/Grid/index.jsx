@@ -1,7 +1,7 @@
 import { setStyle, generateHeader } from '../../utils';
 import { useAppData } from '../../hooks';
 import Cell from './Cell';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Grid = ({ data }) => {
   const { findDesiredData } = useAppData();
@@ -34,13 +34,25 @@ const Grid = ({ data }) => {
 
   let size = 0;
 
-  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible } = data?.Properties;
+  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible, CurCell } = data?.Properties;
 
   const style = setStyle(data?.Properties);
 
   if (!ColTitles) {
     size = Values[0]?.length + 1;
   }
+
+  useEffect(() => {
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          CurCell: !CurCell ? [0, 0] : CurCell,
+          Values
+        },
+      })
+    );
+  }, [data]);
 
   // Grid without types
 
