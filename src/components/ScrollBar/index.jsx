@@ -9,6 +9,8 @@ const ScrollBar = ({ data }) => {
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
+  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+
   const [showButtons, setShowButtons] = useState(false);
 
   const emitEvent = Event && Event[0];
@@ -18,7 +20,7 @@ const ScrollBar = ({ data }) => {
   };
 
   const handleTrackMouseLeave = () => {
-    setShowButtons(false);
+    setShowButtons(true);
   };
 
   const { socket } = useAppData();
@@ -28,8 +30,8 @@ const ScrollBar = ({ data }) => {
 
   const maxValue = Range;
 
-  const trackHeight = 500;
-  const trackWidth = 800;
+  const trackHeight = parentSize[0];
+  const trackWidth = parentSize[1];
 
   const handleThumbDrag = (event) => {
     event.preventDefault();
@@ -64,37 +66,20 @@ const ScrollBar = ({ data }) => {
           );
         }
 
-        console.log(
-          'Event',
-          JSON.stringify({
-            Event: {
-              EventName: emitEvent && emitEvent[0],
-              ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
-            },
-          })
-        );
+        const event = JSON.stringify({
+          Event: {
+            EventName: emitEvent && emitEvent[0],
+            ID: data?.ID,
+            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+          },
+        });
 
-        localStorage.setItem(
-          data.ID,
-          JSON.stringify({
-            Event: {
-              EventName: emitEvent && emitEvent[0],
-              ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
-            },
-          })
-        );
+        console.log(event);
+        localStorage.setItem(data.ID, event);
+        const exists = Event && Event.some((item) => item[0] === 'Scroll');
+        if (!exists) return;
 
-        socket.send(
-          JSON.stringify({
-            Event: {
-              EventName: emitEvent && emitEvent[0],
-              ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
-            },
-          })
-        );
+        socket.send(event);
       }
     };
 
@@ -159,7 +144,8 @@ const ScrollBar = ({ data }) => {
             })
           );
         }
-
+        const exists = Event && Event.some((item) => item[0] === 'Scroll');
+        if (!exists) return;
         socket.send(
           JSON.stringify({
             Event: {
@@ -256,6 +242,9 @@ const ScrollBar = ({ data }) => {
         );
       }
 
+      const exists = Event && Event.some((item) => item[0] === 'Scroll');
+      if (!exists) return;
+
       socket.send(
         JSON.stringify({
           Event: {
@@ -310,6 +299,8 @@ const ScrollBar = ({ data }) => {
           })
         );
       }
+      const exists = Event && Event.some((item) => item[0] === 'Scroll');
+      if (!exists) return;
 
       socket.send(
         JSON.stringify({
@@ -351,14 +342,14 @@ const ScrollBar = ({ data }) => {
               style={{ left: '0' }}
               onClick={decrementScale}
             >
-              <FA.FaCaretDown />
+              <FA.FaCaretDown style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
             </div>
             <div
               className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
               style={{ right: '0' }}
               onClick={incrementScale}
             >
-              <FA.FaCaretUp />
+              <FA.FaCaretUp style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
             </div>
           </>
         ) : showButtons ? (
@@ -369,14 +360,14 @@ const ScrollBar = ({ data }) => {
                 style={{ top: '0' }}
                 onClick={decrementScale}
               >
-                <FA.FaCaretUp />
+                <FA.FaCaretUp style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
               </div>
               <div
                 className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
                 style={{ bottom: '0' }}
                 onClick={incrementScale}
               >
-                <FA.FaCaretDown />
+                <FA.FaCaretDown style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
               </div>
             </>
           </>

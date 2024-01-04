@@ -13,7 +13,7 @@ import Group from './Group';
 import ScrollBar from './ScrollBar';
 import TabControl from './TabControl';
 import TabButton from './TabButton';
-import SubForm from './SubForm';
+// import SubForm from './SubForm';
 import TextArea from './TextArea';
 import CustomRibbon from './Ribbon';
 import CustomRibbonGroup from './Ribbon/RibbonGroup';
@@ -27,6 +27,7 @@ import ShapeSubForm from './ShapeSubForm';
 import Text from './Text';
 import Timer from './Timer';
 import ListView from './ListView';
+import SubForm from './DynamicSubForm';
 
 const SelectComponent = ({
   data,
@@ -106,11 +107,11 @@ const SelectComponent = ({
     );
   if (data?.Properties?.Type == 'Label') return <Label data={data} />;
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
-  if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
-    return <SubForm data={data} />;
+  // if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
+  //   return <SubForm data={data} />;
   // Image Subform
-  if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('Picture'))
-    return <ImageSubForm data={data} />;
+  // if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('Picture'))
+  //   return <ImageSubForm data={data} />;
 
   if (data?.Properties?.Type == 'List') return <List data={data} />;
   if (data?.Properties?.Type == 'Splitter') return <Splitter data={data} />;
@@ -130,7 +131,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Poly') return <Poly data={data} />;
   if (data?.Properties?.Type == 'Rect') return <Rectangle data={data} />;
   if (data?.Properties?.Type == 'SubForm') {
-    return <ShapeSubForm inSplitter={inSplitter} data={data} />;
+    return <SubForm data={data} />;
   }
 
   if (data?.Properties?.Type == 'Text') return <Text data={data} />;

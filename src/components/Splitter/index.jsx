@@ -248,9 +248,9 @@ const Splitter = ({ data }) => {
                 display: isTopVisible == 0 ? 'none' : 'block',
               }}
             >
-              {Object.keys(updatedFirstForm).map((key) => (
+              {/* {Object.keys(updatedFirstForm).map((key) => (
                 <SelectComponent inSplitter={'inSplitter'} data={updatedFirstForm[key]} />
-              ))}
+              ))} */}
             </div>
           </div>
           <div style={{ border: '1px solid #F0F0F0' }}>
@@ -262,9 +262,9 @@ const Splitter = ({ data }) => {
                 display: isBottomVisible == 0 ? 'none' : 'block',
               }}
             >
-              {Object.keys(updatedSecondForm).map((key) => (
+              {/* {Object.keys(updatedSecondForm).map((key) => (
                 <SelectComponent inSplitter={'inSplitter'} data={updatedSecondForm[key]} />
-              ))}
+              ))} */}
             </div>
           </div>
         </SplitPane>
@@ -346,22 +346,23 @@ const Splitter = ({ data }) => {
               position: 'relative',
             }}
           >
-            {Object.keys(updatedFirstForm).map((key) => (
-              <SelectComponent inSplitter={'inSplitter'} data={updatedFirstForm[key]} />
-            ))}
+            {/* {Object.keys(firstFormData).map((key) => {
+              console.log({ key });
+              return <SelectComponent data={firstFormData[key]} />;
+            })} */}
           </div>
         </div>
       </Pane>
       {/* Right SubForm */}
       <div style={{ ...layoutCSS, background: 'white' }}>
         <div style={{ background: 'white', display: isRightVisible == 0 ? 'none' : 'block' }}>
-          {Object.keys(updatedSecondForm).map((key) => (
+          {/* {Object.keys(updatedSecondForm).map((key) => (
             <SelectComponent
               inSplitter={'inSplitter'}
               isSubForm={true}
               data={updatedSecondForm[key]}
             />
-          ))}
+          ))} */}
         </div>
       </div>
     </SplitPane>
