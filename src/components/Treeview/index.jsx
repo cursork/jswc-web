@@ -33,6 +33,9 @@ const Treeview = ({ data }) => {
   const eventEmit = (treeState, info) => {
     const { node } = info;
 
+    console.log({ nodeData });
+    console.log({ treeState });
+
     if (treeState.length > nodeData.length) {
       const missingPart = treeState.filter((item) => !nodeData.includes(item));
 
@@ -45,6 +48,7 @@ const Treeview = ({ data }) => {
           Info: node?.id,
         },
       });
+      
 
       const exists = Event && Event.some((item) => item[0] === 'Expanding');
       if (!exists) return;
