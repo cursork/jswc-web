@@ -71,9 +71,7 @@ const ShapeSubForm = ({ data, inSplitter }) => {
         } else if (updatedData[key].Properties.Type == 'ListView') {
           return <ListView data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'Group') {
-          return <Group data={updatedData[key]} />;
-        } else if (updatedData[key].Properties.Type == 'Grid') {
-          return <Grid data={updatedData[key]} />;
+          if (!inSplitter) return <Group data={updatedData[key]} />;
         }
       })}
     </div>
