@@ -8,6 +8,7 @@ import Text from '../Text';
 import Label from '../Label';
 import { useEffect } from 'react';
 import ListView from '../ListView';
+import Group from '../Group';
 
 const ShapeSubForm = ({ data, inSplitter }) => {
   const { Posn, Size, Visible } = data?.Properties;
@@ -68,6 +69,8 @@ const ShapeSubForm = ({ data, inSplitter }) => {
           return <Label data={updatedData[key]} />;
         } else if (updatedData[key].Properties.Type == 'ListView') {
           return <ListView data={updatedData[key]} />;
+        } else if (updatedData[key].Properties.Type == 'Group') {
+          return <Group data={updatedData[key]} />;
         }
       })}
     </div>
