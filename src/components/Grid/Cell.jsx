@@ -60,7 +60,7 @@ const Cell = ({
     );
   }
 
-  console.log({ type });
+ 
 
   return (
     <div

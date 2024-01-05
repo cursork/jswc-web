@@ -166,9 +166,7 @@ const Grid = ({ data }) => {
             ) : null}
             {tableValues.map((value, column) => {
               let cellType = CellTypes && CellTypes[row][column];
-
               const type = findDesiredData(Input && Input[cellType - 1]);
-
               const event = data?.Properties?.Event && data?.Properties?.Event;
 
               return (
