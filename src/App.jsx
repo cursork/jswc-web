@@ -240,7 +240,7 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: { serverPropertiesObj },
+                Properties: serverPropertiesObj ,
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
                   ? { NotSupported: result.NotSupported }
@@ -274,7 +274,7 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: { Values: Values, CurCell },
+                Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
                   ? { NotSupported: result.NotSupported }
