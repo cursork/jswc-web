@@ -89,7 +89,7 @@ const Grid = ({ data }) => {
                 isRow={tableProperty.row}
                 isBody={tableProperty.body}
                 selectedGrid={selectedGrid}
-                cellWidth={CellWidths[column]}
+                cellWidth={CellWidths && CellWidths[column]}
                 title={heading}
                 column={column + 1}
                 onClick={(row, column) => handleGridClick(row, column, 'column')}
