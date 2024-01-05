@@ -60,15 +60,13 @@ const Cell = ({
     );
   }
 
- 
-
   return (
     <div
       style={{
         borderRight: '1px solid  #EFEFEF',
         borderBottom: '1px solid  #EFEFEF',
-        minWidth: '100px',
-        maxWidth: '100px',
+        minWidth: cellWidth ? cellWidth : '100px',
+        maxWidth: cellWidth ? cellWidth : '100px',
         minHeight: '20px',
         maxHeight: '20px',
         overflow: 'hidden',
