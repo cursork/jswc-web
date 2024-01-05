@@ -72,6 +72,7 @@ const Cell = ({
         overflow: 'hidden',
         margin: 0,
         padding: 0,
+        fontSize: '12px',
       }}
       onClick={() => onClick(row, column)}
     >

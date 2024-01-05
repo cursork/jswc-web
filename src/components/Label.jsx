@@ -10,8 +10,6 @@ const Label = ({ data, gridValue }) => {
 
   const { Visible, FontObj, Caption } = data?.Properties;
 
-  styles = { ...styles, fontSize: '11px' };
-
   if (haveColor) {
     styles = {
       ...styles,
@@ -45,7 +43,7 @@ const Label = ({ data, gridValue }) => {
 
   return (
     <div style={{ ...styles, display: Visible == 0 ? 'none' : 'block' }}>
-      {!Caption ? gridValue : Caption}
+      {!Caption ? <span style={{ fontSize: '12px' }}>{gridValue}</span> : Caption}
     </div>
   );
 };
