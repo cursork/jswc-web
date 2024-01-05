@@ -28,6 +28,7 @@ import Text from './Text';
 import Timer from './Timer';
 import ListView from './ListView';
 import SubForm from './DynamicSubForm';
+import Image from './Image';
 
 const SelectComponent = ({
   data,
@@ -138,6 +139,7 @@ const SelectComponent = ({
 
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
   if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
+  if (data?.Properties?.Type == 'Image') return <Image data={data} />;
 };
 
 export default SelectComponent;

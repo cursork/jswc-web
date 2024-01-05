@@ -48,7 +48,7 @@ const Grid = ({ data }) => {
       JSON.stringify({
         Event: {
           CurCell: !CurCell ? [0, 0] : CurCell,
-          Values
+          Values,
         },
       })
     );
@@ -89,7 +89,7 @@ const Grid = ({ data }) => {
                 isRow={tableProperty.row}
                 isBody={tableProperty.body}
                 selectedGrid={selectedGrid}
-                cellWidth={CellWidths}
+                cellWidth={CellWidths[column]}
                 title={heading}
                 column={column + 1}
                 onClick={(row, column) => handleGridClick(row, column, 'column')}
@@ -133,7 +133,7 @@ const Grid = ({ data }) => {
           >
             {!ColTitles ? (
               <Cell
-                cellWidth={CellWidths}
+                cellWidth={CellWidths && CellWidths[row]}
                 justify='start'
                 isColumn={tableProperty.column}
                 isRow={tableProperty.row}
@@ -148,7 +148,7 @@ const Grid = ({ data }) => {
             ) : null}
             {RowTitles ? (
               <Cell
-                cellWidth={CellWidths + 50}
+                cellWidth={CellWidths && CellWidths[row]}
                 title={RowTitles[row]}
                 selectedGrid={selectedGrid}
                 row={row + 1}
@@ -166,9 +166,10 @@ const Grid = ({ data }) => {
               const event = data?.Properties?.Event && data?.Properties?.Event;
 
               return (
+                // <div style={{ minWidth: `${CellWidths && CellWidths[column]}px` }}>Sarim</div>
                 <Cell
                   justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}
-                  cellWidth={CellWidths}
+                  cellWidth={CellWidths && CellWidths[column]}
                   title={value}
                   type={type}
                   parent={event}
