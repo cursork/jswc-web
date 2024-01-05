@@ -106,7 +106,7 @@ const SelectComponent = ({
         values={values}
       />
     );
-  if (data?.Properties?.Type == 'Label') return <Label data={data} />;
+  if (data?.Properties?.Type == 'Label') return <Label gridValue={inputValue} data={data} />;
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
   // if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
   //   return <SubForm data={data} />;

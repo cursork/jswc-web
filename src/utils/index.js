@@ -172,11 +172,15 @@ export const calculateDateAfterDays = (days) => {
   // Start date: 1900-1-1
   var startDate = new Date(1900, 0, 1);
 
+  console.log({ days });
+
   // Calculate the target date
-  var targetDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+  var targetDate = new Date(startDate?.getTime() + days * 24 * 60 * 60 * 1000);
+
+  console.log({ targetDate });
 
   // Format the date as YYYY-MM-DD
-  var formattedDate = targetDate.toISOString().split('T')[0];
+  var formattedDate = targetDate?.toISOString().split('T')[0];
 
   return formattedDate;
 };
@@ -266,7 +270,7 @@ export const createListViewObjects = (images, codes, descriptions, imagesIndexes
     index: index + 1,
     title: code,
     description: descriptions && descriptions[index][0],
-    image: (images && images[imagesIndexes[index]-1]) || '', // Set image to an empty string if it's undefined
+    image: (images && images[imagesIndexes[index] - 1]) || '', // Set image to an empty string if it's undefined
   }));
 
   return result;

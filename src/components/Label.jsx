@@ -2,13 +2,13 @@ import { setStyle } from '../utils';
 import '../styles/font.css';
 import { useAppData } from '../hooks';
 
-const Label = ({ data }) => {
+const Label = ({ data, gridValue }) => {
   let styles = setStyle(data?.Properties);
   const { findDesiredData } = useAppData();
   const haveColor = data?.Properties.hasOwnProperty('FCol');
   const haveFontProperty = data?.Properties.hasOwnProperty('Font');
 
-  const { Visible, FontObj } = data?.Properties;
+  const { Visible, FontObj, Caption } = data?.Properties;
 
   styles = { ...styles, fontSize: '11px' };
 
@@ -45,7 +45,7 @@ const Label = ({ data }) => {
 
   return (
     <div style={{ ...styles, display: Visible == 0 ? 'none' : 'block' }}>
-      {data?.Properties?.Caption}
+      {!Caption ? gridValue : Caption}
     </div>
   );
 };

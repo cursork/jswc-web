@@ -34,7 +34,8 @@ const Grid = ({ data }) => {
 
   let size = 0;
 
-  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible, CurCell } = data?.Properties;
+  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible, CurCell, CellTypes } =
+    data?.Properties;
 
   const style = setStyle(data?.Properties);
 
@@ -164,9 +165,10 @@ const Grid = ({ data }) => {
               />
             ) : null}
             {tableValues.map((value, column) => {
-              console.log({ Input });
+              let cellType = CellTypes && CellTypes[row][column];
 
-              const type = findDesiredData(Input && Input[column]);
+              const type = findDesiredData(Input && Input[cellType - 1]);
+
               const event = data?.Properties?.Event && data?.Properties?.Event;
 
               return (
