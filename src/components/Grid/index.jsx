@@ -70,17 +70,19 @@ const Grid = ({ data }) => {
       {/* Table have column */}
       {ColTitles && (
         <div style={{ display: 'flex' }}>
-          <Cell
-            cellWidth={CellWidths + 50}
-            title={''}
-            column={0}
-            row={0}
-            isColumn={tableProperty.column}
-            isRow={tableProperty.row}
-            isBody={tableProperty.body}
-            selectedGrid={selectedGrid}
-            onClick={(row, column) => handleGridClick(row, column, 'column')}
-          />
+          {ColTitles.length > 0 && !RowTitles ? null : (
+            <Cell
+              cellWidth={CellWidths + 50}
+              title={''}
+              column={0}
+              row={0}
+              isColumn={tableProperty.column}
+              isRow={tableProperty.row}
+              isBody={tableProperty.body}
+              selectedGrid={selectedGrid}
+              onClick={(row, column) => handleGridClick(row, column, 'column')}
+            />
+          )}
 
           {ColTitles.map((heading, column) => {
             return (
@@ -162,11 +164,12 @@ const Grid = ({ data }) => {
               />
             ) : null}
             {tableValues.map((value, column) => {
+              console.log({ Input });
+
               const type = findDesiredData(Input && Input[column]);
               const event = data?.Properties?.Event && data?.Properties?.Event;
 
               return (
-                // <div style={{ minWidth: `${CellWidths && CellWidths[column]}px` }}>Sarim</div>
                 <Cell
                   justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}
                   cellWidth={CellWidths && CellWidths[column]}
