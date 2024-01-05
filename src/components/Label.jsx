@@ -43,7 +43,11 @@ const Label = ({ data, gridValue }) => {
 
   return (
     <div style={{ ...styles, display: Visible == 0 ? 'none' : 'block' }}>
-      {!Caption ? <span style={{ fontSize: '12px' }}>{gridValue}</span> : Caption}
+      {!Caption ? (
+        <span style={{ fontSize: '12px', marginLeft: '5px' }}>{gridValue}</span>
+      ) : (
+        Caption
+      )}
     </div>
   );
 };

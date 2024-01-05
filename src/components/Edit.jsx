@@ -46,7 +46,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
   const [initialValue, setInitialValue] = useState('');
   const dateInputRef = useRef();
 
-  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj } = data?.Properties;
+  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj, Size } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
@@ -393,6 +393,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
       onKeyDown={(e) => handleKeyPress(e)}
       style={{
         ...styles,
+        width: !Size ? '100%' : Size[1],
         borderRadius: '2px',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'block',
