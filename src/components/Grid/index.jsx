@@ -34,8 +34,18 @@ const Grid = ({ data }) => {
 
   let size = 0;
 
-  const { Values, Input, ColTitles, RowTitles, CellWidths, Visible, CurCell, CellTypes } =
-    data?.Properties;
+  const {
+    Values,
+    Input,
+    ColTitles,
+    RowTitles,
+    CellWidths,
+    Visible,
+    CurCell,
+    CellTypes,
+    ShowInput,
+    FormattedValues,
+  } = data?.Properties;
 
   const style = setStyle(data?.Properties);
 
@@ -174,6 +184,7 @@ const Grid = ({ data }) => {
                   justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}
                   cellWidth={CellWidths && CellWidths[column]}
                   title={value}
+                  formattedValue={FormattedValues && FormattedValues[row][column]}
                   type={type}
                   parent={event}
                   row={row + 1}

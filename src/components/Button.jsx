@@ -56,7 +56,7 @@ const Button = ({
           Properties: {
             ...gridEvent.Properties,
             Values: values,
-            CurCell:[row,column]
+            CurCell: [row, column],
           },
         },
         'WS'
@@ -80,10 +80,20 @@ const Button = ({
       },
     });
 
+    const formatCellEvent = JSON.stringify({
+      FormatCell: {
+        Cell: [row, column],
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Value: value ? 1 : 0,
+      },
+    });
+
     localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(triggerEvent);
+    console.log(formatCellEvent);
+    socket.send(formatCellEvent);
     socket.send(triggerEvent);
   };
 

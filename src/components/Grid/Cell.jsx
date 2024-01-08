@@ -1,4 +1,5 @@
 import SelectComponent from '../SelectComponent';
+import { useState, useRef, useEffect } from 'react';
 
 const Cell = ({
   title,
@@ -16,7 +17,11 @@ const Cell = ({
   isBody = false,
   highLightMe = false,
   values = [],
+  formattedValue = null,
 }) => {
+  const divRef = useRef(null);
+  const [isFocused, setIsFocused] = useState(false);
+
   if (!type) {
     return (
       <div
@@ -60,8 +65,34 @@ const Cell = ({
     );
   }
 
+    const handleFocus = () => {
+      setIsFocused(true);
+    };
+
+    const handleBlur = () => {
+      setIsFocused(false);
+    };
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (divRef.current && divRef.current.contains(event.target)) {
+        setIsFocused(true);
+      } else {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
   return (
     <div
+      ref={divRef}
+      id={type?.ID}
       style={{
         borderRight: '1px solid  #EFEFEF',
         borderBottom: '1px solid  #EFEFEF',
@@ -74,17 +105,22 @@ const Cell = ({
         padding: 0,
         fontSize: '12px',
       }}
-      onClick={() => onClick(row, column)}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
-      <SelectComponent
-        location={location}
-        data={type}
-        inputValue={title}
-        event={parent}
-        row={row}
-        column={column}
-        values={values}
-      />
+      {isFocused ? (
+        <SelectComponent
+          location={location}
+          data={type}
+          inputValue={title}
+          event={parent}
+          row={row}
+          column={column}
+          values={values}
+        />
+      ) : (
+        <p onBlur={() => setIsFocused(false)}>{formattedValue}</p>
+      )}
     </div>
   );
 };
