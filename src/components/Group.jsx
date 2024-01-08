@@ -24,7 +24,7 @@ const Group = ({ data }) => {
       }}
       id={data?.ID}
     >
-      {data?.Properties?.Caption && (
+      {data?.Properties?.Caption != '' && (
         <span
           style={{
             fontSize: '12px',
