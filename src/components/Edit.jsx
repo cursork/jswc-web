@@ -243,12 +243,22 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
       },
     });
 
+    const formatCellEvent = JSON.stringify({
+      FormatCell: {
+        Cell: [row, column],
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        Value: emitValue,
+      },
+    });
+
     localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
 
     // localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), cellChangedEvent);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(cellChangedEvent);
+    console.log(formatCellEvent);
+    socket.send(formatCellEvent);
     socket.send(cellChangedEvent);
   };
 

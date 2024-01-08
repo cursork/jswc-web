@@ -240,7 +240,7 @@ const App = () => {
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
-                Properties: serverPropertiesObj ,
+                Properties: serverPropertiesObj,
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
                   ? { NotSupported: result.NotSupported }
@@ -875,6 +875,23 @@ const App = () => {
         deleteObjectsById(dataRef.current, serverEvent?.ID);
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
+      } else if (keys[0] == 'FormatCell') {
+        const formatCellEvent = JSON.parse(event.data);
+        const { FormatCell, FormattedValue } = formatCellEvent;
+        const refData = JSON.parse(getObjectById(dataRef.current, FormatCell?.ID));
+        const { Properties } = refData;
+        const updatedFormattedValues = Properties?.FormattedValues;
+        updatedFormattedValues[FormatCell.Cell[0] - 1][FormatCell.Cell[1] - 1] = FormattedValue;
+        handleData(
+          {
+            ID: FormatCell?.ID,
+            Properties: {
+              ...refData?.Properties,
+              FormattedValues: updatedFormattedValues,
+            },
+          },
+          'WS'
+        );
       }
     };
   };
