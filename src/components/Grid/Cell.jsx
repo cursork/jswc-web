@@ -91,6 +91,26 @@ const Cell = ({
     };
   }, []);
 
+  const { Properties } = type;
+
+  let justifyContent = 'center';
+
+  if (Properties.Type == 'Edit') {
+    if (typeof title == 'string') {
+      justifyContent = 'start';
+    } else {
+      justifyContent = 'end';
+    }
+  } else if (Properties.Type == 'Button') {
+    justifyContent = 'center';
+  } else if (Properties.Type == 'Label') {
+    if (typeof title == 'string') {
+      justifyContent = 'start';
+    } else {
+      justifyContent = 'end';
+    }
+  }
+
   return (
     <div
       ref={divRef}
@@ -121,7 +141,12 @@ const Cell = ({
           values={values}
         />
       ) : (
-        <p onBlur={() => setIsFocused(false)}>{formattedValue}</p>
+        <p
+          className={`d-flex justify-content-${justifyContent} ms-1`}
+          onBlur={() => setIsFocused(false)}
+        >
+          {formattedValue}
+        </p>
       )}
     </div>
   );
