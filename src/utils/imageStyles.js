@@ -41,8 +41,6 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundRepeat: 'no-repeat',
-      width: '32px',
-      height: '32px',
       backgroundSize: 'cover',
     };
   }
