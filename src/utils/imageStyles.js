@@ -97,3 +97,7 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
 //     alignItems: 'center',
 //   };
 // }
+
+export const renderImage = (PORT, ImageData) => {
+  return `http://localhost:${PORT}${ImageData?.Properties?.File}`;
+};
