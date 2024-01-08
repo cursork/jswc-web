@@ -93,21 +93,45 @@ const Cell = ({
 
   const { Properties } = type;
 
+  let justifiedStyles = {
+    display: 'flex',
+    justifyContent: 'center',
+  };
+
   let justifyContent = 'center';
 
   if (Properties.Type == 'Edit') {
     if (typeof title == 'string') {
-      justifyContent = 'start';
+      justifiedStyles = {
+        ...justifiedStyles,
+        justifyContent: 'start',
+        marginLeft: '5px',
+      };
     } else {
-      justifyContent = 'end';
+      justifiedStyles = {
+        ...justifiedStyles,
+        justifyContent: 'end',
+        marginRight: '5px',
+      };
     }
   } else if (Properties.Type == 'Button') {
-    justifyContent = 'center';
+    justifiedStyles = {
+      ...justifiedStyles,
+      justifyContent: 'center',
+    };
   } else if (Properties.Type == 'Label') {
     if (typeof title == 'string') {
-      justifyContent = 'start';
+      justifiedStyles = {
+        ...justifiedStyles,
+        justifyContent: 'start',
+        marginLeft: '5px',
+      };
     } else {
-      justifyContent = 'end';
+      justifiedStyles = {
+        ...justifiedStyles,
+        justifyContent: 'end',
+        marginRight: '5px',
+      };
     }
   }
 
@@ -141,10 +165,7 @@ const Cell = ({
           values={values}
         />
       ) : (
-        <p
-          className={`d-flex justify-content-${justifyContent} ms-1`}
-          onBlur={() => setIsFocused(false)}
-        >
+        <p style={justifiedStyles} onBlur={() => setIsFocused(false)}>
           {formattedValue}
         </p>
       )}
