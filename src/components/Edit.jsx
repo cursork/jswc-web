@@ -46,7 +46,8 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
   const [initialValue, setInitialValue] = useState('');
   const dateInputRef = useRef();
 
-  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj, Size } = data?.Properties;
+  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj, Size, EdgeStyle } =
+    data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
@@ -407,6 +408,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'block',
         paddingLeft: '5px',
+        border: !EdgeStyle ? 0 : EdgeStyle == 'Ridge' ? '1px solid #6A6A6A' : 0,
       }}
       maxLength={MaxLength}
       onFocus={handleGotFocus}
