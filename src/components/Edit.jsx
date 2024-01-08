@@ -69,7 +69,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
       if (FieldType == 'LongNumeric') {
         setEmitValue(value);
         setInitialValue(value);
-        return setInputValue(formatNumber(value));
+        return setInputValue(value);
       }
       setEmitValue(value);
       setInitialValue(value);
@@ -384,8 +384,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
         }
         if (FieldType == 'LongNumeric') {
           value = replaceDanishToNumber(e.target.value);
-
-          setInputValue(formatNumber(e.target.value));
+          setInputValue(e.target.value);
           setEmitValue(value);
         }
 
@@ -396,7 +395,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
       }}
       onBlur={() => {
         if (FieldType == 'LongNumeric') {
-          setInputValue(formatNumber(emitValue));
+          setInputValue(emitValue);
         }
         handleEditEvents();
       }}
