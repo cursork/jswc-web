@@ -18,6 +18,7 @@ const Cell = ({
   highLightMe = false,
   values = [],
   formattedValue = null,
+  ShowInput=0
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -65,13 +66,13 @@ const Cell = ({
     );
   }
 
-    const handleFocus = () => {
-      setIsFocused(true);
-    };
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
 
-    const handleBlur = () => {
-      setIsFocused(false);
-    };
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   useEffect(() => {
     const handleDocumentClick = (event) => {
@@ -108,7 +109,7 @@ const Cell = ({
       onFocus={handleFocus}
       onBlur={handleBlur}
     >
-      {isFocused ? (
+      {isFocused || ShowInput == 1 ? (
         <SelectComponent
           location={location}
           data={type}

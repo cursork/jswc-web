@@ -196,6 +196,7 @@ const Grid = ({ data }) => {
                   isRow={tableProperty.row}
                   isBody={tableProperty.body}
                   values={Values}
+                  ShowInput={ShowInput}
                 />
               );
             })}
