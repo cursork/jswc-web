@@ -46,9 +46,8 @@ const Grid = ({ data }) => {
     ShowInput,
     FormattedValues,
     BCol,
+    CellFonts,
   } = data?.Properties;
-
-  console.log('data', BCol);
 
   const style = setStyle(data?.Properties);
 
@@ -181,8 +180,8 @@ const Grid = ({ data }) => {
               let cellType = CellTypes && CellTypes[row][column];
               const type = findDesiredData(Input && Input[cellType - 1]);
               const event = data?.Properties?.Event && data?.Properties?.Event;
-
               const backgroundColor = BCol && BCol[cellType - 1];
+              const cellFont = findDesiredData(CellFonts && CellFonts[cellType - 1]);
 
               return (
                 <Cell
@@ -203,6 +202,7 @@ const Grid = ({ data }) => {
                   values={Values}
                   ShowInput={ShowInput}
                   bgColor={backgroundColor}
+                  cellFont={cellFont}
                 />
               );
             })}

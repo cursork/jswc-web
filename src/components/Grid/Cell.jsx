@@ -21,6 +21,7 @@ const Cell = ({
   formattedValue = null,
   ShowInput = 0,
   bgColor = [0, 0, 0],
+  cellFont = null,
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -32,14 +33,12 @@ const Cell = ({
         style={{
           borderRight: '1px solid  #EFEFEF',
           borderBottom: '1px solid  #EFEFEF',
-          // width: cellWidth ? cellWidth : '100px',
           minWidth: cellWidth ? cellWidth : '100px',
           maxWidth: cellWidth ? cellWidth : '100px',
           fontSize: '12px',
           minHeight: '20px',
           maxHeight: '20px',
           display: 'flex',
-
           alignItems: 'center',
           justifyContent: justify,
           overflow: 'hidden',
@@ -135,6 +134,20 @@ const Cell = ({
     }
   }
 
+  const fontProperties = cellFont && cellFont?.Properties;
+
+  let fontStyles = {
+    fontFamily: fontProperties?.PName,
+    fontSize: !fontProperties?.Size ? '11px' : '12px',
+    textDecoration: !fontProperties?.Underline
+      ? 'none'
+      : fontProperties?.Underline == 1
+      ? 'underline'
+      : 'none',
+    fontStyle: !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none',
+    fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
+  };
+
   return (
     <div
       ref={divRef}
@@ -149,8 +162,8 @@ const Cell = ({
         overflow: 'hidden',
         margin: 0,
         padding: 0,
-        fontSize: '12px',
         background: rgbColor(bgColor),
+        ...fontStyles,
       }}
       onFocus={handleFocus}
       onBlur={handleBlur}
@@ -166,7 +179,7 @@ const Cell = ({
           values={values}
         />
       ) : (
-        <p style={justifiedStyles} onBlur={() => setIsFocused(false)}>
+        <p style={{ ...justifiedStyles, ...fontStyles }} onBlur={() => setIsFocused(false)}>
           {formattedValue}
         </p>
       )}
