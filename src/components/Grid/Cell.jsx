@@ -1,3 +1,4 @@
+import { rgbColor } from '../../utils';
 import SelectComponent from '../SelectComponent';
 import { useState, useRef, useEffect } from 'react';
 
@@ -19,6 +20,7 @@ const Cell = ({
   values = [],
   formattedValue = null,
   ShowInput = 0,
+  bgColor = [0, 0, 0],
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -98,8 +100,6 @@ const Cell = ({
     justifyContent: 'center',
   };
 
-  let justifyContent = 'center';
-
   if (Properties.Type == 'Edit') {
     if (typeof title == 'string') {
       justifiedStyles = {
@@ -150,6 +150,7 @@ const Cell = ({
         margin: 0,
         padding: 0,
         fontSize: '12px',
+        background: rgbColor(bgColor),
       }}
       onFocus={handleFocus}
       onBlur={handleBlur}

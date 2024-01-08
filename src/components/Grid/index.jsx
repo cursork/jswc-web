@@ -45,7 +45,10 @@ const Grid = ({ data }) => {
     CellTypes,
     ShowInput,
     FormattedValues,
+    BCol,
   } = data?.Properties;
+
+  console.log('data', BCol);
 
   const style = setStyle(data?.Properties);
 
@@ -179,6 +182,8 @@ const Grid = ({ data }) => {
               const type = findDesiredData(Input && Input[cellType - 1]);
               const event = data?.Properties?.Event && data?.Properties?.Event;
 
+              const backgroundColor = BCol && BCol[cellType - 1];
+
               return (
                 <Cell
                   justify={type ? '' : typeof value == 'string' ? 'start' : 'end'}
@@ -197,6 +202,7 @@ const Grid = ({ data }) => {
                   isBody={tableProperty.body}
                   values={Values}
                   ShowInput={ShowInput}
+                  bgColor={backgroundColor}
                 />
               );
             })}
