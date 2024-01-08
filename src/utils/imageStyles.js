@@ -43,6 +43,7 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
       backgroundRepeat: 'no-repeat',
       width: '32px',
       height: '32px',
+      backgroundSize: 'cover',
     };
   }
 
