@@ -18,7 +18,7 @@ const Cell = ({
   highLightMe = false,
   values = [],
   formattedValue = null,
-  ShowInput=0
+  ShowInput = 0,
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -78,6 +78,7 @@ const Cell = ({
     const handleDocumentClick = (event) => {
       if (divRef.current && divRef.current.contains(event.target)) {
         setIsFocused(true);
+        onClick(row, column);
       } else {
         setIsFocused(false);
       }
