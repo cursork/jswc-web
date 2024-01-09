@@ -83,9 +83,9 @@ const Grid = ({ data }) => {
       {/* Table have column */}
       {ColTitles && (
         <div style={{ display: 'flex' }}>
-          {ColTitles.length > 0 && !RowTitles ? null : (
+          {RowTitles?.length > 1 ? (
             <Cell
-              cellWidth={CellWidths + 50}
+              cellWidth={100}
               title={''}
               column={0}
               row={0}
@@ -95,7 +95,7 @@ const Grid = ({ data }) => {
               selectedGrid={selectedGrid}
               onClick={(row, column) => handleGridClick(row, column, 'column')}
             />
-          )}
+          ) : null}
 
           {ColTitles.map((heading, column) => {
             return (
@@ -148,7 +148,7 @@ const Grid = ({ data }) => {
           >
             {!ColTitles ? (
               <Cell
-                cellWidth={CellWidths && CellWidths[row]}
+                cellWidth={100}
                 justify='start'
                 isColumn={tableProperty.column}
                 isRow={tableProperty.row}
@@ -163,7 +163,7 @@ const Grid = ({ data }) => {
             ) : null}
             {RowTitles ? (
               <Cell
-                cellWidth={CellWidths && CellWidths[row]}
+                cellWidth={100}
                 title={RowTitles[row]}
                 selectedGrid={selectedGrid}
                 row={row + 1}
