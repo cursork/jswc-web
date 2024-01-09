@@ -1,4 +1,8 @@
 export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
+  console.log({ ImageData });
+
+  console.log({ decideImageStyle });
+
   let imageStyles = null;
 
   if (decideImageStyle == 0) {
@@ -41,6 +45,15 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundRepeat: 'no-repeat',
+    };
+  }
+
+  if (ImageData?.Properties?.Type == 'Icon') {
+    imageStyles = {
+      ...imageStyles,
+      height: '32px',
+      width: '32px',
+      backgroundSize: 'cover',
     };
   }
 
