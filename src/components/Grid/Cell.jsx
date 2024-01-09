@@ -22,11 +22,12 @@ const Cell = ({
   ShowInput = 0,
   bgColor = [255, 255, 255],
   cellFont = null,
+  fontColor = [0, 0, 0],
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  if (!type) {
+  if (!type && !Array.isArray(title)) {
     return (
       <div
         onClick={() => onClick(row, column)}
@@ -36,23 +37,23 @@ const Cell = ({
           minWidth: cellWidth ? cellWidth : '100px',
           maxWidth: cellWidth ? cellWidth : '100px',
           fontSize: '12px',
-          minHeight: '20px',
-          maxHeight: '20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: justify,
           overflow: 'hidden',
           margin: 0,
+          color: rgbColor(fontColor),
           cursor: 'pointer',
-          background: selectedGrid
-            ? selectedGrid.column == column && !isRow && !isBody
-              ? '#C7E9FF'
-              : selectedGrid.row == row && !isColumn && !isBody
-              ? '#C7E9FF'
-              : highLightMe
-              ? '#C7E9FF'
-              : null
-            : null,
+          background: rgbColor(bgColor),
+          // background: selectedGrid
+          //   ? selectedGrid.column == column && !isRow && !isBody
+          //     ? '#C7E9FF'
+          //     : selectedGrid.row == row && !isColumn && !isBody
+          //     ? '#C7E9FF'
+          //     : highLightMe
+          //     ? '#C7E9FF'
+          //     : null
+          //   : null,
         }}
       >
         <span
@@ -63,6 +64,34 @@ const Cell = ({
         >
           {title?.toString()?.slice(0, 10)}
         </span>
+      </div>
+    );
+  }
+
+  if (!type && Array.isArray(title)) {
+    return (
+      <div
+        onClick={() => onClick(row, column)}
+        style={{
+          borderRight: '1px solid  #EFEFEF',
+          borderBottom: '1px solid  #EFEFEF',
+          minWidth: cellWidth ? cellWidth : '100px',
+          maxWidth: cellWidth ? cellWidth : '100px',
+          fontSize: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: justify,
+          flexDirection: 'column',
+          overflow: 'hidden',
+          margin: 0,
+          cursor: 'pointer',
+          color: rgbColor(fontColor),
+          background: rgbColor(bgColor),
+        }}
+      >
+        {title.map((th) => (
+          <div>{th}</div>
+        ))}
       </div>
     );
   }

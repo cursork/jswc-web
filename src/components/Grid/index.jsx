@@ -47,6 +47,12 @@ const Grid = ({ data }) => {
     FormattedValues,
     BCol,
     CellFonts,
+    RowTitleBCol,
+    RowTitleFCol,
+    ColTitleBCol,
+    ColTitleFCol,
+    TitleHeight,
+    TitleWidth,
   } = data?.Properties;
 
   const style = setStyle(data?.Properties);
@@ -85,7 +91,7 @@ const Grid = ({ data }) => {
         <div style={{ display: 'flex' }}>
           {RowTitles?.length > 1 ? (
             <Cell
-              cellWidth={100}
+              cellWidth={TitleWidth && TitleWidth}
               title={''}
               column={0}
               row={0}
@@ -100,6 +106,8 @@ const Grid = ({ data }) => {
           {ColTitles.map((heading, column) => {
             return (
               <Cell
+                fontColor={ColTitleFCol}
+                bgColor={ColTitleBCol}
                 isColumn={tableProperty.column}
                 isRow={tableProperty.row}
                 isBody={tableProperty.body}
@@ -163,7 +171,9 @@ const Grid = ({ data }) => {
             ) : null}
             {RowTitles ? (
               <Cell
-                cellWidth={100}
+                fontColor={RowTitleFCol}
+                bgColor={RowTitleBCol}
+                cellWidth={TitleWidth && TitleWidth}
                 title={RowTitles[row]}
                 selectedGrid={selectedGrid}
                 row={row + 1}
