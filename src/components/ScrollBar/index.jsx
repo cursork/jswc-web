@@ -66,11 +66,11 @@ const ScrollBar = ({ data }) => {
           );
         }
 
-        const event = JSON.stringify({
+        const event = JSON.stringify({  
           Event: {
             EventName: 'Scroll',
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [0, Math.round(newScaledValue)],
           },
         });
 
@@ -105,27 +105,20 @@ const ScrollBar = ({ data }) => {
 
       if (newScaledValue >= 1 && newScaledValue <= maxValue) {
         setScaledValue(newScaledValue);
-        console.log(
-          'Event',
-          JSON.stringify({
-            Event: {
-              EventName: emitEvent && emitEvent[0],
-              ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
-            },
-          })
-        );
 
-        localStorage.setItem(
-          data.ID,
-          JSON.stringify({
-            Event: {
-              EventName: emitEvent && emitEvent[0],
-              ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
-            },
-          })
-        );
+        const scrollEvent = JSON.stringify({
+          Event: {
+            EventName: emitEvent && emitEvent[0],
+            ID: data?.ID,
+            Info: [
+              Math.round(scaledValue) < Math.round(newScaledValue) ? 2 : -2,
+              Math.round(newScaledValue),
+            ],
+          },
+        });
+
+        console.log('Event', scrollEvent);
+        localStorage.setItem(data.ID, scrollEvent);
 
         if (isHorizontal) {
           localStorage.setItem(
@@ -149,9 +142,12 @@ const ScrollBar = ({ data }) => {
         socket.send(
           JSON.stringify({
             Event: {
-              EventName:'Scroll',
+              EventName: 'Scroll',
               ID: data?.ID,
-              Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+              Info: [
+                Math.round(scaledValue) < Math.round(newScaledValue) ? 2 : -2,
+                Math.round(newScaledValue),
+              ],
             },
           })
         );
@@ -208,7 +204,7 @@ const ScrollBar = ({ data }) => {
           Event: {
             EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [1, Math.round(newScaledValue)],
           },
         })
       );
@@ -219,7 +215,7 @@ const ScrollBar = ({ data }) => {
           Event: {
             EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [1, Math.round(newScaledValue)],
           },
         })
       );
@@ -248,9 +244,9 @@ const ScrollBar = ({ data }) => {
       socket.send(
         JSON.stringify({
           Event: {
-            EventName:'Scroll',
+            EventName: 'Scroll',
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [1, Math.round(newScaledValue)],
           },
         })
       );
@@ -266,7 +262,7 @@ const ScrollBar = ({ data }) => {
           Event: {
             EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [-1, Math.round(newScaledValue)],
           },
         })
       );
@@ -277,7 +273,7 @@ const ScrollBar = ({ data }) => {
           Event: {
             EventName: emitEvent && emitEvent[0],
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [-1, Math.round(newScaledValue)],
           },
         })
       );
@@ -307,7 +303,7 @@ const ScrollBar = ({ data }) => {
           Event: {
             EventName: 'Scroll',
             ID: data?.ID,
-            Info: [Math.round(scaledValue), Math.round(newScaledValue)],
+            Info: [-1, Math.round(newScaledValue)],
           },
         })
       );
