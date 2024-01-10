@@ -877,11 +877,12 @@ const App = () => {
         handleData(JSON.parse(event.data).Options, 'WC');
       } else if (keys[0] == 'FormatCell') {
         const formatCellEvent = JSON.parse(event.data);
-        const { FormatCell, FormattedValue } = formatCellEvent;
+        const { FormatCell } = formatCellEvent;
         const refData = JSON.parse(getObjectById(dataRef.current, FormatCell?.ID));
         const { Properties } = refData;
         const updatedFormattedValues = Properties?.FormattedValues;
-        updatedFormattedValues[FormatCell.Cell[0] - 1][FormatCell.Cell[1] - 1] = FormattedValue;
+        updatedFormattedValues[FormatCell.Cell[0] - 1][FormatCell.Cell[1] - 1] =
+          FormatCell?.FormattedValue;
         handleData(
           {
             ID: FormatCell?.ID,

@@ -1,8 +1,4 @@
 export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
-  console.log({ ImageData });
-
-  console.log({ decideImageStyle });
-
   let imageStyles = null;
 
   if (decideImageStyle == 0) {

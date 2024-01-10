@@ -27,6 +27,23 @@ const Cell = ({
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
 
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (divRef.current && divRef.current.contains(event.target)) {
+        setIsFocused(true);
+        onClick(row, column);
+      } else {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
   if (!type && !Array.isArray(title)) {
     return (
       <div
@@ -103,23 +120,6 @@ const Cell = ({
   const handleBlur = () => {
     setIsFocused(false);
   };
-
-  useEffect(() => {
-    const handleDocumentClick = (event) => {
-      if (divRef.current && divRef.current.contains(event.target)) {
-        setIsFocused(true);
-        onClick(row, column);
-      } else {
-        setIsFocused(false);
-      }
-    };
-
-    document.addEventListener('click', handleDocumentClick);
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, []);
 
   const { Properties } = type;
 

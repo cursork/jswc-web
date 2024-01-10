@@ -389,6 +389,10 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
           setEmitValue(value);
         }
 
+        if (FieldType == 'Char') {
+          setEmitValue(e.target.value);
+          setInputValue(e.target.value);
+        }
         if (!FieldType) {
           setEmitValue(e.target.value);
           setInputValue(e.target.value);
