@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 const Splitter = ({ data }) => {
   const { dataRef, socket, findDesiredData } = useAppData();
 
+
   let formWidth = 800;
   let formHeight = 800;
 
@@ -283,6 +284,8 @@ const Splitter = ({ data }) => {
   const isLeftVisible = firstFormData && firstFormData?.Properties?.Visible;
 
   const isRightVisible = secondFormData && secondFormData?.Properties?.Visible;
+
+  console.log({ firstFormData });
 
   return (
     <SplitPane

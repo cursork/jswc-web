@@ -8,7 +8,8 @@ const Label = ({ data, gridValue }) => {
   const haveColor = data?.Properties.hasOwnProperty('FCol');
   const haveFontProperty = data?.Properties.hasOwnProperty('Font');
 
-  const { Visible, FontObj, Caption } = data?.Properties;
+  const { Visible, FontObj, Caption, Size } = data?.Properties;
+
 
   if (haveColor) {
     styles = {
@@ -22,7 +23,6 @@ const Label = ({ data, gridValue }) => {
       ...styles,
       fontFamily: data.Properties?.Font[0],
       fontSize: data?.Properties?.Font[1],
-      width: '250px',
     };
   } else {
     const font = findDesiredData(FontObj && FontObj);
@@ -40,6 +40,8 @@ const Label = ({ data, gridValue }) => {
       fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
     };
   }
+
+ 
 
   return (
     <div style={{ ...styles, display: Visible == 0 ? 'none' : 'block' }}>

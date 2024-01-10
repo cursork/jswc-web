@@ -18,7 +18,7 @@ const Group = ({ data }) => {
     <div
       style={{
         ...styles,
-        border: '1px solid #E9E9E9',
+        // border: '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
         ...imageStyles,
       }}
