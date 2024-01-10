@@ -106,9 +106,10 @@ const Cell = ({
           background: rgbColor(bgColor),
         }}
       >
-        {title.map((th) => (
-          <div>{th}</div>
-        ))}
+        {title.map((th) => {
+          if (th == '') return <br />;
+          return <div>{th}</div>;
+        })}
       </div>
     );
   }

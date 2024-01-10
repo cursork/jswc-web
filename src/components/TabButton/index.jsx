@@ -9,7 +9,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
   return (
     <div
       style={{
-        border: '1px solid #DFDFDF',
+        // border: '1px solid #DFDFDF',
         fontSize: '12px',
         paddingTop: '2px',
         paddingBottom: '2px',
