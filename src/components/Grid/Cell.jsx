@@ -208,7 +208,10 @@ const Cell = ({
           values={values}
         />
       ) : (
-        <p style={{ ...justifiedStyles, ...fontStyles }} onBlur={() => setIsFocused(false)}>
+        <p
+          style={{ ...justifiedStyles, ...fontStyles, width: '100%' }}
+          onBlur={() => setIsFocused(false)}
+        >
           {formattedValue}
         </p>
       )}
