@@ -132,13 +132,13 @@ const Cell = ({
     if (typeof title == 'string') {
       justifiedStyles = {
         ...justifiedStyles,
-        justifyContent: 'start',
+        justifyContent: 'flex-start',
         paddingLeft: '5px',
       };
     } else {
       justifiedStyles = {
         ...justifiedStyles,
-        justifyContent: 'end',
+        justifyContent: 'flex-end',
         paddingRight: '5px',
       };
     }
@@ -151,13 +151,13 @@ const Cell = ({
     if (typeof title == 'string') {
       justifiedStyles = {
         ...justifiedStyles,
-        justifyContent: 'start',
+        justifyContent: 'flex-start',
         paddingLeft: '5px',
       };
     } else {
       justifiedStyles = {
         ...justifiedStyles,
-        justifyContent: 'end',
+        justifyContent: 'flex-end',
         paddingRight: '5px',
       };
     }
