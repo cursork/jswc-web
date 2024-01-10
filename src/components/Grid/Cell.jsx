@@ -183,7 +183,6 @@ const Cell = ({
     <>
       {isFocused || ShowInput == 1 ? (
         <div
-          ref={divRef}
           id={type?.ID}
           style={{
             borderRight: '1px solid  #EFEFEF',
@@ -198,8 +197,6 @@ const Cell = ({
             background: rgbColor(bgColor),
             ...fontStyles,
           }}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         >
           <SelectComponent
             location={location}
@@ -213,6 +210,10 @@ const Cell = ({
         </div>
       ) : (
         <div
+          id={type?.ID}
+          ref={divRef}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           style={{
             borderRight: '1px solid  #EFEFEF',
             borderBottom: '1px solid  #EFEFEF',
