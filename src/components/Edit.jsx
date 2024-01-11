@@ -11,33 +11,14 @@ import {
 import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../hooks';
 import dayjs from 'dayjs';
+import { NumericFormat, removeNumericFormat } from 'react-number-format';
 
 const Edit = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
   const { socket, dataRef, findDesiredData, handleData } = useAppData();
-  const currentLocale = navigator.language || navigator.userLanguage;
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
-  const { ShortDate, Thousand } = dateFormat?.Properties;
-
-  const formatNumber = (
-    number,
-    decimalSeparator = !dateFormat?.Properties?.Decimal ? '.' : dateFormat?.Properties?.Decimal,
-    thousandSeparator = !Thousand ? ',' : Thousand
-  ) => {
-    const formattedNumber = number.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-      useGrouping: true,
-    });
-
-    // Replace the default separators with the specified separators
-    const formattedWithCustomSeparators = formattedNumber
-      .replace('.', decimalSeparator)
-      .replace(/,/g, thousandSeparator);
-
-    return formattedWithCustomSeparators;
-  };
+  const { ShortDate, Thousand, Decimal: decimalSeparator } = dateFormat?.Properties;
 
   let styles = { ...setStyle(data?.Properties) };
   const [inputType, setInputType] = useState('text');
@@ -354,6 +335,35 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
           onKeyDown={(e) => handleKeyPress(e)}
         />
       </div>
+    );
+  }
+
+  if (FieldType == 'LongNumeric') {
+    return (
+      <NumericFormat
+        ref={inputRef}
+        onClick={handleInputClick}
+        id={data?.ID}
+        style={{
+          ...styles,
+          width: !Size ? '100%' : Size[1],
+          borderRadius: '2px',
+          zIndex: 1,
+          display: Visible == 0 ? 'none' : 'block',
+          paddingLeft: '5px',
+          border: !EdgeStyle ? 0 : EdgeStyle == 'Ridge' ? '1px solid #6A6A6A' : 0,
+        }}
+        onValueChange={(value) => {
+          const { floatValue } = value;
+          setInputValue(floatValue);
+          setEmitValue(floatValue);
+        }}
+        decimalScale={Decimal}
+        value={inputValue}
+        decimalSeparator={decimalSeparator}
+        thousandSeparator={Thousand}
+        onBlur={() => handleEditEvents()}
+      />
     );
   }
 

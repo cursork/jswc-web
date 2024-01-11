@@ -30,8 +30,8 @@ const ScrollBar = ({ data }) => {
 
   const maxValue = Range;
 
-  const trackHeight = parentSize[0];
-  const trackWidth = parentSize[1];
+  const trackHeight = parentSize && parentSize[0];
+  const trackWidth = parentSize && parentSize[1];
 
   const handleThumbDrag = (event) => {
     event.preventDefault();
@@ -66,7 +66,7 @@ const ScrollBar = ({ data }) => {
           );
         }
 
-        const event = JSON.stringify({  
+        const event = JSON.stringify({
           Event: {
             EventName: 'Scroll',
             ID: data?.ID,
