@@ -393,11 +393,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
           setInputValue(e.target.value);
           setEmitValue(value);
         }
-        if (FieldType == 'LongNumeric') {
-          value = replaceDanishToNumber(e.target.value);
-          setInputValue(e.target.value);
-          setEmitValue(value);
-        }
 
         if (FieldType == 'Char') {
           setEmitValue(e.target.value);
@@ -409,9 +404,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
         }
       }}
       onBlur={() => {
-        if (FieldType == 'LongNumeric') {
-          setInputValue(emitValue);
-        }
         handleEditEvents();
       }}
       onKeyDown={(e) => handleKeyPress(e)}
