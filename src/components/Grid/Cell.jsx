@@ -38,10 +38,10 @@ const Cell = ({
       }
     };
 
-    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('dblclick', handleDocumentClick);
 
     return () => {
-      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('dblclick', handleDocumentClick);
     };
   }, []);
 
