@@ -53,6 +53,7 @@ const Grid = ({ data }) => {
     ColTitleFCol,
     TitleHeight,
     TitleWidth,
+    FormatString,
   } = data?.Properties;
 
   const style = setStyle(data?.Properties);
@@ -213,6 +214,7 @@ const Grid = ({ data }) => {
                   ShowInput={ShowInput}
                   bgColor={backgroundColor}
                   cellFont={cellFont}
+                  formatString={FormatString && FormatString[row][column]}
                 />
               );
             })}

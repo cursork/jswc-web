@@ -39,6 +39,7 @@ const SelectComponent = ({
   location,
   inSplitter = null,
   values = [],
+  formatString = '',
 }) => {
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
   if (data?.Properties?.Type == 'MenuBar')
@@ -79,6 +80,7 @@ const SelectComponent = ({
           event={event}
           row={row}
           column={column}
+          formatString={formatString}
         />
       </div>
     );

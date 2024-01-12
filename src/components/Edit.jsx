@@ -13,7 +13,16 @@ import { useAppData } from '../hooks';
 import dayjs from 'dayjs';
 import { NumericFormat, removeNumericFormat } from 'react-number-format';
 
-const Edit = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
+const Edit = ({
+  data,
+  value,
+  event = '',
+  row = '',
+  column = '',
+  location = '',
+  values = [],
+  formatString = '',
+}) => {
   const { socket, dataRef, findDesiredData, handleData } = useAppData();
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
@@ -239,9 +248,12 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(cellChangedEvent);
+    socket.send(cellChangedEvent);
+
+    if (!formatString) return;
+
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
-    socket.send(cellChangedEvent);
   };
 
   const handleEditEvents = () => {
@@ -338,7 +350,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
     );
   }
 
-  if (FieldType == 'LongNumeric') {
+  if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
       <NumericFormat
         ref={inputRef}
@@ -352,6 +364,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
           display: Visible == 0 ? 'none' : 'block',
           paddingLeft: '5px',
           border: !EdgeStyle ? 0 : EdgeStyle == 'Ridge' ? '1px solid #6A6A6A' : 0,
+          textAlign: 'right',
         }}
         onValueChange={(value) => {
           const { floatValue } = value;
@@ -363,6 +376,7 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
         decimalSeparator={decimalSeparator}
         thousandSeparator={Thousand}
         onBlur={() => handleEditEvents()}
+        onKeyDown={(e) => handleKeyPress(e)}
       />
     );
   }
@@ -375,25 +389,6 @@ const Edit = ({ data, value, event = '', row = '', column = '', location = '', v
       onClick={handleInputClick}
       type={inputType}
       onChange={(e) => {
-        let value = e.target.value;
-        if (FieldType == 'Numeric') {
-          if (!Decimal) {
-            value = parseInt(e.target.value);
-            setInputValue(e.target.value);
-            setEmitValue(value);
-          }
-
-          let number = parseInt(e.target.value);
-          value = number.toFixed(Decimal);
-          setEmitValue(parseInt(value));
-          setInputValue(value);
-        }
-        if (FieldType == 'Date') {
-          value = calculateDaysFromDate(e.target.value) + 1;
-          setInputValue(e.target.value);
-          setEmitValue(value);
-        }
-
         if (FieldType == 'Char') {
           setEmitValue(e.target.value);
           setInputValue(e.target.value);

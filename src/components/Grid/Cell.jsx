@@ -23,6 +23,7 @@ const Cell = ({
   bgColor = [255, 255, 255],
   cellFont = null,
   fontColor = [0, 0, 0],
+  formatString = '',
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -178,98 +179,48 @@ const Cell = ({
     fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
   };
 
+  let cellStyles = {
+    borderRight: '1px solid  #EFEFEF',
+    borderBottom: '1px solid  #EFEFEF',
+    minWidth: cellWidth ? cellWidth : '100px',
+    maxWidth: cellWidth ? cellWidth : '100px',
+    minHeight: '20px',
+    maxHeight: '20px',
+    overflow: 'hidden',
+    margin: 0,
+    padding: 0,
+    background: rgbColor(bgColor),
+  };
+
   // Render the formatted values and the Input
   return (
-    <>
+    <div
+      ref={divRef}
+      id={type?.ID}
+      style={{ ...cellStyles, ...(isFocused || ShowInput == 1 ? fontStyles : justifiedStyles) }}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    >
       {isFocused || ShowInput == 1 ? (
-        <div
-          id={type?.ID}
-          style={{
-            borderRight: '1px solid  #EFEFEF',
-            borderBottom: '1px solid  #EFEFEF',
-            minWidth: cellWidth ? cellWidth : '100px',
-            maxWidth: cellWidth ? cellWidth : '100px',
-            minHeight: '20px',
-            maxHeight: '20px',
-            overflow: 'hidden',
-            margin: 0,
-            padding: 0,
-            background: rgbColor(bgColor),
-            ...fontStyles,
-          }}
-        >
-          <SelectComponent
-            location={location}
-            data={type}
-            inputValue={title}
-            event={parent}
-            row={row}
-            column={column}
-            values={values}
-          />
-        </div>
+        <SelectComponent
+          location={location}
+          data={type}
+          inputValue={title}
+          event={parent}
+          row={row}
+          column={column}
+          values={values}
+          formatString={formatString}
+        />
       ) : (
-        <div
-          id={type?.ID}
-          ref={divRef}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          style={{
-            borderRight: '1px solid  #EFEFEF',
-            borderBottom: '1px solid  #EFEFEF',
-            minWidth: cellWidth ? cellWidth : '100px',
-            maxWidth: cellWidth ? cellWidth : '100px',
-            minHeight: '20px',
-            maxHeight: '20px',
-            margin: 0,
-            padding: 0,
-            overflow: 'hidden',
-            background: rgbColor(bgColor),
-            ...justifiedStyles,
-          }}
+        <p
+          style={{ ...fontStyles, ...justifiedStyles, margin: 0, padding: 0 }}
+          onBlur={() => setIsFocused(false)}
         >
-          <p
-            style={{ ...fontStyles, ...justifiedStyles, margin: 0, padding: 0 }}
-            onBlur={() => setIsFocused(false)}
-          >
-            {formattedValue}
-          </p>
-        </div>
+          {formattedValue}
+        </p>
       )}
-    </>
-    // <div
-    //   ref={divRef}
-    //   id={type?.ID}
-    //   style={{
-    //     borderRight: '1px solid  #EFEFEF',
-    //     borderBottom: '1px solid  #EFEFEF',
-    //     minWidth: cellWidth ? cellWidth : '100px',
-    //     maxWidth: cellWidth ? cellWidth : '100px',
-    //     minHeight: '20px',
-    //     maxHeight: '20px',
-    //     overflow: 'hidden',
-    //     margin: 0,
-    //     padding: 0,
-    //     background: rgbColor(bgColor),
-    //     ...fontStyles,
-    //   }}
-    //   onFocus={handleFocus}
-    //   onBlur={handleBlur}
-    // >
-    //   {isFocused || ShowInput == 1 ? (
-    //     <SelectComponent
-    //       location={location}
-    //       data={type}
-    //       inputValue={title}
-    //       event={parent}
-    //       row={row}
-    //       column={column}
-    //       values={values}
-    //     />
-    //   ) : (
-
-    //   )}
-    // </div>
+    </div>
   );
 };
 
