@@ -214,7 +214,7 @@ const Grid = ({ data }) => {
                   ShowInput={ShowInput}
                   bgColor={backgroundColor}
                   cellFont={cellFont}
-                  formatString={FormatString && FormatString[row][column]}
+                  formatString={FormatString && FormatString[cellType - 1]}
                 />
               );
             })}
