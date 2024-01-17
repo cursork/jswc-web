@@ -7,16 +7,22 @@ import { useRef, useState } from 'react';
 import { useEffect } from 'react';
 
 const Splitter = ({ data }) => {
-  const { dataRef, socket, findDesiredData } = useAppData();
+  
 
+  const { dataRef, socket, findDesiredData } = useAppData();
 
   let formWidth = 800;
   let formHeight = 800;
 
   const { SplitObj1, SplitObj2, Style, Posn, Event, Visible, Size } = data?.Properties;
 
+  let parentKey = data?.ID?.split('.');
+
+
   const [sizes, setSizes] = useState([Posn && Posn[1]]);
   const [horizontalSize, setHorizontalSize] = useState([Posn && Posn[0]]);
+  const [clone1, setClone1] = useState(null);
+  const [clone2, setClone2] = useState(null);
 
   const emitEvent = Event && Event[0];
 
@@ -199,7 +205,23 @@ const Splitter = ({ data }) => {
     initializeSplitterDimensions();
   }, []);
 
+  useEffect(() => {
+    let splitObj1 = document.getElementById(SplitObj1);
+    let splitObj2 = document.getElementById(SplitObj2);
+
+    if (splitObj1) {
+      splitObj1.style.display = 'none';
+    }
+    if (splitObj2) {
+      splitObj2.style.display = 'none';
+    }
+  }, [data]);
   // Horizontal Split
+
+  let splitObj1 = document.getElementById(SplitObj1)?.innerHTML;
+  let splitObj2 = document.getElementById(SplitObj2)?.innerHTML;
+
+  // console.log('split', splitObj2);
 
   if (Style && Style == 'Horz') {
     const isTopVisible = firstFormData && firstFormData?.Properties?.Visible;
@@ -242,6 +264,7 @@ const Splitter = ({ data }) => {
         >
           <div>
             <div
+              // dangerouslySetInnerHTML={{ __html: splitObj1 }}
               style={{
                 height: data?.Properties?.Posn[0],
                 position: 'relative',
@@ -249,13 +272,14 @@ const Splitter = ({ data }) => {
                 display: isTopVisible == 0 ? 'none' : 'block',
               }}
             >
-              {/* {Object.keys(updatedFirstForm).map((key) => (
+              {Object.keys(updatedFirstForm).map((key) => (
                 <SelectComponent inSplitter={'inSplitter'} data={updatedFirstForm[key]} />
-              ))} */}
+              ))}
             </div>
           </div>
           <div style={{ border: '1px solid #F0F0F0' }}>
             <div
+              // dangerouslySetInnerHTML={{ __html: splitObj2 }}
               style={{
                 position: 'absolute',
                 flex: 1,
@@ -263,9 +287,9 @@ const Splitter = ({ data }) => {
                 display: isBottomVisible == 0 ? 'none' : 'block',
               }}
             >
-              {/* {Object.keys(updatedSecondForm).map((key) => (
+              {Object.keys(updatedSecondForm).map((key) => (
                 <SelectComponent inSplitter={'inSplitter'} data={updatedSecondForm[key]} />
-              ))} */}
+              ))}
             </div>
           </div>
         </SplitPane>
@@ -285,7 +309,11 @@ const Splitter = ({ data }) => {
 
   const isRightVisible = secondFormData && secondFormData?.Properties?.Visible;
 
-  console.log({ firstFormData });
+  // splitObj1 = document.getElementById(SplitObj1)?.innerHTML;
+
+  // splitObj2 = document.getElementById(SplitObj2)?.innerHTML;
+
+  console.log({ splitObj2 });
 
   return (
     <SplitPane
@@ -343,29 +371,34 @@ const Splitter = ({ data }) => {
           }}
         >
           <div
+            // dangerouslySetInnerHTML={{ __html: splitObj1 }}
+            id='split-obj1'
             style={{
               width: data?.Properties?.Posn[1],
               background: 'white',
               position: 'relative',
             }}
           >
-            {/* {Object.keys(firstFormData).map((key) => {
-              console.log({ key });
+            {Object.keys(firstFormData).map((key) => {
+              
               return <SelectComponent data={firstFormData[key]} />;
-            })} */}
+            })}
           </div>
         </div>
       </Pane>
       {/* Right SubForm */}
       <div style={{ ...layoutCSS, background: 'white' }}>
-        <div style={{ background: 'white', display: isRightVisible == 0 ? 'none' : 'block' }}>
-          {/* {Object.keys(updatedSecondForm).map((key) => (
+        <div
+          // dangerouslySetInnerHTML={{ __html: splitObj2 }}
+          style={{ background: 'white', display: isRightVisible == 0 ? 'none' : 'block' }}
+        >
+          {Object.keys(updatedSecondForm).map((key) => (
             <SelectComponent
               inSplitter={'inSplitter'}
               isSubForm={true}
               data={updatedSecondForm[key]}
             />
-          ))} */}
+          ))}
         </div>
       </div>
     </SplitPane>

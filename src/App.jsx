@@ -14,6 +14,7 @@ const App = () => {
   const [socket, setSocket] = useState(null);
   const [layout, setLayout] = useState('Initialise');
   const webSocketRef = useRef(null);
+  const [focusedElement, setFocusedElement] = useState(null);
 
   function useForceRerender() {
     const [_state, setState] = useState(true);
@@ -867,6 +868,28 @@ const App = () => {
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
+
+        const { Event, ID, Info } = nqEvent;
+
+        const appElement = getObjectById(dataRef.current, ID);
+
+        // console.log({ appElement });
+
+        if (Event && Event == 'Configure') {
+          handleData(
+            {
+              ID: ID,
+              Properties: {
+                ...appElement.Properties,
+                Posn: [Info[0], Info[1]],
+                Size: [Info[3], Info[2]],
+              },
+            },
+            'WS'
+          );
+
+          return;
+        }
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
       } else if (keys[0] == 'EX') {
@@ -922,14 +945,33 @@ const App = () => {
     };
   }, [layout]);
 
+  const handleFocus = (event) => {
+    setFocusedElement(event.target.id);
+  };
+
+  useEffect(() => {
+    const container = document.getElementById('app');
+
+    if (container) {
+      container.addEventListener('focusin', handleFocus);
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, []);
+
   console.log('App', dataRef.current);
 
   const formParentID = findFormParentID(dataRef.current);
 
   return (
-    <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData }}>
-      {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
-    </AppDataContext.Provider>
+    <div id='app'>
+      <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData, focusedElement }}>
+        {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
+      </AppDataContext.Provider>
+    </div>
   );
 };
 

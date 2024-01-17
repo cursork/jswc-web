@@ -9,7 +9,7 @@ import {
   getObjectById,
 } from '../utils';
 import { useState, useRef, useEffect } from 'react';
-import { useAppData } from '../hooks';
+import { useAppData, useActiveElement } from '../hooks';
 import dayjs from 'dayjs';
 import { NumericFormat, removeNumericFormat } from 'react-number-format';
 
@@ -23,7 +23,7 @@ const Edit = ({
   values = [],
   formatString = '',
 }) => {
-  const { socket, dataRef, findDesiredData, handleData } = useAppData();
+  const { socket, dataRef, findDesiredData, handleData, focusedElement } = useAppData();
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
@@ -179,14 +179,7 @@ const Edit = ({
   const triggerChangeEvent = () => {
     const focusedId = localStorage.getItem('current-focus');
 
-    const event = JSON.stringify({
-      Event: {
-        EventName: 'Change',
-        ID: data?.ID,
-        Info: [!focusedId ? '' : focusedId],
-      },
-    });
-
+    console.log({ focusedId });
     const event2 = JSON.stringify({
       Event: {
         EventName: 'Change',
@@ -197,6 +190,15 @@ const Edit = ({
     localStorage.setItem(data?.ID, event2);
     const exists = Event && Event.some((item) => item[0] === 'Change');
     if (!exists) return;
+
+    const event = JSON.stringify({
+      Event: {
+        EventName: 'Change',
+        ID: data?.ID,
+        Info: [],
+      },
+    });
+
     console.log(event);
     socket.send(event);
   };
@@ -377,6 +379,7 @@ const Edit = ({
         thousandSeparator={Thousand}
         onBlur={() => handleEditEvents()}
         onKeyDown={(e) => handleKeyPress(e)}
+        onFocus={handleGotFocus}
       />
     );
   }

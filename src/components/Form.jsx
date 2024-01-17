@@ -1,11 +1,22 @@
 import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
 import { useAppData } from '../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
+  function useForceRerender() {
+    const [_state, setState] = useState(true);
+    const reRender = () => {
+      setState((prev) => !prev);
+    };
+    return { reRender };
+  }
+
+  const { reRender } = useForceRerender();
+
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
+
   const styles = setStyle(data?.Properties, 'relative');
 
   const { BCol, Picture, Size, Visible } = data?.Properties;
@@ -20,7 +31,11 @@ const Form = ({ data }) => {
     localStorage.setItem('current-focus', data.ID);
   }, []);
 
+  useEffect(() => {
+    reRender();
+  }, [data.Properties]);
 
+  console.log({ styles });
 
   return (
     <div

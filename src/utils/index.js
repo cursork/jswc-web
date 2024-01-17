@@ -86,7 +86,7 @@ export const getObjectById = (jsonData, targetId) => {
     if (typeof node === 'object') {
       if (node.ID === idToFind) {
         return node;
-      }
+      } 
       for (const key in node) {
         const result = searchObject(node[key], idToFind);
         if (result) {
