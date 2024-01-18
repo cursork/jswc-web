@@ -6,8 +6,9 @@ const HorizontalSplitter = ({ data }) => {
   const { Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
   const [position, setPosition] = useState({ top: Posn && Posn[0] });
   const [isResizing, setResizing] = useState(false);
-  const { handleData, reRender } = useAppData();
+  const { handleData, reRender, socket } = useAppData();
   let formHeight = 800;
+  const emitEvent = Event && Event[0];
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -20,13 +21,12 @@ const HorizontalSplitter = ({ data }) => {
         const { Size } = parentSize;
 
         newTop = Math.max(0, Math.min(newTop, formHeight));
-
         handleData(
           {
             ID: SplitObj1,
             Properties: {
               Posn: [0, 0],
-              Size: [newTop - 3, Size[1]],
+              Size: [newTop, Size[1]],
             },
           },
           'WS'
@@ -43,6 +43,17 @@ const HorizontalSplitter = ({ data }) => {
           'WS'
         );
 
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              EventName: emitEvent && emitEvent[0],
+              ID: data.ID,
+              Info: [newTop, 0, 3, formHeight],
+              Size: [3, 800],
+            },
+          })
+        );
         reRender();
         setPosition({ top: newTop });
       }
@@ -51,7 +62,13 @@ const HorizontalSplitter = ({ data }) => {
     const handleMouseUp = () => {
       if (isResizing) {
         setResizing(false);
-        console.log('Dragging ended. New top position:', position.top);
+        const { Event: customEvent } = JSON.parse(localStorage.getItem(data?.ID));
+        const { Size, ...event } = customEvent;
+        const exists = Event && Event?.some((item) => item[0] === 'EndSplit');
+        if (!exists) return;
+        console.log(JSON.stringify({ Event: { ...event } }));
+        socket.send(JSON.stringify({ Event: { ...event } }));
+
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       }

@@ -5,7 +5,7 @@ const VerticalSplitter = ({ data }) => {
   const { Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
   const [position, setPosition] = useState({ left: Posn && Posn[1] });
   const [isResizing, setResizing] = useState(false);
-  const { handleData, reRender } = useAppData();
+  const { handleData, reRender, socket } = useAppData();
   let formWidth = 800;
   let formHeight = 800;
   const emitEvent = Event && Event[0];
@@ -25,13 +25,15 @@ const VerticalSplitter = ({ data }) => {
       if (isResizing) {
         let newLeft = e.clientX;
         newLeft = Math.max(0, Math.min(newLeft, formWidth - 3));
+        const rightWidth = formWidth - (newLeft + 3);
 
         handleData(
           {
             ID: SplitObj1,
             Properties: {
               Posn: [0, 0],
-              Size: [formHeight, newLeft - 3],
+              Size: [formHeight, newLeft],
+              BCol: [255, 255, 255],
             },
           },
           'WS'
@@ -42,12 +44,24 @@ const VerticalSplitter = ({ data }) => {
             ID: SplitObj2,
             Properties: {
               Posn: [0, newLeft + 3],
-              Size: [formHeight, formWidth - (newLeft + 3)],
+              Size: [formHeight, rightWidth],
+              BCol: [255, 255, 255],
             },
           },
           'WS'
         );
 
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              EventName: emitEvent && emitEvent[0],
+              ID: data.ID,
+              Info: [0, newLeft, formWidth, 3],
+              Size: [formHeight, 3],
+            },
+          })
+        );
         reRender();
 
         setPosition({ left: newLeft });
@@ -57,7 +71,12 @@ const VerticalSplitter = ({ data }) => {
     const handleMouseUp = () => {
       if (isResizing) {
         setResizing(false);
-        console.log('Dragging ended. New left position:', position.left);
+        const { Event: customEvent } = JSON.parse(localStorage.getItem(data?.ID));
+        const { Size, ...event } = customEvent;
+        const exists = Event && Event?.some((item) => item[0] === 'EndSplit');
+        if (!exists) return;
+        console.log(JSON.stringify({ Event: { ...event } }));
+        socket.send(JSON.stringify({ Event: { ...event } }));
       }
     };
 

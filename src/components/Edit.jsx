@@ -179,7 +179,6 @@ const Edit = ({
   const triggerChangeEvent = () => {
     const focusedId = localStorage.getItem('current-focus');
 
-    console.log({ focusedId });
     const event2 = JSON.stringify({
       Event: {
         EventName: 'Change',
