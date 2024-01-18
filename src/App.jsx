@@ -970,19 +970,18 @@ const App = () => {
   const formParentID = findFormParentID(updatedData);
 
   return (
-    <>
-      {JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties)}
-      <div id='app'>
-        {JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties)}
-        <AppDataContext.Provider
-          value={{ socketData, dataRef, socket, handleData, focusedElement, reRender }}
-        >
-          {dataRef && formParentID && <SelectComponent data={updatedData[formParentID]} />}
-        </AppDataContext.Provider>
-        {/* <button onClick={()=>reRender()}>clock</button> */}
-      </div>
-    </>
+    <div id='app'>
+      <AppDataContext.Provider
+        value={{ socketData, dataRef, socket, handleData, focusedElement, reRender }}
+      >
+        {dataRef && formParentID && <SelectComponent data={updatedData[formParentID]} />}
+      </AppDataContext.Provider>
+    </div>
   );
 };
 
 export default App;
+
+// {
+//   JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties);
+// }

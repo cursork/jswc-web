@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
-import { excludeKeys, setStyle, getImageStyles } from '../../utils';
+import { excludeKeys, setStyle, getImageStyles, rgbColor } from '../../utils';
 import SelectComponent from '../SelectComponent';
 import { useAppData } from '../../hooks';
 
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
-  const { Size, Posn, Picture, Visible } = data?.Properties;
+  const { Size, Posn, Picture, Visible, BCol } = data?.Properties;
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
   const styles = setStyle(data?.Properties);
@@ -40,6 +40,7 @@ const SubForm = ({ data }) => {
         left: !Posn ? 0 : Posn[1],
         position: 'absolute',
         display: Visible == 0 ? 'none' : 'block',
+        background: BCol && rgbColor(BCol),
       }}
     >
       {Object.keys(updatedData).map((key) => {

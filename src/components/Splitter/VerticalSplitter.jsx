@@ -24,7 +24,7 @@ const VerticalSplitter = ({ data }) => {
     const handleMouseMove = (e) => {
       if (isResizing) {
         let newLeft = e.clientX;
-        newLeft = Math.max(0, Math.min(newLeft, formWidth));
+        newLeft = Math.max(0, Math.min(newLeft, formWidth - 3));
 
         handleData(
           {

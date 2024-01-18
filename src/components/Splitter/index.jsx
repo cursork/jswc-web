@@ -439,6 +439,7 @@ const Splitter = ({ data }) => {
               Properties: {
                 Posn: [0, 0],
                 Size: [Posn[0], Size[1]],
+                BCol: [255, 255, 255],
               },
             },
             'WS'
@@ -456,6 +457,7 @@ const Splitter = ({ data }) => {
               Properties: {
                 Posn: [Posn[0] + 3, 0],
                 Size: [formHeight - (Posn[0] + 3), Size[1]],
+                BCol: [255, 255, 255],
               },
             },
             'WS'
@@ -485,6 +487,26 @@ const Splitter = ({ data }) => {
           Size: [formHeight, formWidth - (Posn[1] + 3)],
           Posn: [0, Posn[1] + 3],
         })
+      );
+
+      handleData(
+        {
+          ID: SplitObj1,
+          Properties: {
+            BCol: [255, 255, 255],
+          },
+        },
+        'WS'
+      );
+
+      handleData(
+        {
+          ID: SplitObj2,
+          Properties: {
+            BCol: [255, 255, 255],
+          },
+        },
+        'WS'
       );
     }
   };
