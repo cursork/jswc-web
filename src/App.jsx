@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
 import {
@@ -8,6 +8,15 @@ import {
   deleteFormAndSiblings,
 } from './utils';
 import './App.css';
+import * as _ from 'lodash';
+
+function useForceRerender() {
+  const [_state, setState] = useState(true);
+  const reRender = () => {
+    setState((prev) => !prev);
+  };
+  return { reRender };
+}
 
 const App = () => {
   const [socketData, setSocketData] = useState([]);
@@ -16,20 +25,13 @@ const App = () => {
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
 
-  function useForceRerender() {
-    const [_state, setState] = useState(true);
-    const reRender = () => {
-      setState((prev) => !prev);
-    };
-    return { reRender };
-  }
-
   const { reRender } = useForceRerender();
 
   const dataRef = useRef({});
 
   const handleData = (data, mode) => {
     const splitID = data.ID.split('.');
+
     let currentLevel = dataRef.current;
 
     for (let i = 0; i < splitID.length - 1; i++) {
@@ -873,7 +875,7 @@ const App = () => {
 
         const appElement = getObjectById(dataRef.current, ID);
 
-        // console.log({ appElement });
+        console.log({ appElement });
 
         if (Event && Event == 'Configure') {
           handleData(
@@ -962,16 +964,24 @@ const App = () => {
     };
   }, []);
 
+  const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
 
-  const formParentID = findFormParentID(dataRef.current);
+  const formParentID = findFormParentID(updatedData);
 
   return (
-    <div id='app'>
-      <AppDataContext.Provider value={{ socketData, dataRef, socket, handleData, focusedElement }}>
-        {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
-      </AppDataContext.Provider>
-    </div>
+    <>
+      {JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties)}
+      <div id='app'>
+        {JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties)}
+        <AppDataContext.Provider
+          value={{ socketData, dataRef, socket, handleData, focusedElement, reRender }}
+        >
+          {dataRef && formParentID && <SelectComponent data={updatedData[formParentID]} />}
+        </AppDataContext.Provider>
+        {/* <button onClick={()=>reRender()}>clock</button> */}
+      </div>
+    </>
   );
 };
 

@@ -27,7 +27,7 @@ const SubForm = ({ data }) => {
         Posn: !Posn ? [0, 0] : Posn,
       })
     );
-  }, []);
+  }, [data]);
 
   return (
     <div

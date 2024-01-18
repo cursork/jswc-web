@@ -16,6 +16,7 @@ const Form = ({ data }) => {
 
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
+  const [formStyles, setFormStyles] = useState({});
 
   const styles = setStyle(data?.Properties, 'relative');
 
@@ -32,21 +33,20 @@ const Form = ({ data }) => {
   }, []);
 
   useEffect(() => {
-    reRender();
+    setFormStyles(setStyle(data?.Properties, 'relative'));
   }, [data.Properties]);
-
-  console.log({ styles });
 
   return (
     <div
       style={{
-        ...styles,
+        ...formStyles,
         // width: '1000px',
         background: BCol ? rgbColor(BCol) : '#F0F0F0',
         position: 'relative',
         border: '1px solid #F0F0F0',
         display: Visible == 0 ? 'none' : 'block',
         ...imageStyles,
+        overflow: 'hidden',
       }}
     >
       {Object.keys(updatedData).map((key) => {
