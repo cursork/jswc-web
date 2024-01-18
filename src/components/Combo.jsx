@@ -14,7 +14,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   useEffect(() => {
     const index = SelItems?.findIndex((element) => element == 1);
     setComboInput(Items[index]);
-  }, [SelItems]);
+  }, []);
 
   const handleCellChangeEvent = (value) => {
     const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
@@ -25,7 +25,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         Properties: {
           ...gridEvent.Properties,
           Values: values,
-          CurCell:[row,column]
+          CurCell: [row, column],
         },
       },
       'WS'
@@ -41,14 +41,13 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
       },
     });
 
-
-     const updatedGridValues = JSON.stringify({
-       Event: {
-         EventName: 'CellChanged',
-         Values: values,
-         CurCell: [row, column],
-       },
-     });
+    const updatedGridValues = JSON.stringify({
+      Event: {
+        EventName: 'CellChanged',
+        Values: values,
+        CurCell: [row, column],
+      },
+    });
 
     localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
     const exists = event && event.some((item) => item[0] === 'CellChanged');

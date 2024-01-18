@@ -112,7 +112,7 @@ const Edit = ({
 
   useEffect(() => {
     decideInputValue();
-  }, [data]);
+  }, []);
 
   // Checks for the Styling of the Edit Field
 
