@@ -5,7 +5,7 @@ import { useAppData } from '../hooks';
 const Group = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const styles = setStyle(data?.Properties);
-  const { Visible, Picture } = data?.Properties;
+  const { Visible, Picture, Border } = data?.Properties;
   const { findDesiredData } = useAppData();
 
   const ImageData = findDesiredData(Picture && Picture[0]);
@@ -18,7 +18,7 @@ const Group = ({ data }) => {
     <div
       style={{
         ...styles,
-        // border: '1px solid #E9E9E9',
+        border: !Border || Border == 0 ? 'none' : '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
         ...imageStyles,
       }}

@@ -83,8 +83,6 @@ const HorizontalSplitter = ({ data }) => {
   const handleMouseDown = (e) => {
     e.preventDefault();
     setResizing(true);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
   };
 
   let horizontalStyles = {
