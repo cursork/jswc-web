@@ -68,9 +68,6 @@ const HorizontalSplitter = ({ data }) => {
         if (!exists) return;
         console.log(JSON.stringify({ Event: { ...event } }));
         socket.send(JSON.stringify({ Event: { ...event } }));
-
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
       }
     };
 
