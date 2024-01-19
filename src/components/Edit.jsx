@@ -22,7 +22,7 @@ const Edit = ({
   values = [],
   formatString = '',
 }) => {
-  const { socket, dataRef, findDesiredData, handleData } = useAppData();
+  const { socket, dataRef, findDesiredData, handleData, addChangeEvent } = useAppData();
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
@@ -207,8 +207,7 @@ const Edit = ({
       },
     });
 
-    console.log(event);
-    socket.send(event);
+    localStorage.setItem('change-event', event);
   };
 
   const triggerCellChangedEvent = () => {
@@ -327,6 +326,7 @@ const Edit = ({
     return (
       <div style={{ position: 'relative' }}>
         <input
+          id={data?.ID}
           type='date'
           ref={dateInputRef}
           onChange={handleDateChange}
@@ -339,6 +339,7 @@ const Edit = ({
         />
 
         <input
+          id={data?.ID}
           style={{
             ...styles,
             borderRadius: '2px',

@@ -24,10 +24,12 @@ const App = () => {
   const [layout, setLayout] = useState('Initialise');
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
+  const [changeEvents, setChangeEvents] = useState([]);
 
   const { reRender } = useForceRerender();
 
   const dataRef = useRef({});
+  const appRef = useRef(null);
 
   const handleData = (data, mode) => {
     const splitID = data.ID.split('.');
@@ -947,19 +949,33 @@ const App = () => {
     };
   }, [layout]);
 
-  const handleFocus = (event) => {
-    setFocusedElement(event.target.id);
+  const handleFocus = (element) => {
+    const formParentID = findFormParentID(dataRef.current);
+    if (localStorage.getItem('change-event')) {
+      const { Event } = JSON.parse(localStorage.getItem('change-event'));
+      const updatedEvent = {
+        ...Event,
+        Info: [!element.target.id ? formParentID : element.target.id],
+      };
+
+      let webSocket = webSocketRef.current;
+
+      webSocket.send(JSON.stringify({ Event: { ...updatedEvent } }));
+      localStorage.removeItem('change-event');
+    }
   };
 
   useEffect(() => {
-    const container = document.getElementById('app');
+    const container = appRef.current;
 
     if (container) {
-      container.addEventListener('focusin', handleFocus);
+      // container.addEventListener('focusin', handleFocus);
+      container.addEventListener('click', handleFocus);
     }
     return () => {
       if (container) {
-        container.removeEventListener('focus', handleFocus);
+        // container.removeEventListener('focusin', handleFocus);
+        container.removeEventListener('click', handleFocus);
       }
     };
   }, []);
@@ -970,9 +986,17 @@ const App = () => {
   const formParentID = findFormParentID(dataRef.current);
 
   return (
-    <div id='app'>
+    <div ref={appRef}>
       <AppDataContext.Provider
-        value={{ socketData, dataRef, socket, handleData, focusedElement, reRender }}
+        value={{
+          socketData,
+          dataRef,
+          socket,
+          handleData,
+          focusedElement,
+          reRender,
+          setChangeEvents,
+        }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
       </AppDataContext.Provider>
