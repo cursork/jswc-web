@@ -13,7 +13,7 @@ const VerticalSplitter = ({ data }) => {
   let verticalStyles = {
     width: '3px',
     height: '100%',
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#F0F0F0',
     cursor: 'col-resize',
     position: 'absolute',
     top: Posn && Posn[0],

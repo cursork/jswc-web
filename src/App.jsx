@@ -964,17 +964,17 @@ const App = () => {
     };
   }, []);
 
-  const updatedData = _.cloneDeep(dataRef.current);
+  // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
 
-  const formParentID = findFormParentID(updatedData);
+  const formParentID = findFormParentID(dataRef.current);
 
   return (
     <div id='app'>
       <AppDataContext.Provider
         value={{ socketData, dataRef, socket, handleData, focusedElement, reRender }}
       >
-        {dataRef && formParentID && <SelectComponent data={updatedData[formParentID]} />}
+        {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
       </AppDataContext.Provider>
     </div>
   );

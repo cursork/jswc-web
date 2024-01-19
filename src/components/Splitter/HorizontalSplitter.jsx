@@ -88,7 +88,7 @@ const HorizontalSplitter = ({ data }) => {
   let horizontalStyles = {
     width: '100%',
     height: '3px',
-    backgroundColor: '#CCCCCC',
+    backgroundColor: '#F0F0F0',
     cursor: 'row-resize',
     position: 'absolute',
     top: position?.top,

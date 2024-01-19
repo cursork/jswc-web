@@ -4,14 +4,13 @@ import {
   generateAsteriskString,
   calculateDateAfterDays,
   calculateDaysFromDate,
-  replaceDanishToNumber,
   rgbColor,
   getObjectById,
 } from '../utils';
 import { useState, useRef, useEffect } from 'react';
-import { useAppData, useActiveElement } from '../hooks';
+import { useAppData } from '../hooks';
 import dayjs from 'dayjs';
-import { NumericFormat, removeNumericFormat } from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 
 const Edit = ({
   data,
@@ -23,7 +22,7 @@ const Edit = ({
   values = [],
   formatString = '',
 }) => {
-  const { socket, dataRef, findDesiredData, handleData, focusedElement } = useAppData();
+  const { socket, dataRef, findDesiredData, handleData } = useAppData();
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
@@ -36,8 +35,18 @@ const Edit = ({
   const [initialValue, setInitialValue] = useState('');
   const dateInputRef = useRef();
 
-  const { FieldType, MaxLength, FCol, Decimal, Visible, Event, FontObj, Size, EdgeStyle } =
-    data?.Properties;
+  const {
+    FieldType,
+    MaxLength,
+    FCol,
+    Decimal,
+    Visible,
+    Event,
+    FontObj,
+    Size,
+    EdgeStyle,
+    Border = 0,
+  } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty('Text');
   const hasValueProperty = data?.Properties.hasOwnProperty('Value');
@@ -112,7 +121,7 @@ const Edit = ({
 
   useEffect(() => {
     decideInputValue();
-  }, []);
+  }, [data]);
 
   // Checks for the Styling of the Edit Field
 
