@@ -20,7 +20,7 @@ const Cell = ({
   values = [],
   formattedValue = null,
   ShowInput = 0,
-  bgColor = [255, 255, 255],
+  bgColor,
   cellFont = null,
   fontColor = [0, 0, 0],
   formatString = '',
@@ -46,6 +46,7 @@ const Cell = ({
   }, []);
 
   if (!type && !Array.isArray(title)) {
+    console.log({ selectedGrid });
     return (
       <div
         onClick={() => onClick(row, column)}
@@ -62,16 +63,17 @@ const Cell = ({
           margin: 0,
           color: rgbColor(fontColor),
           cursor: 'pointer',
-          background: rgbColor(bgColor),
-          // background: selectedGrid
-          //   ? selectedGrid.column == column && !isRow && !isBody
-          //     ? '#C7E9FF'
-          //     : selectedGrid.row == row && !isColumn && !isBody
-          //     ? '#C7E9FF'
-          //     : highLightMe
-          //     ? '#C7E9FF'
-          //     : null
-          //   : null,
+          background: !bgColor
+            ? selectedGrid
+              ? selectedGrid.column == column && !isRow && !isBody
+                ? '#C7E9FF'
+                : selectedGrid.row == row && !isColumn && !isBody
+                ? '#C7E9FF'
+                : highLightMe
+                ? '#C7E9FF'
+                : null
+              : null
+            : rgbColor(bgColor),
         }}
       >
         <span
@@ -87,6 +89,8 @@ const Cell = ({
   }
 
   if (!type && Array.isArray(title)) {
+    console.log({ selectedGrid });
+
     return (
       <div
         onClick={() => onClick(row, column)}
@@ -104,7 +108,17 @@ const Cell = ({
           margin: 0,
           cursor: 'pointer',
           color: rgbColor(fontColor),
-          background: rgbColor(bgColor),
+          background: !bgColor
+            ? selectedGrid
+              ? selectedGrid.column == column && !isRow && !isBody
+                ? '#C7E9FF'
+                : selectedGrid.row == row && !isColumn && !isBody
+                ? '#C7E9FF'
+                : highLightMe
+                ? '#C7E9FF'
+                : null
+              : null
+            : rgbColor(bgColor),
         }}
       >
         {title.map((th) => {
@@ -115,8 +129,9 @@ const Cell = ({
     );
   }
 
-  const handleFocus = () => {
+  const handleFocus = (row, column) => {
     setIsFocused(true);
+    onClick(row, column);
   };
 
   const handleBlur = () => {
@@ -198,7 +213,7 @@ const Cell = ({
       ref={divRef}
       id={type?.ID}
       style={{ ...cellStyles, ...(isFocused || ShowInput == 1 ? fontStyles : justifiedStyles) }}
-      onFocus={handleFocus}
+      onFocus={() => handleFocus(row, column)}
       onBlur={handleBlur}
     >
       {isFocused || ShowInput == 1 ? (

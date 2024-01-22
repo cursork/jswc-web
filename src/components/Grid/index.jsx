@@ -9,6 +9,7 @@ const Grid = ({ data }) => {
   const [tableProperty, setTableProperty] = useState({ row: false, column: false, body: false });
 
   const handleGridClick = (row, column, property) => {
+    console.log('Hello');
     if (property == 'column') {
       setTableProperty({
         row: false,
