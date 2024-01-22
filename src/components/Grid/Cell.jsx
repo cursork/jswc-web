@@ -46,7 +46,6 @@ const Cell = ({
   }, []);
 
   if (!type && !Array.isArray(title)) {
-    console.log({ selectedGrid });
     return (
       <div
         onClick={() => onClick(row, column)}
@@ -89,8 +88,6 @@ const Cell = ({
   }
 
   if (!type && Array.isArray(title)) {
-    console.log({ selectedGrid });
-
     return (
       <div
         onClick={() => onClick(row, column)}

@@ -73,6 +73,14 @@ const Grid = ({ data }) => {
         },
       })
     );
+    if (CurCell) {
+      setSelectedGrid({ row: CurCell[0], column: CurCell[1] });
+      setTableProperty({
+        row: false,
+        column: true,
+        body: false,
+      });
+    }
   }, [data]);
 
   // Grid without types
