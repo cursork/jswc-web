@@ -4,9 +4,10 @@ import {
   getObjectById,
   calculateSumFromString,
   findParentIndex,
+  extractStringUntilSecondPeriod,
 } from '../../utils';
 import { useAppData } from '../../hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Tree from 'rc-tree';
 import 'rc-tree/assets/index.css';
@@ -213,6 +214,8 @@ const Treeview = ({ data }) => {
       })
     );
   }, []);
+
+
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 import { excludeKeys, setStyle, getImageStyles, rgbColor } from '../../utils';
 import SelectComponent from '../SelectComponent';
@@ -8,6 +8,7 @@ const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
   const { Size, Posn, Picture, Visible, BCol } = data?.Properties;
+  const observedDiv = useRef(null);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
   const styles = setStyle(data?.Properties);
@@ -18,6 +19,8 @@ const SubForm = ({ data }) => {
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
   let updatedStyles = { ...styles, ...imageStyles };
+
+
 
   useEffect(() => {
     localStorage.setItem(
@@ -42,6 +45,7 @@ const SubForm = ({ data }) => {
         display: Visible == 0 ? 'none' : 'block',
         background: BCol && rgbColor(BCol),
       }}
+      ref={observedDiv}
     >
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;

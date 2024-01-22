@@ -667,7 +667,7 @@ const App = () => {
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           console.log('server', serverEvent);
-          console.log('getValue', localStorage.getItem(serverEvent.ID));
+        
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};

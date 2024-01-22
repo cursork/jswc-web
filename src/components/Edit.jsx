@@ -374,7 +374,10 @@ const Edit = ({
           zIndex: 1,
           display: Visible == 0 ? 'none' : 'block',
           paddingLeft: '5px',
-          border: !EdgeStyle ? 0 : EdgeStyle == 'Ridge' ? '1px solid #6A6A6A' : 0,
+          border:
+            (Border && Border == '1') || (EdgeStyle && EdgeStyle == 'Ridge')
+              ? '1px solid #6A6A6A'
+              : 'none',
           textAlign: 'right',
         }}
         onValueChange={(value) => {
@@ -421,7 +424,10 @@ const Edit = ({
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'block',
         paddingLeft: '5px',
-        border: !EdgeStyle ? 0 : EdgeStyle == 'Ridge' ? '1px solid #6A6A6A' : 0,
+        border:
+          (Border && Border == '1') || (EdgeStyle && EdgeStyle == 'Ridge')
+            ? '1px solid #6A6A6A'
+            : 'none',
       }}
       maxLength={MaxLength}
       onFocus={handleGotFocus}
