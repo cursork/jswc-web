@@ -1,12 +1,24 @@
-import { setStyle, excludeKeys, getImageStyles } from '../utils';
+import { useState, useEffect } from 'react';
+import { setStyle, excludeKeys, getImageStyles, extractStringUntilSecondPeriod } from '../utils';
 import SelectComponent from './SelectComponent';
-import { useAppData } from '../hooks';
+import { useAppData, useResizeObserver } from '../hooks';
 
 const Group = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const styles = setStyle(data?.Properties);
-  const { Visible, Picture, Border = 1 } = data?.Properties;
+  const { Visible, Picture, Border = 1, Size } = data?.Properties;
   const { findDesiredData } = useAppData();
+  const dimensions = useResizeObserver(
+    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+  );
+
+  const [width, setWidth] = useState(Size[1]);
+  const [height, setHeight] = useState(Size[0]);
+
+  useEffect(() => {
+    setWidth(dimensions?.width - 47);
+    setHeight(dimensions?.height - 47);
+  }, [dimensions]);
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -18,6 +30,8 @@ const Group = ({ data }) => {
     <div
       style={{
         ...styles,
+        width,
+        height,
         border: Border == 0 ? 'none' : '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
         ...imageStyles,

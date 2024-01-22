@@ -1,5 +1,5 @@
-import { setStyle, generateHeader } from '../../utils';
-import { useAppData } from '../../hooks';
+import { setStyle, generateHeader, extractStringUntilSecondPeriod } from '../../utils';
+import { useAppData, useResizeObserver } from '../../hooks';
 import Cell from './Cell';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +7,9 @@ const Grid = ({ data }) => {
   const { findDesiredData } = useAppData();
   const [selectedGrid, setSelectedGrid] = useState(null);
   const [tableProperty, setTableProperty] = useState({ row: false, column: false, body: false });
+  const dimensions = useResizeObserver(
+    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+  );
 
   const handleGridClick = (row, column, property) => {
     console.log('Hello');
@@ -34,8 +37,8 @@ const Grid = ({ data }) => {
   };
 
   let size = 0;
-
   const {
+    Size,
     Values,
     Input,
     ColTitles,
@@ -55,7 +58,12 @@ const Grid = ({ data }) => {
     TitleHeight,
     TitleWidth,
     FormatString,
+    VScroll = 0,
+    HScroll = 0,
   } = data?.Properties;
+
+  const [height, setHeight] = useState(Size[0]);
+  const [width, setWidth] = useState(Size[1]);
 
   const style = setStyle(data?.Properties);
 
@@ -83,6 +91,11 @@ const Grid = ({ data }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    setWidth(dimensions?.width - 73);
+    setHeight(dimensions?.height - 73);
+  }, [dimensions]);
+
   // Grid without types
 
   return (
@@ -90,10 +103,14 @@ const Grid = ({ data }) => {
       id={data.ID}
       style={{
         ...style,
+        height,
+        width,
         border: '1px solid black',
         overflow: !ColTitles ? 'auto' : 'hidden',
         background: 'white',
         display: Visible == 0 ? 'none' : 'block',
+        overflowX: HScroll == -3 ? 'scroll' : HScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
+        overflowY: VScroll == -3 ? 'scroll' : VScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
       }}
     >
       {/* Table have column */}
