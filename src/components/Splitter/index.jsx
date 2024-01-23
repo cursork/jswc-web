@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import VerticalSplitter from './VerticalSplitter';
 import HorizontalSplitter from './HorizontalSplitter';
-import { useAppData } from '../../hooks';
-
+import { useAppData, useResizeObserver } from '../../hooks';
+import { extractStringUntilSecondPeriod } from '../../utils';
 
 const Splitter = ({ data }) => {
   const { Style, Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
+
   const { handleData } = useAppData();
   let formWidth = 800;
   let formHeight = 800;

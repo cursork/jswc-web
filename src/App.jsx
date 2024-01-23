@@ -667,7 +667,6 @@ const App = () => {
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           console.log('server', serverEvent);
-        
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
@@ -987,6 +986,7 @@ const App = () => {
 
   return (
     <div ref={appRef}>
+     
       <AppDataContext.Provider
         value={{
           socketData,

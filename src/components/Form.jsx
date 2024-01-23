@@ -20,7 +20,7 @@ const Form = ({ data }) => {
 
   const styles = setStyle(data?.Properties, 'relative');
 
-  const { BCol, Picture, Size, Visible } = data?.Properties;
+  const { BCol, Picture, Size, Visible, Posn } = data?.Properties;
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -30,7 +30,14 @@ const Form = ({ data }) => {
 
   useEffect(() => {
     localStorage.setItem('current-focus', data.ID);
-  }, []);
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Size,
+        Posn,
+      })
+    );
+  }, [data]);
 
   useEffect(() => {
     setFormStyles(setStyle(data?.Properties, 'relative'));
@@ -38,6 +45,7 @@ const Form = ({ data }) => {
 
   return (
     <div
+      id={data?.ID}
       style={{
         ...formStyles,
         // width: '1000px',

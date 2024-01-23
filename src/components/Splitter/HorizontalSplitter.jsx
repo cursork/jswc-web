@@ -1,13 +1,32 @@
 import { useState, useEffect } from 'react';
-import { useAppData } from '../../hooks';
+import { useAppData, useResizeObserver } from '../../hooks';
 import { extractStringUntilSecondPeriod } from '../../utils';
 
 const HorizontalSplitter = ({ data }) => {
+  const { Size: SubformSize, Posn: SubFormPosn } = JSON.parse(
+    localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+  );
+
   const { Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
   const [position, setPosition] = useState({ top: Posn && Posn[0] });
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
-  let formHeight = 800;
+  const dimensions = useResizeObserver(
+    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+  );
+  const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
+
+  useEffect(() => {
+    if (!position) return;
+    if (!oldFormValues) return;
+    const calculateTop =
+      position && position.top && oldFormValues && oldFormValues[0]
+        ? (position.top / oldFormValues[0]) * dimensions.height
+        : 0;
+    setPosition({ top: calculateTop });
+  }, [dimensions]);
+
+  let formHeight = dimensions?.height;
   const emitEvent = Event && Event[0];
 
   useEffect(() => {

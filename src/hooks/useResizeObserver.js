@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 
 const useResizeObserver = (parent) => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [dimensions, setDimensions] = useState({
+    width: parent?.clientWidth,
+    height: parent?.clientHeight,
+  });
 
   useEffect(() => {
     if (!parent) {
