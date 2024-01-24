@@ -16,20 +16,47 @@ const VerticalSplitter = ({ data }) => {
   );
   const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
 
-  // useEffect(() => {
-  //   if (!position) return;
-  //   if (!oldFormValues) return;
-  //   const calculateLeft =
-  //     position && position.left && oldFormValues && oldFormValues[1]
-  //       ? (position.left / oldFormValues[1]) * dimensions.width
-  //       : 0;
-  //   setPosition({ left: calculateLeft });
-  // }, [dimensions]);
+  useEffect(() => {
+    if (!position) return;
+    if (!oldFormValues) return;
+    let calculateLeft =
+      position && position.left && oldFormValues && oldFormValues[1]
+        ? (position.left / oldFormValues[1]) * dimensions.width
+        : 0;
 
-  let formWidth = 800;
-  let formHeight = 800;
+    calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width - 3));
+
+    setPosition({ left: calculateLeft });
+    const rightWidth = dimensions.width - (calculateLeft + 3);
+    handleData(
+      {
+        ID: SplitObj1,
+        Properties: {
+          Posn: [0, 0],
+          Size: [dimensions.height, calculateLeft],
+          BCol: [255, 255, 255],
+        },
+      },
+      'WS'
+    );
+
+    handleData(
+      {
+        ID: SplitObj2,
+        Properties: {
+          Posn: [0, calculateLeft + 3],
+          Size: [dimensions?.height, rightWidth],
+          BCol: [255, 255, 255],
+        },
+      },
+      'WS'
+    );
+    reRender();
+  }, [dimensions]);
+
+  let formWidth = dimensions.width;
+  let formHeight = dimensions.height;
   const emitEvent = Event && Event[0];
-
   let verticalStyles = {
     width: '3px',
     height: '100%',

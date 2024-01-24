@@ -288,6 +288,30 @@ const App = () => {
             })
           );
         }
+        if (Type == 'Form') {
+          const supportedProperties = ['Posn', 'Size'];
+          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+          const serverPropertiesObj = {};
+          const Form = JSON.parse(localStorage.getItem(serverEvent.ID));
+          serverEvent.Properties.map((key) => {
+            return (serverPropertiesObj[key] = Form[key]);
+          });
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              Properties: serverPropertiesObj,
+              WGID: serverEvent.WGID,
+              ...(result && result.NotSupported && result.NotSupported.length > 0
+                ? { NotSupported: result.NotSupported }
+                : null),
+            },
+          });
+
+          console.log(event);
+          webSocket.send(event);
+          return;
+        }
 
         if (Type == 'Edit') {
           const { Text, Value } = Properties;
@@ -670,7 +694,7 @@ const App = () => {
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
-            console.log('Sarim');
+
             serverEvent.Properties.map((key) => {
               return (serverPropertiesObj[key] = Properties[key]);
             });
@@ -876,8 +900,6 @@ const App = () => {
 
         const appElement = getObjectById(dataRef.current, ID);
 
-        console.log({ appElement });
-
         if (Event && Event == 'Configure') {
           handleData(
             {
@@ -986,7 +1008,6 @@ const App = () => {
 
   return (
     <div ref={appRef}>
-     
       <AppDataContext.Provider
         value={{
           socketData,

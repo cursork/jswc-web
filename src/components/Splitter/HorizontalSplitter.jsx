@@ -24,9 +24,33 @@ const HorizontalSplitter = ({ data }) => {
         ? (position.top / oldFormValues[0]) * dimensions.height
         : 0;
     setPosition({ top: calculateTop });
+
+    handleData(
+      {
+        ID: SplitObj1,
+        Properties: {
+          Posn: [0, 0],
+          Size: [calculateTop, dimensions.width],
+        },
+      },
+      'WS'
+    );
+
+    handleData(
+      {
+        ID: SplitObj2,
+        Properties: {
+          Posn: [calculateTop + 3, 0],
+          Size: [dimensions.height - (calculateTop + 3), dimensions.width],
+        },
+      },
+      'WS'
+    );
+
+    reRender();
   }, [dimensions]);
 
-  let formHeight = dimensions?.height;
+  let formHeight = dimensions.height;
   const emitEvent = Event && Event[0];
 
   useEffect(() => {
