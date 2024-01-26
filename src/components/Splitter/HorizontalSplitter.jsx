@@ -17,43 +17,47 @@ const HorizontalSplitter = ({ data }) => {
   const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
 
   useEffect(() => {
-    if (!position) return;
-    if (!oldFormValues) return;
-    const calculateTop =
-      position && position.top && oldFormValues && oldFormValues[0]
-        ? (position.top / oldFormValues[0]) * dimensions.height
-        : 0;
-    setPosition({ top: calculateTop });
+    console.log('IN the Dimensions');
+    // if (!position) return;
+    // if (!oldFormValues) return;
+    // let calculateTop =
+    //   position && position.top && oldFormValues && oldFormValues[0]
+    //     ? (position.top / oldFormValues[0]) * dimensions.height
+    //     : 0;
+    // calculateTop = Math.round(calculateTop);
 
-    handleData(
-      {
-        ID: SplitObj1,
-        Properties: {
-          Posn: [0, 0],
-          Size: [calculateTop, dimensions.width],
-        },
-      },
-      'WS'
-    );
+    // handleData(
+    //   {
+    //     ID: SplitObj1,
+    //     Properties: {
+    //       Posn: [0, 0],
+    //       Size: [calculateTop, dimensions.width],
+    //     },
+    //   },
+    //   'WS'
+    // );
 
-    handleData(
-      {
-        ID: SplitObj2,
-        Properties: {
-          Posn: [calculateTop + 3, 0],
-          Size: [dimensions.height - (calculateTop + 3), dimensions.width],
-        },
-      },
-      'WS'
-    );
+    // handleData(
+    //   {
+    //     ID: SplitObj2,
+    //     Properties: {
+    //       Posn: [calculateTop + 3, 0],
+    //       Size: [dimensions.height - (calculateTop + 3), dimensions.width],
+    //     },
+    //   },
+    //   'WS'
+    // );
+    // setPosition({ top: calculateTop });
 
-    reRender();
+    // reRender();
   }, [dimensions]);
 
   let formHeight = dimensions.height;
   const emitEvent = Event && Event[0];
 
   useEffect(() => {
+    console.log('in Resizing');
+
     const handleMouseMove = (e) => {
       if (isResizing) {
         let newTop = e.clientY;
@@ -121,7 +125,7 @@ const HorizontalSplitter = ({ data }) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isResizing, position.top]);
+  }, [isResizing]);
 
   const handleMouseDown = (e) => {
     e.preventDefault();
