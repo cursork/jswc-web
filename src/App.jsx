@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
 import {
@@ -9,6 +9,7 @@ import {
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
+import { useWindowDimensions } from './hooks';
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
@@ -25,7 +26,7 @@ const App = () => {
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
   const [changeEvents, setChangeEvents] = useState([]);
-
+  
   const { reRender } = useForceRerender();
 
   const dataRef = useRef({});

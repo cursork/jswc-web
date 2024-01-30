@@ -1,6 +1,6 @@
 import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
-import { useAppData } from '../hooks';
+import { useAppData, useWindowDimensions } from '../hooks';
 import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
@@ -13,6 +13,7 @@ const Form = ({ data }) => {
   }
 
   const { reRender } = useForceRerender();
+  const { viewport } = useWindowDimensions();
 
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
