@@ -26,7 +26,7 @@ const App = () => {
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
   const [changeEvents, setChangeEvents] = useState([]);
-  
+
   const { reRender } = useForceRerender();
 
   const dataRef = useRef({});
@@ -115,6 +115,17 @@ const App = () => {
     const webSocket = webSocketRef.current;
     setSocket(webSocket);
     webSocket.onopen = () => {
+      let event = JSON.stringify({
+        DeviceCapabilities: {
+          ViewPort: [window.innerHeight, window.innerWidth],
+          ScreenSize: [window.screen.height, window.screen.width],
+          DPR: 1,
+          PPI: 200,
+        },
+      });
+
+      webSocket.send(event);
+
       webSocket.send(layout);
       // webSocket.send('Initialise');4
     };

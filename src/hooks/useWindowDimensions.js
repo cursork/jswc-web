@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useAppData from './useAppData';
 
 const useWindowDimensions = () => {
@@ -8,45 +8,44 @@ const useWindowDimensions = () => {
     height: window.innerHeight,
   });
 
+  const resizeTimeoutRef = useRef(null);
+
   useEffect(() => {
-    let event = JSON.stringify({
-      DeviceCapabilities: {
-        ViewPort: [window.innerHeight, window.innerWidth],
-        ScreenSize: [window.innerHeight, window.innerWidth],
-        DPR: 1,
-        PPI: 200,
-      },
-    });
-
-    socket.send(event);
-
     const handleResize = () => {
       const newViewport = {
         width: window.innerWidth,
         height: window.innerHeight,
       };
 
-      if (newViewport.width !== viewport.width || newViewport.height !== viewport.height) {
-        setViewport(newViewport);
+      setViewport(newViewport);
+
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+
+      resizeTimeoutRef.current = setTimeout(() => {
         let event = JSON.stringify({
           DeviceCapabilities: {
             ViewPort: [newViewport.height, newViewport.width],
-            ScreenSize: [newViewport.height, newViewport.width],
+            ScreenSize: [window.screen.height, window.screen.width],
             DPR: 1,
             PPI: 200,
           },
         });
-
+        console.log({ event });
         socket.send(event);
-      }
+      }, 1000);
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
     };
-  }, [viewport]);
+  }, []); // Only run the effect once during component mount
 
   return viewport;
 };

@@ -4,15 +4,6 @@ import { useAppData, useWindowDimensions } from '../hooks';
 import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
-  function useForceRerender() {
-    const [_state, setState] = useState(true);
-    const reRender = () => {
-      setState((prev) => !prev);
-    };
-    return { reRender };
-  }
-
-  const { reRender } = useForceRerender();
   const { viewport } = useWindowDimensions();
 
   const PORT = localStorage.getItem('PORT');
