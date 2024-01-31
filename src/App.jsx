@@ -942,7 +942,7 @@ const App = () => {
               Properties: {
                 ...appElement.Properties,
                 Posn: [Info[0], Info[1]],
-                Size: [Info[3], Info[2]],
+                Size: [Info[2], Info[3]],
               },
             },
             'WS'
