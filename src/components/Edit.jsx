@@ -273,7 +273,7 @@ const Edit = ({
         triggerCellChangedEvent();
       }
     } else {
-      if (initialValue != emitValue) triggerChangeEvent();
+      triggerChangeEvent();
     }
   };
 
