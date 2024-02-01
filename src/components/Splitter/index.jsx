@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 
 import VerticalSplitter from './VerticalSplitter';
 import HorizontalSplitter from './HorizontalSplitter';
-import { useAppData, useResizeObserver } from '../../hooks';
-import { extractStringUntilSecondPeriod } from '../../utils';
+import { useAppData } from '../../hooks';
 
 const Splitter = ({ data }) => {
   const { Style, Posn, SplitObj1, SplitObj2, Event } = data?.Properties;

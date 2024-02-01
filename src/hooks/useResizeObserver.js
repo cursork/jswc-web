@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import useAppData from './useAppData';
 
 const useResizeObserver = (parent) => {
-  const { handleData } = useAppData();
   const [dimensions, setDimensions] = useState({
     width: parent?.clientWidth,
     height: parent?.clientHeight,
