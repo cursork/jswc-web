@@ -20,9 +20,6 @@ const VerticalSplitter = ({ data }) => {
     if (!position) return;
     if (!oldFormValues) return;
 
-    console.log({ position });
-    console.log({ oldFormValues });
-
     let calculateLeft =
       position && position.left && oldFormValues && oldFormValues[1]
         ? (position.left / oldFormValues[1]) * dimensions.width
@@ -65,6 +62,8 @@ const VerticalSplitter = ({ data }) => {
         },
       })
     );
+
+    setoldFormValues([dimensions?.height, dimensions?.width]);
     reRender();
   }, [dimensions]);
 

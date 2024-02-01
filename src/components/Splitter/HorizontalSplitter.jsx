@@ -95,6 +95,7 @@ const HorizontalSplitter = ({ data }) => {
     }
 
     setOldHeight(dimensions.height);
+    setoldFormValues([dimensions?.height, dimensions?.width]);
 
     reRender();
   }, [dimensions]);
