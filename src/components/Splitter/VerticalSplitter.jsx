@@ -19,12 +19,17 @@ const VerticalSplitter = ({ data }) => {
   useEffect(() => {
     if (!position) return;
     if (!oldFormValues) return;
+
+    console.log({ position });
+    console.log({ oldFormValues });
+
     let calculateLeft =
       position && position.left && oldFormValues && oldFormValues[1]
         ? (position.left / oldFormValues[1]) * dimensions.width
         : 0;
-
     calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width - 3));
+
+    console.log({ calculateLeft });
 
     setPosition({ left: calculateLeft });
     const rightWidth = dimensions.width - (calculateLeft + 3);
@@ -52,17 +57,17 @@ const VerticalSplitter = ({ data }) => {
       'WS'
     );
 
-       localStorage.setItem(
-         data?.ID,
-         JSON.stringify({
-           Event: {
-             EventName: emitEvent && emitEvent[0],
-             ID: data.ID,
-             Info: [0, calculateLeft, formWidth, 3],
-             Size: [formHeight, 3],
-           },
-         })
-       );
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          EventName: emitEvent && emitEvent[0],
+          ID: data.ID,
+          Info: [0, calculateLeft, formWidth, 3],
+          Size: [formHeight, 3],
+        },
+      })
+    );
     reRender();
   }, [dimensions]);
 

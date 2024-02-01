@@ -364,7 +364,6 @@ const Edit = ({
   if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
       <NumericFormat
-    
         allowLeadingZeros={true}
         ref={inputRef}
         onClick={handleInputClick}
@@ -383,9 +382,10 @@ const Edit = ({
           textAlign: 'right',
         }}
         onValueChange={(value) => {
-          const { floatValue } = value;
-          setInputValue(floatValue);
-          setEmitValue(floatValue);
+          console.log({ value });
+          const { formattedValue } = value;
+          setInputValue(formattedValue);
+          setEmitValue(formattedValue);
         }}
         decimalScale={Decimal}
         value={inputValue}
