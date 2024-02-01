@@ -364,6 +364,8 @@ const Edit = ({
   if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
       <NumericFormat
+    
+        allowLeadingZeros={true}
         ref={inputRef}
         onClick={handleInputClick}
         id={data?.ID}
