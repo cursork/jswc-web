@@ -3,7 +3,7 @@ import { useAppData, useResizeObserver } from '../../hooks';
 import { extractStringUntilSecondPeriod } from '../../utils';
 
 const VerticalSplitter = ({ data }) => {
-  const { Size: SubformSize, Posn: SubFormPosn } = JSON.parse(
+  const { Size: SubformSize } = JSON.parse(
     localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
   );
 
@@ -73,6 +73,16 @@ const VerticalSplitter = ({ data }) => {
         let newLeft = e.clientX;
         newLeft = Math.max(0, Math.min(newLeft, formWidth - 3));
         const rightWidth = formWidth - (newLeft + 3);
+
+        localStorage.setItem(
+          SplitObj1,
+          JSON.stringify({ Posn: [0, 0], Size: [formHeight, newLeft] })
+        );
+
+        localStorage.setItem(
+          SplitObj2,
+          JSON.stringify({ Posn: [0, newLeft + 3], Size: [formHeight, rightWidth] })
+        );
 
         handleData(
           {

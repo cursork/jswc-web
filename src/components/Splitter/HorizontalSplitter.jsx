@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppData, useResizeObserver } from '../../hooks';
 import { extractStringUntilSecondPeriod } from '../../utils';
 
@@ -7,66 +7,94 @@ const HorizontalSplitter = ({ data }) => {
     localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
   );
 
-  const { Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
+  const { Posn, SplitObj1, SplitObj2, Event, Size } = data?.Properties;
   const [position, setPosition] = useState({ top: Posn && Posn[0] });
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
+
   const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
+  const [oldHeight, setOldHeight] = useState(Size && Size[0]);
 
   useEffect(() => {
     if (!position) return;
     if (!oldFormValues) return;
 
-    let calculateTop =
-      position && position.top && oldFormValues && oldFormValues[0]
-        ? (position.top / oldFormValues[0]) * dimensions.height
-        : 0;
-
-    calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height - 3));
-
-    calculateTop = Math.round((calculateTop / 10) * 10);
-    console.log('SpliObj1', { Size: [calculateTop, dimensions.width], Posn: [0, 0] });
-    console.log('SpliObj2', {
-      Size: [dimensions?.height - (calculateTop + 3), dimensions.width],
-      Posn: [calculateTop + 3, 0],
-    });
-
-    // let calculateTop =
-    //   position && position.top && oldFormValues && oldFormValues[0]
-    //     ? (position.top / oldFormValues[0]) * dimensions.height
-    //     : 0;
-    // console.log({ SubformSize });
-    // console.log({ oldFormValues });
-
-    // console.log({ calculateTop });
-
-    // calculateTop = Math.round(calculateTop);
-
-    handleData(
-      {
-        ID: SplitObj1,
-        Properties: {
-          Posn: [0, 0],
-          Size: [calculateTop, dimensions.width],
+    if (oldHeight == dimensions.height) {
+      const obj1 = JSON.parse(localStorage.getItem(SplitObj1));
+      const obj2 = JSON.parse(localStorage.getItem(SplitObj2));
+      if (!obj1 && !obj2) return;
+      const { Size: Size1, Posn: Posn1 } = obj1;
+      const { Size: Size2, Posn: Posn2 } = obj2;
+      localStorage.setItem(
+        SplitObj1,
+        JSON.stringify({
+          Size: [Math.round(Size1 && Size1[0]), dimensions.width],
+          Posn: Posn1,
+        })
+      );
+      localStorage.setItem(
+        SplitObj2,
+        JSON.stringify({
+          Size: [Math.round(Size2 && Size2[0]), dimensions.width],
+          Posn: Posn2,
+        })
+      );
+      handleData(
+        {
+          ID: SplitObj1,
+          Properties: {
+            Posn: Posn1,
+            Size: [Math.round(Size1 && Size1[0]), dimensions.width],
+          },
         },
-      },
-      'WS'
-    );
-
-    handleData(
-      {
-        ID: SplitObj2,
-        Properties: {
-          Posn: [calculateTop + 3, 0],
-          Size: [dimensions?.height - (calculateTop + 3), dimensions.width],
+        'WS'
+      );
+      handleData(
+        {
+          ID: SplitObj2,
+          Properties: {
+            Posn: Posn2,
+            Size: [Math.round(Size2 && Size2[0]), dimensions.width],
+          },
         },
-      },
-      'WS'
-    );
-    setPosition({ top: calculateTop });
+        'WS'
+      );
+    } else {
+      let calculateTop =
+        position && position.top && oldFormValues && oldFormValues[0]
+          ? (position.top / oldFormValues[0]) * dimensions.height
+          : 0;
+      calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height - 3));
+
+      setPosition({ top: calculateTop });
+
+      handleData(
+        {
+          ID: SplitObj1,
+          Properties: {
+            Posn: [0, 0],
+            Size: [calculateTop, dimensions.width],
+          },
+        },
+        'WS'
+      );
+
+      handleData(
+        {
+          ID: SplitObj2,
+          Properties: {
+            Posn: [calculateTop + 3, 0],
+            Size: [dimensions?.height - (calculateTop + 3), dimensions.width],
+          },
+        },
+        'WS'
+      );
+    }
+
+    setOldHeight(dimensions.height);
 
     reRender();
   }, [dimensions]);
