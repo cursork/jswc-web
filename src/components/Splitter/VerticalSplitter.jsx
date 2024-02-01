@@ -28,9 +28,6 @@ const VerticalSplitter = ({ data }) => {
         ? (position.left / oldFormValues[1]) * dimensions.width
         : 0;
     calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width - 3));
-
-    console.log({ calculateLeft });
-
     setPosition({ left: calculateLeft });
     const rightWidth = dimensions.width - (calculateLeft + 3);
     handleData(

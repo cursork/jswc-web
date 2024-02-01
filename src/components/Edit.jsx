@@ -192,7 +192,10 @@ const Edit = ({
       Event: {
         EventName: 'Change',
         ID: data?.ID,
-        Info: emitValue,
+        Info:
+          (FieldType && FieldType == 'LongNumeric') || FieldType == 'Numeric'
+            ? parseInt(emitValue)
+            : emitValue,
       },
     });
     localStorage.setItem(data?.ID, event2);
@@ -382,10 +385,9 @@ const Edit = ({
           textAlign: 'right',
         }}
         onValueChange={(value) => {
-          console.log({ value });
           const { formattedValue } = value;
-          setInputValue(formattedValue);
-          setEmitValue(formattedValue);
+          setInputValue(value.value);
+          setEmitValue(value.value);
         }}
         decimalScale={Decimal}
         value={inputValue}
