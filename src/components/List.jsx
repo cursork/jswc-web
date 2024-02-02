@@ -54,9 +54,30 @@ const List = ({ data }) => {
       {Items &&
         Items.map((item, index) =>
           selectedItem == items[index] ? (
-            <div style={{ ...selectedStyles, fontSize: '10px' }}>{item}</div>
+            <div
+              style={{
+                ...selectedStyles,
+                fontSize: '12px',
+                height: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '1px',
+              }}
+            >
+              {item}
+            </div>
           ) : (
-            <div onClick={() => handleClick(index)} style={{ cursor: 'pointer', fontSize: '10px' }}>
+            <div
+              onClick={() => handleClick(index)}
+              style={{
+                cursor: 'pointer',
+                fontSize: '12px',
+                height: '14px',
+                padding: '1px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               {item}
             </div>
           )
