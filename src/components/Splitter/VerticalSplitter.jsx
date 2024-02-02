@@ -57,7 +57,7 @@ const VerticalSplitter = ({ data }) => {
         Event: {
           EventName: emitEvent && emitEvent[0],
           ID: data.ID,
-          Info: [0, calculateLeft, formWidth, 3],
+          Info: [0, calculateLeft],
           Size: [formHeight, 3],
         },
       })
