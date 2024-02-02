@@ -142,8 +142,8 @@ const HorizontalSplitter = ({ data }) => {
             Event: {
               EventName: emitEvent && emitEvent[0],
               ID: data.ID,
-              Info: [newTop, 0, 3, formHeight],
-              Size: [3, 800],
+              Info: [newTop, 0],
+              Size: [3, formHeight],
             },
           })
         );
