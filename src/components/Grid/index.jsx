@@ -60,6 +60,7 @@ const Grid = ({ data }) => {
     FormatString,
     VScroll = 0,
     HScroll = 0,
+    Attach,
   } = data?.Properties;
 
   const [height, setHeight] = useState(Size[0]);
@@ -92,6 +93,7 @@ const Grid = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
+    if (!Attach) return;
     setWidth(dimensions?.width - 73);
     setHeight(dimensions?.height - 73);
   }, [dimensions]);
