@@ -1,15 +1,23 @@
 import { setStyle, extractStringUntilSecondPeriod } from '../utils';
 
-import { useAppData } from '../hooks';
+import { useAppData, useResizeObserver } from '../hooks';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
 const Combo = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
+  const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
+
   const { socket, handleData, findDesiredData } = useAppData();
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems, Event, Visible } = data?.Properties;
+  const { Items, SelItems, Event, Visible, Posn } = data?.Properties;
+  const dimensions = useResizeObserver(
+    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+  );
 
   const [comboInput, setComboInput] = useState('+');
+  const [position, setPosition] = useState({ top: Posn && Posn[0], left: Posn && Posn[1] });
+
+  const [parentOldDimensions, setParentOldDimensions] = useState(parentSize?.Size);
 
   useEffect(() => {
     const index = SelItems?.findIndex((element) => element == 1);
@@ -83,8 +91,39 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     }
   };
 
+  useEffect(() => {
+    if (!position) return;
+    if (!parentOldDimensions) return;
+
+    let calculateLeft =
+      position && position.left && parentOldDimensions && parentOldDimensions[1]
+        ? (position.left / parentOldDimensions[1]) * dimensions.width
+        : 0;
+
+    calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width));
+
+    let calculateTop =
+      position && position.top && parentOldDimensions && parentOldDimensions[0]
+        ? (position.top / parentOldDimensions[0]) * dimensions.height
+        : 0;
+
+    calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
+
+    setPosition({ top: calculateTop, left: calculateLeft });
+
+    setParentOldDimensions([dimensions?.height, dimensions?.width]);
+  }, [dimensions]);
+
   return (
-    <div style={{ ...styles, borderColor: '#ccc', display: Visible == 0 ? 'none' : 'block' }}>
+    <div
+      style={{
+        ...styles,
+        borderColor: '#ccc',
+        display: Visible == 0 ? 'none' : 'block',
+        top: position?.top,
+        left: position?.left,
+      }}
+    >
       <select
         id={data?.ID}
         value={value ? value : comboInput}

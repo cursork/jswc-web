@@ -1,5 +1,5 @@
-import { setStyle, extractStringUntilSecondPeriod, getElementPosition } from '../utils';
-import { useAppData } from '../hooks';
+import { setStyle, extractStringUntilSecondPeriod } from '../utils';
+import { useAppData, useResizeObserver } from '../hooks';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { getObjectById, getImageStyles } from '../utils';
@@ -15,10 +15,16 @@ const Button = ({
 }) => {
   const PORT = localStorage.getItem('PORT');
 
+  const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
+
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData } = useAppData();
-  const { Picture, State, Visible, Event, Caption, Align } = data?.Properties;
+  const { Picture, State, Visible, Event, Caption, Align, Posn } = data?.Properties;
   const inputRef = useRef();
+
+  const dimensions = useResizeObserver(
+    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+  );
 
   const [checkInput, setCheckInput] = useState();
 
@@ -35,6 +41,8 @@ const Button = ({
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
 
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  const [position, setPosition] = useState({ top: Posn && Posn[0], left: Posn && Posn[1] });
+  const [parentOldDimensions, setParentOldDimensions] = useState(parentSize?.Size);
 
   const decideInput = () => {
     if (location == 'inGrid') {
@@ -278,6 +286,29 @@ const Button = ({
     );
   }
 
+  useEffect(() => {
+    if (!position) return;
+    if (!parentOldDimensions) return;
+
+    let calculateLeft =
+      position && position.left && parentOldDimensions && parentOldDimensions[1]
+        ? (position.left / parentOldDimensions[1]) * dimensions.width
+        : 0;
+
+    calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width));
+
+    let calculateTop =
+      position && position.top && parentOldDimensions && parentOldDimensions[0]
+        ? (position.top / parentOldDimensions[0]) * dimensions.height
+        : 0;
+
+    calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
+
+    setPosition({ top: calculateTop, left: calculateLeft });
+
+    setParentOldDimensions([dimensions?.height, dimensions?.width]);
+  }, [dimensions]);
+
   return (
     <div
       id={data?.ID}
@@ -315,6 +346,8 @@ const Button = ({
         cursor: 'pointer',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'flex',
+        top: position?.top,
+        left: position?.left,
       }}
     >
       {ImageData ? <div style={{ ...imageStyles, width: '100%', height: '100%' }}></div> : null}
