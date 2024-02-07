@@ -111,15 +111,15 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
 
     setPosition({ top: calculateTop, left: calculateLeft });
 
-    handleData(
-      {
-        ID: data?.ID,
-        Properties: {
-          Posn: [calculateTop, calculateLeft],
-        },
-      },
-      'WS'
-    );
+    // handleData(
+    //   {
+    //     ID: data?.ID,
+    //     Properties: {
+    //       Posn: [calculateTop, calculateLeft],
+    //     },
+    //   },
+    //   'WS'
+    // );
 
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
   }, [dimensions]);
