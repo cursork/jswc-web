@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 const Combo = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
   const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
 
-  const { socket, handleData, findDesiredData } = useAppData();
+  const { socket, handleData, findDesiredData, reRender } = useAppData();
   const styles = setStyle(data?.Properties);
   const { Items, SelItems, Event, Visible, Posn } = data?.Properties;
   const dimensions = useResizeObserver(
@@ -110,6 +110,16 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
 
     setPosition({ top: calculateTop, left: calculateLeft });
+
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          Posn: [calculateTop, calculateLeft],
+        },
+      },
+      'WS'
+    );
 
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
   }, [dimensions]);
