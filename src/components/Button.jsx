@@ -111,6 +111,8 @@ const Button = ({
         EventName: 'Select',
         ID: data?.ID,
         Value: value ? 1 : 0,
+        Posn: [position?.top, position?.left],
+        Size: [dimensions?.height, dimensions?.width],
       },
     });
     localStorage.setItem(data?.ID, triggerEvent);
@@ -306,19 +308,46 @@ const Button = ({
 
     setPosition({ top: calculateTop, left: calculateLeft });
 
-    // handleData(
-    //   {
-    //     ID: data?.ID,
-    //     Properties: {
-    //       Posn: [calculateTop, calculateLeft],
-    //     },
-    //   },
-    //   'WS'
-    // );
-
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          Posn: [calculateTop, calculateLeft],
+        },
+      },
+      'WS'
+    );
 
-    // reRender();
+    if (!localStorage.getItem(data?.ID)) {
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Value: 0,
+          Posn: [calculateTop, calculateLeft],
+          Size: [dimensions?.height, dimensions?.width],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    } else {
+      const { Event } = JSON.parse(localStorage.getItem(data?.ID));
+      const { Value } = Event;
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Value,
+          Posn: [calculateTop, calculateLeft],
+          Size: [dimensions?.height, dimensions?.width],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    }
+    setParentOldDimensions([dimensions?.height, dimensions?.width]);
+    reRender();
   }, [dimensions]);
 
   return (

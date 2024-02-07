@@ -794,72 +794,55 @@ const App = () => {
 
         if (Type == 'Button') {
           const { State } = Properties;
-          const supportedProperties = ['State'];
+          const supportedProperties = ['State', 'Posn', 'Size'];
 
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: {
-                    State: State ? State : 0,
-                  },
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
-            return webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: {
-                    State: State ? State : 0,
-                  },
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
+            const serverPropertiesObj = {};
+            serverEvent.Properties.map((key) => {
+              return (serverPropertiesObj[key] =
+                key == 'State' ? (State ? State : 0) : Properties[key]);
+            });
+
+            const event = JSON.stringify({
+              WG: {
+                ID: serverEvent.ID,
+                Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+                ...(result && result.NotSupported && result.NotSupported.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
+            });
+
+            console.log(event);
+            return webSocket.send(event);
           }
 
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
           const { Value } = Event;
 
-          console.log(
-            JSON.stringify({
-              WG: {
-                ID: serverEvent.ID,
-                Properties: {
-                  State: Value,
-                },
-                WGID: serverEvent.WGID,
-                ...(result && result.NotSupported && result.NotSupported.length > 0
-                  ? { NotSupported: result.NotSupported }
-                  : null),
-              },
-            })
-          );
-          return webSocket.send(
-            JSON.stringify({
-              WG: {
-                ID: serverEvent.ID,
-                Properties: {
-                  State: Value,
-                },
-                WGID: serverEvent.WGID,
-                ...(result && result.NotSupported && result.NotSupported.length > 0
-                  ? { NotSupported: result.NotSupported }
-                  : null),
-              },
-            })
-          );
+          const serverPropertiesObj = {};
+
+          serverEvent.Properties.map((key) => {
+            return (serverPropertiesObj[key] = key == 'State' ? Value : Event[key]);
+          });
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              Properties: serverPropertiesObj,
+              WGID: serverEvent.WGID,
+              ...(result && result.NotSupported && result.NotSupported.length > 0
+                ? { NotSupported: result.NotSupported }
+                : null),
+            },
+          });
+
+          console.log(event);
+
+          return webSocket.send(event);
         }
 
         if (Type == 'TreeView') {
