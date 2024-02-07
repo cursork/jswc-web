@@ -432,7 +432,7 @@ const App = () => {
 
         if (Type == 'Combo') {
           const { SelItems, Items } = Properties;
-          const supportedProperties = ['Text', 'SelItems'];
+          const supportedProperties = ['Text', 'SelItems', 'Posn', 'Size'];
 
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
@@ -467,7 +467,7 @@ const App = () => {
             );
           }
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
-          const { Info } = Event;
+          const { Info, Size, Posn } = Event;
 
           SelItems.fill(0);
           let indexToChange = Info - 1;
@@ -476,7 +476,8 @@ const App = () => {
           const serverPropertiesObj = {};
 
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] = key == 'SelItems' ? SelItems : Items[indexToChange]);
+            return (serverPropertiesObj[key] =
+              key == 'SelItems' ? SelItems : key == 'Items' ? Items[indexToChange] : Event[key]);
           });
 
           console.log(

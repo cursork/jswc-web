@@ -71,8 +71,11 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         EventName: 'Select',
         ID: data?.ID,
         Info: parseInt(value + 1),
+        Posn: [position?.top, position?.left],
+        Size: [dimensions?.height, dimensions?.width],
       },
     });
+
     localStorage.setItem(data?.ID, triggerEvent);
     const exists = Event && Event.some((item) => item[0] === 'Select');
     if (!exists) return;
@@ -111,17 +114,46 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
 
     setPosition({ top: calculateTop, left: calculateLeft });
 
-    // handleData(
-    //   {
-    //     ID: data?.ID,
-    //     Properties: {
-    //       Posn: [calculateTop, calculateLeft],
-    //     },
-    //   },
-    //   'WS'
-    // );
-
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          Posn: [calculateTop, calculateLeft],
+        },
+      },
+      'WS'
+    );
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
+
+    if (!localStorage.getItem(data?.ID)) {
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Info: 0,
+          Posn: [calculateTop, calculateLeft],
+          Size: [dimensions?.height, dimensions?.width],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    } else {
+      const { Event } = JSON.parse(localStorage.getItem(data?.ID));
+      const { Info } = Event;
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Info,
+          Posn: [calculateTop, calculateLeft],
+          Size: [dimensions?.height, dimensions?.width],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    }
+
+    reRender();
   }, [dimensions]);
 
   return (
