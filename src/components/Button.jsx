@@ -18,7 +18,7 @@ const Button = ({
   const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
 
   const styles = setStyle(data?.Properties);
-  const { socket, findDesiredData, dataRef, handleData } = useAppData();
+  const { socket, findDesiredData, dataRef, handleData, reRender } = useAppData();
   const { Picture, State, Visible, Event, Caption, Align, Posn } = data?.Properties;
   const inputRef = useRef();
 
@@ -306,7 +306,19 @@ const Button = ({
 
     setPosition({ top: calculateTop, left: calculateLeft });
 
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          Posn: [calculateTop, calculateLeft],
+        },
+      },
+      'WS'
+    );
+
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
+
+    reRender();
   }, [dimensions]);
 
   return (
