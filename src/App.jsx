@@ -109,7 +109,7 @@ const App = () => {
 
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
-
+    let zoom = Math.round(window.devicePixelRatio * 100);
     webSocketRef.current = new WebSocket(`ws://localhost:${runningPort}/`);
 
     const webSocket = webSocketRef.current;
@@ -119,7 +119,7 @@ const App = () => {
         DeviceCapabilities: {
           ViewPort: [window.innerHeight, window.innerWidth],
           ScreenSize: [window.screen.height, window.screen.width],
-          DPR: 1,
+          DPR: zoom / 100,
           PPI: 200,
         },
       });
