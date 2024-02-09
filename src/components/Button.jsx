@@ -19,7 +19,7 @@ const Button = ({
 
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData, reRender } = useAppData();
-  const { Picture, State, Visible, Event, Caption, Align, Posn } = data?.Properties;
+  const { Picture, State, Visible, Event, Caption, Align, Posn, Size } = data?.Properties;
   const inputRef = useRef();
 
   const dimensions = useResizeObserver(
@@ -112,7 +112,7 @@ const Button = ({
         ID: data?.ID,
         Value: value ? 1 : 0,
         Posn: [position?.top, position?.left],
-        Size: [dimensions?.height, dimensions?.width],
+        Size: [Size && Size[0], Size && Size[1]],
       },
     });
     localStorage.setItem(data?.ID, triggerEvent);
@@ -326,7 +326,7 @@ const Button = ({
           ID: data?.ID,
           Value: 0,
           Posn: [calculateTop, calculateLeft],
-          Size: [dimensions?.height, dimensions?.width],
+          Size: [Size && Size[0], Size && Size[1]],
         },
       });
 
@@ -340,7 +340,7 @@ const Button = ({
           ID: data?.ID,
           Value,
           Posn: [calculateTop, calculateLeft],
-          Size: [dimensions?.height, dimensions?.width],
+          Size: [Size && Size[0], Size && Size[1]],
         },
       });
 

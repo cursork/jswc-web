@@ -9,7 +9,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
 
   const { socket, handleData, findDesiredData, reRender } = useAppData();
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems, Event, Visible, Posn } = data?.Properties;
+  const { Items, SelItems, Event, Visible, Posn, Size } = data?.Properties;
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
@@ -72,7 +72,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         ID: data?.ID,
         Info: parseInt(value + 1),
         Posn: [position?.top, position?.left],
-        Size: [dimensions?.height, dimensions?.width],
+        Size: [Size && Size[0], Size && Size[1]],
       },
     });
 
@@ -132,7 +132,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
           ID: data?.ID,
           Info: 0,
           Posn: [calculateTop, calculateLeft],
-          Size: [dimensions?.height, dimensions?.width],
+          Size: [Size && Size[0], Size && Size[1]],
         },
       });
 
@@ -146,7 +146,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
           ID: data?.ID,
           Info,
           Posn: [calculateTop, calculateLeft],
-          Size: [dimensions?.height, dimensions?.width],
+          Size: [Size && Size[0], Size && Size[1]],
         },
       });
 
