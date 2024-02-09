@@ -933,6 +933,17 @@ const App = () => {
           );
 
           return;
+        } else if (Event && Event == 'ItemDown') {
+          const event = JSON.stringify({
+            Event: {
+              EventName: Event,
+              ID,
+              Info,
+            },
+          });
+          console.log(event);
+          webSocket.send(event);
+          return;
         }
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
