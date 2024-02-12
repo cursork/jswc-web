@@ -69,14 +69,14 @@ const HorizontalSplitter = ({ data }) => {
           : 0;
       calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height - 3));
 
-      setPosition({ top: calculateTop });
+      setPosition({ top: Math.round(calculateTop) });
 
       handleData(
         {
           ID: SplitObj1,
           Properties: {
             Posn: [0, 0],
-            Size: [calculateTop, dimensions.width],
+            Size: [Math.round(calculateTop), dimensions.width],
           },
         },
         'WS'
@@ -86,8 +86,8 @@ const HorizontalSplitter = ({ data }) => {
         {
           ID: SplitObj2,
           Properties: {
-            Posn: [calculateTop + 3, 0],
-            Size: [dimensions?.height - (calculateTop + 3), dimensions.width],
+            Posn: [Math.round(calculateTop + 3), 0],
+            Size: [Math.round(dimensions?.height - (calculateTop + 3)), dimensions.width],
           },
         },
         'WS'

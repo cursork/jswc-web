@@ -32,7 +32,7 @@ const VerticalSplitter = ({ data }) => {
         ID: SplitObj1,
         Properties: {
           Posn: [0, 0],
-          Size: [dimensions.height, calculateLeft],
+          Size: [dimensions.height, Math.round(calculateLeft)],
           BCol: [255, 255, 255],
         },
       },
@@ -43,8 +43,8 @@ const VerticalSplitter = ({ data }) => {
       {
         ID: SplitObj2,
         Properties: {
-          Posn: [0, calculateLeft + 3],
-          Size: [dimensions?.height, rightWidth],
+          Posn: [0, Math.round(calculateLeft + 3)],
+          Size: [dimensions?.height, Math.round(rightWidth)],
           BCol: [255, 255, 255],
         },
       },
@@ -57,7 +57,7 @@ const VerticalSplitter = ({ data }) => {
         Event: {
           EventName: emitEvent && emitEvent[0],
           ID: data.ID,
-          Info: [0, calculateLeft],
+          Info: [0, Math.round(calculateLeft)],
           Size: [formHeight, 3],
         },
       })
