@@ -21,7 +21,7 @@ const ListView = ({ data }) => {
         },
       })
     );
-  }, []);
+  }, [data?.Properties]);
 
   const handleListViewEvent = (index, shiftState, eventName) => {
     const event = JSON.stringify({
