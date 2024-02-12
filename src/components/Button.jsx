@@ -306,14 +306,14 @@ const Button = ({
 
     calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
 
-    setPosition({ top: calculateTop, left: calculateLeft });
+    setPosition({ top: Math.round(calculateTop), left: Math.round(calculateLeft) });
 
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
     handleData(
       {
         ID: data?.ID,
         Properties: {
-          Posn: [calculateTop, calculateLeft],
+          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
         },
       },
       'WS'
@@ -325,7 +325,7 @@ const Button = ({
           EventName: 'Select',
           ID: data?.ID,
           Value: 0,
-          Posn: [calculateTop, calculateLeft],
+          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
           Size: [Size && Size[0], Size && Size[1]],
         },
       });
@@ -339,7 +339,7 @@ const Button = ({
           EventName: 'Select',
           ID: data?.ID,
           Value,
-          Posn: [calculateTop, calculateLeft],
+          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
           Size: [Size && Size[0], Size && Size[1]],
         },
       });

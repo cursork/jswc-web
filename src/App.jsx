@@ -933,7 +933,7 @@ const App = () => {
           );
 
           return;
-        } else if (Event && Event == 'ItemDown') {
+        } else if ((Event && Event == 'ItemDown') || (Event && Event == 'GotFocus')) {
           const event = JSON.stringify({
             Event: {
               EventName: Event,
@@ -945,6 +945,7 @@ const App = () => {
           webSocket.send(event);
           return;
         }
+
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
       } else if (keys[0] == 'EX') {
