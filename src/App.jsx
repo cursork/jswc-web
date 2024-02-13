@@ -9,7 +9,6 @@ import {
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
-import { useWindowDimensions } from './hooks';
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
