@@ -469,9 +469,11 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info, Size, Posn } = Event;
 
-          SelItems.fill(0);
-          let indexToChange = Info - 1;
-          SelItems[indexToChange] = 1;
+          if (SelItems) {
+            SelItems?.fill(0);
+            let indexToChange = Info - 1;
+            SelItems[indexToChange] = 1;
+          }
 
           const serverPropertiesObj = {};
 
@@ -479,6 +481,8 @@ const App = () => {
             return (serverPropertiesObj[key] =
               key == 'SelItems' ? SelItems : key == 'Items' ? Items[indexToChange] : Event[key]);
           });
+
+          console.log({ serverPropertiesObj });
 
           console.log(
             JSON.stringify({
