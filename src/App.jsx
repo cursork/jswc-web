@@ -482,8 +482,6 @@ const App = () => {
               key == 'SelItems' ? SelItems : key == 'Items' ? Items[indexToChange] : Event[key]);
           });
 
-          console.log({ serverPropertiesObj });
-
           console.log(
             JSON.stringify({
               WG: {
