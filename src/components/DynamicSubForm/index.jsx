@@ -11,15 +11,12 @@ import SelectComponent from '../SelectComponent';
 import { useAppData } from '../../hooks';
 
 const SubForm = ({ data }) => {
-  const parent = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
-
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData } = useAppData();
-  const { Size, Posn, Picture, Visible, BCol } = data?.Properties;
+  const { Size, Posn, Picture, Visible, BCol, FlexDirection, JustifyContent, Display } =
+    data?.Properties;
 
   const observedDiv = useRef(null);
-
-  const [oldFormValues, setoldFormValues] = useState(parent && parent?.Size);
 
   const styles = setStyle(data?.Properties);
   const updatedData = excludeKeys(data);
@@ -50,8 +47,15 @@ const SubForm = ({ data }) => {
         top: Posn && Posn[0],
         left: Posn && Posn[1],
         position: 'absolute',
-        display: Visible == 0 ? 'none' : 'block',
+        display:
+          Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Display') ? Display : 'block',
         background: BCol && rgbColor(BCol),
+        ...(data?.Properties.hasOwnProperty('FlexDirection')
+          ? { flexDirection: FlexDirection }
+          : {}),
+        ...(data?.Properties.hasOwnProperty('JustifyContent')
+          ? { justifyContent: JustifyContent }
+          : {}),
       }}
       ref={observedDiv}
     >

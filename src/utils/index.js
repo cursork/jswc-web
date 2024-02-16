@@ -3,7 +3,8 @@ export * from './deleteForm';
 
 export const setStyle = (Properties, position = 'absolute', background) => {
   return {
-    position: Properties?.Posn ? 'absolute' : 'relative',
+    ...(Properties?.hasOwnProperty('Posn') ? { position: 'absolute' } : { position: 'relative' }),
+    // position: Properties?.Posn ? 'absolute' : 'relative',
     height: Properties?.Size && Properties?.Size[0],
     width: Properties?.Size && Properties?.Size[1],
     top: Properties?.Posn && Properties?.Posn[0],
@@ -86,7 +87,7 @@ export const getObjectById = (jsonData, targetId) => {
     if (typeof node === 'object') {
       if (node.ID === idToFind) {
         return node;
-      } 
+      }
       for (const key in node) {
         const result = searchObject(node[key], idToFind);
         if (result) {
@@ -171,8 +172,6 @@ export const rgbColor = (rgbArray) => {
 export const calculateDateAfterDays = (days) => {
   // Start date: 1900-1-1
   var startDate = new Date(1900, 0, 1);
-
-  
 
   // Calculate the target date
   var targetDate = new Date(startDate?.getTime() + days * 24 * 60 * 60 * 1000);

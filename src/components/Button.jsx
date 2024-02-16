@@ -313,7 +313,9 @@ const Button = ({
       {
         ID: data?.ID,
         Properties: {
-          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
+          ...(data?.Properties?.hasOwnProperty('Posn')
+            ? { Posn: [Math.round(calculateTop), Math.round(calculateLeft)] }
+            : {}),
         },
       },
       'WS'
@@ -387,8 +389,10 @@ const Button = ({
         cursor: 'pointer',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'flex',
-        top: position?.top,
-        left: position?.left,
+
+        ...(data?.Properties?.hasOwnProperty('Posn') ? { top: position?.top } : {}),
+        ...(data?.Properties?.hasOwnProperty('Posn') ? { left: position?.left } : {}),
+        // left: position?.left,
       }}
     >
       {ImageData ? <div style={{ ...imageStyles, width: '100%', height: '100%' }}></div> : null}
