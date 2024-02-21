@@ -6,15 +6,22 @@ import {
   getImageStyles,
   rgbColor,
   extractStringUntilSecondPeriod,
+  getObjectById,
 } from '../../utils';
 import SelectComponent from '../SelectComponent';
 import { useAppData } from '../../hooks';
 
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const { findDesiredData } = useAppData();
+  const { findDesiredData, dataRef } = useAppData();
   const { Size, Posn, Picture, Visible, BCol, FlexDirection, JustifyContent, Display } =
     data?.Properties;
+
+  // const parentId = extractStringUntilSecondPeriod(data?.ID);
+
+  // const parentObj = JSON.parse(getObjectById(dataRef.current, parentId));
+
+  // const { Flex = 0 } = parentObj?.Properties;
 
   const observedDiv = useRef(null);
 

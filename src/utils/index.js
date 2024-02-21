@@ -1,7 +1,7 @@
 export * from './imageStyles';
 export * from './deleteForm';
 
-export const setStyle = (Properties, position = 'absolute', background) => {
+export const setStyle = (Properties, position = 'absolute', Flex = 0) => {
   return {
     ...(Properties?.hasOwnProperty('Posn') ? { position: 'absolute' } : { position: 'relative' }),
     // position: Properties?.Posn ? 'absolute' : 'relative',
