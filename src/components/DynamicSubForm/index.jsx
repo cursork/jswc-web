@@ -1,38 +1,37 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
-import {
-  excludeKeys,
-  setStyle,
-  getImageStyles,
-  rgbColor,
-  extractStringUntilSecondPeriod,
-  getObjectById,
-} from '../../utils';
+import { excludeKeys, setStyle, getImageStyles, rgbColor, parseFlexStyles } from '../../utils';
 import SelectComponent from '../SelectComponent';
 import { useAppData } from '../../hooks';
 
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData, dataRef } = useAppData();
-  const { Size, Posn, Picture, Visible, BCol, FlexDirection, JustifyContent, Display } =
-    data?.Properties;
-
-  // const parentId = extractStringUntilSecondPeriod(data?.ID);
-
-  // const parentObj = JSON.parse(getObjectById(dataRef.current, parentId));
-
-  // const { Flex = 0 } = parentObj?.Properties;
+  const {
+    Size,
+    Posn,
+    Picture,
+    Visible,
+    BCol,
+    FlexDirection,
+    JustifyContent,
+    Display,
+    Flex = 0,
+    Styles,
+  } = data?.Properties;
 
   const observedDiv = useRef(null);
+  const styles = setStyle(data?.Properties, 'absolute', Flex);
 
-  const styles = setStyle(data?.Properties);
+  const flexStyles = parseFlexStyles(Styles);
+
   const updatedData = excludeKeys(data);
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
-  let updatedStyles = { ...styles, ...imageStyles };
+  let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
 
   useEffect(() => {
     localStorage.setItem(
@@ -48,21 +47,14 @@ const SubForm = ({ data }) => {
     <div
       id={data.ID}
       style={{
-        ...updatedStyles,
-        height: Size && Size[0],
-        width: Size && Size[1],
-        top: Posn && Posn[0],
-        left: Posn && Posn[1],
-        position: 'absolute',
-        display:
-          Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Display') ? Display : 'block',
+        // height: Size && Size[0],
+        // width: Size && Size[1],
+        // top: Posn && Posn[0],
+        // left: Posn && Posn[1],
+        // position: 'absolute',
+        display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
         background: BCol && rgbColor(BCol),
-        ...(data?.Properties.hasOwnProperty('FlexDirection')
-          ? { flexDirection: FlexDirection }
-          : {}),
-        ...(data?.Properties.hasOwnProperty('JustifyContent')
-          ? { justifyContent: JustifyContent }
-          : {}),
+        ...updatedStyles,
       }}
       ref={observedDiv}
     >
