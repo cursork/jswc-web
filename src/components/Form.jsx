@@ -12,7 +12,7 @@ const Form = ({ data }) => {
 
   const styles = setStyle(data?.Properties, 'relative');
 
-  const { BCol, Picture, Size, Visible, Posn } = data?.Properties;
+  const { BCol, Picture, Size, Visible, Posn, Flex = 0 } = data?.Properties;
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -32,7 +32,7 @@ const Form = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
-    setFormStyles(setStyle(data?.Properties, 'relative'));
+    setFormStyles(setStyle(data?.Properties, 'relative', Flex));
   }, [data.Properties]);
 
   return (

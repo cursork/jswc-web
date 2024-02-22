@@ -1,7 +1,22 @@
 export * from './imageStyles';
 export * from './deleteForm';
+export * from './flexStyles';
 
 export const setStyle = (Properties, position = 'absolute', Flex = 0) => {
+  if (Flex == 2) {
+    return {
+      display: 'flex',
+      flex: 1,
+      height: '100vh',
+      flexDirection: 'column',
+    };
+  }
+  if (Flex == 1) {
+    return {
+      display: 'flex',
+    };
+  }
+
   return {
     ...(Properties?.hasOwnProperty('Posn') ? { position: 'absolute' } : { position: 'relative' }),
     // position: Properties?.Posn ? 'absolute' : 'relative',
