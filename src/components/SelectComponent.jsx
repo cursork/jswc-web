@@ -138,7 +138,7 @@ const SelectComponent = ({
     return <SubForm data={data} />;
   }
 
-  // if (data?.Properties?.Type == 'Text') return <Text data={data} />;
+  if (data?.Properties?.Type == 'Text') return <Text data={data} />;
 
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
   if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
