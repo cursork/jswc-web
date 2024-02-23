@@ -4,19 +4,33 @@ import { useAppData, useWindowDimensions } from '../hooks';
 import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
-  const { viewport } = useWindowDimensions();
-
   const PORT = localStorage.getItem('PORT');
-  const { findDesiredData, handleData, reRender } = useAppData();
+  const { findDesiredData, socket } = useAppData();
   const [formStyles, setFormStyles] = useState({});
+
+  const dimensions = useResizeObserver(document.getElementById(data?.ID));
 
   const styles = setStyle(data?.Properties, 'relative');
 
-  const { BCol, Picture, Size, Visible, Posn, Flex = 0 } = data?.Properties;
+  const { BCol, Picture, Size, Visible, Posn, Flex = 0, Event } = data?.Properties;
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
   let imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+
+  const sendConfigureEvent = () => {
+    const event = JSON.stringify({
+      Event: {
+        EventName: 'Configure',
+        ID: data?.ID,
+        Info: [Posn && Posn[0], Posn && Posn[1], dimensions.height, dimensions?.width],
+      },
+    });
+    const exists = Event && Event.some((item) => item[0] === 'Configure');
+    if (!exists) return;
+    console.log(event);
+    socket.send(event);
+  };
 
   // Set the current Focus
   useEffect(() => {
@@ -56,6 +70,10 @@ const Form = ({ data }) => {
       )
     );
   }, [data]);
+
+  useEffect(() => {
+    sendConfigureEvent();
+  }, [dimensions]);
 
   return (
     <div
