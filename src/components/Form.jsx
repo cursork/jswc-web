@@ -1,6 +1,6 @@
 import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
-import { useAppData, useWindowDimensions } from '../hooks';
+import { useAppData, useResizeObserver } from '../hooks';
 import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
