@@ -389,7 +389,6 @@ const Button = ({
         cursor: 'pointer',
         zIndex: 1,
         display: Visible == 0 ? 'none' : 'flex',
-
         ...(data?.Properties?.hasOwnProperty('Posn') ? { top: position?.top } : {}),
         ...(data?.Properties?.hasOwnProperty('Posn') ? { left: position?.left } : {}),
         // left: position?.left,

@@ -27,8 +27,8 @@ const Form = ({ data }) => {
       },
     });
     const exists = Event && Event.some((item) => item[0] === 'Configure');
-    if (!exists) return;
     console.log(event);
+    if (!exists) return;
     socket.send(event);
   };
 
