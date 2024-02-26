@@ -10,9 +10,5 @@ export const parseFlexStyles = (inputString) => {
     stylesObject[camelCaseProperty] = isNaN(value) ? value : parseFloat(value);
   });
 
-
-  console.log({inputString})
-  console.log({stylesObject})
-
   return stylesObject;
 };

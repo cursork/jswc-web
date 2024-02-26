@@ -23,7 +23,7 @@ const Form = ({ data }) => {
       Event: {
         EventName: 'Configure',
         ID: data?.ID,
-        Info: [Posn && Posn[0], Posn && Posn[1], dimensions.height, dimensions?.width],
+        Info: [Posn && Posn[0], Posn && Posn[1], Size && Size[0], Size && Size[1]],
       },
     });
     const exists = Event && Event.some((item) => item[0] === 'Configure');
