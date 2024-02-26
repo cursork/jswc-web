@@ -32,6 +32,19 @@ const Form = ({ data }) => {
     socket.send(event);
   };
 
+  const sendDeviceCapabilities = () => {
+    let event = JSON.stringify({
+      DeviceCapabilities: {
+        ViewPort: [window.innerHeight, window.innerWidth],
+        ScreenSize: [window.screen.height, window.screen.width],
+        DPR: zoom / 100,
+        PPI: 200,
+      },
+    });
+    console.log(event);
+    socket.send(event);
+  };
+
   // Set the current Focus
   useEffect(() => {
     localStorage.setItem('current-focus', data.ID);
@@ -73,6 +86,7 @@ const Form = ({ data }) => {
 
   useEffect(() => {
     sendConfigureEvent();
+    sendDeviceCapabilities();
   }, [dimensions]);
 
   return (
