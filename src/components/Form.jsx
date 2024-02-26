@@ -1,10 +1,11 @@
 import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
 import SelectComponent from './SelectComponent';
-import { useAppData, useResizeObserver } from '../hooks';
+import { useAppData, useResizeObserver, useWindowDimensions } from '../hooks';
 import { useEffect, useState } from 'react';
 
 const Form = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
+  const { viewport } = useWindowDimensions();
   const { findDesiredData, socket } = useAppData();
   const [formStyles, setFormStyles] = useState({});
 
