@@ -86,6 +86,7 @@ const Form = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
+    console.log('FormResized');
     sendConfigureEvent();
     sendDeviceCapabilities();
   }, [dimensions]);
