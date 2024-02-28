@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import { setStyle, excludeKeys, getImageStyles, extractStringUntilSecondPeriod } from '../utils';
+import {
+  setStyle,
+  excludeKeys,
+  getImageStyles,
+  extractStringUntilSecondPeriod,
+  parseFlexStyles,
+} from '../utils';
 import SelectComponent from './SelectComponent';
 import { useAppData, useResizeObserver } from '../hooks';
 
 const Group = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const styles = setStyle(data?.Properties);
-  const { Visible, Picture, Border = 1, Size } = data?.Properties;
+  const { Visible, Picture, Border = 1, Size, Flex = 0, Styles } = data?.Properties;
   const { findDesiredData } = useAppData();
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -24,7 +29,11 @@ const Group = ({ data }) => {
 
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
+  const flexStyles = parseFlexStyles(Styles);
+
   const updatedData = excludeKeys(data);
+
+  const styles = setStyle(data?.Properties, 'absolute', Flex);
 
   return (
     <div
@@ -35,6 +44,7 @@ const Group = ({ data }) => {
         border: Border == 0 ? 'none' : '1px solid #E9E9E9',
         display: Visible == 0 ? 'none' : 'block',
         ...imageStyles,
+        ...flexStyles,
       }}
       id={data?.ID}
     >

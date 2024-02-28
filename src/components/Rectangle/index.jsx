@@ -22,7 +22,7 @@ const Rectangle = ({
         display: Visible == 0 ? 'none' : 'block',
       }}
     >
-      <svg height={parentSize[0]} width={parentSize[1]}>
+      <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray?.map((rectanglePoints, index) => {
           return (
             <rect
