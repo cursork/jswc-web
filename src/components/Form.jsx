@@ -1,4 +1,4 @@
-import { setStyle, excludeKeys, rgbColor, getImageStyles } from '../utils';
+import { setStyle, excludeKeys, rgbColor, getImageStyles, parseFlexStyles } from '../utils';
 import SelectComponent from './SelectComponent';
 import { useAppData, useResizeObserver, useWindowDimensions } from '../hooks';
 import { useEffect, useState } from 'react';
@@ -11,9 +11,8 @@ const Form = ({ data }) => {
 
   const dimensions = useResizeObserver(document.getElementById(data?.ID));
 
-  const styles = setStyle(data?.Properties, 'relative');
-
-  const { BCol, Picture, Size, Visible, Posn, Flex = 0, Event } = data?.Properties;
+  const { BCol, Picture, Size, Visible, Posn, Flex = 0, Event, Styles } = data?.Properties;
+  const styles = parseFlexStyles(Styles);
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -87,7 +86,6 @@ const Form = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
-    console.log('FormResized');
     sendConfigureEvent();
     sendDeviceCapabilities();
   }, [dimensions]);
@@ -97,11 +95,11 @@ const Form = ({ data }) => {
       id={data?.ID}
       style={{
         ...formStyles,
-        // width: '1000px',
+        ...styles,
         background: BCol ? rgbColor(BCol) : '#F0F0F0',
         position: 'relative',
         border: '1px solid #F0F0F0',
-        display: Visible == 0 ? 'none' : 'block',
+        display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
         ...imageStyles,
         overflow: 'hidden',
       }}

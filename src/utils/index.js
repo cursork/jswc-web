@@ -8,7 +8,6 @@ export const setStyle = (Properties, position = 'absolute', Flex = 0) => {
       display: 'flex',
       flex: 1,
       height: '100vh',
-      flexDirection: 'column',
     };
   }
   if (Flex == 1) {
