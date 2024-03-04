@@ -916,7 +916,7 @@ const App = () => {
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
 
-        const { Event, ID, Info } = nqEvent;
+        const { Event, ID, Info, NoCallback = 0 } = nqEvent;
 
         const appElement = getObjectById(dataRef.current, ID);
 
@@ -942,8 +942,9 @@ const App = () => {
               Info,
             },
           });
+
           console.log(event);
-          webSocket.send(event);
+          if (NoCallback == 0) webSocket.send(event);
           return;
         }
 
