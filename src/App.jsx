@@ -935,6 +935,14 @@ const App = () => {
 
           return;
         } else if ((Event && Event == 'ItemDown') || (Event && Event == 'GotFocus')) {
+          const existingData = JSON.parse(getObjectById(dataRef.current, ID));
+
+          const exists =
+            existingData?.Properties?.Event &&
+            existingData?.Properties?.Event.some((item) => item[0] === Event);
+
+          if (!exists) return;
+
           const event = JSON.stringify({
             Event: {
               EventName: Event,
