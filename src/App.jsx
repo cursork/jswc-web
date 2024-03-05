@@ -52,7 +52,6 @@ const App = () => {
       if (mode === 'WC') {
         if (data.Properties && data.Properties.Type === 'Form') {
           localStorage.clear();
-          console.log('current Level', currentLevel[finalKey]);
         }
         // Overwrite the existing object with new properties
 
@@ -962,6 +961,44 @@ const App = () => {
         const serverEvent = JSON.parse(event.data).EX;
 
         deleteObjectsById(dataRef.current, serverEvent?.ID);
+      } else if (keys[0] == 'WX') {
+        const serverEvent = JSON.parse(event.data).WX;
+
+        const { Method, Info, WGID } = serverEvent;
+
+        const calculateTextDimensions = (content) => {
+          const text = document.createElement('span');
+          document.body.appendChild(text);
+          text.style.fontSize = 16 + 'px';
+          text.style.height = 'auto';
+          text.style.width = 'auto';
+          text.style.position = 'absolute';
+          text.style.whiteSpace = 'no-wrap';
+          text.innerHTML = content;
+
+          const width = Math.ceil(text.clientWidth);
+          const height = Math.ceil(text.clientHeight);
+
+          document.body.removeChild(text);
+
+          return [height, width];
+        };
+
+        if (Method == 'GetTextSize') {
+          const joinedString = Info && Info[0].join(' ');
+          const lowercaseString = joinedString.toLowerCase();
+
+          const textDimensions = calculateTextDimensions(lowercaseString);
+
+          const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
+
+          return webSocket.send(event);
+        } else if (Method == 'GetFocus') {
+          const focusedID = localStorage.getItem('current-focus');
+          const event = JSON.stringify({ WX: { Info: !focusedID ? [] : [focusedID], WGID } });
+          console.log(event);
+          webSocket.send(event);
+        }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
       } else if (keys[0] == 'FormatCell') {
