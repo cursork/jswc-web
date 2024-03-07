@@ -934,6 +934,8 @@ const App = () => {
 
           return;
         } else if ((Event && Event == 'ItemDown') || (Event && Event == 'GotFocus')) {
+          if (Event && Event == 'GotFocus') localStorage.setItem('current-focus', ID);
+
           const existingData = JSON.parse(getObjectById(dataRef.current, ID));
 
           const exists =
