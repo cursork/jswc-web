@@ -127,11 +127,12 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
 
     if (!localStorage.getItem(data?.ID)) {
+      const index = SelItems?.findIndex((element) => element == 1);
       const event = JSON.stringify({
         Event: {
           EventName: 'Select',
           ID: data?.ID,
-          Info: 0,
+          Info: !index ? 0 : index + 1,
           Posn: [calculateTop, calculateLeft],
           Size: [Size && Size[0], Size && Size[1]],
         },

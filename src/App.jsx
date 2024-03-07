@@ -966,32 +966,47 @@ const App = () => {
 
         const { Method, Info, WGID } = serverEvent;
 
-        const calculateTextDimensions = (content) => {
-          const text = document.createElement('span');
-          document.body.appendChild(text);
-          text.style.fontSize = 16 + 'px';
-          text.style.height = 'auto';
-          text.style.width = 'auto';
-          text.style.position = 'absolute';
-          text.style.whiteSpace = 'no-wrap';
-          text.innerHTML = content;
+        const calculateTextDimensions = (wordsArray, baseFontSize = 16) => {
+          let maxWidth = 0;
+          let totalHeight = 0;
 
-          const width = Math.ceil(text.clientWidth);
-          const height = Math.ceil(text.clientHeight);
+          for (let i = 0; i < wordsArray.length; i++) {
+            const lineWords = wordsArray[i];
+            let lineHeight = 0;
+            let lineWidth = 0;
 
-          document.body.removeChild(text);
+            for (let j = 0; j < lineWords.length; j++) {
+              const word = lineWords[j];
+              const text = document.createElement('span');
+              document.body.appendChild(text);
+              text.style.fontSize = baseFontSize + 'px';
+              text.style.height = 'auto';
+              text.style.width = 'auto';
+              text.style.position = 'absolute';
+              text.style.whiteSpace = 'nowrap';
+              text.innerHTML = word;
 
-          return [height, width];
+              const wordWidth = Math.ceil(text.clientWidth);
+              const wordHeight = Math.ceil(text.clientHeight);
+
+              lineWidth += wordWidth;
+              lineHeight = Math.max(lineHeight, wordHeight);
+
+              document.body.removeChild(text);
+            }
+
+            maxWidth = Math.max(maxWidth, lineWidth);
+            totalHeight += lineHeight;
+          }
+
+          return [maxWidth, totalHeight];
         };
-
         if (Method == 'GetTextSize') {
-          const joinedString = Info && Info[0].join(' ');
-          const lowercaseString = joinedString.toLowerCase();
+          const joinedString = Info && Info[0];
 
-          const textDimensions = calculateTextDimensions(lowercaseString);
-
+          const textDimensions = calculateTextDimensions(joinedString);
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
-
+          console.log(event);
           return webSocket.send(event);
         } else if (Method == 'GetFocus') {
           const focusedID = localStorage.getItem('current-focus');

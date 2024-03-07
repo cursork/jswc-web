@@ -12,7 +12,7 @@ const Text = ({ data }) => {
   const font = findDesiredData(FontObj && FontObj);
   const fontProperties = font && font?.Properties;
 
-  console.log({ fontProperties });
+  // console.log({ pointsArray });
 
   return (
     <div
@@ -46,7 +46,14 @@ const Text = ({ data }) => {
                   : 'none'
               }
             >
-              {Text[index]}
+              {Text &&
+                Text[0]?.map((text) => {
+                  return (
+                    <tspan x={textPoints[0]} dy='0.7em'>
+                      {text}
+                    </tspan>
+                  );
+                })}
             </text>
           );
         })}
