@@ -1001,7 +1001,7 @@ const App = () => {
             totalHeight += lineHeight;
           }
 
-          return [maxWidth, totalHeight];
+          return [totalHeight, maxWidth];
         };
         if (Method == 'GetTextSize') {
           const joinedString = Info && Info[0];
