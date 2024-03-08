@@ -15,10 +15,11 @@ const Rectangle = ({
 
   return (
     <div
+      id={data?.ID}
       style={{
-        // position: 'absolute',
-        // top: posn[0],
-        // left: posn[1],
+        position: 'absolute',
+        top: 0,
+        left: 0,
         display: Visible == 0 ? 'none' : 'block',
       }}
     >

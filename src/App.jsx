@@ -967,46 +967,44 @@ const App = () => {
         const serverEvent = JSON.parse(event.data).WX;
 
         const { Method, Info, WGID } = serverEvent;
+        const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+          // Create a hidden div element to calculate text dimensions
+          const container = document.createElement('div');
+          container.style.visibility = 'hidden';
+          container.style.position = 'fixed';
+          container.style.top = '0';
+          container.style.left = '0';
+          container.style.fontSize = fontSize + 'px'; // Set font size
 
-        const calculateTextDimensions = (wordsArray, baseFontSize = 16) => {
-          let maxWidth = 0;
-          let totalHeight = 0;
+          // Iterate through the array of words
+          wordsArray.forEach((word) => {
+            // Create a span element for each word
+            const span = document.createElement('div');
+            span.textContent = word;
+            span.style.display = 'block'; // Start each word on a new line
+            container.appendChild(span);
+          });
 
-          for (let i = 0; i < wordsArray.length; i++) {
-            const lineWords = wordsArray[i];
-            let lineHeight = 0;
-            let lineWidth = 0;
+          // Append the container to the body
+          document.body.appendChild(container);
 
-            for (let j = 0; j < lineWords.length; j++) {
-              const word = lineWords[j];
-              const text = document.createElement('span');
-              document.body.appendChild(text);
-              text.style.fontSize = baseFontSize + 'px';
-              text.style.height = 'auto';
-              text.style.width = 'auto';
-              text.style.position = 'absolute';
-              text.style.whiteSpace = 'nowrap';
-              text.innerHTML = word;
+          console.log({ container });
 
-              const wordWidth = Math.ceil(text.clientWidth);
-              const wordHeight = Math.ceil(text.clientHeight);
+          // Retrieve dimensions
+          const width = container.offsetWidth;
+          const height = container.offsetHeight - 11;
 
-              lineWidth += wordWidth;
-              lineHeight = Math.max(lineHeight, wordHeight);
+          // Remove the container from the body
+          document.body.removeChild(container);
 
-              document.body.removeChild(text);
-            }
-
-            maxWidth = Math.max(maxWidth, lineWidth);
-            totalHeight += lineHeight;
-          }
-
-          return [totalHeight, maxWidth];
+          return [height, width];
         };
+
         if (Method == 'GetTextSize') {
           const joinedString = Info && Info[0];
-
-          const textDimensions = calculateTextDimensions(joinedString);
+          const font = JSON.parse(getObjectById(dataRef.current, Info && Info[1]));
+          const fontProperties = font && font?.Properties;
+          const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size);
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
           console.log(event);
           return webSocket.send(event);
