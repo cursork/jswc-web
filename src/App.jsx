@@ -955,6 +955,18 @@ const App = () => {
           console.log(event);
           if (NoCallback == 0) webSocket.send(event);
           return;
+        } else if (Event == 'CellMove') {
+          handleData(
+            {
+              ID: ID,
+              Properties: {
+                CurCell: Info,
+              },
+            },
+            'WS'
+          );
+          // reRender();
+          return;
         }
 
         const element = document.getElementById(nqEvent.ID);
@@ -987,8 +999,6 @@ const App = () => {
 
           // Append the container to the body
           document.body.appendChild(container);
-
-          console.log({ container });
 
           // Retrieve dimensions
           const width = container.offsetWidth;

@@ -32,6 +32,15 @@ const Grid = ({ data }) => {
         body: true,
       });
     }
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          CurCell: [row, column],
+          Values,
+        },
+      })
+    );
 
     setSelectedGrid({ row, column });
   };
@@ -97,6 +106,8 @@ const Grid = ({ data }) => {
     setWidth(dimensions?.width - 73);
     setHeight(dimensions?.height - 73);
   }, [dimensions]);
+
+  console.log({ selectedGrid });
 
   // Grid without types
 
