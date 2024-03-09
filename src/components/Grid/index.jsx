@@ -12,6 +12,8 @@ const Grid = ({ data }) => {
   );
 
   const handleGridClick = (row, column, property) => {
+    console.log({ property });
+
     if (property == 'column') {
       setTableProperty({
         row: false,
@@ -94,8 +96,8 @@ const Grid = ({ data }) => {
       setSelectedGrid({ row: CurCell[0], column: CurCell[1] });
       setTableProperty({
         row: false,
-        column: true,
-        body: false,
+        column: false,
+        body: true,
       });
     }
   }, [data]);
