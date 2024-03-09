@@ -11,40 +11,6 @@ const Grid = ({ data }) => {
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
 
-  const handleGridClick = (row, column, property) => {
-    console.log({ property });
-
-    if (property == 'column') {
-      setTableProperty({
-        row: false,
-        column: true,
-        body: false,
-      });
-    } else if (property == 'row') {
-      setTableProperty({
-        row: true,
-        column: false,
-        body: false,
-      });
-    } else if (property == 'body') {
-      setTableProperty({
-        row: false,
-        column: false,
-        body: true,
-      });
-    }
-    localStorage.setItem(
-      data?.ID,
-      JSON.stringify({
-        Event: {
-          CurCell: [row, column],
-          Values,
-        },
-      })
-    );
-    setSelectedGrid({ row, column });
-  };
-
   let size = 0;
   const {
     Size,
@@ -73,6 +39,56 @@ const Grid = ({ data }) => {
     Event,
   } = data?.Properties;
 
+  const handleCellMove = (info) => {
+    const event = JSON.stringify({
+      Event: {
+        ID:data?.ID,
+        EventName: 'CellMove',
+        Info: info,
+      },
+    });
+
+    console.log(event);
+
+    const exists = Event && Event.some((item) => item[0] === 'CellMove');
+    if (!exists) return;
+    socket.send(event);
+  };
+
+  const handleGridClick = (row, column, property) => {
+    if (property == 'column') {
+      setTableProperty({
+        row: false,
+        column: true,
+        body: false,
+      });
+    } else if (property == 'row') {
+      setTableProperty({
+        row: true,
+        column: false,
+        body: false,
+      });
+    } else if (property == 'body') {
+      setTableProperty({
+        row: false,
+        column: false,
+        body: true,
+      });
+    }
+    localStorage.setItem(
+      data?.ID,
+      JSON.stringify({
+        Event: {
+          CurCell: [row, column],
+          Values,
+        },
+      })
+    );
+
+    setSelectedGrid({ row, column });
+    handleCellMove([row, column]);
+  };
+
   const [height, setHeight] = useState(Size[0]);
   const [width, setWidth] = useState(Size[1]);
 
@@ -92,6 +108,7 @@ const Grid = ({ data }) => {
         },
       })
     );
+
     if (CurCell) {
       setSelectedGrid({ row: CurCell[0], column: CurCell[1] });
       setTableProperty({
@@ -99,6 +116,8 @@ const Grid = ({ data }) => {
         column: false,
         body: true,
       });
+
+      handleCellMove([CurCell[0], CurCell[1]]);
     }
   }, [data]);
 
