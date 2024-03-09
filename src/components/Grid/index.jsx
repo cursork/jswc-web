@@ -4,7 +4,7 @@ import Cell from './Cell';
 import { useEffect, useState } from 'react';
 
 const Grid = ({ data }) => {
-  const { findDesiredData } = useAppData();
+  const { findDesiredData, socket } = useAppData();
   const [selectedGrid, setSelectedGrid] = useState(null);
   const [tableProperty, setTableProperty] = useState({ row: false, column: false, body: false });
   const dimensions = useResizeObserver(
@@ -12,7 +12,6 @@ const Grid = ({ data }) => {
   );
 
   const handleGridClick = (row, column, property) => {
-    console.log('Hello');
     if (property == 'column') {
       setTableProperty({
         row: false,
@@ -41,7 +40,6 @@ const Grid = ({ data }) => {
         },
       })
     );
-
     setSelectedGrid({ row, column });
   };
 
@@ -70,6 +68,7 @@ const Grid = ({ data }) => {
     VScroll = 0,
     HScroll = 0,
     Attach,
+    Event,
   } = data?.Properties;
 
   const [height, setHeight] = useState(Size[0]);
@@ -107,12 +106,32 @@ const Grid = ({ data }) => {
     setHeight(dimensions?.height - 73);
   }, [dimensions]);
 
-  console.log({ selectedGrid });
-
   // Grid without types
+  const handleKeyPress = (e) => {
+    const exists = Event && Event.some((item) => item[0] === 'KeyPress');
+    if (!exists) return;
+
+    const isAltPressed = e.altKey ? 4 : 0;
+    const isCtrlPressed = e.ctrlKey ? 2 : 0;
+    const isShiftPressed = e.shiftKey ? 1 : 0;
+    const charCode = e.key.charCodeAt(0);
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+    let event = JSON.stringify({
+      Event: {
+        EventName: 'KeyPress',
+        ID: data?.ID,
+        Info: [e.key, charCode, e.keyCode, shiftState],
+      },
+    });
+    console.log(event);
+    socket.send(event);
+  };
 
   return (
     <div
+      onKeyDown={(e) => handleKeyPress(e)}
+      tabIndex='0'
       id={data.ID}
       style={{
         ...style,
