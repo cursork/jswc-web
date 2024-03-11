@@ -2,6 +2,7 @@ import * as Icons from './RibbonIcons';
 import { RibbonButton } from 'react-bootstrap-ribbon';
 import { Row, Col } from 'reactstrap';
 import { useAppData } from '../../hooks';
+import { MdOutlineQuestionMark } from 'react-icons/md';
 
 const CustomRibbonButton = ({ data }) => {
   const { socket } = useAppData();
@@ -25,7 +26,7 @@ const CustomRibbonButton = ({ data }) => {
     handleSelectEvent();
   };
 
-  const IconComponent = Icons[Icon];
+  const IconComponent = Icons[Icon] ? Icons[Icon] : MdOutlineQuestionMark;
   return (
     <Row>
       <Col md={12}>
@@ -34,7 +35,7 @@ const CustomRibbonButton = ({ data }) => {
           onClick={handleButtonEvent}
           style={{ cursor: 'pointer' }}
         >
-          {Icons[Icon] ? <IconComponent size={35} /> : null}
+          <IconComponent size={35} />
           <div className='text-center' style={{ fontSize: '12px' }}>
             {Caption}
           </div>
