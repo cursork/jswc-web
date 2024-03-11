@@ -34,7 +34,7 @@ const CustomRibbonButton = ({ data }) => {
           onClick={handleButtonEvent}
           style={{ cursor: 'pointer' }}
         >
-          <IconComponent size={35} />
+          {Icons[Icon] ? <IconComponent size={35} /> : null}
           <div className='text-center' style={{ fontSize: '12px' }}>
             {Caption}
           </div>
