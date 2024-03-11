@@ -211,6 +211,7 @@ const Cell = ({
       id={type?.ID}
       style={{ ...cellStyles, ...(isFocused || ShowInput == 1 ? fontStyles : justifiedStyles) }}
       onFocus={() => handleFocus(row, column)}
+      onSelect={()=> handleFocus(row, column)}
       onBlur={handleBlur}
     >
       {isFocused || ShowInput == 1 ? (

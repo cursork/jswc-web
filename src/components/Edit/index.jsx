@@ -6,6 +6,7 @@ import {
   calculateDaysFromDate,
   rgbColor,
   getObjectById,
+  getObjectTypeById,
 } from '../../utils';
 import { useState, useRef, useEffect } from 'react';
 import { useAppData } from '../../hooks';
@@ -153,8 +154,57 @@ const Edit = ({
       });
   };
 
+  const handleRightArrow = () => {
+    if (location !== 'inGrid') return;
+    console.log(inputRef);
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const nextSibling = grandParent.nextSibling;
+    const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
+    console.log(nextSibling?.id);
+    console.log(querySelector);
+    const element = nextSibling?.querySelectorAll(querySelector);
+
+    if (querySelector == 'select') return element && element[0].focus();
+
+    return element && element[0].select();
+  };
+  const handleLeftArrow = () => {
+    if (location !== 'inGrid') return;
+
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const nextSibling = grandParent.previousSibling;
+    const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
+    console.log(nextSibling?.id);
+    console.log(querySelector);
+    const element = nextSibling?.querySelectorAll(querySelector);
+
+    if (querySelector == 'select') return element && element[0].focus();
+
+    return element && element[0].select();
+  };
+  const handleUpArrow = () => {
+    if (location !== 'inGrid') return;
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const superParent = grandParent.parentElement;
+    const nextSibling = superParent.previousSibling;
+    const element = nextSibling?.querySelectorAll('input');
+    element &&
+      element.forEach((inputElement) => {
+        if (inputElement.id === data?.ID) {
+          inputElement.select();
+        }
+      });
+  };
+
   const handleKeyPress = (e) => {
-    if (e.key == 'Enter') handleCellMove();
+    if (e.key == 'ArrowRight') handleRightArrow();
+    else if (e.key == 'ArrowLeft') handleLeftArrow();
+    else if (e.key == 'ArrowDown') handleCellMove();
+    else if (e.key == 'Enter') handleCellMove();
+    else if (e.key == 'ArrowUp') handleUpArrow();
     const exists = Event && Event.some((item) => item[0] === 'KeyPress');
     if (!exists) return;
 
@@ -315,8 +365,8 @@ const Edit = ({
 
   if (inputType == 'date') {
     const handleTextClick = () => {
-      dateInputRef.current.select();
-      dateInputRef.current.showPicker();
+      inputRef.current.select();
+      inputRef.current.showPicker();
     };
 
     const handleDateChange = (event) => {
@@ -327,20 +377,7 @@ const Edit = ({
     };
 
     return (
-      <div style={{ position: 'relative' }}>
-        <input
-          id={data?.ID}
-          type='date'
-          ref={dateInputRef}
-          onChange={handleDateChange}
-          style={{
-            ...styles,
-            position: 'absolute',
-            zIndex: 1,
-            display: 'none',
-          }}
-        />
-
+      <>
         <input
           id={data?.ID}
           style={{
@@ -360,7 +397,19 @@ const Edit = ({
           }}
           onKeyDown={(e) => handleKeyPress(e)}
         />
-      </div>
+        <input
+          id={data?.ID}
+          type='date'
+          ref={inputRef}
+          onChange={handleDateChange}
+          style={{
+            ...styles,
+            position: 'absolute',
+            zIndex: 1,
+            display: 'none',
+          }}
+        />
+      </>
     );
   }
 
@@ -369,7 +418,8 @@ const Edit = ({
       <NumericFormat
         className='currency'
         allowLeadingZeros={true}
-        ref={inputRef}
+        // ref={inputRef}
+        getInputRef={inputRef}
         onClick={handleInputClick}
         id={data?.ID}
         style={{

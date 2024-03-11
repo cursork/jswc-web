@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilSecondPeriod } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById } from '../utils';
 import { useAppData, useResizeObserver } from '../hooks';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
@@ -146,8 +146,58 @@ const Button = ({
       });
   };
 
+  const handleRightArrow = () => {
+    if (location !== 'inGrid') return;
+    console.log(inputRef);
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const nextSibling = grandParent.nextSibling;
+    const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
+    console.log(nextSibling?.id);
+    console.log(querySelector);
+    const element = nextSibling?.querySelectorAll(querySelector);
+    console.log({ element });
+
+    if (querySelector == 'select') return element && element[0].focus();
+
+    return element && element[0].select();
+  };
+  const handleLeftArrow = () => {
+    if (location !== 'inGrid') return;
+    console.log(inputRef);
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const nextSibling = grandParent.previousSibling;
+    const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
+    console.log(nextSibling?.id);
+    console.log(querySelector);
+    const element = nextSibling?.querySelectorAll(querySelector);
+
+    if (querySelector == 'select') return element && element[0].focus();
+
+    return element && element[0].select();
+  };
+  const handleUpArrow = () => {
+    if (location !== 'inGrid') return;
+    const parent = inputRef.current.parentElement;
+    const grandParent = parent.parentElement;
+    const superParent = grandParent.parentElement;
+    const nextSibling = superParent.previousSibling;
+    const element = nextSibling?.querySelectorAll('input');
+    element &&
+      element.forEach((inputElement) => {
+        if (inputElement.id === data?.ID) {
+          inputElement.focus();
+        }
+      });
+  };
+
   const handleKeyPress = (e) => {
     if (e.key == 'Enter') handleCellMove();
+    else if (e.key == 'ArrowRight') handleRightArrow();
+    else if (e.key == 'ArrowLeft') handleLeftArrow();
+    else if (e.key == 'ArrowDown') handleCellMove();
+    else if (e.key == 'ArrowUp') handleUpArrow();
   };
 
   //handle got focus event on all controls

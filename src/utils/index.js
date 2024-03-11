@@ -1,6 +1,7 @@
 export * from './imageStyles';
 export * from './deleteForm';
 export * from './flexStyles';
+export * from './getType';
 
 export const setStyle = (Properties, position = 'absolute', Flex = 0) => {
   if (Flex == 2) {
