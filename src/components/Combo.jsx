@@ -160,6 +160,21 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     reRender();
   }, [dimensions]);
 
+  const triggerCellMoveEvent = (row, column) => {
+    const Event = JSON.stringify({
+      Event: {
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        EventName: 'CellMove',
+        Info: [row, column, 0, 0, 0, comboInput],
+      },
+    });
+
+    const exists = event && event.some((item) => item[0] === 'CellMove');
+    if (!exists) return;
+    console.log(Event);
+    socket.send(Event);
+  };
+
   const handleRightArrow = () => {
     if (location !== 'inGrid') return;
     console.log(inputRef);
@@ -167,8 +182,8 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.nextSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
+
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll(querySelector);
     console.log({ element });
 
@@ -183,8 +198,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.previousSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
+     triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll(querySelector);
 
     if (querySelector == 'select') return element && element[0].focus();
@@ -198,6 +212,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
     const element = nextSibling?.querySelectorAll('select');
+      triggerCellMoveEvent(row, column);
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
@@ -211,6 +226,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll('select');
     element &&
       element.forEach((inputElement) => {

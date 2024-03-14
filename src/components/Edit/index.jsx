@@ -139,6 +139,21 @@ const Edit = ({
     };
   }
 
+  const triggerCellMoveEvent = (row, column, value) => {
+    const Event = JSON.stringify({
+      Event: {
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        EventName: 'CellMove',
+        Info: [row, column, 0, 0, 0, value],
+      },
+    });
+
+    const exists = event && event.some((item) => item[0] === 'CellMove');
+    if (!exists) return;
+    console.log(Event);
+    socket.send(Event);
+  };
+
   const handleCellMove = () => {
     if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
@@ -146,6 +161,7 @@ const Edit = ({
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
     const element = nextSibling?.querySelectorAll('input');
+    if (!element) return;
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
@@ -156,18 +172,20 @@ const Edit = ({
 
   const handleRightArrow = () => {
     if (location !== 'inGrid') return;
-    console.log(inputRef);
+
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.nextSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
-    const element = nextSibling?.querySelectorAll(querySelector);
 
-    if (querySelector == 'select') return element && element[0].focus();
+    let element = nextSibling?.querySelectorAll(querySelector);
 
-    return element && element[0].select();
+    if (element?.length == 0) element = nextSibling?.querySelectorAll('span');
+
+    triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
+    element && element[0]?.focus();
+
+    element && element[0]?.select();
   };
   const handleLeftArrow = () => {
     if (location !== 'inGrid') return;
@@ -175,14 +193,22 @@ const Edit = ({
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.previousSibling;
+
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
     console.log(nextSibling?.id);
     console.log(querySelector);
     const element = nextSibling?.querySelectorAll(querySelector);
 
+    triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
+
+    // for (let i = 0; i < children.length; i++) {
+    //   children[i].focus();
+    // }
+
+    if (!element) return;
     if (querySelector == 'select') return element && element[0].focus();
 
-    return element && element[0].select();
+    return element && element[0]?.select();
   };
   const handleUpArrow = () => {
     if (location !== 'inGrid') return;
@@ -190,7 +216,10 @@ const Edit = ({
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
+
+    triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
     const element = nextSibling?.querySelectorAll('input');
+    if (!element) return;
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {

@@ -32,5 +32,7 @@ export const getObjectTypeById = (jsonData, targetId) => {
   result = JSON.parse(result);
 
   if (result?.Properties?.Type == 'Combo') return 'select';
-  return 'input';
+
+  if (result?.Properties?.Type == 'Edit' || result?.Properties?.Type == 'Button') return 'input';
+  return 'span';
 };

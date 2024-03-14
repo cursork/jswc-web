@@ -24,6 +24,7 @@ const Cell = ({
   cellFont = null,
   fontColor = [0, 0, 0],
   formatString = '',
+  key,
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -48,6 +49,8 @@ const Cell = ({
   if (!type && !Array.isArray(title)) {
     return (
       <div
+        className='cell'
+        key={key}
         onClick={() => onClick(row, column)}
         style={{
           borderRight: '1px solid  #EFEFEF',
@@ -76,6 +79,8 @@ const Cell = ({
         }}
       >
         <span
+          tabIndex='0'
+          onFocus={() => onClick(row, column)}
           style={{
             paddingLeft: justify == 'start' ? '4px' : '0px',
             paddingRight: justify == 'end' ? '4px' : '0px',
@@ -90,6 +95,9 @@ const Cell = ({
   if (!type && Array.isArray(title)) {
     return (
       <div
+        onFocus={() => onClick(row, column)}
+        className='cell'
+        key={key}
         onClick={() => onClick(row, column)}
         style={{
           borderRight: '1px solid  #EFEFEF',
@@ -207,11 +215,13 @@ const Cell = ({
   // Render the formatted values and the Input
   return (
     <div
+      className='cell'
+      key={key}
       ref={divRef}
       id={type?.ID}
       style={{ ...cellStyles, ...(isFocused || ShowInput == 1 ? fontStyles : justifiedStyles) }}
       onFocus={() => handleFocus(row, column)}
-      onSelect={()=> handleFocus(row, column)}
+      onSelect={() => handleFocus(row, column)}
       onBlur={handleBlur}
     >
       {isFocused || ShowInput == 1 ? (
@@ -226,12 +236,15 @@ const Cell = ({
           formatString={formatString}
         />
       ) : (
-        <p
+        <span
+          onFocus={() => onClick(row, column)}
+          tabIndex='0'
+          id={type?.ID}
           style={{ ...fontStyles, ...justifiedStyles, margin: 0, padding: 0 }}
           onBlur={() => setIsFocused(false)}
         >
           {formattedValue}
-        </p>
+        </span>
       )}
     </div>
   );

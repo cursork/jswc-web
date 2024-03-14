@@ -131,12 +131,23 @@ const Button = ({
     }
   };
 
+  const triggerCellMoveEvent = (row, column) => {
+    const Event = JSON.stringify({
+      Event: {
+        ID: extractStringUntilSecondPeriod(data?.ID),
+        EventName: 'CellMove',
+        Info: [row, column, 0, 0, 0, checkInput ? 1 : 0],
+      },
+    });
+  };
+
   const handleCellMove = () => {
     if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
@@ -153,8 +164,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.nextSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll(querySelector);
     console.log({ element });
 
@@ -169,13 +179,12 @@ const Button = ({
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.previousSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll(querySelector);
 
-    if (querySelector == 'select') return element && element[0].focus();
+    element && element[0]?.focus();
 
-    return element && element[0].select();
+    return element && element[0]?.select();
   };
   const handleUpArrow = () => {
     if (location !== 'inGrid') return;
@@ -183,6 +192,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
+    triggerCellMoveEvent(row, column);
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
@@ -232,6 +242,7 @@ const Button = ({
 
     return (
       <div
+        onKeyDown={(e) => handleKeyPress(e)}
         style={{
           ...styles,
           zIndex: 1,

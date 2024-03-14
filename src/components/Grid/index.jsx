@@ -1,7 +1,7 @@
 import { setStyle, generateHeader, extractStringUntilSecondPeriod } from '../../utils';
 import { useAppData, useResizeObserver } from '../../hooks';
 import Cell from './Cell';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const Grid = ({ data }) => {
   const { findDesiredData, socket } = useAppData();
@@ -39,22 +39,6 @@ const Grid = ({ data }) => {
     Event,
   } = data?.Properties;
 
-  const handleCellMove = (info) => {
-    const event = JSON.stringify({
-      Event: {
-        ID:data?.ID,
-        EventName: 'CellMove',
-        Info: info,
-      },
-    });
-
-    console.log(event);
-
-    const exists = Event && Event.some((item) => item[0] === 'CellMove');
-    if (!exists) return;
-    socket.send(event);
-  };
-
   const handleGridClick = (row, column, property) => {
     if (property == 'column') {
       setTableProperty({
@@ -86,13 +70,19 @@ const Grid = ({ data }) => {
     );
 
     setSelectedGrid({ row, column });
-    handleCellMove([row, column]);
   };
 
   const [height, setHeight] = useState(Size[0]);
   const [width, setWidth] = useState(Size[1]);
 
   const style = setStyle(data?.Properties);
+  const cells = useRef([]);
+
+  useEffect(() => {
+    if (cells.current.length > 0) {
+      cells.current[0].focus(); // Set initial focus on the first cell
+    }
+  }, []);
 
   if (!ColTitles) {
     size = Values[0]?.length + 1;
@@ -116,8 +106,6 @@ const Grid = ({ data }) => {
         column: false,
         body: true,
       });
-
-      handleCellMove([CurCell[0], CurCell[1]]);
     }
   }, [data]);
 
@@ -149,9 +137,10 @@ const Grid = ({ data }) => {
     socket.send(event);
   };
 
+ 
+
   return (
     <div
-      onKeyDown={(e) => handleKeyPress(e)}
       tabIndex='0'
       id={data.ID}
       style={{
@@ -171,6 +160,7 @@ const Grid = ({ data }) => {
         <div style={{ display: 'flex' }}>
           {RowTitles?.length > 1 ? (
             <Cell
+              key={0}
               cellWidth={TitleWidth && TitleWidth}
               title={''}
               column={0}
@@ -198,6 +188,7 @@ const Grid = ({ data }) => {
                 onClick={(row, column) => handleGridClick(row, column, 'column')}
                 highLightMe={tableProperty.body && selectedGrid.column === column + 1}
                 row={0}
+                key={column + 1}
               />
             );
           })}
@@ -219,6 +210,7 @@ const Grid = ({ data }) => {
                 column={i}
                 selectedGrid={selectedGrid}
                 onClick={(row, column) => handleGridClick(row, column, 'column')}
+                key={i}
               />
             ) : null;
           })}
@@ -243,6 +235,7 @@ const Grid = ({ data }) => {
                 isBody={tableProperty.body}
                 onClick={(row, column) => handleGridClick(row, column, 'row')}
                 column={0}
+                key={0}
                 row={row + 1}
                 title={row + 1}
                 selectedGrid={selectedGrid}
@@ -263,6 +256,7 @@ const Grid = ({ data }) => {
                 highLightMe={tableProperty.body && selectedGrid.row === row + 1}
                 onClick={(row, column) => handleGridClick(row, column, 'row')}
                 column={0}
+                key={0}
                 justify='start'
               />
             ) : null}
@@ -294,6 +288,7 @@ const Grid = ({ data }) => {
                   bgColor={backgroundColor}
                   cellFont={cellFont}
                   formatString={FormatString && FormatString[cellType - 1]}
+                  key={column + 1}
                 />
               );
             })}
