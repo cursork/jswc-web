@@ -160,12 +160,12 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     reRender();
   }, [dimensions]);
 
-  const triggerCellMoveEvent = (row, column) => {
+  const triggerCellMoveEvent = (row, column, value) => {
     const Event = JSON.stringify({
       Event: {
         ID: extractStringUntilSecondPeriod(data?.ID),
         EventName: 'CellMove',
-        Info: [row, column, 0, 0, 0, comboInput],
+        Info: [row, column, 0, 0, 0, value],
       },
     });
 
@@ -175,7 +175,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     socket.send(Event);
   };
 
-  const handleRightArrow = () => {
+  const handleRightArrow = (value) => {
     if (location !== 'inGrid') return;
     console.log(inputRef);
     const parent = inputRef.current.parentElement;
@@ -183,7 +183,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const nextSibling = grandParent.nextSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
 
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row, column + 1, value);
     const element = nextSibling?.querySelectorAll(querySelector);
     console.log({ element });
 
@@ -191,28 +191,28 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
 
     return element && element[0].select();
   };
-  const handleLeftArrow = () => {
+  const handleLeftArrow = (value) => {
     if (location !== 'inGrid') return;
     console.log(inputRef);
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.previousSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-     triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row, column - 1, value);
     const element = nextSibling?.querySelectorAll(querySelector);
 
     if (querySelector == 'select') return element && element[0].focus();
 
     return element && element[0].select();
   };
-  const handleUpArrow = () => {
+  const handleUpArrow = (value) => {
     if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
     const element = nextSibling?.querySelectorAll('select');
-      triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row - 1, column, value);
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
@@ -220,13 +220,13 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         }
       });
   };
-  const handleCellMove = () => {
+  const handleCellMove = (value) => {
     if (location !== 'inGrid') return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row + 1, column, value);
     const element = nextSibling?.querySelectorAll('select');
     element &&
       element.forEach((inputElement) => {
@@ -237,10 +237,10 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   };
 
   const handleKeyPress = (e) => {
-    if (e.key == 'ArrowRight') handleRightArrow();
-    else if (e.key == 'ArrowLeft') handleLeftArrow();
-    else if (e.key == 'ArrowDown') handleCellMove();
-    else if (e.key == 'ArrowUp') handleUpArrow();
+    if (e.key == 'ArrowRight') handleRightArrow(e.target.value);
+    else if (e.key == 'ArrowLeft') handleLeftArrow(e.target.value);
+    else if (e.key == 'ArrowDown') handleCellMove(e.target.value);
+    else if (e.key == 'ArrowUp') handleUpArrow(e.target.value);
   };
 
   return (

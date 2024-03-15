@@ -147,7 +147,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row + 1, column);
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
@@ -164,7 +164,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.nextSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row, column+1);
     const element = nextSibling?.querySelectorAll(querySelector);
     console.log({ element });
 
@@ -179,7 +179,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.previousSibling;
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row, column-1);
     const element = nextSibling?.querySelectorAll(querySelector);
 
     element && element[0]?.focus();
@@ -192,7 +192,7 @@ const Button = ({
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
-    triggerCellMoveEvent(row, column);
+    triggerCellMoveEvent(row-1, column);
     const element = nextSibling?.querySelectorAll('input');
     element &&
       element.forEach((inputElement) => {
