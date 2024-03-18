@@ -160,6 +160,8 @@ const Edit = ({
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
+    triggerCellMoveEvent(parseInt(row) + 1, parseInt(column), emitValue);
+
     const element = nextSibling?.querySelectorAll('input');
     if (!element) return;
     element &&
@@ -217,7 +219,7 @@ const Edit = ({
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
 
-    triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
+    triggerCellMoveEvent(parseInt(row) - 1, parseInt(column), emitValue);
     const element = nextSibling?.querySelectorAll('input');
     if (!element) return;
     element &&
