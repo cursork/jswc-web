@@ -47,16 +47,6 @@ const Text = ({ data }) => {
                   : 'none'
               }
             >
-              {/* {Text &&
-                Text[0]?.map((text, textIndex) => {
-                  const lineHeight = textIndex === 0 ? '0.7em' : '1em';
-                  return (
-                    <tspan x={textPoints[0]} dy={lineHeight}>
-                      {text}
-                    </tspan>
-                  );
-                })} */}
-              {/* {Text[index]} */}
               {pointsArray.length > 1
                 ? Text[index]
                 : Text?.map((text, textIndex) => {

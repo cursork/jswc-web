@@ -22,6 +22,7 @@ import CustomRibbonButton from './Ribbon/RibbonButton';
 import CustomRibbonButtonGroup from './Ribbon/RibbonButtonGroup';
 import Poly from './Polygon';
 import Rectangle from './Rectangle';
+import Ecllipse from './Ecllipse';
 // import ImageSubForm from './ImgSubForm';
 // import ShapeSubForm from './ShapeSubForm';
 import Text from './Text';
@@ -143,6 +144,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
   if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
   if (data?.Properties?.Type == 'Image') return <Image data={data} />;
+  if (data?.Properties?.Type == 'Ellipse') return <Ecllipse data={data} />;
 };
 
 export default SelectComponent;
