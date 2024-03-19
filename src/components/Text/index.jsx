@@ -14,6 +14,7 @@ const Text = ({ data }) => {
 
   // console.log({ fontProperties });
   console.log({ pointsArray });
+  console.log({ Text });
 
   return (
     <div
@@ -47,7 +48,7 @@ const Text = ({ data }) => {
                   : 'none'
               }
             >
-              {pointsArray.length > 1
+              {pointsArray.length >= 1
                 ? Text[index]
                 : Text?.map((text, textIndex) => {
                     const lineHeight = textIndex === 0 ? '0.7em' : '1em';
