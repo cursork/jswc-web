@@ -3,35 +3,44 @@ import { rgbColor } from '../../utils';
 const Ecllipse = ({ data }) => {
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const { FillCol, Start } = data?.Properties;
-  const startingAngles = Start.map((angle) => parseFloat(angle));
+  const { FillCol, Start, FCol, Size } = data?.Properties;
 
-  // Center of the ellipse
-  const cx = 160;
-  const cy = 210;
+  const generatePieChartPaths = (startAngles) => {
+    const cx = Size && Size[1] / 2 + 10;
+    const cy = Size && Size[0] / 2 + 10;
+    const rx = Size && Size[1] / 2;
+    const ry = Size && Size[0] / 2;
 
-  const rx = 150;
-  const ry = 200;
+    const paths = [];
 
-  // Generate slices based on starting angles
-  const slices = startingAngles.map((startAngle, index) => {
-    // Calculate the ending angle for the slice
-    const endAngle = index < startingAngles.length - 1 ? startingAngles[index + 1] : 2 * Math.PI;
+    for (let i = 0; i < startAngles?.length; i++) {
+      const startAngle = -startAngles[i];
+      const endAngle = i === startAngles?.length - 1 ? 2 * Math.PI : -startAngles[i + 1];
 
-    // Calculate start and end points of the arc
-    const startX = cx + rx * Math.cos(startAngle);
-    const startY = cy + ry * Math.sin(startAngle);
-    const endX = cx + rx * Math.cos(endAngle);
-    const endY = cy + ry * Math.sin(endAngle);
+      const startX = cx + rx * Math.cos(startAngle);
+      const startY = cy + ry * Math.sin(startAngle);
+      const endX = cx + rx * Math.cos(endAngle);
+      const endY = cy + ry * Math.sin(endAngle);
 
-    // Construct the path for the slice
-    const path = `M ${cx} ${cy} L ${startX} ${startY} A ${rx} ${ry} 0 0 1 ${endX} ${endY} Z`;
+      const path = `
+                M ${cx},${cy}
+                L ${startX},${startY}
+                A ${rx},${ry} 0 0,0 ${endX},${endY}
+                Z
+            `;
 
-    // Return a <path> element for the slice
-    return (
-      <path key={index} d={path} fill={rgbColor(FillCol[index])} stroke='black' strokeWidth='1' />
-    );
-  });
+      paths.push({
+        d: path,
+        fill: rgbColor(FillCol && FillCol[i]),
+        stroke: 'black',
+        strokeWidth: '1',
+      });
+    }
+
+    return paths;
+  };
+
+  const paths = generatePieChartPaths(Start);
 
   return (
     <div
@@ -42,12 +51,45 @@ const Ecllipse = ({ data }) => {
       }}
     >
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
-        <rect x='10' y='10' width='400' height='300' fill='none' />
-        <ellipse cx={cx} cy={cy} rx='150' ry='200' fill='none' stroke='black' />
+        {/* <rect x='10' y='10' width='400' height='300' fill='none'> */}
 
-        {slices}
+        {paths.map((path, index) => (
+          <path
+            key={index}
+            d={path.d}
+            fill={path.fill}
+            stroke={path.stroke}
+            strokeWidth={path.strokeWidth}
+          />
+        ))}
       </svg>
     </div>
   );
 };
 export default Ecllipse;
+
+// Correct value for the Pie Chart
+/* <path
+          d='M 210,160 L 410,160 A 200,150 0 0,0 357.682,53.097 Z'
+          fill='#ff0000'
+          stroke='black'
+          strokeWidth='1'
+        />
+        <path
+          d='M 210,160 L 357.682,53.097 A 200,150 0 0,0 70.757,59.502 Z'
+          fill='#00ff00'
+          stroke='black'
+          strokeWidth='1'
+        />
+        <path
+          d='M 210,160 L  70.757,59.502 A 200,150 0 0,0 151.36,309.94 Z'
+          fill='#ffff00'
+          stroke='black'
+          strokeWidth='1'
+        />
+        <path
+          d='M 210,160 L 151.36,309.94 A 200,150 0 0,0 410,160 Z'
+          fill='#0000ff'
+          stroke='black'
+          strokeWidth='1'
+        /> */
