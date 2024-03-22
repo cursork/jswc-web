@@ -1,21 +1,53 @@
-const Ecllipse = ({
-  width = 300,
-  height = 400,
-  fillColors = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF'],
-  startAngles = [0, 43, 140, 216],
-}) => {
+import { rgbColor } from '../../utils';
+
+const Ecllipse = ({ data }) => {
+  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+
+  const { FillCol, Start } = data?.Properties;
+  const startingAngles = Start.map((angle) => parseFloat(angle));
+
+  // Center of the ellipse
+  const cx = 160;
+  const cy = 210;
+
+  const rx = 150;
+  const ry = 200;
+
+  // Generate slices based on starting angles
+  const slices = startingAngles.map((startAngle, index) => {
+    // Calculate the ending angle for the slice
+    const endAngle = index < startingAngles.length - 1 ? startingAngles[index + 1] : 2 * Math.PI;
+
+    // Calculate start and end points of the arc
+    const startX = cx + rx * Math.cos(startAngle);
+    const startY = cy + ry * Math.sin(startAngle);
+    const endX = cx + rx * Math.cos(endAngle);
+    const endY = cy + ry * Math.sin(endAngle);
+
+    // Construct the path for the slice
+    const path = `M ${cx} ${cy} L ${startX} ${startY} A ${rx} ${ry} 0 0 1 ${endX} ${endY} Z`;
+
+    // Return a <path> element for the slice
+    return (
+      <path key={index} d={path} fill={rgbColor(FillCol[index])} stroke='black' strokeWidth='1' />
+    );
+  });
+
   return (
-    <svg width='300' height='200' xmlns='http://www.w3.org/2000/svg'>
-      <ellipse cx='150' cy='100' rx='120' ry='50' fill='none' stroke='black' stroke-width='2' />
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}
+    >
+      <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
+        <rect x='10' y='10' width='400' height='300' fill='none' />
+        <ellipse cx={cx} cy={cy} rx='150' ry='200' fill='none' stroke='black' />
 
-      <path d='M150,100 L150,50 A120,50 0 0,1 270,80 Z' fill='#ff5733' />
-
-      <path d='M150,100 L270,80 A120,50 0 0,1 270,120 Z' fill='#33aaff' />
-
-      <path d='M150,100 L270,120 A120,50 0 0,1 150,150 Z' fill='#33ff33' />
-
-      <path d='M150,100 L150,150 A120,50 0 0,1 30,120 Z' fill='#ffcc33' />
-    </svg>
+        {slices}
+      </svg>
+    </div>
   );
 };
 export default Ecllipse;

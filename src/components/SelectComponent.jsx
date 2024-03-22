@@ -47,6 +47,7 @@ const SelectComponent = ({
     return (
       <div
         style={{
+          
           translate: '0% -100%',
           position: 'relative',
           zIndex: '2',
