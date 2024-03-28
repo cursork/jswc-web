@@ -289,3 +289,5 @@ export const createListViewObjects = (images, codes, descriptions, imagesIndexes
 
   return result;
 };
+
+

@@ -1,7 +1,7 @@
-import { setStyle, generateHeader, extractStringUntilSecondPeriod } from '../../utils';
 import { useAppData, useResizeObserver } from '../../hooks';
 import Cell from './Cell';
 import { useEffect, useState, useRef } from 'react';
+import { extractStringUntilSecondPeriod, setStyle, generateHeader } from '../../utils';
 
 const Grid = ({ data }) => {
   const { findDesiredData, socket } = useAppData();
@@ -137,11 +137,10 @@ const Grid = ({ data }) => {
     socket.send(event);
   };
 
- 
-
   return (
     <div
       tabIndex='0'
+      onKeyDown={handleKeyPress}
       id={data.ID}
       style={{
         ...style,
@@ -300,3 +299,286 @@ const Grid = ({ data }) => {
 };
 
 export default Grid;
+
+// import React, { useState, useEffect } from 'react';
+// import { setStyle, generateHeader, extractStringUntilSecondPeriod } from '../../utils';
+// import { useResizeObserver, useAppData } from '../../hooks';
+// import GridEdit from './GridEdit';
+// import GridSelect from './GridSelect';
+// import GridButton from './GridButton';
+// import GridCell from './GridCell';
+// import Header from './Header';
+
+// const Grid = ({ data }) => {
+//   return <GridComponent key={data?.ID} data={data} />;
+// };
+
+// const GridComponent = ({ data }) => {
+//   const { findDesiredData, socket } = useAppData();
+//   const dimensions = useResizeObserver(
+//     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+//   );
+
+//   const {
+//     Size,
+//     Values,
+//     Input,
+//     ColTitles,
+//     RowTitles,
+//     CellWidths,
+//     Visible,
+//     CurCell,
+//     CellTypes,
+//     ShowInput,
+//     FormattedValues,
+//     BCol,
+//     CellFonts,
+//     RowTitleBCol,
+//     RowTitleFCol,
+//     ColTitleBCol,
+//     ColTitleFCol,
+//     TitleHeight,
+//     TitleWidth,
+//     FormatString,
+//     VScroll = 0,
+//     HScroll = 0,
+//     Attach,
+//     Event,
+//   } = data?.Properties;
+
+//   const [height, setHeight] = useState(Size[0]);
+//   const [width, setWidth] = useState(Size[1]);
+//   const [rows, setRows] = useState(0);
+//   const [columns, setColumns] = useState(0);
+//   const [focusedCell, setFocusedCell] = useState({ row: 0, column: 0 });
+//   const style = setStyle(data?.Properties);
+
+//   useEffect(() => {
+//     if (!Attach) return;
+//     setWidth(dimensions?.width - 73);
+//     setHeight(dimensions?.height - 73);
+//   }, [dimensions]);
+
+//   useEffect(() => {
+//     if (!ColTitles) setColumns(Values[0]?.length + 1);
+//     else setColumns(ColTitles?.length);
+
+//     if (Values) setRows(Values?.length + 1);
+//   }, [data]);
+
+//   useEffect(() => {
+//     const handleKeyDown = (event) => {
+//       if (event.key == 'ArrowRight') {
+//         setFocusedCell((prevState) => ({
+//           ...prevState,
+//           column: prevState.column + 1,
+//         }));
+//       } else if (event.key == 'ArrowLeft') {
+//         setFocusedCell((prevState) => ({
+//           ...prevState,
+//           column: prevState.column - 1,
+//         }));
+//       } else if (event.key == 'ArrowUp') {
+//         setFocusedCell((prevState) => ({
+//           ...prevState,
+//           row: prevState.row - 1,
+//         }));
+//       } else if (event.key == 'ArrowDown') {
+//         setFocusedCell((prevState) => ({
+//           ...prevState,
+//           row: prevState.row + 1,
+//         }));
+//       }
+//     };
+
+//     const gridElement = document.getElementById(data?.ID);
+//     gridElement.addEventListener('focus', () => {
+//       document.addEventListener('keydown', handleKeyDown);
+//     });
+//     gridElement.addEventListener('blur', () => {
+//       document.removeEventListener('keydown', handleKeyDown);
+//     });
+
+//     // document.addEventListener('keydown', handleKeyDown);
+
+//     return () => {
+//       document.removeEventListener('keydown', handleKeyDown);
+//       gridElement.removeEventListener('focus', () => {
+//         document.addEventListener('keydown', handleKeyDown);
+//       });
+//       gridElement.removeEventListener('blur', () => {
+//         document.removeEventListener('keydown', handleKeyDown);
+//       });
+//     };
+//   }, []);
+
+//   const modifyGridData = () => {
+//     let data = [];
+
+//     // Push the header Information
+//     if (ColTitles) {
+//       let header = [];
+//       for (let i = 0; i < ColTitles?.length; i++) {
+//         let obj = {
+//           value: ColTitles[i],
+//           type: 'header',
+//         };
+
+//         header.push(obj);
+//       }
+//       data.push(header);
+//     } else if (!ColTitles) {
+//       let headerArray = generateHeader(columns).map((alphabet) => {
+//         return {
+//           value: alphabet,
+//           type: 'header',
+//         };
+//       });
+//       data.push(headerArray);
+//     }
+
+//     // Make the body the Grid Like if it have Input Array that means it have types
+//     if (!Input) {
+//       for (let i = 0; i < Values?.length; i++) {
+//         let body = [];
+//         let obj = {
+//           type: 'cell',
+//           value: i + 1,
+//         };
+//         body.push(obj);
+//         for (let j = 0; j <= columns; j++) {
+//           let obj = {
+//             type: 'cell',
+//             value: Values[i][j],
+//           };
+//           body.push(obj);
+//         }
+//         data.push(body);
+//       }
+//     } else if (Input) {
+//       for (let i = 0; i < Values?.length; i++) {
+//         let body = [];
+//         for (let j = 0; j < columns; j++) {
+//           let cellType = CellTypes && CellTypes[i][j];
+//           const type = findDesiredData(Input && Input[cellType - 1]);
+//           const event = data?.Properties?.Event && data?.Properties?.Event;
+//           const backgroundColor = BCol && BCol[cellType - 1];
+//           const cellFont = findDesiredData(CellFonts && CellFonts[cellType - 1]);
+
+//           let obj = {
+//             type: type?.Properties?.Type,
+//             value: Values[i][j],
+//             event,
+//             backgroundColor,
+//             cellFont,
+//             typeObj: type,
+//           };
+//           body.push(obj);
+//         }
+//         data.push(body);
+//       }
+//     }
+
+//     return data;
+//   };
+
+//   const gridData = modifyGridData();
+
+//   const components = {
+//     Edit: (data) => {
+//       return <GridEdit data={data} />;
+//     },
+//     Button: (data) => {
+//       return <GridButton data={data} />;
+//     },
+//     cell: (data) => {
+//       return <GridCell data={data} />;
+//     },
+//     header: (data) => {
+//       return <Header data={data} />;
+//     },
+//     Combo: (data) => {
+//       return <GridSelect data={data} />;
+//     },
+//   };
+
+//   return (
+//     <div
+//       tabIndex='0'
+//       id={data?.ID}
+//       style={{
+//         ...style,
+//         height,
+//         width,
+//         border: '1px solid black',
+//         overflow: !ColTitles ? 'auto' : 'hidden',
+//         background: 'white',
+//         display: Visible == 0 ? 'none' : 'block',
+//         overflowX: HScroll == -3 ? 'scroll' : HScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
+//         overflowY: VScroll == -3 ? 'scroll' : VScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
+//       }}
+//     >
+//       {/* {Array(rows)
+//         .fill(0)
+//         ?.map((row, rowi) => {
+//           return (
+//             <div style={{ display: 'flex' }}>
+//               {Array(columns)
+//                 .fill(0)
+//                 ?.map((column, columni) => {
+//                   const isFocused = focusedCell.row === rowi && focusedCell.column === columni;
+//                   return (
+//                     <div
+//                       style={{
+//                         border: isFocused ? '2px solid blue' : '1px solid  #EFEFEF',
+//                         // borderRight: '1px solid  #EFEFEF',
+//                         // borderBottom: '1px solid  #EFEFEF',
+//                         minWidth: CellWidths ? CellWidths[column] : '100px',
+//                         maxWidth: CellWidths ? CellWidths[column] : '100px',
+//                         fontSize: '12px',
+//                         backgroundColor: focusedCell.column === columni ? 'lightblue' : 'white',
+//                       }}
+//                     >
+//                       {`(${rowi},${columni})`}
+//                     </div>
+//                   );
+//                 })}
+//               <br />
+//             </div>
+//           );
+//         })} */}
+//       {gridData.map((row, rowi) => {
+//         return (
+//           <div style={{ display: 'flex' }}>
+//             {row.map((data, columni) => {
+//               const isFocused = focusedCell.row === rowi && focusedCell.column === columni;
+//               const Component = components[data?.type];
+//               return (
+//                 <div
+//                   style={{
+//                     borderRight: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
+//                     borderBottom: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
+//                     minWidth: '100px',
+//                     maxWidth: '100px',
+//                     fontSize: '12px',
+//                     minHeight: '20px',
+//                     maxHeight: '20px',
+//                     backgroundColor:
+//                       focusedCell.column === columni && data.type == 'header'
+//                         ? 'lightblue'
+//                         : 'white',
+//                     textAlign: data.type == 'header' ? 'center' : 'left',
+//                   }}
+//                 >
+//                   <Component {...data} />
+//                 </div>
+//               );
+//             })}
+//           </div>
+//         );
+//       })}
+//     </div>
+//   );
+// };
+
+// export default Grid;
