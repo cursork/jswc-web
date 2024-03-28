@@ -237,6 +237,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   };
 
   const handleKeyPress = (e) => {
+    e.preventDefault();
     if (e.key == 'ArrowRight') handleRightArrow(e.target.value);
     else if (e.key == 'ArrowLeft') handleLeftArrow(e.target.value);
     else if (e.key == 'ArrowDown') handleCellMove(e.target.value);
