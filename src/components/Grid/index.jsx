@@ -372,17 +372,86 @@ const GridComponent = ({ data }) => {
     if (Values) setRows(Values?.length + 1);
   }, [data]);
 
+  const handleCellMove = (row, column, value) => {
+    const cellMoveEvent = JSON.stringify({
+      Event: {
+        ID: data?.ID,
+        EventName: 'CellMove',
+        Info: [row, column, 0, 0, 0, value],
+      },
+    });
+
+    const exists = Event && Event?.some((item) => item[0] === 'CellMove');
+    if (!exists) return;
+    console.log(cellMoveEvent);
+    socket.send(cellMoveEvent);
+  };
+
   const handleKeyDown = (event) => {
-    event.preventDefault();
+    // const gridData = JSON.parse(localStorage.getItem(data?.ID));
+    const table = event.target.id.split('-');
+
+    const isAltPressed = event.altKey ? 4 : 0;
+    const isCtrlPressed = event.ctrlKey ? 2 : 0;
+    const isShiftPressed = event.shiftKey ? 1 : 0;
+    const charCode = event.key.charCodeAt(0);
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+    const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
+
+    if (exists) {
+      console.log(
+        JSON.stringify({
+          Event: {
+            EventName: 'KeyPress',
+            ID: data?.ID,
+            Info: [event.key, charCode, event.keyCode, shiftState],
+          },
+        })
+      );
+      socket.send(
+        JSON.stringify({
+          Event: {
+            EventName: 'KeyPress',
+            ID: data?.ID,
+            Info: [event.key, charCode, event.keyCode, shiftState],
+          },
+        })
+      );
+    }
 
     if (event.key === 'ArrowRight') {
-      setSelectedColumn((prev) => prev + 1);
+      setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
+
+      handleCellMove(
+        parseInt(table[0]),
+        parseInt(table[1]) + 2,
+        Values[parseInt(table[0]) - 1][parseInt(table[1])]
+      );
     } else if (event.key === 'ArrowLeft') {
-      setSelectedColumn((prev) => prev - 1);
+      // setSelectedColumn((prev) => prev - 1);
+      setSelectedColumn((prev) => Math.max(prev - 1, 0));
+      handleCellMove(
+        parseInt(table[0]),
+        parseInt(table[1]),
+        Values[parseInt(table[0]) - 1][parseInt(table[1])]
+      );
     } else if (event.key === 'ArrowUp') {
-      setSelectedRow((prev) => prev - 1);
+      // setSelectedRow((prev) => prev - 1);
+      setSelectedRow((prev) => Math.max(prev - 1, 1));
+      handleCellMove(
+        parseInt(table[0]) - 1,
+        parseInt(table[1]) + 1,
+        Values[parseInt(table[0]) - 1][parseInt(table[1])]
+      );
     } else if (event.key === 'ArrowDown') {
-      setSelectedRow((prev) => prev + 1);
+      // setSelectedRow((prev) => prev + 1);
+      setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
+      handleCellMove(
+        parseInt(table[0]) + 1,
+        parseInt(table[1]) + 1,
+        Values[parseInt(table[0]) - 1][parseInt(table[1])]
+      );
     }
   };
 
@@ -483,14 +552,7 @@ const GridComponent = ({ data }) => {
 
   const components = {
     Edit: (data) => {
-      return (
-        <GridEdit
-          gridEvent={Event}
-          data={data}
-          keyPress={handleKeyDown}
-          cellClick={handleCellClick}
-        />
-      );
+      return <GridEdit data={data} keyPress={handleKeyDown} />;
     },
     Button: (data) => {
       return <GridButton data={data} gridId={data?.ID} gridValues={Values} />;
@@ -549,7 +611,7 @@ const GridComponent = ({ data }) => {
               return (
                 <div
                   tabIndex={rowi}
-                  onClick={() => {
+                  onClick={(e) => {
                     setSelectedColumn(columni);
                     setSelectedRow(rowi);
                   }}
@@ -560,9 +622,8 @@ const GridComponent = ({ data }) => {
                   onKeyDown={handleKeyDown}
                   id={`${rowi}-${columni}`}
                   style={{
-                    //  isFocused ? '1px solid blue' :
-                    borderRight: '1px solid  #EFEFEF',
-                    borderBottom: '1px solid  #EFEFEF',
+                    borderRight: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
+                    borderBottom: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
                     // minWidth: !CellWidths ? '100px' : CellWidths[columni],
                     // maxWidth: !CellWidths ? '100px' : CellWidths[columni],
                     fontSize: '12px',

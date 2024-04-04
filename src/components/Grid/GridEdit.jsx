@@ -9,6 +9,7 @@ const GridEdit = ({ data }) => {
   const dateRef = useRef(null);
 
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
+  const [showInput, setShowInput] = useState(data?.showInput);
 
   const { FieldType, Decimal } = data?.typeObj?.Properties;
   const { dataRef, findDesiredData, handleData, socket } = useAppData();
@@ -74,7 +75,7 @@ const GridEdit = ({ data }) => {
 
     localStorage.setItem(data?.gridId, updatedGridValues);
 
-    localStorage.setItem(data?.gridId, cellChangedEvent);
+    // localStorage.setItem(data?.gridId, cellChangedEvent);
     console.log(cellChangedEvent);
     const exists = data?.gridEvents && data?.gridEvents.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
@@ -128,6 +129,7 @@ const GridEdit = ({ data }) => {
             ) {
               inputRef?.current?.blur();
               dateRef?.current?.blur();
+
               return;
             }
             e.stopPropagation();
@@ -148,77 +150,109 @@ const GridEdit = ({ data }) => {
 
   if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
-      <NumericFormat
-        className='currency'
-        allowLeadingZeros={true}
-        getInputRef={inputRef}
-        id={data?.typeObj?.ID}
-        style={{
-          width: '100%',
-          border: 0,
-          outline: 0,
-          backgroundColor: data?.backgroundColor,
-        }}
-        onValueChange={(value) => {
-          setInputValue(parseInt(value.value));
-        }}
-        decimalScale={Decimal}
-        value={inputValue}
-        decimalSeparator={decimalSeparator}
-        thousandSeparator={Thousand}
-        onBlur={(e) => {
-          handleEditEvents();
-        }}
-        onKeyDown={(e) => {
-          if (
-            e.key === 'ArrowRight' ||
-            e.key === 'ArrowLeft' ||
-            e.key === 'ArrowUp' ||
-            e.key === 'ArrowDown'
-          ) {
-            inputRef.current.blur();
-            return;
-          }
-          e.stopPropagation();
-        }}
-      />
+      <>
+        {!showInput ? (
+          <div
+            onDoubleClick={() => {
+              setShowInput(true);
+            }}
+            ref={inputRef}
+            tabIndex={'1'}
+            // onDoubleClick={() => setShowInput(true)}
+            style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+          >
+            {data?.formattedValue}
+          </div>
+        ) : (
+          <NumericFormat
+            className='currency'
+            allowLeadingZeros={true}
+            getInputRef={inputRef}
+            id={`${data?.row}-${data?.column}`}
+            style={{
+              width: '100%',
+              border: 0,
+              outline: 0,
+              backgroundColor: data?.backgroundColor,
+            }}
+            onValueChange={(value) => {
+              setInputValue(parseInt(value.value));
+            }}
+            decimalScale={Decimal}
+            value={inputValue}
+            decimalSeparator={decimalSeparator}
+            thousandSeparator={Thousand}
+            onBlur={(e) => {
+              handleEditEvents();
+            }}
+            onKeyDown={(e) => {
+              if (
+                e.key === 'ArrowRight' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowDown'
+              ) {
+                inputRef.current.blur();
+                return;
+              }
+              e.stopPropagation();
+            }}
+          />
+        )}
+      </>
     );
   }
 
   return (
-    <input
-      ref={inputRef}
-      type='text'
-      id={`${data?.row}-${data?.column}`}
-      style={{
-        outline: 0,
-        border: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: data?.backgroundColor,
-      }}
-      value={inputValue}
-      onKeyDown={(e) => {
-        if (
-          e.key === 'ArrowRight' ||
-          e.key === 'ArrowLeft' ||
-          e.key === 'ArrowUp' ||
-          e.key === 'ArrowDown'
-        ) {
-          inputRef.current.blur();
-          dateRef.current.blur();
-          return;
-        }
-        e.stopPropagation();
-      }}
-      onChange={(e) => {
-        e.stopPropagation();
-        setInputValue(e.target.value);
-      }}
-      onBlur={(e) => {
-        handleEditEvents();
-      }}
-    />
+    <>
+      {!showInput ? (
+        <div
+          onDoubleClick={() => {
+            setShowInput(true);
+          }}
+          ref={inputRef}
+          tabIndex={'1'}
+          // onDoubleClick={() => setShowInput(true)}
+          style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+        >
+          {data?.formattedValue}
+        </div>
+      ) : (
+        <input
+          ref={inputRef}
+          type='text'
+          id={`${data?.row}-${data?.column}`}
+          style={{
+            outline: 0,
+            border: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: data?.backgroundColor,
+          }}
+          value={inputValue}
+          onKeyDown={(e) => {
+            if (
+              e.key === 'ArrowRight' ||
+              e.key === 'ArrowLeft' ||
+              e.key === 'ArrowUp' ||
+              e.key === 'ArrowDown'
+            ) {
+              inputRef?.current?.blur();
+              dateRef?.current?.blur();
+              return;
+            }
+            e.stopPropagation();
+          }}
+          onChange={(e) => {
+            e.stopPropagation();
+            setInputValue(e.target.value);
+          }}
+          onBlur={(e) => {
+            handleEditEvents();
+          }}
+        />
+      )}
+    </>
   );
 };
 

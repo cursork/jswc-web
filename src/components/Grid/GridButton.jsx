@@ -55,7 +55,7 @@ const GridButton = ({ data }) => {
       },
     });
 
-    // localStorage.setItem(data?.gridId, updatedGridValues);
+    localStorage.setItem(data?.gridId, updatedGridValues);
     console.log(triggerEvent);
     const exists = data?.gridEvents && data?.gridEvents.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
@@ -87,6 +87,7 @@ const GridButton = ({ data }) => {
     <>
       {!showInput ? (
         <div
+          id={`${data?.row}-${data?.column}`}
           onDoubleClick={() => {
             setShowInput(true);
           }}

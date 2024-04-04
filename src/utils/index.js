@@ -191,8 +191,6 @@ export const calculateDateAfterDays = (days) => {
   // Calculate the target date
   var targetDate = new Date(startDate?.getTime() + days * 24 * 60 * 60 * 1000);
 
-  console.log({ targetDate });
-
   // Format the date as YYYY-MM-DD
   var formattedDate = targetDate?.toISOString().split('T')[0];
 
@@ -289,5 +287,3 @@ export const createListViewObjects = (images, codes, descriptions, imagesIndexes
 
   return result;
 };
-
-
