@@ -20,13 +20,24 @@ const Menu = ({ data }) => {
         }}
         className='menu-item'
       >
-        {data?.Properties?.Caption?.substring(1)}
+        {data?.Properties?.Caption?.includes('&')
+          ? data?.Properties?.Caption?.substring(1)
+          : data?.Properties?.Caption}
       </div>
     );
   }
 
   // Render the DropDown if the Object have Menu Items
-  return <Dropdown data={updatedData} title={data?.Properties?.Caption?.substring(1)} />;
+  return (
+    <Dropdown
+      data={updatedData}
+      title={
+        data?.Properties?.Caption?.includes('&')
+          ? data?.Properties?.Caption?.substring(1)
+          : data?.Properties?.Caption
+      }
+    />
+  );
 };
 
 export default Menu;

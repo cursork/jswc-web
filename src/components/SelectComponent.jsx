@@ -48,11 +48,10 @@ const SelectComponent = ({
     return (
       <div
         style={{
-         
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 2,
+          translate: '0% -100%',
+          position: 'relative',
+          zIndex: '2',
+          width: '100%',
         }}
       >
         <MenuBar data={data} />

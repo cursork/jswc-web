@@ -122,7 +122,7 @@ const Form = ({ data }) => {
         border: '1px solid #F0F0F0',
         display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
         ...imageStyles,
-        overflow: 'hidden',
+        // overflow: 'hidden',
       }}
     >
       {Object.keys(updatedData).map((key) => {
