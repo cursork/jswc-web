@@ -16,6 +16,8 @@ const Text = ({ data }) => {
   console.log({ pointsArray });
   console.log({ Text });
 
+  console.log({ fontProperties });
+
   return (
     <div
       style={{
@@ -25,7 +27,7 @@ const Text = ({ data }) => {
         left: 0,
       }}
     >
-      <svg height={parentSize[0]} width={parentSize[1]}>
+      <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray?.map((textPoints, index) => {
           return (
             <text
@@ -47,9 +49,12 @@ const Text = ({ data }) => {
                   ? 'underline'
                   : 'none'
               }
+              transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
+                fontProperties?.Rotate * (180 / Math.PI)
+              }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
             >
               {pointsArray.length >= 1
-                ? Text[index]
+                ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
                 : Text?.map((text, textIndex) => {
                     const lineHeight = textIndex === 0 ? '0.7em' : '1em';
                     return (
