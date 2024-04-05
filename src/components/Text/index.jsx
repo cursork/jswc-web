@@ -13,10 +13,10 @@ const Text = ({ data }) => {
   const fontProperties = font && font?.Properties;
 
   // console.log({ fontProperties });
-  console.log({ pointsArray });
-  console.log({ Text });
+  // console.log({ pointsArray });
+  // console.log({ Text });
 
-  console.log({ fontProperties });
+  // console.log({ fontProperties });
 
   return (
     <div

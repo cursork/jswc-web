@@ -46,6 +46,8 @@ const Form = ({ data }) => {
     socket.send(event);
   };
 
+  console.log({ Event });
+
   // Set the current Focus
   useEffect(() => {
     localStorage.setItem('current-focus', data.ID);
@@ -92,6 +94,25 @@ const Form = ({ data }) => {
 
   return (
     <div
+      onMouseUp={(e) => {
+        const shiftState = e.shiftKey ? 1 : 0; // Shift state: 1 for Shift, 0 for no Shift
+        const x = e.clientX; // X position of the mouse
+        const y = e.clientY; // Y position of the mouse
+        const button = e.button;
+
+        const mouseUpEvent = JSON.stringify({
+          Event: {
+            EventName: 'MouseUp',
+            ID: data?.ID,
+            Info: [x, y, button, shiftState],
+          },
+        });
+
+        const exists = Event && Event.some((item) => item[0] === 'MouseUp');
+        if (!exists) return;
+        console.log(mouseUpEvent);
+        socket.send(mouseUpEvent);
+      }}
       id={data?.ID}
       style={{
         ...formStyles,
