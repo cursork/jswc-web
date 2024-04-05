@@ -48,9 +48,11 @@ const SelectComponent = ({
     return (
       <div
         style={{
-          translate: '0% -100%',
-          position: 'relative',
-          zIndex: '2',
+         
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 2,
         }}
       >
         <MenuBar data={data} />
@@ -145,7 +147,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
   if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
   if (data?.Properties?.Type == 'Image') return <Image data={data} />;
-   if (data?.Properties?.Type == 'Ellipse') return <Ecllipse data={data} />;
+  if (data?.Properties?.Type == 'Ellipse') return <Ecllipse data={data} />;
   if (data?.Properties?.Type == 'Circle') return <Circle data={data} />;
 };
 

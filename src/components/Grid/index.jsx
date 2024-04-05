@@ -608,6 +608,7 @@ const GridComponent = ({ data }) => {
             {row.map((data, columni) => {
               const isFocused = selectedRow === rowi && selectedColumn === columni;
               const Component = components[data?.type];
+
               return (
                 <div
                   tabIndex={rowi}
@@ -640,17 +641,19 @@ const GridComponent = ({ data }) => {
                     textAlign: data.type == 'header' ? 'center' : 'left',
                   }}
                 >
-                  <Component
-                    showInput={ShowInput}
-                    backgroundColor={data?.backgroundColor}
-                    gridId={gridId}
-                    gridValues={Values}
-                    gridEvent={Event}
-                    focused={isFocused}
-                    row={rowi}
-                    column={columni}
-                    {...data}
-                  />
+                  {!data.type ? null : (
+                    <Component
+                      showInput={ShowInput}
+                      backgroundColor={data?.backgroundColor}
+                      gridId={gridId}
+                      gridValues={Values}
+                      gridEvent={Event}
+                      focused={isFocused}
+                      row={rowi}
+                      column={columni}
+                      {...data}
+                    />
+                  )}
                 </div>
               );
             })}

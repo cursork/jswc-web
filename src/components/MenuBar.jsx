@@ -6,7 +6,11 @@ const MenuBar = ({ data }) => {
   const { Visible } = data?.Properties;
 
   return (
-    <div style={{ display: Visible == 0 ? 'none' : 'flex' }}>
+    <div
+      style={{
+        display: Visible == 0 ? 'none' : 'flex',
+      }}
+    >
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}
