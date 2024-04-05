@@ -113,6 +113,25 @@ const Form = ({ data }) => {
         console.log(mouseUpEvent);
         socket.send(mouseUpEvent);
       }}
+      onMouseDown={(e) => {
+        const shiftState = e.shiftKey ? 1 : 0; // Shift state: 1 for Shift, 0 for no Shift
+        const x = e.clientX; // X position of the mouse
+        const y = e.clientY; // Y position of the mouse
+        const button = e.button;
+
+        const mousedownEvent = JSON.stringify({
+          Event: {
+            EventName: 'MouseDown',
+            ID: data?.ID,
+            Info: [x, y, button, shiftState],
+          },
+        });
+
+        const exists = Event && Event.some((item) => item[0] === 'MouseDown');
+        if (!exists) return;
+        console.log(mousedownEvent);
+        socket.send(mousedownEvent);
+      }}
       id={data?.ID}
       style={{
         ...formStyles,

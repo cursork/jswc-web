@@ -1,3 +1,5 @@
+import { getObjectById } from '../utils';
+
 import Form from './Form';
 import MenuBar from './MenuBar';
 import Menu from './Menu';
@@ -31,6 +33,7 @@ import Timer from './Timer';
 import ListView from './ListView';
 import SubForm from './DynamicSubForm';
 import Image from './Image';
+import { useAppData } from '../hooks';
 
 const SelectComponent = ({
   data,
@@ -43,6 +46,8 @@ const SelectComponent = ({
   values = [],
   formatString = '',
 }) => {
+  const { dataRef } = useAppData();
+
   if (data?.Properties?.Type == 'Form') return <Form data={data} />;
   if (data?.Properties?.Type == 'MenuBar')
     return (
@@ -141,7 +146,11 @@ const SelectComponent = ({
     return <SubForm data={data} />;
   }
 
-  if (data?.Properties?.Type == 'Text') return <Text data={data} />;
+  if (data?.Properties?.Type == 'Text') {
+    const font = JSON.parse(getObjectById(dataRef?.current, data?.Properties?.FontObj));
+
+    return <Text data={data} fontProperties={font?.Properties} />;
+  }
 
   if (data?.Properties?.Type == 'Timer') return <Timer data={data} />;
   if (data?.Properties?.Type == 'ListView') return <ListView data={data} />;
