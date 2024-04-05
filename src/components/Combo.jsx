@@ -134,16 +134,17 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         Event: {
           EventName: 'Select',
           ID: data?.ID,
-          Info: !index ? 0 : index + 1,
+          Info: index + 1,
           Posn: [calculateTop, calculateLeft],
           Size: [Size && Size[0], Size && Size[1]],
+          Text: Items && Items[index],
         },
       });
 
       localStorage.setItem(data?.ID, event);
     } else {
       const { Event } = JSON.parse(localStorage.getItem(data?.ID));
-      const { Info } = Event;
+      const { Info, Text } = Event;
       const event = JSON.stringify({
         Event: {
           EventName: 'Select',
@@ -151,6 +152,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
           Info,
           Posn: [calculateTop, calculateLeft],
           Size: [Size && Size[0], Size && Size[1]],
+          Text: Text,
         },
       });
 
