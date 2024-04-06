@@ -3,9 +3,12 @@ import { rgbColor } from '../../utils';
 const Ecllipse = ({ data }) => {
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const { FillCol, Start, FCol, Size } = data?.Properties;
+  const { FillCol, Start, FCol, Size, End, Points } = data?.Properties;
 
-  const generatePieChartPaths = (startAngles) => {
+  const generatePieChartPaths = (startAngles, Points) => {
+    // const myPoints = Points && Points[0];
+    // const myPoints2 = Points && Points[1];
+
     const cx = Size && Size[1] / 2 + 10;
     const cy = Size && Size[0] / 2 + 10;
     const rx = Size && Size[1] / 2;
@@ -40,7 +43,51 @@ const Ecllipse = ({ data }) => {
     return paths;
   };
 
-  const paths = generatePieChartPaths(Start);
+  const generatePieChartPathsWithEnd = (startAngles, endAngles, Points) => {
+    // console.log('1', Points && Points[0][0]);
+    // console.log('2', Points && Points[1][0]);
+    const cx = (Size && Size[1] / 2) + 10;
+    const cy = (Size && Size[0] / 2) + 250;
+    const rx = Size && Size[1] / 2;
+    const ry = Size && Size[0] / 2;
+
+    console.log({ Start });
+    console.log({ End });
+
+    const paths = [];
+
+    for (let i = 0; i < startAngles.length; i++) {
+      const startAngle = -startAngles[i];
+      const endAngle = -endAngles[i];
+
+      const startX = cx + rx * Math.cos(startAngle);
+      const startY = cy + ry * Math.sin(startAngle);
+      const endX = cx + rx * Math.cos(endAngle);
+      const endY = cy + ry * Math.sin(endAngle);
+
+      const largeArcFlag = endAngle - startAngle <= Math.PI ? '0' : '1'; // Determine large arc flag
+
+      const path = `
+      M ${cx},${cy}
+      L ${startX},${startY}
+      A ${rx},${ry} 0 ${largeArcFlag},0 ${endX},${endY}
+      Z
+    `;
+
+      paths.push({
+        d: path,
+        fill: rgbColor(FillCol && FillCol[i]),
+        stroke: 'black',
+        strokeWidth: '1',
+      });
+    }
+
+    return paths;
+  };
+
+  const paths = !End
+    ? generatePieChartPaths(Start, Points)
+    : generatePieChartPathsWithEnd(Start, End, Points);
 
   return (
     <div
