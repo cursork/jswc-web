@@ -20,9 +20,10 @@ const Menu = ({ data }) => {
         }}
         className='menu-item'
       >
-        {data?.Properties?.Caption?.includes('&')
+        {/* {data?.Properties?.Caption?.includes('&')
           ? data?.Properties?.Caption?.substring(1)
-          : data?.Properties?.Caption}
+          : data?.Properties?.Caption} */}
+        {data?.Properties?.Caption?.replace('&', '')}
       </div>
     );
   }
@@ -32,9 +33,10 @@ const Menu = ({ data }) => {
     <Dropdown
       data={updatedData}
       title={
-        data?.Properties?.Caption?.includes('&')
-          ? data?.Properties?.Caption?.substring(1)
-          : data?.Properties?.Caption
+        // data?.Properties?.Caption?.includes('&')
+        //   ? data?.Properties?.Caption?.substring(1)
+        //   : data?.Properties?.Caption
+        data?.Properties?.Caption?.replace('&', '')
       }
     />
   );

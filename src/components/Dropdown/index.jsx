@@ -31,9 +31,10 @@ const Dropdown = ({ title, data }) => {
               className='dropdown-item'
               onClick={() => handleSelectEvent(data[key]?.ID, data[key]?.Properties)}
             >
-              {data[key]?.Properties?.Caption?.includes('&')
+              {/* {data[key]?.Properties?.Caption?.includes('&')
                 ? data[key]?.Properties?.Caption?.substring(1)
-                : data[key]?.Properties?.Caption}
+                : data[key]?.Properties?.Caption} */}
+              {data[key]?.Properties?.Caption?.replace('&', '')}
             </div>
           );
         })}
