@@ -13,54 +13,47 @@ function useForceRerender() {
 const Text = ({ data, fontProperties }) => {
   // console.log({ fontProperties });
 
-  const { Visible, Points, Text, FCol, FontObj } = data?.Properties;
-  const { findDesiredData, dataRef } = useAppData();
+  const { Visible, Points, Text, FCol, BCol } = data?.Properties;
 
   const { reRender } = useForceRerender();
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
   const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
-  // const [fontProperties, setFontProperties] = useState(null);
 
-  // const font = JSON.parse(getObjectById(dataRef?.current, FontObj));
+  const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+    // Create a hidden div element to calculate text dimensions
+    const container = document.createElement('div');
+    container.style.visibility = 'hidden';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.fontSize = fontSize + 'px'; // Set font size
 
-  // console.log({ font });
+    // Iterate through the array of words
+    wordsArray.forEach((word) => {
+      // Create a span element for each word
+      const span = document.createElement('div');
+      span.textContent = word;
+      span.style.display = 'block'; // Start each word on a new line
+      container.appendChild(span);
+    });
 
-  // const fontProperties = font && font?.Properties;
+    // Append the container to the body
+    document.body.appendChild(container);
 
-  // console.log({ font });
+    // Retrieve dimensions
+    const width = container.offsetWidth;
+    const height = container.offsetHeight - 11;
 
-  // console.log({ fontProperties });
+    // Remove the container from the body
+    document.body.removeChild(container);
 
-  // console.log({ pointsArray });
-  // console.log({ Text });
-
-  // console.log({ fontProperties });
-
-  // useEffect(() => {
-  //   console.log('Change the Rotate');
-  // }, [fontProperties?.Rotate]);
-  // useEffect(() => {
-  //   reRender();
-  // }, []);
-
-  // useEffect(() => {
-  //   // setInterval(() => {
-  //   //   setRotate((prev) => prev + 0.3);
-  //   // }, 200);
-  //   const font = findDesiredData(FontObj && FontObj);
-
-  //   setFontProperties(font && font?.Properties);
-
-  //   // console.log('Font', font?.Properties);
-  //   // console.log(font?.Properties?.Rotate, 'values');
-  //   setRotate(font?.Properties?.Rotate);
-  // }, [fontProperties?.Rotate]);
+    return { height, width };
+  };
 
   return (
     <>
-      {/* {JSON.stringify(fontProperties)} */}
       <div
         style={{
           position: 'absolute',
@@ -71,41 +64,67 @@ const Text = ({ data, fontProperties }) => {
       >
         <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
           {pointsArray?.map((textPoints, index) => {
+            const dimensions = calculateTextDimensions(
+              Text,
+              !fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`
+            );
+
+            const textWidth = dimensions?.width + 30; // replace with actual calculation
+            const textHeight = dimensions?.height + 10; // replace with actual calculation
+
             return (
-              <text
-                alignment-baseline='middle'
-                dy='0.7em'
-                x={textPoints[0]}
-                y={textPoints[1]}
-                font-family={fontProperties?.PName}
-                font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
-                fill={FCol ? rgbColor(FCol && FCol[index]) : 'black'}
-                font-style={
-                  !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none'
-                }
-                font-weight={!fontProperties?.Weight ? 0 : fontProperties?.Weight}
-                text-decoration={
-                  !fontProperties?.Underline
-                    ? 'none'
-                    : fontProperties?.Underline == 1
-                    ? 'underline'
-                    : 'none'
-                }
-                transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
-                  fontProperties?.Rotate * (180 / Math.PI)
-                }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
-              >
-                {pointsArray.length >= 1
-                  ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
-                  : Text?.map((text, textIndex) => {
-                      const lineHeight = textIndex === 0 ? '0.7em' : '1em';
-                      return (
-                        <tspan x={textPoints[0]} dy={lineHeight}>
-                          {text}
-                        </tspan>
-                      );
-                    })}
-              </text>
+              <g key={index}>
+                <rect
+                  x={textPoints[0]}
+                  y={textPoints[1]}
+                  width={textWidth}
+                  height={textHeight}
+                  transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
+                    fontProperties?.Rotate * (180 / Math.PI)
+                  }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
+                  fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
+                />
+                <text
+                  // fill='red'
+                  alignment-baseline='middle'
+                  dy='0.7em'
+                  x={textPoints[0]}
+                  y={textPoints[1]}
+                  font-family={fontProperties?.PName}
+                  font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
+                  fill={FCol ? rgbColor(FCol) : 'black'}
+                  font-style={
+                    !fontProperties?.Italic
+                      ? 'none'
+                      : fontProperties?.Italic == 1
+                      ? 'italic'
+                      : 'none'
+                  }
+                  font-weight={!fontProperties?.Weight ? 0 : fontProperties?.Weight}
+                  text-decoration={
+                    !fontProperties?.Underline
+                      ? 'none'
+                      : fontProperties?.Underline == 1
+                      ? 'underline'
+                      : 'none'
+                  }
+                  transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
+                    fontProperties?.Rotate * (180 / Math.PI)
+                  }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
+                >
+                  {pointsArray.length >= 1
+                    ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
+                    : Text?.map((text, textIndex) => {
+                        const lineHeight = textIndex === 0 ? '0.7em' : '1em';
+                        return (
+                          <tspan x={textPoints[0]} dy={lineHeight}>
+                            {text}
+                          </tspan>
+                        );
+                      })}
+                </text>
+                //{' '}
+              </g>
             );
           })}
         </svg>
