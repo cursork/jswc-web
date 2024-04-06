@@ -925,7 +925,7 @@ const App = () => {
             {
               ID: ID,
               Properties: {
-                ...appElement.Properties,
+                ...appElement?.Properties,
                 Posn: [Info[0], Info[1]],
                 Size: [Info[2], Info[3]],
               },
