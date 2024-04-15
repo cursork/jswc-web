@@ -1065,8 +1065,10 @@ const App = () => {
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      // Remove the event listener when the component is unmounted
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      +(
+        // Remove the event listener when the component is unmounted
+        window.removeEventListener('beforeunload', handleBeforeUnload)
+      );
       // Close the WebSocket if it's still open
       if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
         webSocketRef.current.close();

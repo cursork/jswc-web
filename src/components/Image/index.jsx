@@ -11,7 +11,12 @@ const Image = ({ data }) => {
 
   return (
     <div
+      id={data?.ID}
       style={{
+        display: Visible == 0 ? 'none' : 'block',
+        position: 'absolute',
+        top: 0,
+        left: 0,
         display: Visible == 0 ? 'none' : 'block',
       }}
     >

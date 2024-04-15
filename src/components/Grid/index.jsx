@@ -467,14 +467,16 @@ const GridComponent = ({ data }) => {
           type: 'header',
           backgroundColor: rgbColor(ColTitleBCol),
           color: rgbColor(ColTitleFCol),
-          width: !CellWidths ? 100 : CellWidths[i],
+          width: !TitleWidth ? 100 : TitleWidth,
           // height: 20,
         };
 
         header.push(obj);
       }
 
-      header = RowTitles ? [{ value: '', type: 'header' }, ...header] : [...header];
+      header = RowTitles
+        ? [{ value: '', type: 'header', width: !TitleWidth ? 100 : TitleWidth }, ...header]
+        : [...header];
 
       data.push(header);
     } else if (!ColTitles) {
@@ -482,7 +484,7 @@ const GridComponent = ({ data }) => {
         return {
           value: alphabet,
           type: 'header',
-          width: !TitleWidth ? 100 : TitleHeight,
+          width: !TitleWidth ? 100 : TitleWidth,
           height: !TitleHeight ? 20 : TitleHeight,
         };
       });
@@ -496,7 +498,7 @@ const GridComponent = ({ data }) => {
         let obj = {
           type: 'cell',
           value: RowTitles ? RowTitles[i] : i + 1,
-          width: 100,
+          width: !TitleWidth ? 100 : TitleWidth,
           height: 20,
         };
         body.push(obj);
