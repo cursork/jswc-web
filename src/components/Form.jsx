@@ -46,8 +46,6 @@ const Form = ({ data }) => {
     socket.send(event);
   };
 
-  console.log({ Event });
-
   // Set the current Focus
   useEffect(() => {
     localStorage.setItem('current-focus', data.ID);

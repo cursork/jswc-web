@@ -31,6 +31,46 @@ const App = () => {
   const dataRef = useRef({});
   const appRef = useRef(null);
 
+  useEffect(() => {
+    dataRef.current = {};
+    setSocketData([]);
+    localStorage.clear();
+    const currentPort = window.location.port;
+    fetchData(currentPort);
+
+    const handleBeforeUnload = () => {
+      // Attempt to send a closing message before the tab is closed
+      if (webSocketRef.current) {
+        webSocketRef.current.send(JSON.stringify({ Signal: { Name: 'Close' } }));
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      // Remove the event listener when the component is unmounted
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // Close the WebSocket if it's still open
+      if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
+        webSocketRef.current.close();
+      }
+    };
+  }, [layout]);
+
+  useEffect(() => {
+    const container = appRef.current;
+
+    if (container) {
+      // container.addEventListener('focusin', handleFocus);
+      container.addEventListener('click', handleFocus);
+    }
+    return () => {
+      if (container) {
+        // container.removeEventListener('focusin', handleFocus);
+        container.removeEventListener('click', handleFocus);
+      }
+    };
+  }, []);
+
   const handleData = (data, mode) => {
     const splitID = data.ID.split('.');
 
@@ -82,29 +122,59 @@ const App = () => {
     reRender();
   };
 
-  const deleteObjectsById = (data, idsToDelete) => {
-    function deleteById(obj, id) {
-      for (const key in obj) {
-        if (obj[key].ID === id) {
-          delete obj[key];
-          return true;
-        }
-        if (typeof obj[key] === 'object') {
-          if (deleteById(obj[key], id)) {
-            return true;
+  // const deleteObjectsById = (data, idsToDelete) => {
+  //   //  reRender();
+  //   function deleteById(obj, id) {
+  //     for (const key in obj) {
+  //       if (obj[key].ID === id) {
+  //         delete obj[key];
+  //         return true;
+  //       }
+  //       if (typeof obj[key] === 'object') {
+  //         if (deleteById(obj[key], id)) {
+  //           return true;
+  //         }
+  //       }
+  //     }
+  //     return false;
+  //   }
+  //   idsToDelete?.forEach((id) => {
+  //     deleteById(data, id);
+  //   });
+
+  //   dataRef.current = data;
+  //   // socketData.filter((item) => idsToDelete.some((id) => item.ID.startsWith(id)));
+  // };
+
+  function deleteObjectsById(obj, ids) {
+    ids.forEach((id) => {
+      const deleteKey = (data, key) => {
+        if (data.hasOwnProperty(key)) {
+          delete data[key];
+        } else {
+          const nestedKeys = key.split('.');
+          let nestedObj = data;
+          for (let i = 0; i < nestedKeys.length; i++) {
+            const nestedKey = nestedKeys[i];
+            if (nestedObj.hasOwnProperty(nestedKey)) {
+              if (i === nestedKeys.length - 1) {
+                delete nestedObj[nestedKey];
+              } else {
+                nestedObj = nestedObj[nestedKey];
+              }
+            } else {
+              break;
+            }
           }
         }
-      }
-      return false;
-    }
-    idsToDelete.forEach((id) => {
-      deleteById(data, id);
-    });
+      };
 
-    dataRef.current = data;
-    socketData.filter((item) => idsToDelete.some((id) => item.ID.startsWith(id)));
+      deleteKey(obj, id);
+    });
+    dataRef.current = obj;
+
     reRender();
-  };
+  }
 
   const fetchData = (port) => {
     const runningPort = port == '5173' ? '22322' : port;
@@ -1049,33 +1119,6 @@ const App = () => {
     };
   };
 
-  useEffect(() => {
-    dataRef.current = {};
-    setSocketData([]);
-    localStorage.clear();
-    const currentPort = window.location.port;
-    fetchData(currentPort);
-
-    const handleBeforeUnload = () => {
-      // Attempt to send a closing message before the tab is closed
-      if (webSocketRef.current) {
-        webSocketRef.current.send(JSON.stringify({ Signal: { Name: 'Close' } }));
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      +(
-        // Remove the event listener when the component is unmounted
-        window.removeEventListener('beforeunload', handleBeforeUnload)
-      );
-      // Close the WebSocket if it's still open
-      if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
-        webSocketRef.current.close();
-      }
-    };
-  }, [layout]);
-
   const handleFocus = (element) => {
     const formParentID = findFormParentID(dataRef.current);
     if (localStorage.getItem('change-event')) {
@@ -1091,21 +1134,6 @@ const App = () => {
       localStorage.removeItem('change-event');
     }
   };
-
-  useEffect(() => {
-    const container = appRef.current;
-
-    if (container) {
-      // container.addEventListener('focusin', handleFocus);
-      container.addEventListener('click', handleFocus);
-    }
-    return () => {
-      if (container) {
-        // container.removeEventListener('focusin', handleFocus);
-        container.removeEventListener('click', handleFocus);
-      }
-    };
-  }, []);
 
   // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);

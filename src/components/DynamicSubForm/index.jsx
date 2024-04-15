@@ -6,7 +6,7 @@ import { useAppData } from '../../hooks';
 
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const { findDesiredData, dataRef } = useAppData();
+  const { findDesiredData } = useAppData();
   const {
     Size,
     Posn,
