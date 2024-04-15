@@ -57,7 +57,7 @@ const GridButton = ({ data }) => {
 
     localStorage.setItem(data?.gridId, updatedGridValues);
     console.log(triggerEvent);
-    const exists = data?.gridEvents && data?.gridEvents.some((item) => item[0] === 'CellChanged');
+    const exists = data?.gridEvent && data?.gridEvent.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
     console.log(formatCellEvent);
     socket.send(formatCellEvent);

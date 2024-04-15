@@ -28,14 +28,14 @@ const ListView = ({ data }) => {
       Event: {
         EventName: eventName,
         ID: data?.ID,
-        Info: [index, 1, shiftState, 4],
+        Info: [index + 1, 1, shiftState, 4],
       },
     });
 
     // Stored in local storage to handle the WG of TreeView
     const SelItems = new Array(Items?.length).fill(0);
 
-    SelItems[index - 1] = 1;
+    SelItems[index] = 1;
 
     //WG SelItems
     const storedFocusedIndex = JSON.stringify({
@@ -82,7 +82,7 @@ const ListView = ({ data }) => {
             <div
               onDoubleClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDblClick')}
               onClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDown')}
-              style={{ width: '50px' }}
+              style={{ width: '60px' }}
               className={`d-flex flex-${orientation}`}
             >
               {Images.length > 0 ? (

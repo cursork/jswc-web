@@ -467,7 +467,7 @@ const GridComponent = ({ data }) => {
           type: 'header',
           backgroundColor: rgbColor(ColTitleBCol),
           color: rgbColor(ColTitleFCol),
-          width: !TitleWidth ? 100 : TitleWidth,
+          width: Input ? CellWidths && CellWidths[i] : !TitleWidth ? 100 : TitleWidth,
           // height: 20,
         };
 

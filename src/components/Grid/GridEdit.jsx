@@ -76,12 +76,12 @@ const GridEdit = ({ data }) => {
     localStorage.setItem(data?.gridId, updatedGridValues);
 
     // localStorage.setItem(data?.gridId, cellChangedEvent);
-    console.log(cellChangedEvent);
-    const exists = data?.gridEvents && data?.gridEvents.some((item) => item[0] === 'CellChanged');
+    const exists = data?.gridEvent && data?.gridEvent.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
+    console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
 
-    if (!formatString) return;
+    // if (!formatString) return;
 
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
