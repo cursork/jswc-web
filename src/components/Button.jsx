@@ -53,7 +53,72 @@ const Button = ({
 
   useEffect(() => {
     decideInput();
+    setPosition({ top: Posn && Posn[0], left: Posn && Posn[1] });
   }, [data]);
+
+  useEffect(() => {
+    if (!position) return;
+    if (!parentOldDimensions) return;
+
+    let calculateLeft =
+      position && position.left && parentOldDimensions && parentOldDimensions[1]
+        ? (position.left / parentOldDimensions[1]) * dimensions.width
+        : 0;
+
+    calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width));
+
+    let calculateTop =
+      position && position.top && parentOldDimensions && parentOldDimensions[0]
+        ? (position.top / parentOldDimensions[0]) * dimensions.height
+        : 0;
+
+    calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
+
+    setPosition({ top: Math.round(calculateTop), left: Math.round(calculateLeft) });
+
+    setParentOldDimensions([dimensions?.height, dimensions?.width]);
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          ...(data?.Properties?.hasOwnProperty('Posn')
+            ? { Posn: [Math.round(calculateTop), Math.round(calculateLeft)] }
+            : {}),
+        },
+      },
+      'WS'
+    );
+
+    if (!localStorage.getItem(data?.ID)) {
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Value: 0,
+          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
+          Size: [Size && Size[0], Size && Size[1]],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    } else {
+      const { Event } = JSON.parse(localStorage.getItem(data?.ID));
+      const { Value } = Event;
+      const event = JSON.stringify({
+        Event: {
+          EventName: 'Select',
+          ID: data?.ID,
+          Value,
+          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
+          Size: [Size && Size[0], Size && Size[1]],
+        },
+      });
+
+      localStorage.setItem(data?.ID, event);
+    }
+    setParentOldDimensions([dimensions?.height, dimensions?.width]);
+    reRender();
+  }, [dimensions]);
 
   const handleCellChangedEvent = (value) => {
     const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
@@ -352,70 +417,6 @@ const Button = ({
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!position) return;
-    if (!parentOldDimensions) return;
-
-    let calculateLeft =
-      position && position.left && parentOldDimensions && parentOldDimensions[1]
-        ? (position.left / parentOldDimensions[1]) * dimensions.width
-        : 0;
-
-    calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width));
-
-    let calculateTop =
-      position && position.top && parentOldDimensions && parentOldDimensions[0]
-        ? (position.top / parentOldDimensions[0]) * dimensions.height
-        : 0;
-
-    calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
-
-    setPosition({ top: Math.round(calculateTop), left: Math.round(calculateLeft) });
-
-    setParentOldDimensions([dimensions?.height, dimensions?.width]);
-    handleData(
-      {
-        ID: data?.ID,
-        Properties: {
-          ...(data?.Properties?.hasOwnProperty('Posn')
-            ? { Posn: [Math.round(calculateTop), Math.round(calculateLeft)] }
-            : {}),
-        },
-      },
-      'WS'
-    );
-
-    if (!localStorage.getItem(data?.ID)) {
-      const event = JSON.stringify({
-        Event: {
-          EventName: 'Select',
-          ID: data?.ID,
-          Value: 0,
-          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
-          Size: [Size && Size[0], Size && Size[1]],
-        },
-      });
-
-      localStorage.setItem(data?.ID, event);
-    } else {
-      const { Event } = JSON.parse(localStorage.getItem(data?.ID));
-      const { Value } = Event;
-      const event = JSON.stringify({
-        Event: {
-          EventName: 'Select',
-          ID: data?.ID,
-          Value,
-          Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
-          Size: [Size && Size[0], Size && Size[1]],
-        },
-      });
-
-      localStorage.setItem(data?.ID, event);
-    }
-    setParentOldDimensions([dimensions?.height, dimensions?.width]);
-    reRender();
-  }, [dimensions]);
 
   return (
     <div

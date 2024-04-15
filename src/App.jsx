@@ -171,6 +171,8 @@ const App = () => {
 
       deleteKey(obj, id);
     });
+
+    console.log({ obj });
     dataRef.current = obj;
 
     reRender();
