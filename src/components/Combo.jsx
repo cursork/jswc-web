@@ -24,7 +24,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   useEffect(() => {
     const index = SelItems?.findIndex((element) => element == 1);
     setComboInput(Items[index]);
-  }, []);
+  }, [data]);
 
   const handleCellChangeEvent = (value) => {
     const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
@@ -145,14 +145,15 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     } else {
       const { Event } = JSON.parse(localStorage.getItem(data?.ID));
       const { Info, Text } = Event;
+      const index = SelItems?.findIndex((element) => element == 1);
       const event = JSON.stringify({
         Event: {
           EventName: 'Select',
           ID: data?.ID,
-          Info,
+          Info: index + 1,
           Posn: [calculateTop, calculateLeft],
           Size: [Size && Size[0], Size && Size[1]],
-          Text: Text,
+          Text: Items && Items[index],
         },
       });
 
@@ -160,7 +161,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     }
 
     reRender();
-  }, [dimensions]);
+  }, [dimensions, data]);
 
   const triggerCellMoveEvent = (row, column, value) => {
     const Event = JSON.stringify({
