@@ -80,8 +80,8 @@ const ListView = ({ data }) => {
         {listViewItems?.map((item, index) => {
           return (
             <div
-              onDoubleClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDblClick')}
-              onClick={(e) => handleEvent(e.nativeEvent, index + 1, 'ItemDown')}
+              onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
+              onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
               style={{ width: '60px' }}
               className={`d-flex flex-${orientation}`}
             >

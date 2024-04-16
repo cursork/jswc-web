@@ -309,6 +309,7 @@ import GridButton from './GridButton';
 import GridCell from './GridCell';
 import Header from './Header';
 import GridLabel from './GridLabel';
+import { isArray } from 'lodash';
 
 const Grid = ({ data }) => {
   return <GridComponent key={data?.ID} data={data} />;
@@ -467,7 +468,7 @@ const GridComponent = ({ data }) => {
           type: 'header',
           backgroundColor: rgbColor(ColTitleBCol),
           color: rgbColor(ColTitleFCol),
-          width: Input ? CellWidths && CellWidths[i] : !TitleWidth ? 100 : TitleWidth,
+          width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
           // height: 20,
         };
 
@@ -475,7 +476,14 @@ const GridComponent = ({ data }) => {
       }
 
       header = RowTitles
-        ? [{ value: '', type: 'header', width: !TitleWidth ? 100 : TitleWidth }, ...header]
+        ? [
+            {
+              value: '',
+              type: 'header',
+              width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : CellWidths,
+            },
+            ...header,
+          ]
         : [...header];
 
       data.push(header);
@@ -498,7 +506,7 @@ const GridComponent = ({ data }) => {
         let obj = {
           type: 'cell',
           value: RowTitles ? RowTitles[i] : i + 1,
-          width: !TitleWidth ? 100 : TitleWidth,
+          width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : 100,
           height: 20,
         };
         body.push(obj);
@@ -506,7 +514,7 @@ const GridComponent = ({ data }) => {
           let obj = {
             type: 'cell',
             value: Values[i][j],
-            width: 100,
+            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
             height: 20,
           };
           body.push(obj);
@@ -532,7 +540,7 @@ const GridComponent = ({ data }) => {
             typeObj: type,
             formattedValue: FormattedValues && FormattedValues[i][j],
             formatString: FormatString && FormatString[cellType - 1],
-            width: !CellWidths ? 100 : CellWidths[j],
+            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[j] : CellWidths,
             height: 20,
           };
           body.push(obj);
