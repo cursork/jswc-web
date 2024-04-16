@@ -309,7 +309,6 @@ import GridButton from './GridButton';
 import GridCell from './GridCell';
 import Header from './Header';
 import GridLabel from './GridLabel';
-import { isArray } from 'lodash';
 
 const Grid = ({ data }) => {
   return <GridComponent key={data?.ID} data={data} />;
@@ -423,7 +422,6 @@ const GridComponent = ({ data }) => {
 
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
-
       handleCellMove(
         parseInt(table[0]),
         parseInt(table[1]) + 2,
@@ -461,7 +459,17 @@ const GridComponent = ({ data }) => {
 
     // Push the header Information
     if (ColTitles) {
+      // Add the empty cell in the header when the default Row Titles is present
       let header = [];
+      let emptyobj = {
+        value: '',
+        type: 'header',
+        width: !TitleWidth ? 100 : TitleWidth,
+      };
+
+      // push the obj when TitleWidth is present
+      !TitleWidth ? null : header.push(emptyobj);
+
       for (let i = 0; i < ColTitles?.length; i++) {
         let obj = {
           value: ColTitles[i],
@@ -524,9 +532,20 @@ const GridComponent = ({ data }) => {
     } else if (Input) {
       for (let i = 0; i < Values?.length; i++) {
         let body = [];
+
+        // Decide to add the RowTitles If the TitleWidth is Greater than 0
+        let obj = {
+          type: 'cell',
+          value: RowTitles ? RowTitles[i] : i + 1,
+          width: !TitleWidth ? 100 : TitleWidth,
+          height: 20,
+        };
+
+        !TitleWidth ? null : body.push(obj);
+
         for (let j = 0; j < columns; j++) {
           let cellType = CellTypes && CellTypes[i][j];
-          const type = findDesiredData(Input && Input[cellType - 1]);
+          const type = findDesiredData(Input?.length > 1 ? Input && Input[cellType - 1] : Input[0]);
           const event = data?.Properties?.Event && data?.Properties?.Event;
           const backgroundColor = BCol && BCol[cellType - 1];
           const cellFont = findDesiredData(CellFonts && CellFonts[cellType - 1]);
