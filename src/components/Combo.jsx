@@ -24,7 +24,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   useEffect(() => {
     const index = SelItems?.findIndex((element) => element == 1);
     setComboInput(Items[index]);
-  }, [data]);
+  }, []);
 
   const handleCellChangeEvent = (value) => {
     const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
