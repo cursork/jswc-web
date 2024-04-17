@@ -113,6 +113,8 @@ const Edit = ({
       setInputType('number');
     } else if (FieldType == 'Date') {
       setInputType('date');
+    } else if (isPassword) {
+      setInputType('password');
     }
   };
 

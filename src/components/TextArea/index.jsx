@@ -11,8 +11,8 @@ const TextArea = ({ data }) => {
     ...styles,
     scrollbarWidth: 'thin',
     scrollbarColor: 'transparent transparent',
-    fontFamily: Font[0],
-    fontSize: `${Font[1]}`,
+    fontFamily: Font && Font[0],
+    fontSize: Font && `${Font[1]}`,
   };
 
   return (

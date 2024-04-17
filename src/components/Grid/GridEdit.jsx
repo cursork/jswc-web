@@ -20,6 +20,7 @@ const GridEdit = ({ data }) => {
       ? dayjs(calculateDateAfterDays(data?.value)).format(ShortDate && ShortDate)
       : data?.value
   );
+  const [selectedDate, setSelectedDate] = useState(data?.value);
 
   useEffect(() => {
     if (data.focused) {
@@ -97,6 +98,7 @@ const GridEdit = ({ data }) => {
       inputRef.current.showPicker();
     };
     const handleDateChange = (event) => {
+      setSelectedDate(event.target.value);
       const selectedDate = dayjs(event.target.value).format(ShortDate);
       let value = calculateDaysFromDate(event.target.value) + 1;
       setInputValue(selectedDate);
@@ -116,7 +118,10 @@ const GridEdit = ({ data }) => {
           value={inputValue}
           type='text'
           readOnly
-          onClick={handleTextClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleTextClick();
+          }}
           onBlur={() => {
             handleEditEvents();
           }}
@@ -138,6 +143,7 @@ const GridEdit = ({ data }) => {
         <input
           id={`${data?.row}-${data?.column}`}
           type='date'
+          value={selectedDate}
           ref={inputRef}
           onChange={handleDateChange}
           style={{
