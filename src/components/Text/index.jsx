@@ -52,6 +52,8 @@ const Text = ({ data, fontProperties }) => {
     return { height, width };
   };
 
+  console.log({ FCol });
+
   return (
     <>
       <div
@@ -92,7 +94,7 @@ const Text = ({ data, fontProperties }) => {
                   y={textPoints[1]}
                   font-family={fontProperties?.PName}
                   font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
-                  fill={FCol ? rgbColor(FCol) : 'black'}
+                  fill={FCol ? rgbColor(FCol[index]) : 'black'}
                   font-style={
                     !fontProperties?.Italic
                       ? 'none'

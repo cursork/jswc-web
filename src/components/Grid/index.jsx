@@ -454,6 +454,8 @@ const GridComponent = ({ data }) => {
     }
   };
 
+  console.log({ TitleHeight });
+
   const modifyGridData = () => {
     let data = [];
 
@@ -465,6 +467,7 @@ const GridComponent = ({ data }) => {
         value: '',
         type: 'header',
         width: !TitleWidth ? 100 : TitleWidth,
+        height: !TitleHeight ? 20 : TitleHeight,
       };
 
       // push the obj when TitleWidth is present
@@ -477,7 +480,7 @@ const GridComponent = ({ data }) => {
           backgroundColor: rgbColor(ColTitleBCol),
           color: rgbColor(ColTitleFCol),
           width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
-          // height: 20,
+          height: !TitleHeight ? 20 : TitleHeight,
         };
 
         header.push(obj);
@@ -657,8 +660,8 @@ const GridComponent = ({ data }) => {
                     // minWidth: !CellWidths ? '100px' : CellWidths[columni],
                     // maxWidth: !CellWidths ? '100px' : CellWidths[columni],
                     fontSize: '12px',
-                    // minHeight: '20px',
-                    // maxHeight: '20px',
+                    minHeight: `${data?.height}px`,
+                    maxHeight: `${data?.height}px`,
                     minWidth: `${data?.width}px`,
                     maxWidth: `${data?.width}px`,
                     minheight: `${data?.height}px`,
@@ -668,6 +671,7 @@ const GridComponent = ({ data }) => {
                         ? 'lightblue'
                         : rgbColor(data?.backgroundColor),
                     textAlign: data.type == 'header' ? 'center' : 'left',
+                    overflow: 'hidden',
                   }}
                 >
                   {!data.type ? null : (

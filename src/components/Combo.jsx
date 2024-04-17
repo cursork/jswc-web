@@ -24,7 +24,18 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   useEffect(() => {
     const index = SelItems?.findIndex((element) => element == 1);
     setComboInput(Items[index]);
-  }, []);
+    const triggerEvent = JSON.stringify({
+      Event: {
+        EventName: 'Select',
+        ID: data?.ID,
+        Info: index + 1,
+        Text: Items && Items[index],
+        Posn: [position?.top, position?.left],
+        Size: [Size && Size[0], Size && Size[1]],
+      },
+    });
+    localStorage.setItem(data?.ID, triggerEvent);
+  }, [data]);
 
   const handleCellChangeEvent = (value) => {
     const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
@@ -128,40 +139,41 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     );
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
 
-    if (!localStorage.getItem(data?.ID)) {
-      const index = SelItems?.findIndex((element) => element == 1);
-      const event = JSON.stringify({
-        Event: {
-          EventName: 'Select',
-          ID: data?.ID,
-          Info: index + 1,
-          Posn: [calculateTop, calculateLeft],
-          Size: [Size && Size[0], Size && Size[1]],
-          Text: Items && Items[index],
-        },
-      });
+    // if (!localStorage.getItem(data?.ID)) {
+    //   const index = SelItems?.findIndex((element) => element == 1);
+    //   // setComboInput(Items[index]);
+    //   const event = JSON.stringify({
+    //     Event: {
+    //       EventName: 'Select',
+    //       ID: data?.ID,
+    //       Info: index + 1,
+    //       Posn: [calculateTop, calculateLeft],
+    //       Size: [Size && Size[0], Size && Size[1]],
+    //       Text: Items && Items[index],
+    //     },
+    //   });
 
-      localStorage.setItem(data?.ID, event);
-    } else {
-      const { Event } = JSON.parse(localStorage.getItem(data?.ID));
-      const { Info, Text } = Event;
-      const index = SelItems?.findIndex((element) => element == 1);
-      const event = JSON.stringify({
-        Event: {
-          EventName: 'Select',
-          ID: data?.ID,
-          Info: index + 1,
-          Posn: [calculateTop, calculateLeft],
-          Size: [Size && Size[0], Size && Size[1]],
-          Text: Items && Items[index],
-        },
-      });
+    //   localStorage.setItem(data?.ID, event);
+    // } else {
+    //   const { Event } = JSON.parse(localStorage.getItem(data?.ID));
+    //   const { Info, Text } = Event;
+    //   const index = SelItems?.findIndex((element) => element == 1);
+    //   const event = JSON.stringify({
+    //     Event: {
+    //       EventName: 'Select',
+    //       ID: data?.ID,
+    //       Info: index + 1,
+    //       Posn: [calculateTop, calculateLeft],
+    //       Size: [Size && Size[0], Size && Size[1]],
+    //       Text: Items && Items[index],
+    //     },
+    //   });
 
-      localStorage.setItem(data?.ID, event);
-    }
+    //   localStorage.setItem(data?.ID, event);
+    // }
 
     reRender();
-  }, [dimensions, data]);
+  }, [dimensions]);
 
   const triggerCellMoveEvent = (row, column, value) => {
     const Event = JSON.stringify({
@@ -246,6 +258,8 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     else if (e.key == 'ArrowDown') handleCellMove(e.target.value);
     else if (e.key == 'ArrowUp') handleUpArrow(e.target.value);
   };
+
+  // console.log({ comboInput });
 
   return (
     <div
