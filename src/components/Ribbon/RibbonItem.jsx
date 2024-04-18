@@ -9,7 +9,11 @@ const CustomRibbonItem = ({ data }) => {
   const size = Size || 12;
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }} className={`col-${size}`}>
+    <div
+      id={data?.ID}
+      style={{ display: 'flex', justifyContent: 'center' }}
+      className={`col-${size}`}
+    >
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;
       })}

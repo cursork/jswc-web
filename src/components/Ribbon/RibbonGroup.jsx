@@ -11,7 +11,7 @@ const CustomRibbonGroup = ({ data }) => {
   const size = Size || 1;
 
   return (
-    <div className={`col-${size}`}>
+    <div id={data?.ID} className={`col-${size}`}>
       <div
         style={{
           border: '1px solid rgb(204, 204, 204)',

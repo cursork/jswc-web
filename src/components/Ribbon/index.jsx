@@ -15,6 +15,7 @@ const CustomRibbon = ({ data }) => {
 
   return (
     <div
+      id={data?.ID}
       className='row'
       style={{
         height: !Size ? '8rem' : Size[0],
