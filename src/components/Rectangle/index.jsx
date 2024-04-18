@@ -27,6 +27,7 @@ const Rectangle = ({
         {pointsArray?.map((rectanglePoints, index) => {
           return (
             <rect
+              id={index}
               rx={Radius && Radius[index * 0]}
               ry={Radius && Radius[index * 0]}
               x={rectanglePoints[0]}

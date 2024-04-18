@@ -454,8 +454,6 @@ const GridComponent = ({ data }) => {
     }
   };
 
-  console.log({ TitleHeight });
-
   const modifyGridData = () => {
     let data = [];
 
@@ -653,7 +651,7 @@ const GridComponent = ({ data }) => {
                   //   setSelectedRow(rowi);
                   // }}
                   onKeyDown={handleKeyDown}
-                  id={`${rowi}-${columni}`}
+                  id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
                   style={{
                     borderRight: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
                     borderBottom: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',

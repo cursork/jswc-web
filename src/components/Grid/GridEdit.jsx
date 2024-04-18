@@ -108,7 +108,7 @@ const GridEdit = ({ data }) => {
       <>
         <input
           ref={dateRef}
-          id={`${data?.row}-${data?.column}`}
+          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
           style={{
             border: 0,
             outline: 0,
@@ -141,7 +141,7 @@ const GridEdit = ({ data }) => {
           }}
         />
         <input
-          id={`${data?.row}-${data?.column}`}
+          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
           type='date'
           value={selectedDate}
           ref={inputRef}
@@ -174,7 +174,7 @@ const GridEdit = ({ data }) => {
             className='currency'
             allowLeadingZeros={true}
             getInputRef={inputRef}
-            id={`${data?.row}-${data?.column}`}
+            id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
             style={{
               width: '100%',
               border: 0,
@@ -227,7 +227,7 @@ const GridEdit = ({ data }) => {
         <input
           ref={inputRef}
           type='text'
-          id={`${data?.row}-${data?.column}`}
+          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
           style={{
             outline: 0,
             border: 0,

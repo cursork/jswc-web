@@ -163,7 +163,7 @@ const VerticalSplitter = ({ data }) => {
     setResizing(true);
   };
 
-  return <div onMouseDown={handleMouseDown} style={verticalStyles}></div>;
+  return <div id={data?.ID} onMouseDown={handleMouseDown} style={verticalStyles}></div>;
 };
 
 export default VerticalSplitter;

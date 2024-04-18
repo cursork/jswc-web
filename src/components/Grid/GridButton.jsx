@@ -71,6 +71,8 @@ const GridButton = ({ data }) => {
 
   const fontProperties = data?.cellFont && data?.cellFont?.Properties;
 
+  console.log({ data });
+
   let fontStyles = {
     fontFamily: fontProperties?.PName,
     fontSize: !fontProperties?.Size ? '11px' : '12px',
@@ -101,7 +103,7 @@ const GridButton = ({ data }) => {
       ) : (
         <input
           ref={buttonRef}
-          id={`${data?.row}-${data?.column}`}
+          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
           type='checkbox'
           checked={checkInput}
           onChange={(e) => {

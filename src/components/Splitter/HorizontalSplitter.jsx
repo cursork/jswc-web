@@ -188,7 +188,7 @@ const HorizontalSplitter = ({ data }) => {
     left: 0,
   };
 
-  return <div style={horizontalStyles} onMouseDown={(e) => handleMouseDown(e)}></div>;
+  return <div id={data?.ID} style={horizontalStyles} onMouseDown={(e) => handleMouseDown(e)}></div>;
 };
 
 export default HorizontalSplitter;

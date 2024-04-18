@@ -17,6 +17,7 @@ const Poly = ({ data }) => {
 
           return (
             <polygon
+              id={index}
               key={index}
               points={flatArray && flatArray.flat().join(' ')}
               fill={FStyle && FStyle[index] == '-1' ? 'none' : FillCol && rgbColor(FillCol[index])}
