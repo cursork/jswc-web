@@ -20,7 +20,9 @@ const GridEdit = ({ data }) => {
       ? dayjs(calculateDateAfterDays(data?.value)).format(ShortDate && ShortDate)
       : data?.value
   );
-  const [selectedDate, setSelectedDate] = useState(data?.value);
+  const [selectedDate, setSelectedDate] = useState(
+    FieldType == 'Date' ? dayjs(calculateDateAfterDays(data?.value)) : new Date()
+  );
 
   useEffect(() => {
     if (data.focused) {
@@ -91,6 +93,8 @@ const GridEdit = ({ data }) => {
   const handleEditEvents = () => {
     triggerCellChangedEvent();
   };
+
+  console.log({ selectedDate });
 
   if (FieldType == 'Date') {
     const handleTextClick = () => {

@@ -330,6 +330,7 @@ const GridComponent = ({ data }) => {
     ColTitles,
     RowTitles,
     CellWidths,
+    CellHeights,
     Visible,
     CurCell,
     CellTypes,
@@ -456,7 +457,6 @@ const GridComponent = ({ data }) => {
 
   const modifyGridData = () => {
     let data = [];
-
     // Push the header Information
     if (ColTitles) {
       // Add the empty cell in the header when the default Row Titles is present
@@ -516,7 +516,8 @@ const GridComponent = ({ data }) => {
           type: 'cell',
           value: RowTitles ? RowTitles[i] : i + 1,
           width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : 100,
-          height: 20,
+          height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
+          align: 'start',
         };
         body.push(obj);
         for (let j = 0; j <= columns; j++) {
@@ -524,7 +525,8 @@ const GridComponent = ({ data }) => {
             type: 'cell',
             value: Values[i][j],
             width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
-            height: 20,
+            height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[j] : CellHeights,
+            align: 'end',
           };
           body.push(obj);
         }
@@ -539,7 +541,8 @@ const GridComponent = ({ data }) => {
           type: 'cell',
           value: RowTitles ? RowTitles[i] : i + 1,
           width: !TitleWidth ? 100 : TitleWidth,
-          height: 20,
+          height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
+          align: 'start',
         };
 
         !TitleWidth ? null : body.push(obj);
@@ -561,7 +564,7 @@ const GridComponent = ({ data }) => {
             formattedValue: FormattedValues && FormattedValues[i][j],
             formatString: FormatString && FormatString[cellType - 1],
             width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[j] : CellWidths,
-            height: 20,
+            height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
           };
           body.push(obj);
         }
@@ -571,6 +574,8 @@ const GridComponent = ({ data }) => {
 
     return data;
   };
+
+  console.log({ CellHeights });
 
   const gridData = modifyGridData();
 
