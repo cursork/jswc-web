@@ -30,8 +30,10 @@ const ScrollBar = ({ data }) => {
 
   const maxValue = Range;
 
-  const trackHeight = parentSize && parentSize[0];
-  const trackWidth = parentSize && parentSize[1];
+  // const trackHeight = parentSize && parentSize[0];
+  // const trackWidth = parentSize && parentSize[1];
+  const trackHeight = 500;
+  const trackWidth = 800;
 
   const handleThumbDrag = (event) => {
     event.preventDefault();
@@ -326,6 +328,7 @@ const ScrollBar = ({ data }) => {
 
   return (
     <div
+      id={data?.ID}
       onMouseEnter={handleTrackMouseEnter}
       onMouseLeave={handleTrackMouseLeave}
       style={isHorizontal ? horizontalPosition : verticalPosition}

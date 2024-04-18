@@ -20,7 +20,7 @@ const Image = ({ data }) => {
         display: Visible == 0 ? 'none' : 'block',
       }}
     >
-      <svg height={parentSize[0]} width={parentSize[1]}>
+      <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray.map((imagePoints, index) => {
           const imageObject = findDesiredData(Picture && Picture[index]);
           const ImageUrl = renderImage(PORT, imageObject);

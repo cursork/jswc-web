@@ -469,7 +469,7 @@ const GridComponent = ({ data }) => {
       };
 
       // push the obj when TitleWidth is present
-      !TitleWidth ? null : header.push(emptyobj);
+      !TitleWidth && !RowTitles ? null : header.push(emptyobj);
 
       for (let i = 0; i < ColTitles?.length; i++) {
         let obj = {
@@ -484,16 +484,16 @@ const GridComponent = ({ data }) => {
         header.push(obj);
       }
 
-      header = RowTitles
-        ? [
-            {
-              value: '',
-              type: 'header',
-              width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : CellWidths,
-            },
-            ...header,
-          ]
-        : [...header];
+      // header = RowTitles
+      //   ? [
+      //       {
+      //         value: '',
+      //         type: 'header',
+      //         width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : CellWidths,
+      //       },
+      //       ...header,
+      //     ]
+      //   : [...header];
 
       data.push(header);
     } else if (!ColTitles) {
@@ -575,7 +575,7 @@ const GridComponent = ({ data }) => {
     return data;
   };
 
-  console.log({ CellHeights });
+  console.log('gridData', modifyGridData());
 
   const gridData = modifyGridData();
 
