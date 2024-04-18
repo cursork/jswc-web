@@ -36,6 +36,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
         let IconComponent = AppIcons[Icons[i]];
         return (
           <Col
+            id={data?.ID}
             md={colSize}
             className='d-flex align-items-center justify-content-center'
             style={{ cursor: 'pointer' }}
