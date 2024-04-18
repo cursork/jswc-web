@@ -9,7 +9,7 @@ const Poly = ({ data }) => {
   const hasFCol = data?.Properties.hasOwnProperty('FCol');
 
   return (
-    <div style={{ position: 'absolute', display: Visible == 0 ? 'none' : 'block' }}>
+    <div id={data?.ID} style={{ position: 'absolute', display: Visible == 0 ? 'none' : 'block' }}>
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {Points?.map((polygonPoints, index) => {
           const flatArray =
