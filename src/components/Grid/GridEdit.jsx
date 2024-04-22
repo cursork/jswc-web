@@ -84,7 +84,7 @@ const GridEdit = ({ data }) => {
     console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
 
-    if (!formatString) return;
+    if (!data?.formatString) return;
 
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
@@ -108,50 +108,66 @@ const GridEdit = ({ data }) => {
     };
     return (
       <>
-        <input
-          ref={dateRef}
-          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
-          style={{
-            border: 0,
-            outline: 0,
-            width: '100%',
-            height: '100%',
-          }}
-          value={inputValue}
-          type='text'
-          readOnly
-          onClick={(e) => {
-            // e.stopPropagation();
-            handleTextClick();
-          }}
-          onBlur={() => {
-            handleEditEvents();
-          }}
-          onKeyDown={(e) => {
-            if (
-              e.key === 'ArrowRight' ||
-              e.key === 'ArrowLeft' ||
-              e.key === 'ArrowUp' ||
-              e.key === 'ArrowDown'
-            ) {
-              inputRef?.current?.blur();
-              dateRef?.current?.blur();
+        {!showInput ? (
+          <div
+            onDoubleClick={() => {
+              setShowInput(true);
+            }}
+            ref={inputRef}
+            tabIndex={'1'}
+            // onDoubleClick={() => setShowInput(true)}
+            style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+          >
+            {data?.formattedValue}
+          </div>
+        ) : (
+          <>
+            <input
+              ref={dateRef}
+              id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+              style={{
+                border: 0,
+                outline: 0,
+                width: '100%',
+                height: '100%',
+              }}
+              value={inputValue}
+              type='text'
+              readOnly
+              onClick={(e) => {
+                // e.stopPropagation();
+                handleTextClick();
+              }}
+              onBlur={() => {
+                handleEditEvents();
+              }}
+              onKeyDown={(e) => {
+                if (
+                  e.key === 'ArrowRight' ||
+                  e.key === 'ArrowLeft' ||
+                  e.key === 'ArrowUp' ||
+                  e.key === 'ArrowDown'
+                ) {
+                  inputRef?.current?.blur();
+                  dateRef?.current?.blur();
 
-              return;
-            }
-            e.stopPropagation();
-          }}
-        />
-        <input
-          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
-          type='date'
-          value={selectedDate}
-          ref={inputRef}
-          onChange={handleDateChange}
-          style={{
-            display: 'none',
-          }}
-        />
+                  return;
+                }
+                e.stopPropagation();
+              }}
+            />
+            <input
+              id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+              type='date'
+              value={selectedDate}
+              ref={inputRef}
+              onChange={handleDateChange}
+              style={{
+                display: 'none',
+              }}
+            />
+          </>
+        )}
       </>
     );
   }

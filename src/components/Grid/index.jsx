@@ -334,7 +334,7 @@ const GridComponent = ({ data }) => {
     Visible,
     CurCell,
     CellTypes,
-    ShowInput = 1,
+    ShowInput,
     FormattedValues,
     BCol,
     CellFonts,
@@ -618,6 +618,8 @@ const GridComponent = ({ data }) => {
       return <GridLabel data={data} />;
     },
   };
+
+  
 
   return (
     <div
