@@ -56,20 +56,20 @@ const App = () => {
     };
   }, [layout]);
 
-  // useEffect(() => {
-  //   const container = appRef.current;
+  useEffect(() => {
+    const container = appRef.current;
 
-  //   if (container) {
-  //     // container.addEventListener('focusin', handleFocus);
-  //     container.addEventListener('click', handleFocus);
-  //   }
-  //   return () => {
-  //     if (container) {
-  //       // container.removeEventListener('focusin', handleFocus);
-  //       container.removeEventListener('click', handleFocus);
-  //     }
-  //   };
-  // }, []);
+    if (container) {
+      // container.addEventListener('focusin', handleFocus);
+      container.addEventListener('click', handleFocus);
+    }
+    return () => {
+      if (container) {
+        // container.removeEventListener('focusin', handleFocus);
+        container.removeEventListener('click', handleFocus);
+      }
+    };
+  }, []);
 
   const handleData = (data, mode) => {
     const splitID = data.ID.split('.');
