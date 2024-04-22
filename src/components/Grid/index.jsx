@@ -576,19 +576,11 @@ const GridComponent = ({ data }) => {
     return data;
   };
 
-  // console.log('gridData', modifyGridData());
-
-  // useEffect(() => {
-
-  // }, [data]);
-
   const handleCellClick = (row, column) => {
     setFocusedCell({ row, column });
   };
 
   const gridData = modifyGridData();
-
-  // console.log({ gridData });
 
   const components = {
     Edit: (data) => {
@@ -624,8 +616,6 @@ const GridComponent = ({ data }) => {
       return <GridLabel data={data} />;
     },
   };
-
-  console.log({ CellHeights });
 
   return (
     <div
