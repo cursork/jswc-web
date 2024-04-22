@@ -582,6 +582,8 @@ const GridComponent = ({ data }) => {
 
   const gridData = modifyGridData();
 
+  console.log({ gridData });
+
   const components = {
     Edit: (data) => {
       return <GridEdit data={data} keyPress={handleKeyDown} />;

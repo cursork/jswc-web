@@ -25,13 +25,13 @@ const GridEdit = ({ data }) => {
   );
 
   useEffect(() => {
-    // if (data.focused) {
-    //   if (FieldType == 'Date') {
-    //     dateRef?.current?.focus();
-    //   } else {
-    //     inputRef?.current?.focus();
-    //   }
-    // }
+    if (data.focused) {
+      if (FieldType == 'Date') {
+        dateRef?.current?.focus();
+      } else {
+        inputRef?.current?.focus();
+      }
+    }
   }, [data.focused]);
 
   const triggerCellChangedEvent = () => {
@@ -84,7 +84,7 @@ const GridEdit = ({ data }) => {
     console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
 
-    // if (!formatString) return;
+    if (!formatString) return;
 
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
@@ -93,8 +93,6 @@ const GridEdit = ({ data }) => {
   const handleEditEvents = () => {
     triggerCellChangedEvent();
   };
-
-  console.log({ selectedDate });
 
   if (FieldType == 'Date') {
     const handleTextClick = () => {
