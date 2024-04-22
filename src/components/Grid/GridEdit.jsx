@@ -25,13 +25,13 @@ const GridEdit = ({ data }) => {
   );
 
   useEffect(() => {
-    if (data.focused) {
-      if (FieldType == 'Date') {
-        dateRef?.current?.focus();
-      } else {
-        inputRef?.current?.focus();
-      }
-    }
+    // if (data.focused) {
+    //   if (FieldType == 'Date') {
+    //     dateRef?.current?.focus();
+    //   } else {
+    //     inputRef?.current?.focus();
+    //   }
+    // }
   }, [data.focused]);
 
   const triggerCellChangedEvent = () => {
@@ -123,7 +123,7 @@ const GridEdit = ({ data }) => {
           type='text'
           readOnly
           onClick={(e) => {
-            e.stopPropagation();
+            // e.stopPropagation();
             handleTextClick();
           }}
           onBlur={() => {

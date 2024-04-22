@@ -358,6 +358,7 @@ const GridComponent = ({ data }) => {
   const [selectedRow, setSelectedRow] = useState(0);
   const [selectedColumn, setSelectedColumn] = useState(0);
   const [focusedCell, setFocusedCell] = useState({ row: 0, column: 0 });
+  const [tableData, setTableData] = useState([]);
   const style = setStyle(data?.Properties);
 
   useEffect(() => {
@@ -555,7 +556,7 @@ const GridComponent = ({ data }) => {
           const cellFont = findDesiredData(CellFonts && CellFonts[cellType - 1]);
 
           let obj = {
-            type: type?.Properties?.Type,
+            type: !type ? 'cell' : type?.Properties?.Type,
             value: Values[i][j],
             event,
             backgroundColor: rgbColor(backgroundColor),
@@ -575,13 +576,17 @@ const GridComponent = ({ data }) => {
     return data;
   };
 
-  console.log('gridData', modifyGridData());
+  // console.log('gridData', modifyGridData());
 
-  const gridData = modifyGridData();
+  // useEffect(() => {
+
+  // }, [data]);
 
   const handleCellClick = (row, column) => {
     setFocusedCell({ row, column });
   };
+
+  const gridData = modifyGridData();
 
   // console.log({ gridData });
 
@@ -620,6 +625,8 @@ const GridComponent = ({ data }) => {
     },
   };
 
+  console.log({ CellHeights });
+
   return (
     <div
       // onKeyDown={handleKeyDown}
@@ -637,7 +644,7 @@ const GridComponent = ({ data }) => {
         overflowY: VScroll == -3 ? 'scroll' : VScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
       }}
     >
-      {gridData.map((row, rowi) => {
+      {gridData?.map((row, rowi) => {
         return (
           <div style={{ display: 'flex' }}>
             {row.map((data, columni) => {
@@ -646,8 +653,9 @@ const GridComponent = ({ data }) => {
 
               return (
                 <div
-                  tabIndex={rowi}
+                  // tabIndex={rowi}
                   onClick={(e) => {
+                    e.preventDefault();
                     setSelectedColumn(columni);
                     setSelectedRow(rowi);
                   }}
