@@ -16,7 +16,7 @@ const Header = ({ data }) => {
       >
         {data?.value.map((th) => {
           if (th == '') return <br />;
-          return <div style={{ lineHeight: '82%' }}>{th}</div>;
+          return <div style={{ lineHeight: '96%' }}>{th}</div>;
         })}
       </div>
     );
