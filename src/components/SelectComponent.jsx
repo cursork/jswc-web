@@ -15,7 +15,7 @@ import Group from './Group';
 import ScrollBar from './ScrollBar';
 import TabControl from './TabControl';
 import TabButton from './TabButton';
-// import SubForm from './SubForm';
+
 import TextArea from './TextArea';
 import CustomRibbon from './Ribbon';
 import CustomRibbonGroup from './Ribbon/RibbonGroup';
@@ -26,8 +26,6 @@ import Poly from './Polygon';
 import Rectangle from './Rectangle';
 import Ecllipse from './Ecllipse';
 import Circle from './Circle';
-// import ImageSubForm from './ImgSubForm';
-// import ShapeSubForm from './ShapeSubForm';
 import Text from './Text';
 import Timer from './Timer';
 import ListView from './ListView';
@@ -45,6 +43,8 @@ const SelectComponent = ({
   inSplitter = null,
   values = [],
   formatString = '',
+  activeTab = null,
+  handleTabClick = () => {},
 }) => {
   const { dataRef } = useAppData();
 
@@ -119,18 +119,13 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Label')
     return <Label location={location} gridValue={inputValue} data={data} />;
   if (data?.Properties?.Type == 'TreeView') return <Treeview data={data} />;
-  // if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('TabObj'))
-  //   return <SubForm data={data} />;
-  // Image Subform
-  // if (data?.Properties?.Type == 'SubForm' && data?.Properties.hasOwnProperty('Picture'))
-  //   return <ImageSubForm data={data} />;
-
   if (data?.Properties?.Type == 'List') return <List data={data} />;
   if (data?.Properties?.Type == 'Splitter') return <Splitter data={data} />;
   if (data?.Properties?.Type == 'Group') return <Group data={data} />;
   if (data?.Properties?.Type == 'Scroll') return <ScrollBar data={data} />;
   if (data?.Properties?.Type == 'TabControl') return <TabControl data={data} />;
-  if (data?.Properties?.Type == 'TabButton') return <TabButton data={data} />;
+  if (data?.Properties?.Type == 'TabButton')
+    return <TabButton activeTab={activeTab} handleTabClick={handleTabClick} data={data} />;
   if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style == 'Multi') {
     return <TextArea data={data} />;
   }

@@ -1,5 +1,5 @@
 import { setStyle, excludeKeys } from '../../utils';
-import SubForm from '../SubForm';
+import SubForm from '../DynamicSubForm';
 import TabButton from '../TabButton';
 import { useState } from 'react';
 
