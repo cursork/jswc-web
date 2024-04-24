@@ -27,7 +27,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
             Event: {
               EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
-              Info: Caption,
+              Info: [data?.ID],
             },
           })
         );
@@ -38,7 +38,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
             Event: {
               EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
-              Info: Caption,
+              Info: [data?.ID],
             },
           })
         );
@@ -48,7 +48,7 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
             Event: {
               EventName: emitEvent && emitEvent[0],
               ID: data?.ID,
-              Info: Caption,
+              Info: [data?.ID],
             },
           })
         );

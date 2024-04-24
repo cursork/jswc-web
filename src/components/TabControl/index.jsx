@@ -1,10 +1,10 @@
 import { setStyle, excludeKeys } from '../../utils';
 import SubForm from '../DynamicSubForm';
 import TabButton from '../TabButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TabControl = ({ data }) => {
-  const [activeTab, setActiveTab] = useState('F1.TC.T4');
+  const [activeTab, setActiveTab] = useState('');
 
   const { Visible } = data?.Properties;
 
@@ -21,8 +21,29 @@ const TabControl = ({ data }) => {
     setActiveTab(ID);
   };
 
+  const getLastId = (data) => {
+    const updatedData = excludeKeys(data);
+  
+    let array = Object.keys(updatedData)
+      .map((key) => {
+        if (updatedData[key]?.Properties.Type == 'TabButton') {
+          return updatedData[key].ID;
+        } else {
+          return undefined;
+        }
+      })
+      .filter((id) => id !== undefined);
+    console.log({ array });
+    // setActiveTab(array.pop());
+  };
+
+  useEffect(() => {
+    getLastId(data);
+  }, [data]);
+
+  console.log({ activeTab });
   return (
-    <div style={updatedStyles}>
+    <div id={data?.ID} style={updatedStyles}>
       {/* Render the Buttons */}
       <div style={{ display: 'flex', alignItems: 'end', marginLeft: '3px' }}>
         {Object.keys(updatedData).map((key) => {

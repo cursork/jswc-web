@@ -21,7 +21,7 @@ const Edit = ({
   column = '',
   location = '',
   values = [],
-  formatString = '',
+  T = '',
 }) => {
   const { socket, dataRef, findDesiredData, handleData, addChangeEvent } = useAppData();
 
