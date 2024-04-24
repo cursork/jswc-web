@@ -4,6 +4,8 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
   const { socket } = useAppData();
   const { Caption, Event } = data?.Properties;
 
+  console.log('TabButton', activeTab);
+
   const emitEvent = Event && Event[0];
 
   return (

@@ -1,16 +1,16 @@
-import { setStyle, excludeKeys } from '../../utils';
+import { setStyle, excludeKeys, getLastTabButton } from '../../utils';
 import SubForm from '../DynamicSubForm';
 import TabButton from '../TabButton';
 import { useEffect, useState } from 'react';
 
 const TabControl = ({ data }) => {
-  const [activeTab, setActiveTab] = useState('');
+  let styles = setStyle(data?.Properties);
+  const updatedData = excludeKeys(data);
+  const Id = getLastTabButton(updatedData);
+
+  const [activeTab, setActiveTab] = useState(Id);
 
   const { Visible } = data?.Properties;
-
-  const updatedData = excludeKeys(data);
-
-  let styles = setStyle(data?.Properties);
 
   const updatedStyles = {
     ...styles,
@@ -21,27 +21,6 @@ const TabControl = ({ data }) => {
     setActiveTab(ID);
   };
 
-  const getLastId = (data) => {
-    const updatedData = excludeKeys(data);
-  
-    let array = Object.keys(updatedData)
-      .map((key) => {
-        if (updatedData[key]?.Properties.Type == 'TabButton') {
-          return updatedData[key].ID;
-        } else {
-          return undefined;
-        }
-      })
-      .filter((id) => id !== undefined);
-    console.log({ array });
-    // setActiveTab(array.pop());
-  };
-
-  useEffect(() => {
-    getLastId(data);
-  }, [data]);
-
-  console.log({ activeTab });
   return (
     <div id={data?.ID} style={updatedStyles}>
       {/* Render the Buttons */}
@@ -49,7 +28,7 @@ const TabControl = ({ data }) => {
         {Object.keys(updatedData).map((key) => {
           return updatedData[key]?.Properties.Type == 'TabButton' ? (
             <TabButton
-              activeTab={activeTab}
+              activeTab={activeTab ? activeTab : Id}
               data={updatedData[key]}
               handleTabClick={handleTabClick}
             />
@@ -60,8 +39,9 @@ const TabControl = ({ data }) => {
       {/* Render the SubForm */}
 
       {Object.keys(updatedData).map((key) => {
+        const tab = activeTab ? activeTab : Id;
         return updatedData[key]?.Properties?.Type == 'SubForm' &&
-          activeTab == updatedData[key]?.Properties?.TabObj ? (
+          tab == updatedData[key]?.Properties?.TabObj ? (
           <SubForm data={updatedData[key]} />
         ) : null;
       })}
