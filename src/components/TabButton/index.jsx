@@ -1,17 +1,16 @@
 import { useAppData } from '../../hooks';
+import { rgbColor } from '../../utils';
 
-const TabButton = ({ data, handleTabClick, activeTab }) => {
+const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, activebgColor }) => {
   const { socket } = useAppData();
   const { Caption, Event } = data?.Properties;
-
-  console.log('TabButton', activeTab);
 
   const emitEvent = Event && Event[0];
 
   return (
     <div
       style={{
-        // border: '1px solid #DFDFDF',
+        border: '1px solid #DFDFDF',
         fontSize: '12px',
         paddingTop: '2px',
         paddingBottom: '2px',
@@ -19,9 +18,10 @@ const TabButton = ({ data, handleTabClick, activeTab }) => {
         paddingRight: '4px',
         cursor: 'pointer',
         borderRadius: '2px',
-        background: activeTab == data?.ID ? '#FAFAFA' : '#F0F0F0',
-        height: activeTab == data?.ID ? '22px' : '20px',
+        background: activeTab == data?.ID ? rgbColor(activebgColor) : rgbColor(bgColor),
+        height: '20px',
         borderBottom: activeTab == data?.ID ? '0px' : '1px solid  #DFDFDF',
+        color: rgbColor(fontColor),
       }}
       onClick={() => {
         console.log(

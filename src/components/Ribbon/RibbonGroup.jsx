@@ -1,4 +1,4 @@
-import { excludeKeys } from '../../utils';
+import { excludeKeys, rgbColor } from '../../utils';
 import { RibbonGroup } from 'react-bootstrap-ribbon';
 import SelectComponent from '../SelectComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,7 +6,7 @@ import 'react-bootstrap-ribbon/dist/react-bootstrap-ribbon.css';
 
 const CustomRibbonGroup = ({ data }) => {
   const updatedData = excludeKeys(data);
-  const { Size, Title } = data?.Properties;
+  const { Size, Title, BorderCol } = data?.Properties;
 
   const size = Size || 1;
 
@@ -14,7 +14,8 @@ const CustomRibbonGroup = ({ data }) => {
     <div id={data?.ID} className={`col-${size}`}>
       <div
         style={{
-          border: '1px solid rgb(204, 204, 204)',
+          border: `1px solid ${rgbColor(BorderCol)}`,
+          borderTop: 0,
           position: 'relative',
           height: '100%',
           alignItems: 'center',

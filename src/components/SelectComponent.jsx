@@ -44,6 +44,9 @@ const SelectComponent = ({
   values = [],
   formatString = '',
   activeTab = null,
+  bgColor = null,
+  fontColor = null,
+  activebgColor = null,
   handleTabClick = () => {},
 }) => {
   const { dataRef } = useAppData();
@@ -125,7 +128,16 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Scroll') return <ScrollBar data={data} />;
   if (data?.Properties?.Type == 'TabControl') return <TabControl data={data} />;
   if (data?.Properties?.Type == 'TabButton')
-    return <TabButton activeTab={activeTab} handleTabClick={handleTabClick} data={data} />;
+    return (
+      <TabButton
+        activeTab={activeTab}
+        handleTabClick={handleTabClick}
+        data={data}
+        bgColor={bgColor}
+        fontColor={fontColor}
+        activebgColor={activebgColor}
+      />
+    );
   if (data?.Properties?.Type == 'Edit' && data?.Properties?.Style == 'Multi') {
     return <TextArea data={data} />;
   }

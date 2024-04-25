@@ -8,6 +8,6 @@ export const getLastTabButton = (data) => {
       }
     })
     .filter((id) => id !== undefined);
-  console.log({ array });
+
   return array.pop();
 };
