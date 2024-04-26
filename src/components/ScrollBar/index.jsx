@@ -20,7 +20,7 @@ const ScrollBar = ({ data }) => {
   };
 
   const handleTrackMouseLeave = () => {
-    setShowButtons(true);
+    setShowButtons(false);
   };
 
   const { socket } = useAppData();
