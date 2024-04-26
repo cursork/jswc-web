@@ -71,8 +71,6 @@ const GridButton = ({ data }) => {
 
   const fontProperties = data?.cellFont && data?.cellFont?.Properties;
 
-  console.log({ data });
-
   let fontStyles = {
     fontFamily: fontProperties?.PName,
     fontSize: !fontProperties?.Size ? '11px' : '12px',

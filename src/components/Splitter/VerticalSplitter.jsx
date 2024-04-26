@@ -25,6 +25,9 @@ const VerticalSplitter = ({ data }) => {
         ? (position.left / oldFormValues[1]) * dimensions.width
         : 0;
     calculateLeft = Math.max(0, Math.min(calculateLeft, dimensions.width - 3));
+
+    console.log({ calculateLeft });
+
     setPosition({ left: calculateLeft });
     const rightWidth = dimensions.width - (calculateLeft + 3);
     handleData(
@@ -83,7 +86,7 @@ const VerticalSplitter = ({ data }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isResizing) {
-        let newLeft = e.clientX;
+        let newLeft = e.clientX - 50;
         newLeft = Math.max(0, Math.min(newLeft, formWidth - 3));
         const rightWidth = formWidth - (newLeft + 3);
 
@@ -163,7 +166,14 @@ const VerticalSplitter = ({ data }) => {
     setResizing(true);
   };
 
-  return <div id={data?.ID} onMouseDown={handleMouseDown} style={verticalStyles}></div>;
+  return (
+    <div
+      id={data?.ID}
+      onClick={(e) => e.preventDefault()}
+      onMouseDown={handleMouseDown}
+      style={verticalStyles}
+    ></div>
+  );
 };
 
 export default VerticalSplitter;
