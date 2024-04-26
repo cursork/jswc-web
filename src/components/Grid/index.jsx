@@ -456,8 +456,6 @@ const GridComponent = ({ data }) => {
     }
   };
 
-  console.log({ BCol });
-
   const modifyGridData = () => {
     let data = [];
     // Push the header Information
@@ -589,8 +587,6 @@ const GridComponent = ({ data }) => {
   };
 
   const gridData = modifyGridData();
-
-  console.log({ gridData });
 
   const components = {
     Edit: (data) => {
