@@ -11,17 +11,21 @@ const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, active
     <div
       style={{
         border: '1px solid #DFDFDF',
-        fontSize: '12px',
+        fontSize: '11px',
         paddingTop: '2px',
         paddingBottom: '2px',
         paddingLeft: '4px',
         paddingRight: '4px',
         cursor: 'pointer',
         borderRadius: '2px',
-        background: activeTab == data?.ID ? rgbColor(activebgColor) : rgbColor(bgColor),
+        background:
+          activeTab == data?.ID
+            ? rgbColor(!activebgColor ? [255, 255, 255] : activebgColor)
+            : rgbColor(bgColor),
         height: '20px',
         borderBottom: activeTab == data?.ID ? '0px' : '1px solid  #DFDFDF',
-        color: rgbColor(fontColor),
+        color: !fontColor ? 'black' : rgbColor(fontColor),
+        fontWeight: 600,
       }}
       onClick={() => {
         console.log(
