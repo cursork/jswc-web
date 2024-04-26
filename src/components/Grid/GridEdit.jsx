@@ -116,7 +116,7 @@ const GridEdit = ({ data }) => {
             ref={inputRef}
             tabIndex={'1'}
             // onDoubleClick={() => setShowInput(true)}
-            style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+            style={{ backgroundColor: data?.backgroundColor, outline: 0, paddingLeft: '5px' }}
           >
             {data?.formattedValue}
           </div>
@@ -130,6 +130,7 @@ const GridEdit = ({ data }) => {
                 outline: 0,
                 width: '100%',
                 height: '100%',
+                paddingLeft: '5px',
               }}
               value={inputValue}
               type='text'
@@ -183,7 +184,12 @@ const GridEdit = ({ data }) => {
             ref={inputRef}
             tabIndex={'1'}
             // onDoubleClick={() => setShowInput(true)}
-            style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+            style={{
+              backgroundColor: data?.backgroundColor,
+              outline: 0,
+              textAlign: 'right',
+              paddingRight: '5px',
+            }}
           >
             {data?.formattedValue}
           </div>
@@ -198,6 +204,8 @@ const GridEdit = ({ data }) => {
               border: 0,
               outline: 0,
               backgroundColor: data?.backgroundColor,
+              textAlign: 'right',
+              paddingRight: '5px',
             }}
             onValueChange={(value) => {
               setInputValue(parseInt(value.value));
@@ -237,7 +245,13 @@ const GridEdit = ({ data }) => {
           ref={inputRef}
           tabIndex={'1'}
           // onDoubleClick={() => setShowInput(true)}
-          style={{ backgroundColor: data?.backgroundColor, outline: 0 }}
+          style={{
+            backgroundColor: data?.backgroundColor,
+            outline: 0,
+            height: '100%',
+            width: '100%',
+            paddingLeft: '5px',
+          }}
         >
           {data?.formattedValue}
         </div>
@@ -252,6 +266,7 @@ const GridEdit = ({ data }) => {
             width: '100%',
             height: '100%',
             backgroundColor: data?.backgroundColor,
+            paddingLeft: '5px',
           }}
           value={inputValue}
           onKeyDown={(e) => {

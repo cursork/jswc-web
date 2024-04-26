@@ -16,9 +16,12 @@ const GridCell = ({ data, keyPress }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: data?.align,
+        paddingLeft: '5px',
+        paddingRight: '5px',
         height: '100%',
         width: '100%',
         textAlign: data?.align,
+        backgroundColor: data?.backgroundColor,
       }}
       ref={cellRef}
       id={`${data?.row}-${data?.column}`}

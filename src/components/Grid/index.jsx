@@ -456,6 +456,8 @@ const GridComponent = ({ data }) => {
     }
   };
 
+  console.log({ BCol });
+
   const modifyGridData = () => {
     let data = [];
     // Push the header Information
@@ -512,6 +514,8 @@ const GridComponent = ({ data }) => {
     // Make the body the Grid Like if it have Input Array that means it have types
     if (!Input) {
       for (let i = 0; i < Values?.length; i++) {
+        let cellType = CellTypes && CellTypes[i][0];
+        const backgroundColor = BCol && BCol[cellType - 1];
         let body = [];
         let obj = {
           type: 'cell',
@@ -519,6 +523,7 @@ const GridComponent = ({ data }) => {
           width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : 100,
           height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
           align: 'start',
+          backgroundColor: rgbColor(backgroundColor),
         };
         body.push(obj);
         for (let j = 0; j <= columns; j++) {
@@ -536,6 +541,8 @@ const GridComponent = ({ data }) => {
     } else if (Input) {
       for (let i = 0; i < Values?.length; i++) {
         let body = [];
+        let cellType = CellTypes && CellTypes[i][0];
+        const backgroundColor = BCol && BCol[cellType - 1];
 
         // Decide to add the RowTitles If the TitleWidth is Greater than 0
         let obj = {
@@ -544,6 +551,7 @@ const GridComponent = ({ data }) => {
           width: !TitleWidth ? 100 : TitleWidth,
           height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
           align: 'start',
+          backgroundColor: rgbColor(backgroundColor),
         };
 
         !TitleWidth ? null : body.push(obj);
@@ -618,8 +626,6 @@ const GridComponent = ({ data }) => {
       return <GridLabel data={data} />;
     },
   };
-
-  
 
   return (
     <div
