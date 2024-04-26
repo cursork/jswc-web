@@ -5,7 +5,7 @@ import './ScrollBar.css';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event, Visible } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event, Visible, Size } = data?.Properties;
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -32,8 +32,8 @@ const ScrollBar = ({ data }) => {
 
   // const trackHeight = parentSize && parentSize[0];
   // const trackWidth = parentSize && parentSize[1];
-  const trackHeight = 500;
-  const trackWidth = 800;
+  const trackHeight = !Size ? parentSize && parentSize[0] : Size && Size[0];
+  const trackWidth = !Size ? parentSize && parentSize[1] : Size && Size[1];
 
   const handleThumbDrag = (event) => {
     event.preventDefault();
@@ -167,8 +167,8 @@ const ScrollBar = ({ data }) => {
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
 
   const trackStyle = {
-    width: isHorizontal ? `${trackWidth}px` : '10px',
-    height: isHorizontal ? '10px' : `${trackHeight}px`,
+    width: isHorizontal ? `${trackWidth}px` : '12px',
+    height: isHorizontal ? '12px' : `${trackHeight}px`,
   };
 
   const thumbStyle = {
