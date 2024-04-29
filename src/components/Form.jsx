@@ -64,6 +64,7 @@ const Form = ({ data }) => {
       'formDimension',
       JSON.stringify(hasSize ? Size : [halfViewportHeight, halfViewportWidth])
     );
+    localStorage.setItem('formPositions', JSON.stringify([Posn && Posn[0], Posn && Posn[1]]));
 
     localStorage.setItem(
       data?.ID,

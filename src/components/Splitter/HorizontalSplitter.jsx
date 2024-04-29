@@ -106,7 +106,8 @@ const HorizontalSplitter = ({ data }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isResizing) {
-        let newTop = e.clientY - 50;
+        const formPositions = JSON.parse(localStorage.getItem('formPositions'));
+        let newTop = e.clientY - formPositions[1];
 
         const parentSize = JSON.parse(
           localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))

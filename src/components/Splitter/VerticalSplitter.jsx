@@ -86,7 +86,9 @@ const VerticalSplitter = ({ data }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isResizing) {
-        let newLeft = e.clientX - 50;
+        const formPositions = JSON.parse(localStorage.getItem('formPositions'));
+
+        let newLeft = e.clientX - formPositions[1];
         newLeft = Math.max(0, Math.min(newLeft, formWidth - 3));
         const rightWidth = formWidth - (newLeft + 3);
 
