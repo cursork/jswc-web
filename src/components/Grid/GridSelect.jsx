@@ -49,7 +49,8 @@ const GridSelect = ({ data }) => {
     });
 
     localStorage.setItem(data?.gridId, updatedGridValues);
-    const exists = data?.gridEvent && data?.gridEvent((item) => item[0] === 'CellChanged');
+
+    const exists = data?.gridEvent?.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
 
     console.log(triggerEvent);

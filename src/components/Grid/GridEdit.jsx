@@ -24,15 +24,15 @@ const GridEdit = ({ data }) => {
     FieldType == 'Date' ? dayjs(calculateDateAfterDays(data?.value)) : new Date()
   );
 
-  useEffect(() => {
-    if (data.focused) {
-      if (FieldType == 'Date') {
-        dateRef?.current?.focus();
-      } else {
-        inputRef?.current?.focus();
-      }
-    }
-  }, [data.focused]);
+  // useEffect(() => {
+  //   if (data.focused) {
+  //     if (FieldType == 'Date') {
+  //       dateRef?.current?.focus();
+  //     } else {
+  //       inputRef?.current?.focus();
+  //     }
+  //   }
+  // }, [data.focused]);
 
   const triggerCellChangedEvent = () => {
     // const gridEvent = findDesiredData(data?.gridId);
@@ -257,7 +257,6 @@ const GridEdit = ({ data }) => {
         </div>
       ) : (
         <input
-          ref={inputRef}
           type='text'
           id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
           style={{
@@ -268,6 +267,11 @@ const GridEdit = ({ data }) => {
             backgroundColor: data?.backgroundColor,
             paddingLeft: '5px',
           }}
+          // onClick={(e) => {
+            // return;
+            // e.stopPropagation();
+          //   console.log('Child Click');
+          // }}
           value={inputValue}
           onKeyDown={(e) => {
             if (

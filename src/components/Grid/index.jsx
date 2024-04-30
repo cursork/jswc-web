@@ -322,6 +322,7 @@ const GridComponent = ({ data }) => {
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
   const handleKeyDownRef = useRef(null);
+  const gridRef = useRef(null);
 
   const {
     Size,
@@ -357,8 +358,7 @@ const GridComponent = ({ data }) => {
   const [columns, setColumns] = useState(0);
   const [selectedRow, setSelectedRow] = useState(0);
   const [selectedColumn, setSelectedColumn] = useState(0);
-  const [focusedCell, setFocusedCell] = useState({ row: 0, column: 0 });
-  const [tableData, setTableData] = useState([]);
+
   const style = setStyle(data?.Properties);
 
   useEffect(() => {
@@ -390,9 +390,6 @@ const GridComponent = ({ data }) => {
   };
 
   const handleKeyDown = (event) => {
-    // const gridData = JSON.parse(localStorage.getItem(data?.ID));
-    const table = event.target.id.split('-');
-
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
@@ -422,37 +419,26 @@ const GridComponent = ({ data }) => {
       );
     }
 
+    const isNavigationKeys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].some(
+      (key) => event.key === key
+    );
+
+    if (isNavigationKeys) {
+      gridRef.current.focus();
+    }
+
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
-      handleCellMove(
-        parseInt(table[0]),
-        parseInt(table[1]) + 2,
-        Values[parseInt(table[0]) - 1][parseInt(table[1])]
-      );
+      handleCellMove(selectedRow, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
     } else if (event.key === 'ArrowLeft') {
-      // setSelectedColumn((prev) => prev - 1);
       setSelectedColumn((prev) => Math.max(prev - 1, 0));
-      handleCellMove(
-        parseInt(table[0]),
-        parseInt(table[1]),
-        Values[parseInt(table[0]) - 1][parseInt(table[1])]
-      );
+      handleCellMove(selectedRow, selectedColumn - 1, Values[selectedRow - 1][selectedColumn]);
     } else if (event.key === 'ArrowUp') {
-      // setSelectedRow((prev) => prev - 1);
       setSelectedRow((prev) => Math.max(prev - 1, 1));
-      handleCellMove(
-        parseInt(table[0]) - 1,
-        parseInt(table[1]) + 1,
-        Values[parseInt(table[0]) - 1][parseInt(table[1])]
-      );
+      handleCellMove(selectedRow - 1, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
     } else if (event.key === 'ArrowDown') {
-      // setSelectedRow((prev) => prev + 1);
       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-      handleCellMove(
-        parseInt(table[0]) + 1,
-        parseInt(table[1]) + 1,
-        Values[parseInt(table[0]) - 1][parseInt(table[1])]
-      );
+      handleCellMove(selectedRow + 1, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
     }
   };
 
@@ -583,7 +569,10 @@ const GridComponent = ({ data }) => {
   };
 
   const handleCellClick = (row, column) => {
-    setFocusedCell({ row, column });
+    setSelectedColumn(column);
+    setSelectedRow(row);
+
+    //  handleCellMove(row, column + 1, Values[row - 1][column]);
   };
 
   const gridData = modifyGridData();
@@ -625,7 +614,8 @@ const GridComponent = ({ data }) => {
 
   return (
     <div
-      // onKeyDown={handleKeyDown}
+      ref={gridRef}
+      onKeyDown={handleKeyDown}
       tabIndex='0'
       id={data?.ID}
       style={{
@@ -642,30 +632,21 @@ const GridComponent = ({ data }) => {
     >
       {gridData?.map((row, rowi) => {
         return (
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex' }} id={`row-${rowi}`}>
             {row.map((data, columni) => {
               const isFocused = selectedRow === rowi && selectedColumn === columni;
               const Component = components[data?.type];
 
               return (
                 <div
-                  // tabIndex={rowi}
                   onClick={(e) => {
-                    e.preventDefault();
-                    setSelectedColumn(columni);
-                    setSelectedRow(rowi);
+                    handleCellClick(rowi, columni);
+                    // handleCellMove(rowi, columni + 1, '');
                   }}
-                  // onChange={() => {
-                  //   setSelectedColumn(columni);
-                  //   setSelectedRow(rowi);
-                  // }}
-                  onKeyDown={handleKeyDown}
                   id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
                   style={{
                     borderRight: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
                     borderBottom: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
-                    // minWidth: !CellWidths ? '100px' : CellWidths[columni],
-                    // maxWidth: !CellWidths ? '100px' : CellWidths[columni],
                     fontSize: '12px',
                     minHeight: `${data?.height}px`,
                     maxHeight: `${data?.height}px`,
