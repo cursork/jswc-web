@@ -91,7 +91,13 @@ const GridEdit = ({ data }) => {
   };
 
   const handleEditEvents = () => {
-    triggerCellChangedEvent();
+    if (FieldType == 'Date') {
+      if (data?.value == dateFormattedValue) return;
+      triggerCellChangedEvent();
+    } else {
+      if (data?.value == inputValue) return;
+      triggerCellChangedEvent();
+    }
   };
 
   if (FieldType == 'Date') {
@@ -268,8 +274,8 @@ const GridEdit = ({ data }) => {
             paddingLeft: '5px',
           }}
           // onClick={(e) => {
-            // return;
-            // e.stopPropagation();
+          // return;
+          // e.stopPropagation();
           //   console.log('Child Click');
           // }}
           value={inputValue}
