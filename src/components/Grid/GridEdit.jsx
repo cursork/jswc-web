@@ -214,7 +214,8 @@ const GridEdit = ({ data }) => {
               paddingRight: '5px',
             }}
             onValueChange={(value) => {
-              setInputValue(parseInt(value.value));
+              if (!value.value) return setInputValue(0);
+              setInputValue(parseInt(value?.value));
             }}
             decimalScale={Decimal}
             value={inputValue}
