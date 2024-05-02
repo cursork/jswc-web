@@ -375,6 +375,9 @@ const GridComponent = ({ data }) => {
   }, [data]);
 
   const handleCellMove = (row, column, value) => {
+    console.log({ column });
+    if (column > columns || column == 0) return;
+
     const cellMoveEvent = JSON.stringify({
       Event: {
         ID: data?.ID,
@@ -429,10 +432,10 @@ const GridComponent = ({ data }) => {
 
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
-      handleCellMove(selectedRow, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow, selectedColumn + 2, Values[selectedRow - 1][selectedColumn]);
     } else if (event.key === 'ArrowLeft') {
       setSelectedColumn((prev) => Math.max(prev - 1, 0));
-      handleCellMove(selectedRow, selectedColumn - 1, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow, selectedColumn, Values[selectedRow - 1][selectedColumn]);
     } else if (event.key === 'ArrowUp') {
       setSelectedRow((prev) => Math.max(prev - 1, 1));
       handleCellMove(selectedRow - 1, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
