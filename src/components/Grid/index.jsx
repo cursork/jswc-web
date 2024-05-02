@@ -384,7 +384,15 @@ const GridComponent = ({ data }) => {
       Event: {
         ID: data?.ID,
         EventName: 'CellMove',
-        Info: [row, column, 0, 0, 0, cellChanged && cellChanged ? 1 : 0, value],
+        Info: [
+          row,
+          column,
+          0,
+          0,
+          0,
+          cellChanged && cellChanged ? 1 : 0,
+          cellChanged && cellChanged ? value : '',
+        ],
       },
     });
 
