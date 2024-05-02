@@ -62,6 +62,7 @@ const GridButton = ({ data }) => {
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
     socket.send(triggerEvent);
+    localStorage.setItem('isChanged', JSON.stringify(true));
   };
 
   const handleCheckBoxEvent = (value) => {

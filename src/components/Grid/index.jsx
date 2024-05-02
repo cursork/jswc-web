@@ -318,6 +318,7 @@ const GridComponent = ({ data }) => {
   const gridId = data?.ID;
 
   const { findDesiredData, socket } = useAppData();
+
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
@@ -375,14 +376,15 @@ const GridComponent = ({ data }) => {
   }, [data]);
 
   const handleCellMove = (row, column, value) => {
-    console.log({ column });
     if (column > columns || column == 0) return;
+
+    const cellChanged = JSON.parse(localStorage.getItem('isChanged'));
 
     const cellMoveEvent = JSON.stringify({
       Event: {
         ID: data?.ID,
         EventName: 'CellMove',
-        Info: [row, column, 0, 0, 0, value],
+        Info: [row, column, 0, 0, 0, cellChanged && cellChanged ? 1 : 0, value],
       },
     });
 
@@ -390,6 +392,7 @@ const GridComponent = ({ data }) => {
     if (!exists) return;
     console.log(cellMoveEvent);
     socket.send(cellMoveEvent);
+    localStorage.setItem('isChanged', JSON.stringify(false));
   };
 
   const handleKeyDown = (event) => {
@@ -603,9 +606,9 @@ const GridComponent = ({ data }) => {
     Combo: (data) => {
       return (
         <GridSelect
-          gridEvent={Event}
+          grirdEvent={Event}
           data={data}
-          keyPress={handleKeyDownRef.current}
+          keyPess={handleKeyDownRef.current}
           cellClick={handleCellClick}
         />
       );

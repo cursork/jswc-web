@@ -83,7 +83,7 @@ const GridEdit = ({ data }) => {
     if (!exists) return;
     console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
-
+    localStorage.setItem('isChanged', JSON.stringify(true));
     if (!data?.formatString) return;
 
     console.log(formatCellEvent);
@@ -214,8 +214,9 @@ const GridEdit = ({ data }) => {
               paddingRight: '5px',
             }}
             onValueChange={(value) => {
+              console.log({ value });
               if (!value.value) return setInputValue(0);
-              setInputValue(parseInt(value?.value));
+              setInputValue(parseFloat(value?.value));
             }}
             decimalScale={Decimal}
             value={inputValue}

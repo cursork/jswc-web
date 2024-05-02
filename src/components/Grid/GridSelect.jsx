@@ -55,6 +55,7 @@ const GridSelect = ({ data }) => {
 
     console.log(triggerEvent);
     socket.send(triggerEvent);
+    localStorage.setItem('isChanged', JSON.stringify(true));
   };
 
   const handleSelItemsEvent = (value) => {
