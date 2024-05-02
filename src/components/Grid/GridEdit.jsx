@@ -226,15 +226,15 @@ const GridEdit = ({ data }) => {
               handleEditEvents();
             }}
             onKeyDown={(e) => {
-              if (
-                e.key === 'ArrowRight' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowDown'
-              ) {
-                inputRef.current.blur();
-                return;
-              }
+              // if (
+              //   e.key === 'ArrowRight' ||
+              //   e.key === 'ArrowLeft' ||
+              //   e.key === 'ArrowUp' ||
+              //   e.key === 'ArrowDown'
+              // ) {
+              //   inputRef.current.blur();
+              //   return;
+              // }
               e.stopPropagation();
             }}
           />
@@ -282,16 +282,16 @@ const GridEdit = ({ data }) => {
           // }}
           value={inputValue}
           onKeyDown={(e) => {
-            if (
-              e.key === 'ArrowRight' ||
-              e.key === 'ArrowLeft' ||
-              e.key === 'ArrowUp' ||
-              e.key === 'ArrowDown'
-            ) {
-              inputRef?.current?.blur();
-              dateRef?.current?.blur();
-              return;
-            }
+            // if (
+            //   e.key === 'ArrowRight' ||
+            //   e.key === 'ArrowLeft' ||
+            //   e.key === 'ArrowUp' ||
+            //   e.key === 'ArrowDown'
+            // ) {
+            //   inputRef?.current?.blur();
+            //   dateRef?.current?.blur();
+            //   return;
+            // }
             e.stopPropagation();
           }}
           onChange={(e) => {
