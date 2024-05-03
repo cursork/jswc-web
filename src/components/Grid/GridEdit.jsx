@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 const GridEdit = ({ data }) => {
   const inputRef = useRef(null);
   const dateRef = useRef(null);
+  const [isEditable, setIsEditable] = useState(false);
 
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
   const [showInput, setShowInput] = useState(data?.showInput);
@@ -114,17 +115,14 @@ const GridEdit = ({ data }) => {
     };
     return (
       <>
-        {!showInput ? (
+        {!isEditable ? (
           <div
             onDoubleClick={() => {
-              setShowInput(true);
+              setIsEditable(true);
             }}
-            ref={inputRef}
-            tabIndex={'1'}
-            // onDoubleClick={() => setShowInput(true)}
             style={{ backgroundColor: data?.backgroundColor, outline: 0, paddingLeft: '5px' }}
           >
-            {data?.formattedValue}
+            {!data?.formattedValue ? inputValue : data?.formattedValue}
           </div>
         ) : (
           <>
@@ -142,24 +140,14 @@ const GridEdit = ({ data }) => {
               type='text'
               readOnly
               onClick={(e) => {
-                // e.stopPropagation();
+                e.stopPropagation();
                 handleTextClick();
               }}
               onBlur={() => {
+                setIsEditable(false);
                 handleEditEvents();
               }}
               onKeyDown={(e) => {
-                if (
-                  e.key === 'ArrowRight' ||
-                  e.key === 'ArrowLeft' ||
-                  e.key === 'ArrowUp' ||
-                  e.key === 'ArrowDown'
-                ) {
-                  inputRef?.current?.blur();
-                  dateRef?.current?.blur();
-
-                  return;
-                }
                 e.stopPropagation();
               }}
             />
@@ -182,14 +170,11 @@ const GridEdit = ({ data }) => {
   if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
       <>
-        {!showInput ? (
+        {!isEditable ? (
           <div
             onDoubleClick={() => {
-              setShowInput(true);
+              setIsEditable(true);
             }}
-            ref={inputRef}
-            tabIndex={'1'}
-            // onDoubleClick={() => setShowInput(true)}
             style={{
               backgroundColor: data?.backgroundColor,
               outline: 0,
@@ -197,7 +182,28 @@ const GridEdit = ({ data }) => {
               paddingRight: '5px',
             }}
           >
-            {data?.formattedValue}
+            {!data?.formattedValue ? (
+              <NumericFormat
+                className='currency'
+                allowLeadingZeros={true}
+                id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+                style={{
+                  width: '100%',
+                  border: 0,
+                  outline: 0,
+                  backgroundColor: data?.backgroundColor,
+                  textAlign: 'right',
+                  paddingRight: '5px',
+                }}
+                readOnly
+                decimalScale={Decimal}
+                value={data?.value}
+                decimalSeparator={decimalSeparator}
+                thousandSeparator={Thousand}
+              />
+            ) : (
+              data?.formattedValue
+            )}
           </div>
         ) : (
           <NumericFormat
@@ -214,7 +220,6 @@ const GridEdit = ({ data }) => {
               paddingRight: '5px',
             }}
             onValueChange={(value) => {
-              console.log({ value });
               if (!value.value) return setInputValue(0);
               setInputValue(parseFloat(value?.value));
             }}
@@ -223,18 +228,10 @@ const GridEdit = ({ data }) => {
             decimalSeparator={decimalSeparator}
             thousandSeparator={Thousand}
             onBlur={(e) => {
+              setIsEditable(false);
               handleEditEvents();
             }}
             onKeyDown={(e) => {
-              // if (
-              //   e.key === 'ArrowRight' ||
-              //   e.key === 'ArrowLeft' ||
-              //   e.key === 'ArrowUp' ||
-              //   e.key === 'ArrowDown'
-              // ) {
-              //   inputRef.current.blur();
-              //   return;
-              // }
               e.stopPropagation();
             }}
           />
@@ -245,13 +242,11 @@ const GridEdit = ({ data }) => {
 
   return (
     <>
-      {!showInput ? (
+      {!isEditable ? (
         <div
           onDoubleClick={() => {
-            setShowInput(true);
+            setIsEditable(true);
           }}
-          ref={inputRef}
-          tabIndex={'1'}
           // onDoubleClick={() => setShowInput(true)}
           style={{
             backgroundColor: data?.backgroundColor,
@@ -261,7 +256,7 @@ const GridEdit = ({ data }) => {
             paddingLeft: '5px',
           }}
         >
-          {data?.formattedValue}
+          {!data?.formattedValue ? data?.value : data?.formattedValue}
         </div>
       ) : (
         <input
@@ -275,23 +270,12 @@ const GridEdit = ({ data }) => {
             backgroundColor: data?.backgroundColor,
             paddingLeft: '5px',
           }}
-          // onClick={(e) => {
-          // return;
-          // e.stopPropagation();
-          //   console.log('Child Click');
-          // }}
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            setIsEditable(true);
+          }}
           value={inputValue}
           onKeyDown={(e) => {
-            // if (
-            //   e.key === 'ArrowRight' ||
-            //   e.key === 'ArrowLeft' ||
-            //   e.key === 'ArrowUp' ||
-            //   e.key === 'ArrowDown'
-            // ) {
-            //   inputRef?.current?.blur();
-            //   dateRef?.current?.blur();
-            //   return;
-            // }
             e.stopPropagation();
           }}
           onChange={(e) => {
@@ -299,8 +283,10 @@ const GridEdit = ({ data }) => {
             setInputValue(e.target.value);
           }}
           onBlur={(e) => {
+            setIsEditable(false);
             handleEditEvents();
           }}
+          autoFocus
         />
       )}
     </>
@@ -308,23 +294,3 @@ const GridEdit = ({ data }) => {
 };
 
 export default GridEdit;
-
-// onFocus={() => cellClick(data?.row, data?.column)}
-// e.stopPropagation();
-// cellClick(data.row, data.column);
-//onClick={(e) => {
-//   e.stopPropagation();
-//   cellClick(data.row, data.column);
-//}}
-
-// onKeyDown={(e) => {
-//   if (
-//     e.key === 'ArrowRight' ||
-//     e.key === 'ArrowLeft' ||
-//     e.key === 'ArrowUp' ||
-//     e.key === 'ArrowDown'
-//   ) {
-//     e.stopPropagation();
-//     keyPress(e);
-//   }
-// }}

@@ -1,7 +1,8 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 const GridLabel = ({ data }) => {
   const labelRef = useRef();
+  const [isEditable, setisEditable] = useState(false);
 
   useEffect(() => {
     if (data.focused) {
@@ -24,13 +25,36 @@ const GridLabel = ({ data }) => {
   };
 
   return (
-    <div
-      tabIndex={'100'}
-      style={{ backgroundColor: data?.backgroundColor, outline: 0, ...fontStyles }}
-      ref={labelRef}
-    >
-      {data?.value}
-    </div>
+    <>
+      {!isEditable ? (
+        <div
+          style={{
+            backgroundColor: data?.backgroundColor,
+            outline: 0,
+            ...fontStyles,
+            textAlign: data?.typeObj?.Properties?.Justify,
+            paddingRight: '5px',
+          }}
+          onDoubleClick={() => setisEditable(true)}
+        >
+          {data?.formattedValue}
+        </div>
+      ) : (
+        <div
+          style={{
+            backgroundColor: data?.backgroundColor,
+            outline: 0,
+            ...fontStyles,
+            textAlign: data?.typeObj?.Properties?.Justify,
+            paddingRight: '5px',
+          }}
+          onBlur={() => setisEditable(false)}
+          ref={labelRef}
+        >
+          {data?.value}
+        </div>
+      )}
+    </>
   );
 };
 

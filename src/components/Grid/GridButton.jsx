@@ -112,6 +112,7 @@ const GridButton = ({ data }) => {
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
+            marginLeft: '3px',
           }}
         />
       )}

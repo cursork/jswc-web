@@ -628,9 +628,9 @@ const GridComponent = ({ data }) => {
 
   return (
     <div
+      tabIndex={0}
       ref={gridRef}
       onKeyDown={handleKeyDown}
-      tabIndex='0'
       id={data?.ID}
       style={{
         ...style,
@@ -655,7 +655,6 @@ const GridComponent = ({ data }) => {
                 <div
                   onClick={(e) => {
                     handleCellClick(rowi, columni);
-                    // handleCellMove(rowi, columni + 1, '');
                   }}
                   id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
                   style={{
