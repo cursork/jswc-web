@@ -381,7 +381,7 @@ const Grid = ({ data }) => {
     if (Values) setRows(Values?.length + 1);
   }, [data]);
 
-  const handleCellMove = (row, column, value) => {
+  const handleCellMove = (row, column, mouseClick) => {
     if (column > columns || column == 0) return;
 
     const cellChanged = JSON.parse(localStorage.getItem('isChanged'));
@@ -395,7 +395,7 @@ const Grid = ({ data }) => {
           column,
           0,
           0,
-          0,
+          mouseClick,
           cellChanged && cellChanged.isChange ? 1 : 0,
           cellChanged && cellChanged ? cellChanged.value : '',
         ],
@@ -455,16 +455,16 @@ const Grid = ({ data }) => {
 
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
-      handleCellMove(selectedRow, selectedColumn + 2, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow, selectedColumn + 2, 0);
     } else if (event.key === 'ArrowLeft') {
       setSelectedColumn((prev) => Math.max(prev - 1, 0));
-      handleCellMove(selectedRow, selectedColumn, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow, selectedColumn, 0);
     } else if (event.key === 'ArrowUp') {
       setSelectedRow((prev) => Math.max(prev - 1, 1));
-      handleCellMove(selectedRow - 1, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow - 1, selectedColumn + 1, 0);
     } else if (event.key === 'ArrowDown') {
       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-      handleCellMove(selectedRow + 1, selectedColumn + 1, Values[selectedRow - 1][selectedColumn]);
+      handleCellMove(selectedRow + 1, selectedColumn + 1, 0);
     }
   };
 
@@ -598,7 +598,7 @@ const Grid = ({ data }) => {
     setSelectedColumn(column);
     setSelectedRow(row);
 
-    handleCellMove(row, column + 1, '');
+    handleCellMove(row, column + 1, 1);
 
     // handleData(
     //   {
