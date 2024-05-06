@@ -55,7 +55,13 @@ const GridSelect = ({ data }) => {
 
     console.log(triggerEvent);
     socket.send(triggerEvent);
-    localStorage.setItem('isChanged', JSON.stringify(true));
+    localStorage.setItem(
+      'isChanged',
+      JSON.stringify({
+        isChange: true,
+        value: value,
+      })
+    );
   };
 
   const handleSelItemsEvent = (value) => {
@@ -67,6 +73,8 @@ const GridSelect = ({ data }) => {
 
   return (
     <select
+      onKeyDown={(e) => e.preventDefault()}
+      onClick={(e) => e.stopPropagation()}
       ref={selectRef}
       value={comboInput}
       style={{ border: 0, outline: 0, width: '100%', height: '100%' }}

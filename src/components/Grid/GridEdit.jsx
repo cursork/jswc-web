@@ -10,7 +10,6 @@ const GridEdit = ({ data }) => {
   const [isEditable, setIsEditable] = useState(false);
 
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
-  const [showInput, setShowInput] = useState(data?.showInput);
 
   const { FieldType, Decimal } = data?.typeObj?.Properties;
   const { dataRef, findDesiredData, handleData, socket } = useAppData();
@@ -25,19 +24,11 @@ const GridEdit = ({ data }) => {
     FieldType == 'Date' ? dayjs(calculateDateAfterDays(data?.value)) : new Date()
   );
 
-  // useEffect(() => {
-  //   if (data.focused) {
-  //     if (FieldType == 'Date') {
-  //       dateRef?.current?.focus();
-  //     } else {
-  //       inputRef?.current?.focus();
-  //     }
-  //   }
-  // }, [data.focused]);
-
   const triggerCellChangedEvent = () => {
     // const gridEvent = findDesiredData(data?.gridId);
+
     const values = data?.gridValues;
+
     values[data?.row - 1][data?.column] = FieldType == 'Date' ? dateFormattedValue : inputValue;
     // handleData(
     //   {
@@ -84,12 +75,28 @@ const GridEdit = ({ data }) => {
     if (!exists) return;
     console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
-    localStorage.setItem('isChanged', JSON.stringify(true));
+    localStorage.setItem(
+      'isChanged',
+      JSON.stringify({
+        isChange: true,
+        value: FieldType == 'Date' ? dateFormattedValue : inputValue,
+      })
+    );
     if (!data?.formatString) return;
 
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
   };
+
+  useEffect(() => {
+    if (data.focused) {
+      inputRef?.current?.focus();
+    }
+  }, [data.focused]);
+
+  useEffect(() => {
+    return () => console.log('unmount');
+  }, []);
 
   const handleEditEvents = () => {
     if (FieldType == 'Date') {
@@ -272,7 +279,7 @@ const GridEdit = ({ data }) => {
           }}
           onDoubleClick={(e) => {
             e.stopPropagation();
-            setIsEditable(true);
+            // setIsEditable(true);
           }}
           value={inputValue}
           onKeyDown={(e) => {

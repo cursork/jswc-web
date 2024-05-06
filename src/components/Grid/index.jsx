@@ -310,14 +310,18 @@ import GridCell from './GridCell';
 import Header from './Header';
 import GridLabel from './GridLabel';
 
-const Grid = ({ data }) => {
-  return <GridComponent key={data?.ID} data={data} />;
+const Component = ({ key, data, row, column }) => {
+  if (data?.type == 'Edit') return <GridEdit data={data} />;
+  else if (data?.type == 'Button') return <GridButton data={data} />;
+  else if (data?.type == 'cell') return <GridCell data={data} />;
+  else if (data?.type == 'header') return <Header data={data} />;
+  else if (data?.type == 'Combo') return <GridSelect data={data} />;
+  else if (data?.type == 'Label') return <GridLabel data={data} />;
 };
 
-const GridComponent = ({ data }) => {
+const Grid = ({ data }) => {
   const gridId = data?.ID;
-
-  const { findDesiredData, socket } = useAppData();
+  const { findDesiredData, socket, handleData, reRender } = useAppData();
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -357,10 +361,12 @@ const GridComponent = ({ data }) => {
   const [width, setWidth] = useState(Size[1]);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
-  const [selectedRow, setSelectedRow] = useState(0);
-  const [selectedColumn, setSelectedColumn] = useState(0);
+  const [selectedRow, setSelectedRow] = useState(!CurCell ? 0 : CurCell[0]);
+  const [selectedColumn, setSelectedColumn] = useState(!CurCell ? 0 : CurCell[1]);
 
   const style = setStyle(data?.Properties);
+
+  // console.log({ CurCell });
 
   useEffect(() => {
     if (!Attach) return;
@@ -390,8 +396,8 @@ const GridComponent = ({ data }) => {
           0,
           0,
           0,
-          cellChanged && cellChanged ? 1 : 0,
-          cellChanged && cellChanged ? value : '',
+          cellChanged && cellChanged.isChange ? 1 : 0,
+          cellChanged && cellChanged ? cellChanged.value : '',
         ],
       },
     });
@@ -400,7 +406,13 @@ const GridComponent = ({ data }) => {
     if (!exists) return;
     console.log(cellMoveEvent);
     socket.send(cellMoveEvent);
-    localStorage.setItem('isChanged', JSON.stringify(false));
+    localStorage.setItem(
+      'isChanged',
+      JSON.stringify({
+        isChange: false,
+        value: '',
+      })
+    );
   };
 
   const handleKeyDown = (event) => {
@@ -586,45 +598,23 @@ const GridComponent = ({ data }) => {
     setSelectedColumn(column);
     setSelectedRow(row);
 
+    handleCellMove(row, column + 1, '');
+
+    // handleData(
+    //   {
+    //     ID: data?.ID,
+    //     Properties: {
+    //       CurCell: [row, column],
+    //     },
+    //   },
+    //   'WS'
+    // );
+
+    // reRender();
     //  handleCellMove(row, column + 1, Values[row - 1][column]);
   };
 
   const gridData = modifyGridData();
-
-  const components = {
-    Edit: (data) => {
-      return <GridEdit data={data} keyPress={handleKeyDown} />;
-    },
-    Button: (data) => {
-      return <GridButton data={data} gridId={data?.ID} gridValues={Values} />;
-    },
-    cell: (data) => {
-      return (
-        <GridCell
-          gridEvent={Event}
-          data={data}
-          keyPress={handleKeyDown}
-          cellClick={handleCellClick}
-        />
-      );
-    },
-    header: (data) => {
-      return <Header data={data} keyPress={handleKeyDown} cellClick={handleCellClick} />;
-    },
-    Combo: (data) => {
-      return (
-        <GridSelect
-          grirdEvent={Event}
-          data={data}
-          keyPess={handleKeyDownRef.current}
-          cellClick={handleCellClick}
-        />
-      );
-    },
-    Label: (data) => {
-      return <GridLabel data={data} />;
-    },
-  };
 
   return (
     <div
@@ -649,12 +639,12 @@ const GridComponent = ({ data }) => {
           <div style={{ display: 'flex' }} id={`row-${rowi}`}>
             {row.map((data, columni) => {
               const isFocused = selectedRow === rowi && selectedColumn === columni;
-              const Component = components[data?.type];
 
               return (
                 <div
                   onClick={(e) => {
                     handleCellClick(rowi, columni);
+                    // handleCellMove(rowi, columni + 1, '');
                   }}
                   id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
                   style={{
@@ -675,19 +665,20 @@ const GridComponent = ({ data }) => {
                     overflow: 'hidden',
                   }}
                 >
-                  {!data.type ? null : (
-                    <Component
-                      showInput={ShowInput}
-                      backgroundColor={data?.backgroundColor}
-                      gridId={gridId}
-                      gridValues={Values}
-                      gridEvent={Event}
-                      focused={isFocused}
-                      row={rowi}
-                      column={columni}
-                      {...data}
-                    />
-                  )}
+                  <Component
+                    key={data?.type}
+                    data={{
+                      ...data,
+                      row: rowi,
+                      column: columni,
+                      gridValues: Values,
+                      gridEvent: Event,
+                      showInput: ShowInput,
+                      gridId: gridId,
+                      focused: isFocused,
+                      backgroundColor: data?.backgroundColor,
+                    }}
+                  />
                 </div>
               );
             })}

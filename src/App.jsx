@@ -119,7 +119,7 @@ const App = () => {
       };
     }
 
-    reRender();
+    // reRender();
   };
 
   // const deleteObjectsById = (data, idsToDelete) => {
@@ -1139,7 +1139,7 @@ const App = () => {
 
   // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
-
+  
   const formParentID = findFormParentID(dataRef.current);
 
   return (

@@ -6,6 +6,7 @@ const GridButton = ({ data }) => {
   const { handleData, socket, findDesiredData } = useAppData();
   const [checkInput, setCheckInput] = useState(data?.value);
   const [showInput, setShowInput] = useState(data?.showInput);
+  const [isFocused, setisFocused] = useState(false);
   useEffect(() => {
     if (data.focused) {
       buttonRef?.current?.focus();
@@ -62,7 +63,7 @@ const GridButton = ({ data }) => {
     console.log(formatCellEvent);
     socket.send(formatCellEvent);
     socket.send(triggerEvent);
-    localStorage.setItem('isChanged', JSON.stringify(true));
+    localStorage.setItem('isChanged', JSON.stringify({ isChange: true, value: value ? 1 : 0 }));
   };
 
   const handleCheckBoxEvent = (value) => {
@@ -91,13 +92,33 @@ const GridButton = ({ data }) => {
           id={`${data?.row}-${data?.column}`}
           onDoubleClick={() => {
             setShowInput(true);
+            setisFocused(true);
           }}
           ref={buttonRef}
           tabIndex={'1'}
           // onDoubleClick={() => setShowInput(true)}
           style={{ backgroundColor: data?.backgroundColor, ...fontStyles, outline: 0 }}
         >
-          {data?.formattedValue}
+          {!data?.formattedValue ? (
+            <input
+              ref={buttonRef}
+              id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+              type='checkbox'
+              checked={checkInput}
+              onChange={(e) => {
+                setCheckInput(e.target.checked);
+                handleCheckBoxEvent(e.target.checked);
+              }}
+              // onBlur={() => setShowInput(false)}
+              style={{
+                backgroundColor: data?.backgroundColor,
+                outline: 0,
+                marginLeft: '3px',
+              }}
+            />
+          ) : (
+            data?.formattedValue
+          )}
         </div>
       ) : (
         <input
@@ -109,6 +130,7 @@ const GridButton = ({ data }) => {
             setCheckInput(e.target.checked);
             handleCheckBoxEvent(e.target.checked);
           }}
+          onBlur={() => setShowInput(false)}
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
