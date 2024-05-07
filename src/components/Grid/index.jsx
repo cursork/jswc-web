@@ -321,12 +321,12 @@ const Component = ({ key, data, row, column }) => {
 
 const Grid = ({ data }) => {
   const gridId = data?.ID;
-  const { findDesiredData, socket, handleData, reRender } = useAppData();
+  const { findDesiredData, socket } = useAppData();
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
-  const handleKeyDownRef = useRef(null);
+
   const gridRef = useRef(null);
 
   const {
@@ -365,8 +365,6 @@ const Grid = ({ data }) => {
   const [selectedColumn, setSelectedColumn] = useState(!CurCell ? 0 : CurCell[1]);
 
   const style = setStyle(data?.Properties);
-
-  // console.log({ CurCell });
 
   useEffect(() => {
     if (!Attach) return;
@@ -597,6 +595,8 @@ const Grid = ({ data }) => {
   const handleCellClick = (row, column) => {
     setSelectedColumn(column);
     setSelectedRow(row);
+
+    if (row == selectedRow && column == selectedColumn) return;
 
     handleCellMove(row, column + 1, 1);
 
