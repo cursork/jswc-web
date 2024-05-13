@@ -285,6 +285,16 @@ const App = () => {
         const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
         const Type = refData?.Properties?.Type;
 
+        // If didn't have any type on WG then return an ErrorMessage
+
+        const errorEvent = JSON.stringify({
+          WG: {
+            ID: serverEvent?.ID,
+            Error: { Code: 1, Message: 'ID Not found', WGID: serverEvent?.WGID },
+          },
+        });
+
+        if (!Type) return webSocket.send(errorEvent);
         // Get Data from the Ref
 
         const { Properties } = refData;
@@ -1139,7 +1149,7 @@ const App = () => {
 
   // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
-  
+
   const formParentID = findFormParentID(dataRef.current);
 
   return (

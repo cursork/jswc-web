@@ -538,7 +538,7 @@ const Grid = ({ data }) => {
           let obj = {
             type: 'cell',
             value: Values[i][j],
-            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
+            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[j] : CellWidths,
             height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[j] : CellHeights,
             align: 'end',
           };
@@ -615,6 +615,8 @@ const Grid = ({ data }) => {
   };
 
   const gridData = modifyGridData();
+
+  console.log({ gridData });
 
   return (
     <div
