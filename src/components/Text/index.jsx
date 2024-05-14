@@ -52,7 +52,8 @@ const Text = ({ data, fontProperties }) => {
     return { height, width };
   };
 
-  console.log({ FCol });
+  console.log({ Text });
+  console.log({ pointsArray });
 
   return (
     <>
@@ -114,13 +115,14 @@ const Text = ({ data, fontProperties }) => {
                     fontProperties?.Rotate * (180 / Math.PI)
                   }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
                 >
-                  {pointsArray.length >= 1
-                    ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
-                    : Text?.map((text, textIndex) => {
+                  {pointsArray.length == 0
+                    ? Text[index].replace(/ /g, '\u00A0')
+                    : // ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
+                      Text?.map((text, textIndex) => {
                         const lineHeight = textIndex === 0 ? '0.7em' : '1em';
                         return (
                           <tspan x={textPoints[0]} dy={lineHeight}>
-                            {text}
+                            {text.replace(/ /g, '\u00A0')}
                           </tspan>
                         );
                       })}

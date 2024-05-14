@@ -119,7 +119,7 @@ const App = () => {
       };
     }
 
-    // reRender();
+    reRender();
   };
 
   // const deleteObjectsById = (data, idsToDelete) => {
