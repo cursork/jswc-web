@@ -406,7 +406,8 @@ const App = () => {
             });
 
             console.log(event);
-            return webSocket.send(event);
+            webSocket.send(event);
+            return;
           }
 
           serverEvent.Properties.map((key) => {
@@ -1175,4 +1176,3 @@ export default App;
 
 // {
 //   JSON.stringify(updatedData[formParentID]?.['LEFT']?.Properties);
-// }

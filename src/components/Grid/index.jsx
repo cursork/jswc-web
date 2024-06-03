@@ -65,19 +65,7 @@
 //         Event: {
 //           CurCell: [row, column],
 //           Values,
-//         },
-//       })
-//     );
-
-//     setSelectedGrid({ row, column });
-//   };
-
-//   const [height, setHeight] = useState(Size[0]);
-//   const [width, setWidth] = useState(Size[1]);
-
-//   const style = setStyle(data?.Properties);
-//   const cells = useRef([]);
-
+//         },+
 //   useEffect(() => {
 //     if (cells.current.length > 0) {
 //       cells.current[0].focus(); // Set initial focus on the first cell
@@ -692,3 +680,6 @@ const Grid = ({ data }) => {
 };
 
 export default Grid;
+
+
+

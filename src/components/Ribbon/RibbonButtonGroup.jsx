@@ -33,7 +33,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
   return (
     <Row>
       {Captions.map((title, i) => {
-        let IconComponent = AppIcons[Icons[i]];
+        // let IconComponent = AppIcons[Icons[i]];
         return (
           <Col
             id={data?.ID}
@@ -42,7 +42,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
             style={{ cursor: 'pointer' }}
             onClick={() => handleButtonEvent(i + 1)}
           >
-            <IconComponent size={25} />
+            {/* <IconComponent size={25} /> */}
             <div style={{ fontSize: '12px', textAlign: 'center', textOverflow: 'ellipsis' }}>
               {title}
             </div>

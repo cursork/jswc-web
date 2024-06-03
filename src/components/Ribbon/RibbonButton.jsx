@@ -5,9 +5,11 @@ import { useAppData } from '../../hooks';
 import { MdOutlineQuestionMark } from 'react-icons/md';
 
 const CustomRibbonButton = ({ data }) => {
+  const PORT = localStorage.getItem('PORT');
+  const ImageList = JSON.parse(localStorage.getItem('ImageList'));
   const { socket } = useAppData();
 
-  const { Icon, Caption, Event } = data?.Properties;
+  const { Icon, Caption, Event, ImageIndex } = data?.Properties;
 
   const handleSelectEvent = () => {
     const selectEvent = JSON.stringify({
@@ -27,6 +29,7 @@ const CustomRibbonButton = ({ data }) => {
   };
 
   const IconComponent = Icons[Icon] ? Icons[Icon] : MdOutlineQuestionMark;
+
   return (
     <Row>
       <Col md={12}>
@@ -36,7 +39,11 @@ const CustomRibbonButton = ({ data }) => {
           onClick={handleButtonEvent}
           style={{ cursor: 'pointer' }}
         >
-          <IconComponent size={35} />
+          {ImageIndex ? (
+            <img src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[ImageIndex - 1]}`} />
+          ) : (
+            <IconComponent size={35} />
+          )}
           <div className='text-center' style={{ fontSize: '12px' }}>
             {Caption}
           </div>
