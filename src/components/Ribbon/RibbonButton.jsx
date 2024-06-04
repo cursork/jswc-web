@@ -40,7 +40,13 @@ const CustomRibbonButton = ({ data }) => {
           style={{ cursor: 'pointer' }}
         >
           {ImageIndex ? (
-            <img src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[ImageIndex - 1]}`} />
+            <img
+              style={{
+                width: ImageList?.Properties?.Size && ImageList?.Properties?.Size[1],
+                height: ImageList?.Properties?.Size && ImageList?.Properties?.Size[0],
+              }}
+              src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[ImageIndex - 1]}`}
+            />
           ) : (
             <IconComponent size={35} />
           )}
@@ -54,3 +60,5 @@ const CustomRibbonButton = ({ data }) => {
 };
 
 export default CustomRibbonButton;
+
+

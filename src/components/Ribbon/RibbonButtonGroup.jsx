@@ -4,11 +4,13 @@ import { useAppData } from '../../hooks';
 
 const CustomRibbonButtonGroup = ({ data }) => {
   const { socket } = useAppData();
+  const PORT = localStorage.getItem('PORT');
+  const ImageList = JSON.parse(localStorage.getItem('ImageList'));
 
   const dataSplit = (title) => {
     return title.substring(0, 5) + '..';
   };
-  const { Captions, Icons, Event } = data?.Properties;
+  const { Captions, Icons, Event, ImageIndex } = data?.Properties;
 
   const colSize = Captions?.length == 4 ? 6 : 12;
 
@@ -30,6 +32,10 @@ const CustomRibbonButtonGroup = ({ data }) => {
     handleSelectEvent(info);
   };
 
+  console.log({ ImageIndex });
+
+  console.log({ Captions });
+
   return (
     <Row>
       {Captions.map((title, i) => {
@@ -42,7 +48,15 @@ const CustomRibbonButtonGroup = ({ data }) => {
             style={{ cursor: 'pointer' }}
             onClick={() => handleButtonEvent(i + 1)}
           >
-            {/* <IconComponent size={25} /> */}
+            {ImageIndex?.length > 0 ? (
+              <img
+                style={{
+                  width: ImageList?.Properties?.Size && ImageList?.Properties?.Size[1],
+                  height: ImageList?.Properties?.Size && ImageList?.Properties?.Size[0],
+                }}
+                src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[ImageIndex[i] - 1]}`}
+              />
+            ) : null}
             <div style={{ fontSize: '12px', textAlign: 'center', textOverflow: 'ellipsis' }}>
               {title}
             </div>

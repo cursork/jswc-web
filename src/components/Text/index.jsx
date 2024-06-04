@@ -52,8 +52,11 @@ const Text = ({ data, fontProperties }) => {
     return { height, width };
   };
 
-  console.log({ Text });
   console.log({ pointsArray });
+
+  console.log({ Text });
+
+  // Text can be the array []  so Map the Text not the Points
 
   return (
     <>
@@ -73,7 +76,7 @@ const Text = ({ data, fontProperties }) => {
             );
 
             const textWidth = dimensions?.width + 30; // replace with actual calculation
-            const textHeight = dimensions?.height + 10; // replace with actual calculation
+            const textHeight = dimensions?.height + 30; // replace with actual calculation
 
             return (
               <g key={index}>
@@ -119,10 +122,11 @@ const Text = ({ data, fontProperties }) => {
                     ? Text[index].replace(/ /g, '\u00A0')
                     : // ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
                       Text?.map((text, textIndex) => {
-                        const lineHeight = textIndex === 0 ? '0.7em' : '1em';
+                        const lineHeight = textIndex === 0 ? '0.7em' : '3em';
                         return (
-                          <tspan x={textPoints[0]} dy={lineHeight}>
+                          <tspan x={textPoints[0]} y={textPoints[1]} dy={lineHeight}>                      
                             {text.replace(/ /g, '\u00A0')}
+                            {/* {text} */}
                           </tspan>
                         );
                       })}
