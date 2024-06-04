@@ -52,10 +52,6 @@ const Text = ({ data, fontProperties }) => {
     return { height, width };
   };
 
-  console.log({ pointsArray });
-
-  console.log({ Text });
-
   // Text can be the array []  so Map the Text not the Points
 
   return (
@@ -69,33 +65,35 @@ const Text = ({ data, fontProperties }) => {
         }}
       >
         <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
-          {pointsArray?.map((textPoints, index) => {
+          {Text?.map((text, index) => {
             const dimensions = calculateTextDimensions(
               Text,
               !fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`
             );
-
             const textWidth = dimensions?.width + 30; // replace with actual calculation
             const textHeight = dimensions?.height + 30; // replace with actual calculation
+
+            const points = pointsArray[index];
 
             return (
               <g key={index}>
                 <rect
-                  x={textPoints[0]}
-                  y={textPoints[1]}
+                  x={points && points[0]}
+                  y={points && points[1]}
                   width={textWidth}
                   height={textHeight}
-                  transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
+                  transform={`translate(${points && points[0]}, ${points && points[1]}) rotate(${
                     fontProperties?.Rotate * (180 / Math.PI)
-                  }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
+                  }) translate(${points && -points[0]}, ${points && -points[1]})`}
                   fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
                 />
                 <text
+                  id={data?.ID}
                   // fill='red'
                   alignment-baseline='middle'
                   dy='0.7em'
-                  x={textPoints[0]}
-                  y={textPoints[1]}
+                  x={points && points[0]}
+                  y={points && points[1]}
                   font-family={fontProperties?.PName}
                   font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
                   fill={FCol ? rgbColor(FCol[index]) : 'black'}
@@ -114,24 +112,12 @@ const Text = ({ data, fontProperties }) => {
                       ? 'underline'
                       : 'none'
                   }
-                  transform={`translate(${textPoints[0]}, ${textPoints[1]}) rotate(${
+                  transform={`translate(${points && points[0]}, ${points && points[1]}) rotate(${
                     fontProperties?.Rotate * (180 / Math.PI)
-                  }) translate(${-textPoints[0]}, ${-textPoints[1]})`}
+                  }) translate(${points && -points[0]}, ${points && -points[1]})`}
                 >
-                  {pointsArray.length == 0
-                    ? Text[index].replace(/ /g, '\u00A0')
-                    : // ? Text[index].replace(/ /g, '\u00A0') // Replace space with &nbsp;
-                      Text?.map((text, textIndex) => {
-                        const lineHeight = textIndex === 0 ? '0.7em' : '3em';
-                        return (
-                          <tspan x={textPoints[0]} y={textPoints[1]} dy={lineHeight}>                      
-                            {text.replace(/ /g, '\u00A0')}
-                            {/* {text} */}
-                          </tspan>
-                        );
-                      })}
+                  {text.replace(/ /g, '\u00A0')}
                 </text>
-                //{' '}
               </g>
             );
           })}
