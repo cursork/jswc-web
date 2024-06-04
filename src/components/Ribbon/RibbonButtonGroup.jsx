@@ -32,14 +32,14 @@ const CustomRibbonButtonGroup = ({ data }) => {
     handleSelectEvent(info);
   };
 
-  console.log({ ImageIndex });
+  console.log({ Icons });
 
-  console.log({ Captions });
+  console.log({ AppIcons });
 
   return (
     <Row>
       {Captions.map((title, i) => {
-        // let IconComponent = AppIcons[Icons[i]];
+        let IconComponent = AppIcons[Icons?.length > 0 ? Icons[i] : 'MdOutlineQuestionMark'];
         return (
           <Col
             id={data?.ID}
@@ -48,15 +48,22 @@ const CustomRibbonButtonGroup = ({ data }) => {
             style={{ cursor: 'pointer' }}
             onClick={() => handleButtonEvent(i + 1)}
           >
-            {ImageIndex?.length > 0 ? (
-              <img
-                style={{
-                  width: ImageList?.Properties?.Size && ImageList?.Properties?.Size[1],
-                  height: ImageList?.Properties?.Size && ImageList?.Properties?.Size[0],
-                }}
-                src={`http://localhost:${PORT}/${ImageList?.Properties?.Files[ImageIndex[i] - 1]}`}
-              />
-            ) : null}
+            {
+              ImageIndex?.length > 0 ? (
+                <img
+                  style={{
+                    width: ImageList?.Properties?.Size && ImageList?.Properties?.Size[1],
+                    height: ImageList?.Properties?.Size && ImageList?.Properties?.Size[0],
+                  }}
+                  src={`http://localhost:${PORT}/${
+                    ImageList?.Properties?.Files[ImageIndex[i] - 1]
+                  }`}
+                />
+              ) : (
+                <IconComponent />
+              )
+              // null
+            }
             <div style={{ fontSize: '12px', textAlign: 'center', textOverflow: 'ellipsis' }}>
               {title}
             </div>
