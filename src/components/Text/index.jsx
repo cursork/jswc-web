@@ -11,8 +11,6 @@ function useForceRerender() {
 }
 
 const Text = ({ data, fontProperties }) => {
-  // console.log({ fontProperties });
-
   const { Visible, Points, Text, FCol, BCol } = data?.Properties;
 
   const { reRender } = useForceRerender();
