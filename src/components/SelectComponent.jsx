@@ -32,6 +32,7 @@ import ListView from './ListView';
 import SubForm from './DynamicSubForm';
 import Image from './Image';
 import { useAppData } from '../hooks';
+import Chart from './Chart';
 
 const SelectComponent = ({
   data,
@@ -164,6 +165,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Image') return <Image data={data} />;
   if (data?.Properties?.Type == 'Ellipse') return <Ecllipse data={data} />;
   if (data?.Properties?.Type == 'Circle') return <Circle data={data} />;
+  if (data?.Properties?.Type == 'ApexChart') return <Chart data={data} />;
 };
 
 export default SelectComponent;
