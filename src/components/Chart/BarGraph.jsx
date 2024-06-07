@@ -82,7 +82,7 @@ const BarGraph = ({ data }) => {
         width={Size && Size[1]}
         height={Size && Size[0]}
         type={Options?.chart?.type}
-        series={{ ...Series }}
+        series={Series}
       />
     </div>
   );
