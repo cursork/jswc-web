@@ -1,7 +1,7 @@
 import ReactApexChart from 'react-apexcharts';
 
 const BarGraph = ({ data }) => {
-  const { Options, Posn, Series, Size, ChartType } = data?.Properties;
+  const { Options, Posn, Series, Size } = data?.Properties;
 
   // const options = {
   //   chart: {
@@ -81,7 +81,7 @@ const BarGraph = ({ data }) => {
         options={{ ...Options }}
         width={Size && Size[1]}
         height={Size && Size[0]}
-        type={ChartType}
+        type={Options?.chart?.type}
         series={Series}
       />
     </div>
