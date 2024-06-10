@@ -1,7 +1,30 @@
 import ReactApexChart from 'react-apexcharts';
+import { useAppData } from '../../hooks';
 
 const BarGraph = ({ data }) => {
-  const { Options, Posn, Series, Size, ChartType } = data?.Properties;
+  const { Options, Posn, Series, Size, ChartType, Event } = data?.Properties;
+  const { socket } = useAppData();
+  const stringifyCircularJSON = (obj) => {
+    const seen = new WeakSet();
+    return JSON.stringify(obj, (k, v) => {
+      if (v !== null && typeof v === 'object') {
+        if (seen.has(v)) return;
+        seen.add(v);
+      }
+      return v;
+    });
+  };
+
+  const sendEvent = (event, chartContext, config) => {
+    const Event = JSON.stringify({
+      Event: {
+        ID: data?.ID,
+        EventName: event,
+        Info: [stringifyCircularJSON(chartContext), stringifyCircularJSON(config)],
+      },
+    });
+    socket.send(Event);
+  };
 
   // const options = {
   //   chart: {
@@ -75,10 +98,23 @@ const BarGraph = ({ data }) => {
   //   ],
   // };
 
+  const options = {
+    ...Options,
+    chart: {
+      events: {
+        ...(Event?.some((item) => item[0] === 'click') && {
+          click: (chartContext, config) => sendEvent('click', chartContext, config),
+        }),
+        ...(Event?.some((item) => item[0] === 'legendclick') && {
+          click: (chartContext, config) => sendEvent('click', chartContext, config),
+        }),
+      },
+    },
+  };
   return (
     <div style={{ position: 'absolute', top: Posn && Posn[0], left: Posn && Posn[1] }}>
       <ReactApexChart
-        options={{ ...Options }}
+        options={options}
         width={Size && Size[1]}
         height={Size && Size[0]}
         type={ChartType}
@@ -89,3 +125,6 @@ const BarGraph = ({ data }) => {
 };
 
 export default BarGraph;
+
+// The event structure that I propose is
+// {"Event":{"ID":"F1.CHART1","EventName":"<name of event>","Info":[<chartContext>,<config>]}}
