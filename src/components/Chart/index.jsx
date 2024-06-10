@@ -118,7 +118,7 @@ const Chart = ({ data }) => {
             sendEvent('click', chartContext, config, chartConfig),
         }),
         ...(Event?.some((item) => item[0] === 'legendclick') && {
-          click: (chartContext, config, chartConfig) =>
+          legendClick: (chartContext, config, chartConfig) =>
             sendEvent('legendclick', chartContext, config, chartConfig),
         }),
       },
