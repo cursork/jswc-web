@@ -16,14 +16,24 @@ const Chart = ({ data }) => {
     });
   };
 
-  const sendEvent = (event, chartContext, config) => {
+  const sendEvent = (event, chartContext, config, chartConfig) => {
+    const obj = {
+      dataPointIndex: chartConfig?.dataPointIndex,
+      seriesIndex: chartConfig?.seriesIndex,
+      series: chartConfig?.config?.series,
+      xaxis: chartConfig?.config?.xaxis,
+      yaxis: chartConfig?.config?.yaxis,
+    };
+
     const Event = JSON.stringify({
       Event: {
         ID: data?.ID,
         EventName: event,
-        Info: [stringifyCircularJSON(chartContext), stringifyCircularJSON(config)],
+        // Info: [stringifyCircularJSON(chartContext), stringifyCircularJSON(config)],
+        Info: [JSON.stringify(obj)],
       },
     });
+    console.log(Event);
     socket.send(Event);
   };
 
@@ -104,10 +114,12 @@ const Chart = ({ data }) => {
     chart: {
       events: {
         ...(Event?.some((item) => item[0] === 'click') && {
-          click: (chartContext, config) => sendEvent('click', chartContext, config),
+          click: (chartContext, config, chartConfig) =>
+            sendEvent('click', chartContext, config, chartConfig),
         }),
         ...(Event?.some((item) => item[0] === 'legendclick') && {
-          click: (chartContext, config) => sendEvent('click', chartContext, config),
+          click: (chartContext, config, chartConfig) =>
+            sendEvent('click', chartContext, config, chartConfig),
         }),
       },
     },
