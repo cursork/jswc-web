@@ -86,7 +86,7 @@ const Text = ({ data, fontProperties }) => {
                   fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
                 />
                 <text
-                  id={data?.ID}
+                  id={`${data?.ID}-t${index + 1}`}
                   // fill='red'
                   alignment-baseline='middle'
                   dy='0.7em'
