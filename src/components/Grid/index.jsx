@@ -467,14 +467,14 @@ const Grid = ({ data }) => {
       if (!localStoragValue)
         localStorage.setItem(
           data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn] } })
         );
       else {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow, selectedColumn + 2],
+              CurCell: [selectedRow, selectedColumn],
               Values: localStoragValue?.Event?.Values,
             },
           })
@@ -486,14 +486,14 @@ const Grid = ({ data }) => {
       if (!localStoragValue)
         localStorage.setItem(
           data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+          JSON.stringify({ Event: { CurCell: [selectedRow - 1, selectedColumn + 1] } })
         );
       else {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow, selectedColumn + 2],
+              CurCell: [selectedRow - 1, selectedColumn + 1],
               Values: localStoragValue?.Event?.Values,
             },
           })
@@ -505,14 +505,14 @@ const Grid = ({ data }) => {
       if (!localStoragValue)
         localStorage.setItem(
           data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+          JSON.stringify({ Event: { CurCell: [selectedRow + 1, selectedColumn + 1] } })
         );
       else {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow, selectedColumn + 2],
+              CurCell: [selectedRow + 1, selectedColumn + 1],
               Values: localStoragValue?.Event?.Values,
             },
           })

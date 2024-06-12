@@ -31,7 +31,11 @@ const CustomRibbonButtonGroup = ({ data }) => {
 
   if (ImageListObj) {
     if (Array.isArray(ImageListObj)) {
-      console.log({ ImageListObj });
+      const ImagesData = ImageListObj?.map((id) => {
+        return id && JSON.parse(getObjectById(dataRef.current, io));
+      });
+
+      console.log({ ImagesData });
     } else {
       const ID = ImageListObj.split('.')[1];
       ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
@@ -66,7 +70,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
                   src={`http://localhost:${PORT}/${
                     ImageList?.Properties?.Files[ImageIndex[i] - 1]
                   }`}
-                />  
+                />
               ) : (
                 <IconComponent />
               )
