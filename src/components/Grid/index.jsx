@@ -440,7 +440,7 @@ const Grid = ({ data }) => {
     }
 
     if (event.key === 'ArrowRight') {
-      setSelectedColumn((prev) => Math.min(prev + 1, columns - 1));
+      setSelectedColumn((prev) => Math.min(prev + 1, columns));
       handleCellMove(selectedRow, selectedColumn + 2, 0);
     } else if (event.key === 'ArrowLeft') {
       setSelectedColumn((prev) => Math.max(prev - 1, 0));
@@ -604,7 +604,7 @@ const Grid = ({ data }) => {
 
   const gridData = modifyGridData();
 
-  console.log({ gridData });
+  // console.log({ gridData });
 
   return (
     <div
@@ -680,6 +680,3 @@ const Grid = ({ data }) => {
 };
 
 export default Grid;
-
-
-

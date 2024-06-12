@@ -5,12 +5,9 @@ import { useAppData } from '../../hooks';
 const CustomRibbonButtonGroup = ({ data }) => {
   const { socket } = useAppData();
   const PORT = localStorage.getItem('PORT');
-  const ImageList = JSON.parse(localStorage.getItem('ImageList'));
+  let ImageList = JSON.parse(localStorage.getItem('ImageList'));
 
-  const dataSplit = (title) => {
-    return title.substring(0, 5) + '..';
-  };
-  const { Captions, Icons, Event, ImageIndex } = data?.Properties;
+  const { Captions, Icons, Event, ImageIndex, ImageListObj } = data?.Properties;
 
   const colSize = Captions?.length == 4 ? 6 : 12;
 
@@ -32,9 +29,20 @@ const CustomRibbonButtonGroup = ({ data }) => {
     handleSelectEvent(info);
   };
 
-  console.log({ Icons });
+  if (ImageListObj) {
+    if (Array.isArray(ImageListObj)) {
+      console.log({ ImageListObj });
+    } else {
+      const ID = ImageListObj.split('.')[1];
+      ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
+    }
+    // const ID = getStringafterPeriod(ImageListObj);
+    // ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
+  }
 
-  console.log({ AppIcons });
+  // console.log({ Icons });
+
+  // console.log({ AppIcons });
 
   return (
     <Row>
@@ -58,7 +66,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
                   src={`http://localhost:${PORT}/${
                     ImageList?.Properties?.Files[ImageIndex[i] - 1]
                   }`}
-                />
+                />  
               ) : (
                 <IconComponent />
               )
