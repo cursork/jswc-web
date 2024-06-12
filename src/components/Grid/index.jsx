@@ -401,8 +401,6 @@ const Grid = ({ data }) => {
     );
   };
 
-  console.log({ columns });
-
   const handleKeyDown = (event) => {
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
@@ -441,17 +439,85 @@ const Grid = ({ data }) => {
       gridRef.current.focus();
     }
 
+    let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
+
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns));
+
+      if (!localStoragValue)
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+        );
+      else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [selectedRow, selectedColumn + 2],
+              Values: localStoragValue?.Event?.Values,
+            },
+          })
+        );
+      }
+
       handleCellMove(selectedRow, selectedColumn + 2, 0);
     } else if (event.key === 'ArrowLeft') {
       setSelectedColumn((prev) => Math.max(prev - 1, 0));
+      if (!localStoragValue)
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+        );
+      else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [selectedRow, selectedColumn + 2],
+              Values: localStoragValue?.Event?.Values,
+            },
+          })
+        );
+      }
       handleCellMove(selectedRow, selectedColumn, 0);
     } else if (event.key === 'ArrowUp') {
       setSelectedRow((prev) => Math.max(prev - 1, 1));
+      if (!localStoragValue)
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+        );
+      else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [selectedRow, selectedColumn + 2],
+              Values: localStoragValue?.Event?.Values,
+            },
+          })
+        );
+      }
       handleCellMove(selectedRow - 1, selectedColumn + 1, 0);
     } else if (event.key === 'ArrowDown') {
       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
+      if (!localStoragValue)
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
+        );
+      else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [selectedRow, selectedColumn + 2],
+              Values: localStoragValue?.Event?.Values,
+            },
+          })
+        );
+      }
       handleCellMove(selectedRow + 1, selectedColumn + 1, 0);
     }
   };
@@ -587,6 +653,21 @@ const Grid = ({ data }) => {
     setSelectedRow(row);
 
     if (row == selectedRow && column == selectedColumn) return;
+
+    let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
+    if (!localStoragValue)
+      localStorage.setItem(data?.ID, JSON.stringify({ Event: { CurCell: [row, column + 1] } }));
+    else {
+      localStorage.setItem(
+        data?.ID,
+        JSON.stringify({
+          Event: {
+            CurCell: [row, column + 1],
+            Values: localStoragValue?.Event?.Values,
+          },
+        })
+      );
+    }
 
     handleCellMove(row, column + 1, 1);
 
