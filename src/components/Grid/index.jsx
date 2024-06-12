@@ -401,6 +401,8 @@ const Grid = ({ data }) => {
     );
   };
 
+  console.log({ columns });
+
   const handleKeyDown = (event) => {
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;

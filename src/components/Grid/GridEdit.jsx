@@ -51,7 +51,6 @@ const GridEdit = ({ data }) => {
         Value: FieldType == 'Date' ? dateFormattedValue : inputValue,
       },
     });
-
     const updatedGridValues = JSON.stringify({
       Event: {
         EventName: 'CellChanged',
