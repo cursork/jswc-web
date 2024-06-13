@@ -107,6 +107,37 @@ const GridEdit = ({ data }) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    const isAltPressed = e?.altKey ? 4 : 0;
+    const isCtrlPressed = e?.ctrlKey ? 2 : 0;
+    const isShiftPressed = e?.shiftKey ? 1 : 0;
+    const charCode = e?.key?.charCodeAt(0);
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+    const exists = data?.typeObj?.Properties?.Event.some((item) => item[0] === 'KeyPress');
+    if (!exists) return;
+
+    console.log(
+      JSON.stringify({
+        Event: {
+          EventName: 'KeyPress',
+          ID: data?.ID,
+          Info: [e.key, charCode, e.keyCode, shiftState],
+        },
+      })
+    );
+
+    socket.send(
+      JSON.stringify({
+        Event: {
+          EventName: 'KeyPress',
+          ID: data?.ID,
+          Info: [e.key, charCode, e.keyCode, shiftState],
+        },
+      })
+    );
+  };
+
   if (FieldType == 'Date') {
     const handleTextClick = () => {
       inputRef.current.select();
@@ -239,6 +270,7 @@ const GridEdit = ({ data }) => {
             }}
             onKeyDown={(e) => {
               e.stopPropagation();
+              handleKeyPress(e);
             }}
           />
         )}
@@ -283,6 +315,7 @@ const GridEdit = ({ data }) => {
           value={inputValue}
           onKeyDown={(e) => {
             e.stopPropagation();
+            handleKeyPress(e);
           }}
           onChange={(e) => {
             e.stopPropagation();
