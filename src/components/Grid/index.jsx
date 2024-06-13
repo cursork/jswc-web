@@ -349,8 +349,12 @@ const Grid = ({ data }) => {
   const [width, setWidth] = useState(Size[1]);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
-  const [selectedRow, setSelectedRow] = useState(!CurCell ? 0 : CurCell[0]);
-  const [selectedColumn, setSelectedColumn] = useState(!CurCell ? 0 : CurCell[1]);
+  const [selectedRow, setSelectedRow] = useState(
+    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+  );
+  const [selectedColumn, setSelectedColumn] = useState(
+    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+  );
 
   const style = setStyle(data?.Properties);
 
@@ -443,82 +447,128 @@ const Grid = ({ data }) => {
 
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns));
-
-      if (!localStoragValue)
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn + 2] } })
-        );
-      else {
+      if (!localStoragValue) {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow, selectedColumn + 2],
+              CurCell: [
+                selectedRow,
+                RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+              ],
+            },
+          })
+        );
+      } else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [
+                selectedRow,
+                RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+              ],
               Values: localStoragValue?.Event?.Values,
             },
           })
         );
       }
 
-      handleCellMove(selectedRow, selectedColumn + 2, 0);
+      handleCellMove(
+        selectedRow,
+        RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+        0
+      );
     } else if (event.key === 'ArrowLeft') {
-      setSelectedColumn((prev) => Math.max(prev - 1, 0));
-      if (!localStoragValue)
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow, selectedColumn] } })
-        );
-      else {
+      setSelectedColumn((prev) => Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0));
+      if (!localStoragValue) {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow, selectedColumn],
+              CurCell: [selectedRow, RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn],
+            },
+          })
+        );
+      } else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [selectedRow, RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn],
               Values: localStoragValue?.Event?.Values,
             },
           })
         );
       }
-      handleCellMove(selectedRow, selectedColumn, 0);
+      handleCellMove(selectedRow, RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn, 0);
     } else if (event.key === 'ArrowUp') {
       setSelectedRow((prev) => Math.max(prev - 1, 1));
-      if (!localStoragValue)
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow - 1, selectedColumn + 1] } })
-        );
-      else {
+      if (!localStoragValue) {
+     
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow - 1, selectedColumn + 1],
+              CurCell: [
+                selectedRow - 1,
+                RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+              ],
+            },
+          })
+        );
+      } else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [
+                selectedRow - 1,
+                RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+              ],
               Values: localStoragValue?.Event?.Values,
             },
           })
         );
       }
-      handleCellMove(selectedRow - 1, selectedColumn + 1, 0);
+      handleCellMove(
+        selectedRow - 1,
+        RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+        0
+      );
     } else if (event.key === 'ArrowDown') {
       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-      if (!localStoragValue)
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({ Event: { CurCell: [selectedRow + 1, selectedColumn + 1] } })
-        );
-      else {
+      if (!localStoragValue) {
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
             Event: {
-              CurCell: [selectedRow + 1, selectedColumn + 1],
+              CurCell: [
+                selectedRow + 1,
+                RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+              ],
+            },
+          })
+        );
+      } else {
+        localStorage.setItem(
+          data?.ID,
+          JSON.stringify({
+            Event: {
+              CurCell: [
+                selectedRow + 1,
+                RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+              ],
               Values: localStoragValue?.Event?.Values,
             },
           })
         );
       }
-      handleCellMove(selectedRow + 1, selectedColumn + 1, 0);
+      handleCellMove(
+        selectedRow + 1,
+        RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+        0
+      );
     }
   };
 
@@ -656,13 +706,16 @@ const Grid = ({ data }) => {
 
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
     if (!localStoragValue)
-      localStorage.setItem(data?.ID, JSON.stringify({ Event: { CurCell: [row, column + 1] } }));
+      localStorage.setItem(
+        data?.ID,
+        JSON.stringify({ Event: { CurCell: [row, RowTitles?.length > 0 ? column : column + 1] } })
+      );
     else {
       localStorage.setItem(
         data?.ID,
         JSON.stringify({
           Event: {
-            CurCell: [row, column + 1],
+            CurCell: [row, RowTitles?.length > 0 ? column : column + 1],
             Values: localStoragValue?.Event?.Values,
           },
         })

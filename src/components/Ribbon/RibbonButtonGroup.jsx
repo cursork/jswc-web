@@ -1,9 +1,10 @@
 import * as AppIcons from './RibbonIcons';
 import { Row, Col } from 'reactstrap';
 import { useAppData } from '../../hooks';
+import { getObjectById } from '../../utils';
 
 const CustomRibbonButtonGroup = ({ data }) => {
-  const { socket } = useAppData();
+  const { socket, dataRef } = useAppData();
   const PORT = localStorage.getItem('PORT');
   let ImageList = JSON.parse(localStorage.getItem('ImageList'));
 
@@ -32,10 +33,12 @@ const CustomRibbonButtonGroup = ({ data }) => {
   if (ImageListObj) {
     if (Array.isArray(ImageListObj)) {
       const ImagesData = ImageListObj?.map((id) => {
-        return id && JSON.parse(getObjectById(dataRef.current, io));
+        return id && JSON.parse(getObjectById(dataRef.current, id));
       });
 
-      console.log({ ImagesData });
+      const images = ImageIndex.map((imageIndex, index) => {
+        return ImagesData && ImagesData[index]?.Properties?.Files[imageIndex - 1];
+      });
     } else {
       const ID = ImageListObj.split('.')[1];
       ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
