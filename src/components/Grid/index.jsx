@@ -448,6 +448,7 @@ const Grid = ({ data }) => {
     if (event.key === 'ArrowRight') {
       setSelectedColumn((prev) => Math.min(prev + 1, columns));
       if (!localStoragValue) {
+        if (RowTitles?.length > 0 && selectedColumn == columns) return;
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -460,6 +461,7 @@ const Grid = ({ data }) => {
           })
         );
       } else {
+        if (RowTitles?.length > 0 && selectedColumn == columns) return;
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -482,6 +484,8 @@ const Grid = ({ data }) => {
     } else if (event.key === 'ArrowLeft') {
       setSelectedColumn((prev) => Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0));
       if (!localStoragValue) {
+        if (RowTitles?.length > 0 && selectedColumn == 1) return;
+
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -491,6 +495,7 @@ const Grid = ({ data }) => {
           })
         );
       } else {
+        if (RowTitles?.length > 0 && selectedColumn == 1) return;
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -505,7 +510,8 @@ const Grid = ({ data }) => {
     } else if (event.key === 'ArrowUp') {
       setSelectedRow((prev) => Math.max(prev - 1, 1));
       if (!localStoragValue) {
-     
+        if (selectedRow == 1 && RowTitles?.length > 0) return;
+
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -518,6 +524,7 @@ const Grid = ({ data }) => {
           })
         );
       } else {
+        if (selectedRow == 1 && RowTitles?.length > 0) return;
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -539,6 +546,7 @@ const Grid = ({ data }) => {
     } else if (event.key === 'ArrowDown') {
       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
       if (!localStoragValue) {
+        if (selectedRow == rows - 1) return;
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
@@ -551,6 +559,8 @@ const Grid = ({ data }) => {
           })
         );
       } else {
+        if (selectedRow == rows - 1) return;
+
         localStorage.setItem(
           data?.ID,
           JSON.stringify({
