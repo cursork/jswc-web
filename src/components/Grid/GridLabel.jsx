@@ -24,6 +24,37 @@ const GridLabel = ({ data }) => {
     fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
   };
 
+  const handleKeyPress = (e) => {
+    const isAltPressed = e?.altKey ? 4 : 0;
+    const isCtrlPressed = e?.ctrlKey ? 2 : 0;
+    const isShiftPressed = e?.shiftKey ? 1 : 0;
+    const charCode = e?.key?.charCodeAt(0);
+    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+    const exists = data?.typeObj?.Properties?.Event?.some((item) => item[0] === 'KeyPress');
+    if (!exists) return;
+
+    console.log(
+      JSON.stringify({
+        Event: {
+          EventName: 'KeyPress',
+          ID: data?.ID,
+          Info: [e.key, charCode, e.keyCode, shiftState],
+        },
+      })
+    );
+
+    socket.send(
+      JSON.stringify({
+        Event: {
+          EventName: 'KeyPress',
+          ID: data?.ID,
+          Info: [e.key, charCode, e.keyCode, shiftState],
+        },
+      })
+    );
+  };
+
   return (
     <>
       {!isEditable ? (
@@ -47,6 +78,10 @@ const GridLabel = ({ data }) => {
             ...fontStyles,
             textAlign: data?.typeObj?.Properties?.Justify,
             paddingRight: '5px',
+          }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            handleKeyPress(e);
           }}
           onBlur={() => setisEditable(false)}
           ref={labelRef}

@@ -412,6 +412,8 @@ const Grid = ({ data }) => {
     const charCode = event.key.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
+    console.log({ Event });
+
     const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
 
     if (exists) {
@@ -749,9 +751,6 @@ const Grid = ({ data }) => {
   };
 
   const gridData = modifyGridData();
-
-  // console.log({ gridData });
-
   return (
     <div
       tabIndex={0}

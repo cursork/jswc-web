@@ -1049,7 +1049,7 @@ const App = () => {
             },
             'WS'
           );
-          // reRender();
+          reRender();
           return;
         }
 
@@ -1158,7 +1158,7 @@ const App = () => {
       <AppDataContext.Provider
         value={{
           socketData,
-          dataRef,  
+          dataRef,
           socket,
           handleData,
           focusedElement,

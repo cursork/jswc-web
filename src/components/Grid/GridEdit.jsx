@@ -114,7 +114,7 @@ const GridEdit = ({ data }) => {
     const charCode = e?.key?.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const exists = data?.typeObj?.Properties?.Event.some((item) => item[0] === 'KeyPress');
+    const exists = data?.typeObj?.Properties?.Event?.some((item) => item[0] === 'KeyPress');
     if (!exists) return;
 
     console.log(
