@@ -66,6 +66,10 @@ const GridLabel = ({ data }) => {
             textAlign: data?.typeObj?.Properties?.Justify,
             paddingRight: '5px',
           }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            handleKeyPress(e);
+          }}
           onDoubleClick={() => setisEditable(true)}
         >
           {data?.formattedValue}
