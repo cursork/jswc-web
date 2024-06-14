@@ -121,7 +121,7 @@ const GridEdit = ({ data }) => {
       JSON.stringify({
         Event: {
           EventName: 'KeyPress',
-          ID: data?.ID,
+          ID: data?.typeObj?.ID,
           Info: [e.key, charCode, e.keyCode, shiftState],
         },
       })
@@ -131,7 +131,7 @@ const GridEdit = ({ data }) => {
       JSON.stringify({
         Event: {
           EventName: 'KeyPress',
-          ID: data?.ID,
+          ID: data?.typeObj?.ID,
           Info: [e.key, charCode, e.keyCode, shiftState],
         },
       })
@@ -285,6 +285,8 @@ const GridEdit = ({ data }) => {
           onDoubleClick={() => {
             setIsEditable(true);
           }}
+          autoFocus
+          onKeyDown={(e) => console.log({ e })}
           // onDoubleClick={() => setShowInput(true)}
           style={{
             backgroundColor: data?.backgroundColor,

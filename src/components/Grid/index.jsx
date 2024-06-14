@@ -412,8 +412,6 @@ const Grid = ({ data }) => {
     const charCode = event.key.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    console.log({ Event });
-
     const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
 
     if (exists) {
@@ -777,6 +775,7 @@ const Grid = ({ data }) => {
 
               return (
                 <div
+                 
                   onClick={(e) => {
                     handleCellClick(rowi, columni);
                     // handleCellMove(rowi, columni + 1, '');

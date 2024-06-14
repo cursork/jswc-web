@@ -30,6 +30,9 @@ const GridLabel = ({ data }) => {
     const isShiftPressed = e?.shiftKey ? 1 : 0;
     const charCode = e?.key?.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+    console.log({ data });
+
+    console.log('Object', data?.typeObj?.Properties?.Event);
 
     const exists = data?.typeObj?.Properties?.Event?.some((item) => item[0] === 'KeyPress');
     if (!exists) return;
@@ -59,6 +62,7 @@ const GridLabel = ({ data }) => {
     <>
       {!isEditable ? (
         <div
+          ref={labelRef}
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
