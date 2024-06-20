@@ -337,7 +337,7 @@ const Grid = ({ data }) => {
     ColTitleBCol,
     ColTitleFCol,
     TitleHeight,
-    TitleWidth = 0,
+    TitleWidth,
     FormatString,
     VScroll = 0,
     HScroll = 0,
@@ -649,7 +649,7 @@ const Grid = ({ data }) => {
           align: 'start',
           backgroundColor: rgbColor(backgroundColor),
         };
-        body.push(obj);
+        TitleWidth == undefined ? body.push(obj) : TitleWidth == 0 ? null : body.push(obj);
         for (let j = 0; j <= columns; j++) {
           let obj = {
             type: 'cell',
@@ -678,8 +678,7 @@ const Grid = ({ data }) => {
           backgroundColor: rgbColor(backgroundColor),
         };
 
-        !TitleWidth ? body.push(obj) : TitleWidth == 0 ? body.push(obj) : null;
-        // body.push(obj);
+        TitleWidth == undefined ? body.push(obj) : TitleWidth == 0 ? null : body.push(obj);
 
         for (let j = 0; j < columns; j++) {
           let cellType = CellTypes && CellTypes[i][j];
