@@ -337,7 +337,7 @@ const Grid = ({ data }) => {
     ColTitleBCol,
     ColTitleFCol,
     TitleHeight,
-    TitleWidth,
+    TitleWidth = 0,
     FormatString,
     VScroll = 0,
     HScroll = 0,
@@ -678,7 +678,8 @@ const Grid = ({ data }) => {
           backgroundColor: rgbColor(backgroundColor),
         };
 
-        !TitleWidth ? null : body.push(obj);
+        !TitleWidth ? body.push(obj) : TitleWidth == 0 ? body.push(obj) : null;
+        // body.push(obj);
 
         for (let j = 0; j < columns; j++) {
           let cellType = CellTypes && CellTypes[i][j];
@@ -749,6 +750,7 @@ const Grid = ({ data }) => {
   };
 
   const gridData = modifyGridData();
+
   return (
     <div
       tabIndex={0}
@@ -775,7 +777,6 @@ const Grid = ({ data }) => {
 
               return (
                 <div
-                 
                   onClick={(e) => {
                     handleCellClick(rowi, columni);
                     // handleCellMove(rowi, columni + 1, '');
