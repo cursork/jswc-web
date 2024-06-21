@@ -21,6 +21,7 @@ function useForceRerender() {
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [proceed, setProceed] = useState(false);
   const [layout, setLayout] = useState('Initialise');
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
@@ -1055,7 +1056,14 @@ const App = () => {
 
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
-      } else if (keys[0] == 'EX') {
+      } 
+      else if (keys[0] == "EC"){
+        const serverEvent = JSON.parse(event.data).EC;
+        const { EventID, Proceed } = serverEvent
+        console.log({EventID, Proceed})
+        setProceed(Proceed)
+      }
+      else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;
 
         deleteObjectsById(dataRef.current, serverEvent?.ID);
@@ -1164,6 +1172,8 @@ const App = () => {
           focusedElement,
           reRender,
           setChangeEvents,
+          proceed,
+          setProceed
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
