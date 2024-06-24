@@ -22,10 +22,11 @@ const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
   const [proceed, setProceed] = useState(false);
+  const [proceedEventArray, setProceedEventArray] = useState([]);
   const [layout, setLayout] = useState('Initialise');
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
-  const [changeEvents, setChangeEvents] = useState([]);
+  const [changeEvents, setChangeEvents] = useState({});
 
   const { reRender } = useForceRerender();
 
@@ -1013,7 +1014,7 @@ const App = () => {
                 Posn: [Info[0], Info[1]],
                 Size: [Info[2], Info[3]],
               },
-            },
+            },  
             'WS'
           );
 
@@ -1061,6 +1062,7 @@ const App = () => {
         const serverEvent = JSON.parse(event.data).EC;
         const { EventID, Proceed } = serverEvent
         console.log({EventID, Proceed})
+        setProceedEventArray((prev) => ({...prev, [EventID]: Proceed}));
         setProceed(Proceed)
       }
       else if (keys[0] == 'EX') {
@@ -1173,7 +1175,9 @@ const App = () => {
           reRender,
           setChangeEvents,
           proceed,
-          setProceed
+          setProceed,
+          proceedEventArray,
+          setProceedEventArray
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}

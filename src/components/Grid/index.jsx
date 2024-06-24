@@ -310,8 +310,10 @@ const Component = ({ key, data, row, column }) => {
 
 const Grid = ({ data }) => {
   const gridId = data?.ID;
-  const { findDesiredData, socket, proceed, setProceed } = useAppData();
-  console.log({ proceed, setProceed });
+  const { findDesiredData, socket, proceed, setProceed, proceedEventArray, setProceedEventArray } = useAppData();
+  console.log({ proceed, setProceed, proceedEventArray });
+
+  const [eventId, setEventId ] = useState(null)
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -411,9 +413,10 @@ const Grid = ({ data }) => {
     return new Promise((resolve) => {
       const checkProceed = () => {
         if (proceed !== null) {
-          if (proceed === 1) {
+          if (proceedEventArray[eventId] === 1) {
             resolve();
             setProceed(false);
+            setProceedEventArray(prev => ({...prev, [eventId]: 0 }))
           } else {
             return;
           }
@@ -428,6 +431,8 @@ const Grid = ({ data }) => {
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
     const charCode = event.key.charCodeAt(0);
+    const eventId = uuidv4()
+    setEventId(eventId)
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
     const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
@@ -436,7 +441,7 @@ const Grid = ({ data }) => {
       Event: {
         EventName: 'KeyPress',
         ID: data?.ID,
-        EventID: uuidv4(),
+        EventID: eventId,
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
     });
