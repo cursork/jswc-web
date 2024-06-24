@@ -289,6 +289,7 @@
 // export default Grid;
 
 import React, { useState, useEffect, useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { setStyle, generateHeader, extractStringUntilSecondPeriod, rgbColor } from '../../utils';
 import { useResizeObserver, useAppData } from '../../hooks';
 import GridEdit from './GridEdit';
@@ -310,7 +311,7 @@ const Component = ({ key, data, row, column }) => {
 const Grid = ({ data }) => {
   const gridId = data?.ID;
   const { findDesiredData, socket, proceed, setProceed } = useAppData();
-  console.log({proceed, setProceed})
+  console.log({ proceed, setProceed });
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -412,7 +413,7 @@ const Grid = ({ data }) => {
         if (proceed !== null) {
           if (proceed === 1) {
             resolve();
-            setProceed(false)
+            setProceed(false);
           } else {
             return;
           }
@@ -431,25 +432,18 @@ const Grid = ({ data }) => {
 
     const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
 
+    const keyPressEvent = JSON.stringify({
+      Event: {
+        EventName: 'KeyPress',
+        ID: data?.ID,
+        EventID: uuidv4(),
+        Info: [event.key, charCode, event.keyCode, shiftState],
+      },
+    });
+
     if (exists) {
-      console.log(
-        JSON.stringify({
-          Event: {
-            EventName: 'KeyPress',
-            ID: data?.ID,
-            Info: [event.key, charCode, event.keyCode, shiftState],
-          },
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          Event: {
-            EventName: 'KeyPress',
-            ID: data?.ID,
-            Info: [event.key, charCode, event.keyCode, shiftState],
-          },
-        })
-      );
+      console.log(keyPressEvent);
+      socket.send(keyPressEvent);
     }
 
     const isNavigationKeys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].some(
@@ -516,7 +510,6 @@ const Grid = ({ data }) => {
     };
 
     updatePosition();
-
   };
 
   const modifyGridData = () => {
