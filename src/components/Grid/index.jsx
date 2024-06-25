@@ -732,7 +732,7 @@ const Grid = ({ data }) => {
       );
     }
 
-    handleCellMove(row, column + 1, 1);
+    handleCellMove(row, column , 1);
 
     // handleData(
     //   {
