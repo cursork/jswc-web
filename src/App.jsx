@@ -1061,9 +1061,10 @@ const App = () => {
       else if (keys[0] == "EC"){
         const serverEvent = JSON.parse(event.data).EC;
         const { EventID, Proceed } = serverEvent
-        console.log({EventID, Proceed})
+        console.log("waiting", {EventID, Proceed})
         setProceedEventArray((prev) => ({...prev, [EventID]: Proceed}));
         setProceed(Proceed)
+        localStorage.setItem(EventID, Proceed);
       }
       else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;

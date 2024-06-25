@@ -323,7 +323,7 @@ const Grid = ({ data }) => {
     proceedEventArray,
     setProceedEventArray,
   } = useAppData();
-  console.log({ proceed, setProceed, proceedEventArray });
+  console.log("waiting", { proceed, setProceed, proceedEventArray });
 
   const [eventId, setEventId] = useState(null);
 
@@ -389,7 +389,7 @@ const Grid = ({ data }) => {
 
   const handleCellMove = (row, column, mouseClick) => {
     if (column > columns || column == 0) return;
-
+    console.log("waiting handle cell move", row, column)
     const cellChanged = JSON.parse(localStorage.getItem("isChanged"));
 
     const cellMoveEvent = JSON.stringify({
@@ -410,7 +410,7 @@ const Grid = ({ data }) => {
 
     const exists = Event && Event?.some((item) => item[0] === "CellMove");
     if (!exists) return;
-    console.log(cellMoveEvent);
+    console.log( "waiting handle cell move event", cellMoveEvent);
     socket.send(cellMoveEvent);
     localStorage.setItem(
       "isChanged",
@@ -421,11 +421,12 @@ const Grid = ({ data }) => {
     );
   };
 
-  const waitForProceed = () => {
+  const waitForProceed = (localStorageBool) => {
     return new Promise((resolve) => {
       const checkProceed = () => {
-        if (proceed !== null) {
-          if (proceedEventArray[eventId] === 1) {
+        if (localStorageBool || proceed !== null) {
+          console.log("waiting checking proceed event",eventId, proceedEventArray[eventId], proceedEventArray, )
+          if (localStorageBool || proceedEventArray[eventId] === 1) {
             resolve();
             console.log({proceedEventArray})
             setProceed(false);
@@ -435,11 +436,14 @@ const Grid = ({ data }) => {
           }
         }
       };
-      checkProceed();
+      setTimeout(() => {
+        checkProceed();
+      }, 100); 
     });
   };
 
   const handleKeyDown = (event) => {
+    
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
@@ -464,6 +468,10 @@ const Grid = ({ data }) => {
       socket.send(keyPressEvent);
     }
 
+
+    // setTimeout(()=>{
+    // }, 100)
+
     const isNavigationKeys = [
       "ArrowRight",
       "ArrowLeft",
@@ -476,13 +484,29 @@ const Grid = ({ data }) => {
     }
 
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
+    console.log("waiting initial local storage", localStoragValue)
 
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
-        await waitForProceed();
+        console.log("waiting in handle key down", { proceed, setProceed, proceedEventArray });
+        console.log("waiting local storage getitem", localStorage.getItem(eventId))
+        console.log("waiting starting arrow right")
+        await waitForProceed(localStorage.getItem(eventId));
+        console.log("waiting await proceed done")
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
         if (!localStoragValue) {
+          console.log("writing local storage", JSON.stringify({
+            Event: {
+              CurCell: [
+                selectedRow,
+                RowTitles?.length > 0
+                  ? selectedColumn + 1
+                  : selectedColumn + 2,
+              ],
+            },
+          }) )
           if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          
           localStorage.setItem(
             data?.ID,   
             JSON.stringify({
@@ -496,8 +520,22 @@ const Grid = ({ data }) => {
               },
             })
           );
-        } else {
+        } 
+        else {
           if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          console.log("writing local storage")
+          console.log("writing local storage", JSON.stringify({
+            Event: {
+              CurCell: [
+                selectedRow,
+                RowTitles?.length > 0
+                  ? selectedColumn + 1
+                  : selectedColumn + 2,
+              ],
+              Values: localStoragValue?.Event?.Values,
+            },
+          }) )
+          
           localStorage.setItem(
             data?.ID,
             JSON.stringify({
@@ -636,6 +674,11 @@ const Grid = ({ data }) => {
     };
 
     updatePosition();
+    // setTimeout(()=>{
+    //   updatePosition();
+    // }, 200)
+
+   
   };
 
   const modifyGridData = () => {
