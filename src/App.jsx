@@ -30,6 +30,9 @@ const App = () => {
 
   const dataRef = useRef({});
   const appRef = useRef(null);
+  const [selectedCell, setSelectedCell] = useState([])
+  const [selectedKey, setSelectedKey] = useState([])
+  const [thumb, setThumb] = useState(null)
 
   useEffect(() => {
     dataRef.current = {};
@@ -322,7 +325,7 @@ const App = () => {
                   : null),
               },
             });
-
+            
             console.log(event);
             return webSocket.send(event);
           }
@@ -684,6 +687,7 @@ const App = () => {
                 },
               })
             );
+            setThumb(Thumb)
             return webSocket.send(
               JSON.stringify({
                 WG: {
@@ -717,6 +721,7 @@ const App = () => {
               },
             })
           );
+          setThumb(Info(1))
           return webSocket.send(
             JSON.stringify({
               WG: {
@@ -1164,6 +1169,11 @@ const App = () => {
           focusedElement,
           reRender,
           setChangeEvents,
+          selectedCell,
+          setSelectedCell,
+          selectedKey, 
+          setSelectedKey,
+          thumb, setThumb
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}

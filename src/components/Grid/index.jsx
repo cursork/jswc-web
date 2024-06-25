@@ -309,7 +309,7 @@ const Component = ({ key, data, row, column }) => {
 
 const Grid = ({ data }) => {
   const gridId = data?.ID;
-  const { findDesiredData, socket } = useAppData();
+  const { findDesiredData, socket, setSelectedCell, selectedKey, setSelectedKey } = useAppData();
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -375,7 +375,7 @@ const Grid = ({ data }) => {
     if (column > columns || column == 0) return;
 
     const cellChanged = JSON.parse(localStorage.getItem('isChanged'));
-
+    setSelectedCell([row, column, cellChanged ])
     const cellMoveEvent = JSON.stringify({
       Event: {
         ID: data?.ID,
@@ -411,6 +411,7 @@ const Grid = ({ data }) => {
     const isShiftPressed = event.shiftKey ? 1 : 0;
     const charCode = event.key.charCodeAt(0);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+    setSelectedKey(event.key)
 
     const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
 
