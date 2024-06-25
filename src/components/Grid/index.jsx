@@ -288,32 +288,44 @@
 
 // export default Grid;
 
-import React, { useState, useEffect, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { setStyle, generateHeader, extractStringUntilSecondPeriod, rgbColor } from '../../utils';
-import { useResizeObserver, useAppData } from '../../hooks';
-import GridEdit from './GridEdit';
-import GridSelect from './GridSelect';
-import GridButton from './GridButton';
-import GridCell from './GridCell';
-import Header from './Header';
-import GridLabel from './GridLabel';
+import React, { useState, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
+import {
+  setStyle,
+  generateHeader,
+  extractStringUntilSecondPeriod,
+  rgbColor,
+} from "../../utils";
+import { useResizeObserver, useAppData } from "../../hooks";
+import GridEdit from "./GridEdit";
+import GridSelect from "./GridSelect";
+import GridButton from "./GridButton";
+import GridCell from "./GridCell";
+import Header from "./Header";
+import GridLabel from "./GridLabel";
 
 const Component = ({ key, data, row, column }) => {
-  if (data?.type == 'Edit') return <GridEdit data={data} />;
-  else if (data?.type == 'Button') return <GridButton data={data} />;
-  else if (data?.type == 'cell') return <GridCell data={data} />;
-  else if (data?.type == 'header') return <Header data={data} />;
-  else if (data?.type == 'Combo') return <GridSelect data={data} />;
-  else if (data?.type == 'Label') return <GridLabel data={data} />;
+  if (data?.type == "Edit") return <GridEdit data={data} />;
+  else if (data?.type == "Button") return <GridButton data={data} />;
+  else if (data?.type == "cell") return <GridCell data={data} />;
+  else if (data?.type == "header") return <Header data={data} />;
+  else if (data?.type == "Combo") return <GridSelect data={data} />;
+  else if (data?.type == "Label") return <GridLabel data={data} />;
 };
 
 const Grid = ({ data }) => {
   const gridId = data?.ID;
-  const { findDesiredData, socket, proceed, setProceed, proceedEventArray, setProceedEventArray } = useAppData();
+  const {
+    findDesiredData,
+    socket,
+    proceed,
+    setProceed,
+    proceedEventArray,
+    setProceedEventArray,
+  } = useAppData();
   console.log({ proceed, setProceed, proceedEventArray });
 
-  const [eventId, setEventId ] = useState(null)
+  const [eventId, setEventId] = useState(null);
 
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -378,12 +390,12 @@ const Grid = ({ data }) => {
   const handleCellMove = (row, column, mouseClick) => {
     if (column > columns || column == 0) return;
 
-    const cellChanged = JSON.parse(localStorage.getItem('isChanged'));
+    const cellChanged = JSON.parse(localStorage.getItem("isChanged"));
 
     const cellMoveEvent = JSON.stringify({
       Event: {
         ID: data?.ID,
-        EventName: 'CellMove',
+        EventName: "CellMove",
         Info: [
           row,
           column,
@@ -391,20 +403,20 @@ const Grid = ({ data }) => {
           0,
           mouseClick,
           cellChanged && cellChanged.isChange ? 1 : 0,
-          cellChanged && cellChanged ? cellChanged.value : '',
+          cellChanged && cellChanged ? cellChanged.value : "",
         ],
       },
     });
 
-    const exists = Event && Event?.some((item) => item[0] === 'CellMove');
+    const exists = Event && Event?.some((item) => item[0] === "CellMove");
     if (!exists) return;
     console.log(cellMoveEvent);
     socket.send(cellMoveEvent);
     localStorage.setItem(
-      'isChanged',
+      "isChanged",
       JSON.stringify({
         isChange: false,
-        value: '',
+        value: "",
       })
     );
   };
@@ -415,8 +427,9 @@ const Grid = ({ data }) => {
         if (proceed !== null) {
           if (proceedEventArray[eventId] === 1) {
             resolve();
+            console.log({proceedEventArray})
             setProceed(false);
-            setProceedEventArray(prev => ({...prev, [eventId]: 0 }))
+            setProceedEventArray((prev) => ({ ...prev, [eventId]: 0 }));
           } else {
             return;
           }
@@ -431,15 +444,15 @@ const Grid = ({ data }) => {
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
     const charCode = event.key.charCodeAt(0);
-    const eventId = uuidv4()
-    setEventId(eventId)
+    const eventId = uuidv4();
+    setEventId(eventId);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const exists = Event && Event?.some((item) => item[0] === 'KeyPress');
+    const exists = Event && Event?.some((item) => item[0] === "KeyPress");
 
     const keyPressEvent = JSON.stringify({
       Event: {
-        EventName: 'KeyPress',
+        EventName: "KeyPress",
         ID: data?.ID,
         EventID: eventId,
         Info: [event.key, charCode, event.keyCode, shiftState],
@@ -451,9 +464,12 @@ const Grid = ({ data }) => {
       socket.send(keyPressEvent);
     }
 
-    const isNavigationKeys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].some(
-      (key) => event.key === key
-    );
+    const isNavigationKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+    ].some((key) => event.key === key);
 
     if (isNavigationKeys) {
       gridRef.current.focus();
@@ -462,54 +478,159 @@ const Grid = ({ data }) => {
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
 
     const updatePosition = async () => {
-      if (event.key === 'ArrowRight') {
+      if (event.key === "ArrowRight") {
         await waitForProceed();
-        setSelectedColumn((prev) => {
-          const newCol = Math.min(prev + 1, columns);
-          handleCellMove(selectedRow, RowTitles?.length > 0 ? newCol + 1 : newCol + 2, 0);
-          return newCol;
-        });
-      } else if (event.key === 'ArrowLeft') {
-        await waitForProceed();
-        setSelectedColumn((prev) => {
-          const newCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
-          handleCellMove(selectedRow, RowTitles?.length > 0 ? newCol - 1 : newCol, 0);
-          return newCol;
-        });
-      } else if (event.key === 'ArrowUp') {
-        await waitForProceed();
-        setSelectedRow((prev) => {
-          const newRow = Math.max(prev - 1, 1);
-          handleCellMove(newRow, selectedColumn, 0);
-          return newRow;
-        });
-      } else if (event.key === 'ArrowDown') {
-        await waitForProceed();
-        setSelectedRow((prev) => {
-          const newRow = Math.min(prev + 1, rows);
-          handleCellMove(newRow, selectedColumn, 0);
-          return newRow;
-        });
-      }
+        setSelectedColumn((prev) => Math.min(prev + 1, columns));
+        if (!localStoragValue) {
+          if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          localStorage.setItem(
+            data?.ID,   
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0
+                    ? selectedColumn + 1
+                    : selectedColumn + 2,
+                ],
+              },
+            })
+          );
+        } else {
+          if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0
+                    ? selectedColumn + 1
+                    : selectedColumn + 2,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
 
-      if (!localStoragValue) {
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({
-            Event: {
-              CurCell: [selectedRow, RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1],
-            },
-          })
+        handleCellMove(
+          selectedRow,
+          RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+          0
         );
-      } else {
-        localStorage.setItem(
-          data?.ID,
-          JSON.stringify({
-            Event: {
-              CurCell: [selectedRow, RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1],
-              Values: localStoragValue?.Event?.Values,
-            },
-          })
+      } else if (event.key === "ArrowLeft") {
+        await waitForProceed();
+        setSelectedColumn((prev) =>
+          Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
+        );
+        if (!localStoragValue) {
+          if (RowTitles?.length > 0 && selectedColumn == 1) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+                ],
+              },
+            })
+          );
+        } else {
+          if (RowTitles?.length > 0 && selectedColumn == 1) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow,
+          RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+          0
+        );
+      } else if (event.key === "ArrowUp") {
+        await waitForProceed();
+        setSelectedRow((prev) => Math.max(prev - 1, 1));
+        if (!localStoragValue) {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 1,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 1,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow - 1,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
+        );
+      } else if (event.key === "ArrowDown") {
+        await waitForProceed();
+        setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
+        if (!localStoragValue) {
+          if (selectedRow == rows - 1) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 1,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == rows - 1) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 1,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow + 1,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
         );
       }
     };
@@ -524,8 +645,8 @@ const Grid = ({ data }) => {
       // Add the empty cell in the header when the default Row Titles is present
       let header = [];
       let emptyobj = {
-        value: '',
-        type: 'header',
+        value: "",
+        type: "header",
         width: !TitleWidth ? 100 : TitleWidth,
         height: !TitleHeight ? 20 : TitleHeight,
       };
@@ -536,10 +657,14 @@ const Grid = ({ data }) => {
       for (let i = 0; i < ColTitles?.length; i++) {
         let obj = {
           value: ColTitles[i],
-          type: 'header',
+          type: "header",
           backgroundColor: rgbColor(ColTitleBCol),
           color: rgbColor(ColTitleFCol),
-          width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[i] : CellWidths,
+          width: !CellWidths
+            ? 100
+            : Array.isArray(CellWidths)
+            ? CellWidths[i]
+            : CellWidths,
           height: !TitleHeight ? 20 : TitleHeight,
         };
 
@@ -562,7 +687,7 @@ const Grid = ({ data }) => {
       let headerArray = generateHeader(columns).map((alphabet) => {
         return {
           value: alphabet,
-          type: 'header',
+          type: "header",
           width: !TitleWidth ? 100 : TitleWidth,
           height: !TitleHeight ? 20 : TitleHeight,
         };
@@ -577,21 +702,37 @@ const Grid = ({ data }) => {
         const backgroundColor = BCol && BCol[cellType - 1];
         let body = [];
         let obj = {
-          type: 'cell',
+          type: "cell",
           value: RowTitles ? RowTitles[i] : i + 1,
           width: RowTitles ? (!TitleWidth ? 100 : TitleWidth) : 100,
-          height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
-          align: 'start',
+          height: !CellHeights
+            ? 20
+            : Array.isArray(CellHeights)
+            ? CellHeights[i]
+            : CellHeights,
+          align: "start",
           backgroundColor: rgbColor(backgroundColor),
         };
-        TitleWidth == undefined ? body.push(obj) : TitleWidth == 0 ? null : body.push(obj);
+        TitleWidth == undefined
+          ? body.push(obj)
+          : TitleWidth == 0
+          ? null
+          : body.push(obj);
         for (let j = 0; j <= columns; j++) {
           let obj = {
-            type: 'cell',
+            type: "cell",
             value: Values[i][j],
-            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[j] : CellWidths,
-            height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[j] : CellHeights,
-            align: 'end',
+            width: !CellWidths
+              ? 100
+              : Array.isArray(CellWidths)
+              ? CellWidths[j]
+              : CellWidths,
+            height: !CellHeights
+              ? 20
+              : Array.isArray(CellHeights)
+              ? CellHeights[j]
+              : CellHeights,
+            align: "end",
           };
           body.push(obj);
         }
@@ -605,25 +746,37 @@ const Grid = ({ data }) => {
 
         // Decide to add the RowTitles If the TitleWidth is Greater than 0
         let obj = {
-          type: 'cell',
+          type: "cell",
           value: RowTitles ? RowTitles[i] : i + 1,
           width: !TitleWidth ? 100 : TitleWidth,
-          height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
-          align: 'start',
+          height: !CellHeights
+            ? 20
+            : Array.isArray(CellHeights)
+            ? CellHeights[i]
+            : CellHeights,
+          align: "start",
           backgroundColor: rgbColor(backgroundColor),
         };
 
-        TitleWidth == undefined ? body.push(obj) : TitleWidth == 0 ? null : body.push(obj);
+        TitleWidth == undefined
+          ? body.push(obj)
+          : TitleWidth == 0
+          ? null
+          : body.push(obj);
 
         for (let j = 0; j < columns; j++) {
           let cellType = CellTypes && CellTypes[i][j];
-          const type = findDesiredData(Input?.length > 1 ? Input && Input[cellType - 1] : Input[0]);
+          const type = findDesiredData(
+            Input?.length > 1 ? Input && Input[cellType - 1] : Input[0]
+          );
           const event = data?.Properties?.Event && data?.Properties?.Event;
           const backgroundColor = BCol && BCol[cellType - 1];
-          const cellFont = findDesiredData(CellFonts && CellFonts[cellType - 1]);
+          const cellFont = findDesiredData(
+            CellFonts && CellFonts[cellType - 1]
+          );
 
           let obj = {
-            type: !type ? 'cell' : type?.Properties?.Type,
+            type: !type ? "cell" : type?.Properties?.Type,
             value: Values[i][j],
             event,
             backgroundColor: rgbColor(backgroundColor),
@@ -631,8 +784,16 @@ const Grid = ({ data }) => {
             typeObj: type,
             formattedValue: FormattedValues && FormattedValues[i][j],
             formatString: FormatString && FormatString[cellType - 1],
-            width: !CellWidths ? 100 : Array.isArray(CellWidths) ? CellWidths[j] : CellWidths,
-            height: !CellHeights ? 20 : Array.isArray(CellHeights) ? CellHeights[i] : CellHeights,
+            width: !CellWidths
+              ? 100
+              : Array.isArray(CellWidths)
+              ? CellWidths[j]
+              : CellWidths,
+            height: !CellHeights
+              ? 20
+              : Array.isArray(CellHeights)
+              ? CellHeights[i]
+              : CellHeights,
           };
           body.push(obj);
         }
@@ -653,7 +814,11 @@ const Grid = ({ data }) => {
     if (!localStoragValue)
       localStorage.setItem(
         data?.ID,
-        JSON.stringify({ Event: { CurCell: [row, RowTitles?.length > 0 ? column : column + 1] } })
+        JSON.stringify({
+          Event: {
+            CurCell: [row, RowTitles?.length > 0 ? column : column + 1],
+          },
+        })
       );
     else {
       localStorage.setItem(
@@ -667,7 +832,7 @@ const Grid = ({ data }) => {
       );
     }
 
-    handleCellMove(row, column , 1);
+    handleCellMove(row, column, 1);
 
     // handleData(
     //   {
@@ -695,19 +860,30 @@ const Grid = ({ data }) => {
         ...style,
         height,
         width,
-        border: '1px solid black',
-        overflow: !ColTitles ? 'auto' : 'hidden',
-        background: 'white',
-        display: Visible == 0 ? 'none' : 'block',
-        overflowX: HScroll == -3 ? 'scroll' : HScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
-        overflowY: VScroll == -3 ? 'scroll' : VScroll == -1 || HScroll == -2 ? 'auto' : 'hidden',
+        border: "1px solid black",
+        overflow: !ColTitles ? "auto" : "hidden",
+        background: "white",
+        display: Visible == 0 ? "none" : "block",
+        overflowX:
+          HScroll == -3
+            ? "scroll"
+            : HScroll == -1 || HScroll == -2
+            ? "auto"
+            : "hidden",
+        overflowY:
+          VScroll == -3
+            ? "scroll"
+            : VScroll == -1 || HScroll == -2
+            ? "auto"
+            : "hidden",
       }}
     >
       {gridData?.map((row, rowi) => {
         return (
-          <div style={{ display: 'flex' }} id={`row-${rowi}`}>
+          <div style={{ display: "flex" }} id={`row-${rowi}`}>
             {row.map((data, columni) => {
-              const isFocused = selectedRow === rowi && selectedColumn === columni;
+              const isFocused =
+                selectedRow === rowi && selectedColumn === columni;
 
               return (
                 <div
@@ -717,9 +893,13 @@ const Grid = ({ data }) => {
                   }}
                   id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
                   style={{
-                    borderRight: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
-                    borderBottom: isFocused ? '1px solid blue' : '1px solid  #EFEFEF',
-                    fontSize: '12px',
+                    borderRight: isFocused
+                      ? "1px solid blue"
+                      : "1px solid  #EFEFEF",
+                    borderBottom: isFocused
+                      ? "1px solid blue"
+                      : "1px solid  #EFEFEF",
+                    fontSize: "12px",
                     minHeight: `${data?.height}px`,
                     maxHeight: `${data?.height}px`,
                     minWidth: `${data?.width}px`,
@@ -727,11 +907,11 @@ const Grid = ({ data }) => {
                     minheight: `${data?.height}px`,
                     maxheight: `${data?.height}px`,
                     backgroundColor:
-                      selectedColumn === columni && data.type == 'header'
-                        ? 'lightblue'
+                      selectedColumn === columni && data.type == "header"
+                        ? "lightblue"
                         : rgbColor(data?.backgroundColor),
-                    textAlign: data.type == 'header' ? 'center' : 'left',
-                    overflow: 'hidden',
+                    textAlign: data.type == "header" ? "center" : "left",
+                    overflow: "hidden",
                   }}
                 >
                   <Component
