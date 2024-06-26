@@ -10,8 +10,15 @@ const ScrollBar = ({ data }) => {
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
-
+  const { selectedCell, setSelectedCell, selectedKey, setSelectedKey, thumb } = useAppData()
   const [showButtons, setShowButtons] = useState(false);
+
+  const isEdgeCell = (row, column) => {
+    return (row === 1 && column !== 1) || row === 10 || column === 10;
+  };
+
+  const row = selectedCell[0]
+  const column = selectedCell[1]
 
   const emitEvent = Event && Event[0];
 
@@ -165,6 +172,9 @@ const ScrollBar = ({ data }) => {
   }
 
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
+
+
+  // console.log({trackHeight, trackWidth, scaledValue,thumbPosition, maxThumbPosition})
 
   const trackStyle = {
     width: isHorizontal ? `${trackWidth}px` : '12px',
@@ -325,6 +335,31 @@ const ScrollBar = ({ data }) => {
       );
     }
   }, []);
+
+  
+  useEffect(() => {
+    if (isEdgeCell(row, column)) {
+      if (selectedKey === 'ArrowRight' && isHorizontal && column === 10) {
+        console.log("moved horizontally right")
+        // If moving horizontally right and at the last column
+        setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
+      } else if (selectedKey === 'ArrowLeft' && isHorizontal && column === 1) {
+        // console.log("moved horizontally left")
+        // If moving horizontally left and at the first column
+        setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
+      } else if (selectedKey === 'ArrowDown' && !isHorizontal && row === 10) {
+        // console.log("moved vertivally down")
+        // If moving vertically down and at the last row
+        setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
+      } else if (selectedKey === 'ArrowUp' && !isHorizontal && row === 1) {
+        // console.log("moved vertically up")
+        // If moving vertically up and at the first row
+        setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
+      }
+    }
+    // console.log("moved", "Scale", scaledValue)
+  }, [row, column, isHorizontal, maxValue, selectedKey, thumb]);
+  
 
   return (
     <div

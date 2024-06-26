@@ -321,7 +321,7 @@ const Grid = ({ data }) => {
     proceed,
     setProceed,
     proceedEventArray,
-    setProceedEventArray,
+    setProceedEventArray, setSelectedCell, selectedKey, setSelectedKey
   } = useAppData();
   console.log("waiting", { proceed, setProceed, proceedEventArray });
 
@@ -391,7 +391,7 @@ const Grid = ({ data }) => {
     if (column > columns || column == 0) return;
     console.log("waiting handle cell move", row, column)
     const cellChanged = JSON.parse(localStorage.getItem("isChanged"));
-
+    setSelectedCell([row, column, cellChanged ])
     const cellMoveEvent = JSON.stringify({
       Event: {
         ID: data?.ID,
@@ -453,6 +453,7 @@ const Grid = ({ data }) => {
     const eventId = uuidv4();
     setEventId(eventId);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+    setSelectedKey(event.key)
 
     const exists = Event && Event?.some((item) => item[0] === "KeyPress");
 
