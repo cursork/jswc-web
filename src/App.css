@@ -40,3 +40,7 @@ select:focus-visible {
 /* input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
 } */
+
+div:focus {
+  outline: none; /* This removes the outline */
+}
