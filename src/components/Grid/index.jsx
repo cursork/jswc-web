@@ -466,7 +466,7 @@ const Grid = ({ data }) => {
     });
 
     if (exists) {
-      console.log(keyPressEvent);
+      console.log("keypressevent", keyPressEvent);
       socket.send(keyPressEvent);
     }
 
@@ -493,7 +493,7 @@ const Grid = ({ data }) => {
         console.log("waiting in handle key down", { proceed, setProceed, proceedEventArray });
         console.log("waiting local storage getitem", localStorage.getItem(eventId))
         console.log("waiting starting arrow right")
-        await waitForProceed(localStorage.getItem(eventId));
+        if (exists)  await waitForProceed(localStorage.getItem(eventId));
         console.log("waiting await proceed done")
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
         if (!localStoragValue) {
@@ -560,7 +560,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowLeft") {
-        await waitForProceed();
+        if (exists) await waitForProceed();
         setSelectedColumn((prev) =>
           Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
         );
@@ -599,7 +599,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowUp") {
-        await waitForProceed();
+        if (exists) await waitForProceed();
         setSelectedRow((prev) => Math.max(prev - 1, 1));
         if (!localStoragValue) {
           if (selectedRow == 1 && RowTitles?.length > 0) return;
@@ -636,7 +636,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowDown") {
-        await waitForProceed();
+        if (exists) await waitForProceed();
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
@@ -896,90 +896,99 @@ const Grid = ({ data }) => {
   const gridData = modifyGridData();
 
   return (
-    <div
-      tabIndex={0}
-      ref={gridRef}
-      onKeyDown={handleKeyDown}
-      id={data?.ID}
-      style={{
-        ...style,
-        height,
-        width,
-        border: "1px solid black",
-        overflow: !ColTitles ? "auto" : "hidden",
-        background: "white",
-        display: Visible == 0 ? "none" : "block",
-        overflowX:
-          HScroll == -3
-            ? "scroll"
-            : HScroll == -1 || HScroll == -2
-            ? "auto"
-            : "hidden",
-        overflowY:
-          VScroll == -3
-            ? "scroll"
-            : VScroll == -1 || HScroll == -2
-            ? "auto"
-            : "hidden",
-      }}
-    >
-      {gridData?.map((row, rowi) => {
-        return (
-          <div style={{ display: "flex" }} id={`row-${rowi}`}>
-            {row.map((data, columni) => {
-              const isFocused =
-                selectedRow === rowi && selectedColumn === columni;
+    <>
+      {/* <style>
+        {`
+          div:focus {
+            outline: none;
+          }
+        `}
+      </style> */}
+      <div
+        tabIndex={0}
+        ref={gridRef}
+        onKeyDown={handleKeyDown}
+        id={data?.ID}
+        style={{
+          ...style,
+          height,
+          width,
+          border: "1px solid black",
+          overflow: !ColTitles ? "auto" : "hidden",
+          background: "white",
+          display: Visible == 0 ? "none" : "block",
+          overflowX:
+            HScroll == -3
+              ? "scroll"
+              : HScroll == -1 || HScroll == -2
+              ? "auto"
+              : "hidden",
+          overflowY:
+            VScroll == -3
+              ? "scroll"
+              : VScroll == -1 || HScroll == -2
+              ? "auto"
+              : "hidden",
+        }}
+      >
+        {gridData?.map((row, rowi) => {
+          return (
+            <div style={{ display: "flex" }} id={`row-${rowi}`}>
+              {row.map((data, columni) => {
+                const isFocused =
+                  selectedRow === rowi && selectedColumn === columni;
 
-              return (
-                <div
-                  onClick={(e) => {
-                    handleCellClick(rowi, columni);
-                    // handleCellMove(rowi, columni + 1, '');
-                  }}
-                  id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
-                  style={{
-                    borderRight: isFocused
-                      ? "1px solid blue"
-                      : "1px solid  #EFEFEF",
-                    borderBottom: isFocused
-                      ? "1px solid blue"
-                      : "1px solid  #EFEFEF",
-                    fontSize: "12px",
-                    minHeight: `${data?.height}px`,
-                    maxHeight: `${data?.height}px`,
-                    minWidth: `${data?.width}px`,
-                    maxWidth: `${data?.width}px`,
-                    minheight: `${data?.height}px`,
-                    maxheight: `${data?.height}px`,
-                    backgroundColor:
-                      selectedColumn === columni && data.type == "header"
-                        ? "lightblue"
-                        : rgbColor(data?.backgroundColor),
-                    textAlign: data.type == "header" ? "center" : "left",
-                    overflow: "hidden",
-                  }}
-                >
-                  <Component
-                    key={data?.type}
-                    data={{
-                      ...data,
-                      row: rowi,
-                      column: columni,
-                      gridValues: Values,
-                      gridEvent: Event,
-                      showInput: ShowInput,
-                      gridId: gridId,
-                      focused: isFocused,
-                      backgroundColor: data?.backgroundColor,
+                return (
+                  <div
+                    onClick={(e) => {
+                      handleCellClick(rowi, columni);
+                      // handleCellMove(rowi, columni + 1, '');
                     }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
+                    id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
+                    style={{
+                      borderRight: isFocused
+                        ? "1px solid blue"
+                        : "1px solid  #EFEFEF",
+                      borderBottom: isFocused
+                        ? "1px solid blue"
+                        : "1px solid  #EFEFEF",
+                      fontSize: "12px",
+                      minHeight: `${data?.height}px`,
+                      maxHeight: `${data?.height}px`,
+                      minWidth: `${data?.width}px`,
+                      maxWidth: `${data?.width}px`,
+                      minheight: `${data?.height}px`,
+                      maxheight: `${data?.height}px`,
+                      backgroundColor:
+                        selectedColumn === columni && data.type == "header"
+                          ? "lightblue"
+                          : rgbColor(data?.backgroundColor),
+                      textAlign: data.type == "header" ? "center" : "left",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Component
+                      key={data?.type}
+                      data={{
+                        ...data,
+                        row: rowi,
+                        column: columni,
+                        gridValues: Values,
+                        gridEvent: Event,
+                        showInput: ShowInput,
+                        gridId: gridId,
+                        focused: isFocused,
+                        backgroundColor: data?.backgroundColor,
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
