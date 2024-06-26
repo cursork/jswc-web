@@ -436,9 +436,11 @@ const Grid = ({ data }) => {
           }
         }
       };
-      setTimeout(() => {
-        checkProceed();
-      }, 100); 
+
+      checkProceed();
+      // setTimeout(() => {
+      //   checkProceed();
+      // }, 80); 
     });
   };
 
@@ -673,10 +675,10 @@ const Grid = ({ data }) => {
       }
     };
 
-    updatePosition();
-    // setTimeout(()=>{
-    //   updatePosition();
-    // }, 200)
+    // updatePosition();
+    setTimeout(()=>{
+      updatePosition();
+    }, 120)
 
    
   };
