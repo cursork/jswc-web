@@ -21,11 +21,11 @@ function useForceRerender() {
 const App = () => {
   const [socketData, setSocketData] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [proceed, setProceed] = useState(false);
+  const [proceedEventArray, setProceedEventArray] = useState([]);
   const [layout, setLayout] = useState('Initialise');
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
-  const [changeEvents, setChangeEvents] = useState([]);
-
   const { reRender } = useForceRerender();
 
   const dataRef = useRef({});
@@ -322,7 +322,7 @@ const App = () => {
                   : null),
               },
             });
-
+            
             console.log(event);
             return webSocket.send(event);
           }
@@ -1012,7 +1012,7 @@ const App = () => {
                 Posn: [Info[0], Info[1]],
                 Size: [Info[2], Info[3]],
               },
-            },
+            },  
             'WS'
           );
 
@@ -1055,7 +1055,16 @@ const App = () => {
 
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
-      } else if (keys[0] == 'EX') {
+      } 
+      else if (keys[0] == "EC"){
+        const serverEvent = JSON.parse(event.data).EC;
+        const { EventID, Proceed } = serverEvent
+        console.log("waiting", {EventID, Proceed})
+        setProceedEventArray((prev) => ({...prev, [EventID]: Proceed}));
+        setProceed(Proceed)
+        localStorage.setItem(EventID, Proceed);
+      }
+      else if (keys[0] == 'EX') {
         const serverEvent = JSON.parse(event.data).EX;
 
         deleteObjectsById(dataRef.current, serverEvent?.ID);
@@ -1163,7 +1172,10 @@ const App = () => {
           handleData,
           focusedElement,
           reRender,
-          setChangeEvents,
+          proceed,
+          setProceed,
+          proceedEventArray,
+          setProceedEventArray,
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
