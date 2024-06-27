@@ -6,11 +6,13 @@ import './ScrollBar.css';
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
   const { Align, Type, Thumb, Range, Event, Visible, Size } = data?.Properties;
+  console.log("thumb", Thumb, "data", data )
   const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
   const { selectedCell, setSelectedCell, selectedKey, setSelectedKey, thumb } = useAppData()
+  // console.log("thumb", thumb)
   const [showButtons, setShowButtons] = useState(false);
 
   const isEdgeCell = (row, column) => {
@@ -174,7 +176,7 @@ const ScrollBar = ({ data }) => {
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
 
 
-  // console.log({trackHeight, trackWidth, scaledValue,thumbPosition, maxThumbPosition})
+  console.log({selectedKey, trackHeight, trackWidth, scaledValue,thumbPosition, maxThumbPosition})
 
   const trackStyle = {
     width: isHorizontal ? `${trackWidth}px` : '12px',
@@ -337,28 +339,33 @@ const ScrollBar = ({ data }) => {
   }, []);
 
   
+  // useEffect(() => {
+  //   if (isEdgeCell(row, column)) {
+  //     if (selectedKey === 'ArrowRight' && isHorizontal && column === 10) {
+  //       console.log("moved horizontally right")
+  //       // If moving horizontally right and at the last column
+  //       setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
+  //     } else if (selectedKey === 'ArrowLeft' && isHorizontal && column === 1) {
+  //       // console.log("moved horizontally left")
+  //       // If moving horizontally left and at the first column
+  //       setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
+  //     } else if (selectedKey === 'ArrowDown' && !isHorizontal && row === 10) {
+  //       // console.log("moved vertivally down")
+  //       // If moving vertically down and at the last row
+  //       setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
+  //     } else if (selectedKey === 'ArrowUp' && !isHorizontal && row === 1) {
+  //       // console.log("moved vertically up")
+  //       // If moving vertically up and at the first row
+  //       setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
+  //     }
+  //   }
+  //   // console.log("moved", "Scale", scaledValue)
+  // }, [row, column, isHorizontal, maxValue, selectedKey, Thumb]);
+
   useEffect(() => {
-    if (isEdgeCell(row, column)) {
-      if (selectedKey === 'ArrowRight' && isHorizontal && column === 10) {
-        console.log("moved horizontally right")
-        // If moving horizontally right and at the last column
-        setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
-      } else if (selectedKey === 'ArrowLeft' && isHorizontal && column === 1) {
-        // console.log("moved horizontally left")
-        // If moving horizontally left and at the first column
-        setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
-      } else if (selectedKey === 'ArrowDown' && !isHorizontal && row === 10) {
-        // console.log("moved vertivally down")
-        // If moving vertically down and at the last row
-        setScaledValue((prevValue) => Math.min(prevValue + 1, maxValue));
-      } else if (selectedKey === 'ArrowUp' && !isHorizontal && row === 1) {
-        // console.log("moved vertically up")
-        // If moving vertically up and at the first row
-        setScaledValue((prevValue) => Math.max(prevValue - 1, 1));
-      }
-    }
+      setScaledValue((prevValue) => Math.min( Thumb, maxValue ));
     // console.log("moved", "Scale", scaledValue)
-  }, [row, column, isHorizontal, maxValue, selectedKey, thumb]);
+  }, [Thumb]);
   
 
   return (
