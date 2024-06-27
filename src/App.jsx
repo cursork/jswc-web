@@ -9,6 +9,7 @@ import {
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
+import MsgBox from './components/MessageBox';
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
@@ -27,6 +28,7 @@ const App = () => {
   const webSocketRef = useRef(null);
   const [focusedElement, setFocusedElement] = useState(null);
   const { reRender } = useForceRerender();
+  const [messageBoxData, setMessageBoxData] = useState(null);
 
   const dataRef = useRef({});
   const appRef = useRef(null);
@@ -88,7 +90,8 @@ const App = () => {
 
     // Check if the key already exists at the final level
     const finalKey = splitID[splitID.length - 1];
-    if (currentLevel.hasOwnProperty(finalKey)) {
+    if (currentLevel.hasOwnProperty(finalKey)) 
+      {
       if (mode === 'WC') {
         if (data.Properties && data.Properties.Type === 'Form') {
           localStorage.clear();
@@ -206,6 +209,7 @@ const App = () => {
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
         let windowCreationEvent = JSON.parse(event.data).WC;
+        console.log({windowCreationEvent})
         if (windowCreationEvent?.Properties?.Type == 'Form') {
           localStorage.clear();
           const updatedData = deleteFormAndSiblings(dataRef.current);
@@ -215,9 +219,16 @@ const App = () => {
           return;
         }
 
+        // Handle Message Box separately
+      if (windowCreationEvent?.Properties?.Type == 'MsgBox') {
+        setMessageBoxData(windowCreationEvent);
+        return;
+      }
+
         // console.log('event from server WC', JSON.parse(event.data).WC);
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WC]);
         handleData(JSON.parse(event.data).WC, 'WC');
+
       } else if (keys[0] == 'WS') {
         const serverEvent = JSON.parse(event.data).WS;
 
@@ -1070,8 +1081,9 @@ const App = () => {
         deleteObjectsById(dataRef.current, serverEvent?.ID);
       } else if (keys[0] == 'WX') {
         const serverEvent = JSON.parse(event.data).WX;
+        console.log("Mohid", serverEvent)
 
-        const { Method, Info, WGID } = serverEvent;
+        const { Method, Info, WGID, ID } = serverEvent;
         const calculateTextDimensions = (wordsArray, fontSize = 11) => {
           // Create a hidden div element to calculate text dimensions
           const container = document.createElement('div');
@@ -1111,6 +1123,11 @@ const App = () => {
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
           console.log(event);
           return webSocket.send(event);
+        } else if (Method == 'OnlyDQ'){
+          console.log("hello")
+          const event = JSON.stringify( { WX:{Info: ID ,"WGID": WGID}} );
+          console.log("onlydq event", event);
+          webSocket.send(event);
         } else if (Method == 'GetFocus') {
           const focusedID = localStorage.getItem('current-focus');
           const event = JSON.stringify({ WX: { Info: !focusedID ? [] : [focusedID], WGID } });
@@ -1162,8 +1179,16 @@ const App = () => {
 
   const formParentID = findFormParentID(dataRef.current);
 
+  const handleMsgBoxClose = (button) => {
+    console.log(`Button pressed: ${button}`);
+    setMessageBoxData(null);
+    // Send event back to server via WebSocket
+    socket.send(JSON.stringify({ EVENT: button }));
+  };
+
+
   return (
-    <div ref={appRef}>
+    <div>
       <AppDataContext.Provider
         value={{
           socketData,
@@ -1180,7 +1205,11 @@ const App = () => {
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
       </AppDataContext.Provider>
+      {messageBoxData && (
+        <MsgBox data = { messageBoxData } onClose = { handleMsgBoxClose } />
+      )}
     </div>
+
   );
 };
 
