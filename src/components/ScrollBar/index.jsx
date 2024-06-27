@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
-import { useAppData } from '../../hooks';
 import './ScrollBar.css';
+import { useAppData } from '../../hooks';
+
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
@@ -11,16 +12,9 @@ const ScrollBar = ({ data }) => {
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
-  const { selectedCell, setSelectedCell, selectedKey, setSelectedKey, thumb } = useAppData()
   // console.log("thumb", thumb)
   const [showButtons, setShowButtons] = useState(false);
 
-  const isEdgeCell = (row, column) => {
-    return (row === 1 && column !== 1) || row === 10 || column === 10;
-  };
-
-  const row = selectedCell[0]
-  const column = selectedCell[1]
 
   const emitEvent = Event && Event[0];
 
@@ -174,9 +168,6 @@ const ScrollBar = ({ data }) => {
   }
 
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
-
-
-  console.log({selectedKey, trackHeight, trackWidth, scaledValue,thumbPosition, maxThumbPosition})
 
   const trackStyle = {
     width: isHorizontal ? `${trackWidth}px` : '12px',
