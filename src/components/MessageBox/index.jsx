@@ -1,10 +1,10 @@
 import React from "react";
 import "./MessageBox.css";
 
-const MsgBox = ({ data, onClose }) => {
+const MsgBox = ({ data, onClose, isDesktop }) => {
   console.log("msgbox", data);
   const { Caption, Text, Style, Btns } = data?.Properties;
-  console.log({Caption, Text, Style, Btns})
+  console.log({Caption, Text, Style, Btns, isDesktop})
   const getIconClass = () => {
     switch (Style) {
       case 'Info':
@@ -22,7 +22,7 @@ const MsgBox = ({ data, onClose }) => {
   return (
     <div className="msgbox-overlay">
       <div className="msgbox-container">
-        <div className="msgbox-header">{Caption}</div>
+        { !!!isDesktop && <div className="msgbox-header">{Caption}</div> }
         <div className="msgbox-body">
           {Style && Style !== 'Msg' && <span className={`icon ${getIconClass()}`}></span>}
           <span>{Text}</span>
