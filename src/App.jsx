@@ -1125,7 +1125,7 @@ const App = () => {
           console.log(event);
           return webSocket.send(event);
         } else if (Method == 'OnlyDQ'){
-          const event = JSON.stringify( { WX:{Info: [[ID, "150", "300"]] ,"WGID": WGID}} );
+          const event = JSON.stringify( { WX:{Info: [[ID, 150, 300]] ,"WGID": WGID}} );
           // const event = JSON.stringify( { WX:{Info: [ID] , WGID: WGID}} );
           
           localStorage.setItem(ID, WGID)
