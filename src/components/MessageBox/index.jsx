@@ -4,35 +4,41 @@ import "./MessageBox.css";
 const MsgBox = ({ data, onClose }) => {
   console.log("msgbox", data);
   const { Caption, Text, Style, Btns } = data?.Properties;
-  const renderIcon = () => {
+  console.log({Caption, Text, Style, Btns})
+  const getIconClass = () => {
     switch (Style) {
-      case "Info":
-        return <i className="icon info-icon">i</i>;
-      case "Query":
-        return <i className="icon query-icon">?</i>;
-      case "Warn":
-        return <i className="icon warn-icon">!</i>;
-      case "Error":
-        return <i className="icon error-icon">x</i>;
+      case 'Info':
+        return 'info-icon';
+      case 'Query':
+        return 'query-icon';
+      case 'Warn':
+        return 'warn-icon';
+      case 'Error':
+        return 'error-icon';
       default:
-        return null;
+        return '';
     }
   };
-
   return (
     <div className="msgbox-overlay">
       <div className="msgbox-container">
         <div className="msgbox-header">{Caption}</div>
         <div className="msgbox-body">
-          {renderIcon()}
+          {Style && Style !== 'Msg' && <span className={`icon ${getIconClass()}`}></span>}
           <span>{Text}</span>
         </div>
         <div className="msgbox-footer">
-          {Btns.map((btn, index) => (
-            <button key={index} onClick={() => onClose(`MsgBtn${index + 1}`)}>
-              {btn}
+          {Array.isArray(Btns) ? (
+            Btns.map((btn, index) => (
+              <button key={index} className="rounded-button " onClick={() => onClose(`MsgBtn${index + 1}`, data?.ID)}>
+                {btn.toLowerCase()}
+              </button>
+            ))
+          ) : (
+            <button className="rounded-button" onClick={() => onClose('MsgBtn1', data?.ID)}>
+              {Btns}
             </button>
-          ))}
+          )}
         </div>
       </div>
     </div>

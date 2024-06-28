@@ -222,6 +222,7 @@ const App = () => {
         // Handle Message Box separately
       if (windowCreationEvent?.Properties?.Type == 'MsgBox') {
         setMessageBoxData(windowCreationEvent);
+        // handleData(JSON.parse(event.data).WC, 'WC');
         return;
       }
 
@@ -1124,8 +1125,10 @@ const App = () => {
           console.log(event);
           return webSocket.send(event);
         } else if (Method == 'OnlyDQ'){
-          console.log("hello")
-          const event = JSON.stringify( { WX:{Info: ID ,"WGID": WGID}} );
+          // const event = JSON.stringify( { WX:{Info: [[ID, "150", "300"]] ,"WGID": WGID}} );
+          const event = JSON.stringify( { WX:{Info: [ID] , WGID: WGID}} );
+          
+          localStorage.setItem(ID, WGID)
           console.log("onlydq event", event);
           webSocket.send(event);
         } else if (Method == 'GetFocus') {
@@ -1179,11 +1182,15 @@ const App = () => {
 
   const formParentID = findFormParentID(dataRef.current);
 
-  const handleMsgBoxClose = (button) => {
+  const handleMsgBoxClose = (button, ID) => {
     console.log(`Button pressed: ${button}`);
     setMessageBoxData(null);
     // Send event back to server via WebSocket
-    socket.send(JSON.stringify({ EVENT: button }));
+    socket.send(JSON.stringify({Event: { EventName: button, ID: ID }}));
+    // {"WX":{"ID":"MB","Info":[],"Method":"OnlyDQ","WGID":"7"}}
+    const WGID = localStorage.getItem(ID)
+    console.log("required data", {WGID})
+    socket.send(JSON.stringify({WX:{ID: ID, Info: [], Method: "OnlyDQ", WGID: WGID}}))
   };
 
 
