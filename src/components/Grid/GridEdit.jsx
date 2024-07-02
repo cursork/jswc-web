@@ -29,7 +29,8 @@ const GridEdit = ({ data }) => {
 
     const values = data?.gridValues;
 
-    values[data?.row - 1][data?.column] = FieldType == 'Date' ? dateFormattedValue : inputValue;
+    values[data?.row - 
+    1][data?.column] = FieldType == 'Date' ? dateFormattedValue : inputValue;
     // handleData(
     //   {
     //     ID: data?.gridId,
@@ -191,7 +192,7 @@ const GridEdit = ({ data }) => {
             <input
               id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
               type='date'
-              value={selectedDate}
+              value={dayjs(new Date(selectedDate)).format('YYYY-MM-DD')}
               ref={inputRef}
               onChange={handleDateChange}
               style={{
