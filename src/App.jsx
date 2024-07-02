@@ -1064,6 +1064,10 @@ const App = () => {
           reRender();
           return;
         }
+        else if (Event == 'Select'){
+          const element = document.getElementById(nqEvent.ID)
+          if(element) element.click()
+        }
 
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
@@ -1082,8 +1086,6 @@ const App = () => {
         deleteObjectsById(dataRef.current, serverEvent?.ID);
       } else if (keys[0] == 'WX') {
         const serverEvent = JSON.parse(event.data).WX;
-        console.log("Mohid", serverEvent)
-
         const { Method, Info, WGID, ID } = serverEvent;
         const calculateTextDimensions = (wordsArray, fontSize = 11) => {
           // Create a hidden div element to calculate text dimensions
