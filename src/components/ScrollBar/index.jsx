@@ -6,9 +6,9 @@ import { useAppData } from '../../hooks';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event, Visible, Size } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll } = data?.Properties;
   console.log("thumb", Thumb, "data", data )
-  const isHorizontal = Type === 'Scroll' && Align === 'Bottom';
+  const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
@@ -169,14 +169,18 @@ const ScrollBar = ({ data }) => {
 
   const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
 
+  // Set default positions and sizes if Posn or Size are not defined
+  const defaultPosn = Posn || [0, 0];
+  const defaultSize = Size || [parentSize[0], parentSize[1]];
+
   const trackStyle = {
-    width: isHorizontal ? `${trackWidth}px` : '12px',
-    height: isHorizontal ? '12px' : `${trackHeight}px`,
+    width: isHorizontal ? `${trackWidth}px` : defaultSize[1] +'px',
+    height: isHorizontal ? defaultSize[0] + 'px' : `${trackHeight}px`,
   };
 
   const thumbStyle = {
-    width: isHorizontal ? '40px' : '6px',
-    height: isHorizontal ? '6px' : '40px',
+    width: isHorizontal ? '40px' : defaultSize[1]-6 +'px',
+    height: isHorizontal ? defaultSize[0]-6 + 'px' : '40px',
     backgroundColor: '#9E9E9E',
     position: 'absolute',
     left: isHorizontal ? `${thumbPosition}px` : 2,
@@ -184,18 +188,20 @@ const ScrollBar = ({ data }) => {
     cursor: 'pointer',
     borderRadius: '5px',
   };
-
+  
   const verticalPosition = {
     position: 'absolute',
-    top: 0,
-    right: 0,
+    top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
+    left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0,
     display: Visible == 0 ? 'none' : 'block',
   };
 
   const horizontalPosition = {
     position: 'absolute',
-    left: 0,
-    bottom: 0,
+    top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
+    left: HScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0,
+    width: defaultSize[1] + 'px',
+    height: defaultSize[0],
     display: Visible == 0 ? 'none' : 'block',
   };
 
@@ -358,7 +364,6 @@ const ScrollBar = ({ data }) => {
     // console.log("moved", "Scale", scaledValue)
   }, [Thumb]);
   
-
   return (
     <div
       id={data?.ID}
@@ -371,37 +376,35 @@ const ScrollBar = ({ data }) => {
           <>
             <div
               className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
-              style={{ left: '0' }}
+              style={{ left: '0', height: `${trackHeight}px` }}
               onClick={decrementScale}
             >
-              <FA.FaCaretDown style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
+              <FA.FaCaretDown style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
             </div>
             <div
               className='scroll-bar-icon scroll-bar-icon-horizontal icon-style'
-              style={{ right: '0' }}
+              style={{ right: '0', height: `${trackHeight}px` }}
               onClick={incrementScale}
             >
-              <FA.FaCaretUp style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
+              <FA.FaCaretUp style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
             </div>
           </>
         ) : showButtons ? (
           <>
-            <>
-              <div
-                className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
-                style={{ top: '0' }}
-                onClick={decrementScale}
-              >
-                <FA.FaCaretUp style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
-              </div>
-              <div
-                className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
-                style={{ bottom: '0' }}
-                onClick={incrementScale}
-              >
-                <FA.FaCaretDown style={{ position: 'absolute', top: '-1px', left: '-1px' }} />
-              </div>
-            </>
+            <div
+              className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
+              style={{ top: '0', width: `${trackWidth}px` }}
+              onClick={decrementScale}
+            >
+              <FA.FaCaretUp style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
+            </div>
+            <div
+              className='scroll-bar-icon scroll-bar-icon-vertical icon-style'
+              style={{ bottom: '0', width: `${trackWidth}px` }}
+              onClick={incrementScale}
+            >
+              <FA.FaCaretDown style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
+            </div>
           </>
         ) : null}
         <div
