@@ -26,9 +26,9 @@ const MsgBox = ({ data, onClose, isDesktop, options }) => {
   };
 
 
-  // let renderCheck = options.Desktop === 1 ? false : true
+  let renderCheck = options.Desktop === 1 ? false : true
   
-  let renderCheck = true
+  // let renderCheck = true
   return (
     <div className="msgbox-overlay">
       <div className={`msgbox-container ${renderCheck? 'with-border': ''}`}>
