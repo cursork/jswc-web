@@ -29,6 +29,7 @@ const App = () => {
   const [focusedElement, setFocusedElement] = useState(null);
   const { reRender } = useForceRerender();
   const [messageBoxData, setMessageBoxData] = useState(null);
+  const [options, setOptions] = useState(null)
 
   const dataRef = useRef({});
   const appRef = useRef(null);
@@ -1143,6 +1144,7 @@ const App = () => {
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
+        JSON.parse(event.data).Options.ID == 'Mode' && setOptions(JSON.parse(event.data).Options.Properties)
       } else if (keys[0] == 'FormatCell') {
         const formatCellEvent = JSON.parse(event.data);
         const { FormatCell } = formatCellEvent;
@@ -1213,7 +1215,7 @@ const App = () => {
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
       </AppDataContext.Provider>
       {messageBoxData && (
-        <MsgBox data = { messageBoxData } onClose = { handleMsgBoxClose } isDesktop = { dataRef?.current?.Mode?.Properties?.Desktop} />
+        <MsgBox data = { messageBoxData } options = {options} onClose = { handleMsgBoxClose } isDesktop = { dataRef?.current?.Mode?.Properties?.Desktop} />
       )}
     </div>
 

@@ -2,8 +2,8 @@ import React from "react";
 import "./MessageBox.css";
 import { isElement } from "lodash";
 
-const MsgBox = ({ data, onClose, isDesktop }) => {
-  console.log("msgbox", data);
+const MsgBox = ({ data, onClose, isDesktop, options }) => {
+  console.log("msgbox", data, options?.Desktop);
   const { Caption, Text, Style, Btns } = data?.Properties;
   console.log({ Caption, Text, Style, Btns, isDesktop });
   const getIconClass = () => {
@@ -21,7 +21,8 @@ const MsgBox = ({ data, onClose, isDesktop }) => {
     }
   };
 
-  let renderCheck = !!!isDesktop
+
+  let renderCheck = options.Desktop === 1 ? false : true
   return (
     <div className="msgbox-overlay">
       <div className={`msgbox-container ${renderCheck? 'with-border': ''}`}>
