@@ -10,7 +10,18 @@ const GridLabel = ({ data }) => {
     }
   }, [data.focused]);
 
+  useEffect(()=>{
+  }, [isEditable])
+
   const fontProperties = data?.cellFont && data?.cellFont?.Properties;
+
+  const handleBlur = () => {
+    setisEditable(false);
+  };
+
+  const handleDoubleClick = () => {
+    setisEditable(true);
+  };
 
   let fontStyles = {
     fontFamily: fontProperties?.PName,
@@ -74,7 +85,8 @@ const GridLabel = ({ data }) => {
             e.stopPropagation();
             handleKeyPress(e);
           }}
-          onDoubleClick={() => setisEditable(true)}
+          onDoubleClick={handleDoubleClick}
+          onBlur={handleBlur}
         >
           {data?.formattedValue}
         </div>
@@ -91,10 +103,10 @@ const GridLabel = ({ data }) => {
             e.stopPropagation();
             handleKeyPress(e);
           }}
-          onBlur={() => setisEditable(false)}
+          onBlur={handleBlur}
           ref={labelRef}
         >
-          {data?.value}
+          {data?.focused?  data?.value: data?.formattedValue}
         </div>
       )}
     </>
