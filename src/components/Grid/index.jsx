@@ -453,9 +453,10 @@ const Grid = ({ data }) => {
     setEventId(eventId);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const exists = Event && Event?.some((item) => item[0] === "KeyPress");
+    const parentExists = Event && Event?.some((item) => item[0] === "KeyPress");
+    const childExists = data?.E1?.Properties?.Event?.some((item) => item[0] === "KeyPress")
 
-    const keyPressEvent = JSON.stringify({
+    const parentKeyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
         ID: data?.ID,
@@ -464,7 +465,21 @@ const Grid = ({ data }) => {
       },
     });
 
-    if (exists) {
+
+    const keyPressEvent = JSON.stringify({
+      Event: {
+        EventName: "KeyPress",
+        ID: data?.E1?.ID,
+        EventID: eventId,
+        Info: [event.key, charCode, event.keyCode, shiftState],
+      },
+    });
+
+    if(parentExists){
+      socket.selectedColumn(parentKeyPressEvent)
+    }
+
+    if (childExists) {
       console.log("keypressevent", keyPressEvent);
       socket.send(keyPressEvent);
     }
@@ -492,7 +507,7 @@ const Grid = ({ data }) => {
         console.log("waiting in handle key down", { proceed, setProceed, proceedEventArray });
         console.log("waiting local storage getitem", localStorage.getItem(eventId))
         console.log("waiting starting arrow right")
-        if (exists)  await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)  await waitForProceed(localStorage.getItem(eventId));
         console.log("waiting await proceed done")
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
         if (!localStoragValue) {
@@ -559,7 +574,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowLeft") {
-        if (exists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed();
         setSelectedColumn((prev) =>
           Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
         );
@@ -598,7 +613,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowUp") {
-        if (exists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed();
         setSelectedRow((prev) => Math.max(prev - 1, 1));
         if (!localStoragValue) {
           if (selectedRow == 1 && RowTitles?.length > 0) return;
@@ -635,7 +650,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowDown") {
-        if (exists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed();
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
