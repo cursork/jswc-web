@@ -250,14 +250,14 @@
     const verticalPosition = {
       position: 'absolute',
       top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
-      left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0,
+      ...(VScroll === -1 ? {left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0 }: {right: 0}),
       display: Visible == 0 ? 'none' : 'block',
       ...attachStyle
     };
 
     const horizontalPosition = {
       position: 'absolute',
-      top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
+      ...(HScroll === -1 ? {top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0}: {bottom: 0} ),
       left: HScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0,
       width: defaultSize[1] + 'px',
       height: defaultSize[0],
