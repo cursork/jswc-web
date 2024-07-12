@@ -475,8 +475,8 @@ const Grid = ({ data }) => {
       },
     });
 
-    if(parentExists){
-      socket.selectedColumn(parentKeyPressEvent)
+    if(parentExists && !!!childExists){
+      socket.send(parentKeyPressEvent)
     }
 
     if (childExists) {
