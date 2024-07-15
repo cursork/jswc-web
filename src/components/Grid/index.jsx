@@ -456,12 +456,14 @@ const Grid = ({ data }) => {
     const parentExists = Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
 
     let keys = Object.keys(data)
+    let childKey
     const checkArray = keys.reduce((prev, current)=> {
+      if(data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")) childKey = current
       return [...prev, data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")]
     },[])
     const childExists = checkArray.some(item => item === true)
 
-    console.log("checkArray", {checkArray, childExists})
+    console.log("checkArray", {checkArray, childExists, childKey})
 
     // const childExists = data?.E1?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")
 
@@ -478,7 +480,7 @@ const Grid = ({ data }) => {
     const keyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
-        ID: data?.E1?.ID,
+        ID: data?.childKey?.ID,
         EventID: eventId,
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
