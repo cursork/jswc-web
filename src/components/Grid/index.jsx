@@ -453,8 +453,8 @@ const Grid = ({ data }) => {
     setEventId(eventId);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const parentExists = Event && Event?.some((item) => item[0] === "KeyPress");
-    const childExists = data?.E1?.Properties?.Event?.some((item) => item[0] === "KeyPress")
+    const parentExists = Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
+    const childExists = data?.E1?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")
 
     const parentKeyPressEvent = JSON.stringify({
       Event: {
