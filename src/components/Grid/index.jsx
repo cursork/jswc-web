@@ -478,9 +478,9 @@ const Grid = ({ data }) => {
 
 
     const keyPressEvent = JSON.stringify({
-      Event: {
+      Event: { 
         EventName: "KeyPress",
-        ID: data?.childKey?.ID,
+        ID: data[childKey]?.ID,
         EventID: eventId,
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
