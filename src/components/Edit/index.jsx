@@ -282,6 +282,8 @@ const Edit = ({
       },
     });
     localStorage.setItem(data?.ID, event2);
+    socket.send(event2)
+    
     const exists = Event && Event.some((item) => item[0] === 'Change');
     if (!exists) return;
 
