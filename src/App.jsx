@@ -1062,7 +1062,7 @@ const App = () => {
             },
             'WS'
           );
-          reRender();
+          // reRender();
           return;
         }
         else if (Event == 'Select'){

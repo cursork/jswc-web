@@ -323,7 +323,7 @@ const Grid = ({ data }) => {
     proceedEventArray,
     setProceedEventArray
   } = useAppData();
-  console.log("waiting", { proceed, setProceed, proceedEventArray });
+  // console.log("waiting", { proceed, setProceed, proceedEventArray });
 
   const [eventId, setEventId] = useState(null);
 
@@ -365,12 +365,22 @@ const Grid = ({ data }) => {
   const [width, setWidth] = useState(Size[1]);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
+  let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+  let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   const [selectedRow, setSelectedRow] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+    defaultRow
   );
   const [selectedColumn, setSelectedColumn] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+    defaultCol
   );
+
+  useEffect(()=>{
+    let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+    let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+    setSelectedRow(defaultRow === 0 ? defaultRow : defaultRow - 1 )
+    setSelectedColumn( defaultCol === 0 ? 0: defaultCol - 1 )
+  },[CurCell])
+
 
   const style = setStyle(data?.Properties);
 
@@ -389,7 +399,7 @@ const Grid = ({ data }) => {
 
   const handleCellMove = (row, column, mouseClick) => {
     if (column > columns || column == 0) return;
-    console.log("waiting handle cell move", row, column)
+    // console.log("waiting handle cell move", row, column, selectedRow, selectedColumn)
     const cellChanged = JSON.parse(localStorage.getItem("isChanged"));
     const cellMoveEvent = JSON.stringify({
       Event: {
@@ -409,7 +419,6 @@ const Grid = ({ data }) => {
 
     const exists = Event && Event?.some((item) => item[0] === "CellMove");
     if (!exists) return;
-    console.log( "waiting handle cell move event", cellMoveEvent);
     socket.send(cellMoveEvent);
     localStorage.setItem(
       "isChanged",
@@ -424,7 +433,7 @@ const Grid = ({ data }) => {
     return new Promise((resolve) => {
       const checkProceed = () => {
         if (localStorageBool || proceed !== null) {
-          console.log("waiting checking proceed event",eventId, proceedEventArray[eventId], proceedEventArray, )
+          // console.log("waiting checking proceed event",eventId, proceedEventArray[eventId], proceedEventArray, )
           if (localStorageBool || proceedEventArray[eventId] === 1) {
             resolve();
             console.log({proceedEventArray})
@@ -511,15 +520,13 @@ const Grid = ({ data }) => {
     }
 
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
-    console.log("waiting initial local storage", localStoragValue)
+    // console.log("waiting initial local storage", localStoragValue)
+
 
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
-        console.log("waiting in handle key down", { proceed, setProceed, proceedEventArray });
-        console.log("waiting local storage getitem", localStorage.getItem(eventId))
-        console.log("waiting starting arrow right")
         if (childExists || parentExists)  await waitForProceed(localStorage.getItem(eventId));
-        console.log("waiting await proceed done")
+        // console.log("waiting await proceed done")
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
         if (!localStoragValue) {
           console.log("writing local storage", JSON.stringify({
@@ -550,8 +557,7 @@ const Grid = ({ data }) => {
         } 
         else {
           if (RowTitles?.length > 0 && selectedColumn == columns) return;
-          console.log("writing local storage")
-          console.log("writing local storage", JSON.stringify({
+          console.log(JSON.stringify({
             Event: {
               CurCell: [
                 selectedRow,
