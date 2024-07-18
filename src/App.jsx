@@ -1057,7 +1057,7 @@ const App = () => {
             {
               ID: ID,
               Properties: {
-                CurCell: Info,
+                CurCell: [Info[0], Info[1]],
               },
             },
             'WS'
