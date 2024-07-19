@@ -291,12 +291,16 @@ const App = () => {
         }
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+        serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal ws ", {WSThumbValue: JSON.parse(event.data).WS.Properties.Thumb})
         handleData(JSON.parse(event.data).WS, 'WS');
       } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
+        console.log("issue server event", {serverEvent})
 
         const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
+        // serverEvent.ID == "F1.LEFTRIGHT" &&  console.log("horizontal wg", serverEvent.ID, getObjectById(dataRef.current, serverEvent?.ID))
         const Type = refData?.Properties?.Type;
+        console.log("issue refData", {refData, Type})
 
         // If didn't have any type on WG then return an ErrorMessage
 
@@ -314,6 +318,7 @@ const App = () => {
 
         if (Type == 'Grid') {
           const { Values } = Properties;
+          console.log("issue values", { Values})
 
           const supportedProperties = ['Values', 'CurCell'];
 
@@ -336,15 +341,16 @@ const App = () => {
               },
             });
             
-            console.log(event);
+            serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal event", event);
             return webSocket.send(event);
           }
 
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] = Event[key]);
+            return (serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key]);
           });
+          console.log("issue check properties", {})
 
           // Values[Row - 1][Col - 1] = Value;
           console.log(
@@ -683,7 +689,7 @@ const App = () => {
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
-            console.log(
+            serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal scroll event",
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
@@ -716,7 +722,7 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
 
-          console.log(
+          console.log("horizontal scroll",
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
@@ -735,7 +741,7 @@ const App = () => {
               WG: {
                 ID: serverEvent.ID,
                 Properties: {
-                  Thumb: Info[1],
+                  Thumb: Thumb,
                 },
                 WGID: serverEvent.WGID,
                 ...(result && result.NotSupported && result.NotSupported.length > 0
@@ -1011,7 +1017,7 @@ const App = () => {
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
-        console.log({nqEvent})
+        console.log("issue", {nqEvent})
         const { Event, ID, Info, NoCallback = 0 } = nqEvent;
 
         const appElement = getObjectById(dataRef.current, ID);
@@ -1185,6 +1191,7 @@ const App = () => {
 
   // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
+  console.log("horizontal app state", dataRef?.current?.F1?.LEFTRIGHT?.Properties)
 
   const formParentID = findFormParentID(dataRef.current);
 

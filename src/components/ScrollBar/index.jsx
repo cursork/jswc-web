@@ -26,7 +26,7 @@
       setShowButtons(false);
     };
 
-    const { socket } = useAppData();
+    const { socket, handleData } = useAppData();
 
     const trackRef = useRef(null);
     const thumbRef = useRef(null);
@@ -49,6 +49,7 @@
 
         const newThumbPosition = Math.max(0, Math.min(maxThumbPosition, newPosition));
         const newScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
+        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
 
         if (newScaledValue >= 1 && newScaledValue <= maxValue) {
           setScaledValue(newScaledValue);
@@ -124,6 +125,9 @@
 
           console.log('Event', scrollEvent);
           localStorage.setItem(data.ID, scrollEvent);
+
+          console.log("horizontal increment")
+          handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
 
           if (isHorizontal) {
             localStorage.setItem(
@@ -280,6 +284,9 @@
           })
         );
 
+        console.log("horizontal increment")
+        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
+
         localStorage.setItem(
           data.ID,
           JSON.stringify({
@@ -290,6 +297,7 @@
             },
           })
         );
+
 
         if (isHorizontal) {
           localStorage.setItem(
