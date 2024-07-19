@@ -375,15 +375,15 @@ const Grid = ({ data }) => {
     !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   );
 
-  // useEffect(() => {
-  //   if (CurCell) {
-  //     console.log("issue arrow use effect")
-  //     let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
-  //     let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
-  //     setSelectedRow((prev) => prev !== CurCell[0] ? defaultRow : prev);
-  //     setSelectedColumn((prev) => prev !== CurCell[1] ? defaultCol : prev);
-  //   }
-  // }, [CurCell]);
+  useEffect(() => {
+    if (CurCell) {
+      console.log("issue arrow use effect")
+      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+      let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+      setSelectedRow((prev) => prev !== CurCell[0] ? defaultRow : prev);
+      setSelectedColumn((prev) => prev !== CurCell[1] ? defaultCol : prev);
+    }
+  }, [CurCell]);
   
   // useEffect(()=>{
   //   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
