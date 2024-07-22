@@ -71,7 +71,7 @@ const Text = ({ data, fontProperties }) => {
             const textWidth = dimensions?.width + 30; // replace with actual calculation
             const textHeight = dimensions?.height + 30; // replace with actual calculation
 
-            const points = pointsArray[index] || [pointsArray[0][0] , pointsArray[0][1] + 10  ];
+            const points = pointsArray[index] || [pointsArray?.[index - 1]?.[0] , pointsArray?.[index - 1]?.[1] + 10  ];
 
             return (
               <g key={index}>
