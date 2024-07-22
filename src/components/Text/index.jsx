@@ -93,7 +93,7 @@ const Text = ({ data, fontProperties }) => {
                   x={points && points[0]}
                   y={points && points[1]}
                   font-family={fontProperties?.PName}
-                  font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
+                  font-size={!fontProperties?.Size ? '9px' : `${fontProperties?.Size - 4}px`}
                   fill={FCol ? rgbColor(FCol[index]) : 'black'}
                   font-style={
                     !fontProperties?.Italic
