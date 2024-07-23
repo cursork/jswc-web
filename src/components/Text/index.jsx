@@ -12,7 +12,7 @@ function useForceRerender() {
 
 const Text = ({ data, fontProperties }) => {
   const { Visible, Points, Text, FCol, BCol } = data?.Properties;
-
+  
   const { reRender } = useForceRerender();
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
@@ -72,7 +72,7 @@ const Text = ({ data, fontProperties }) => {
             const textHeight = dimensions?.height + 30; // replace with actual calculation
 
             const points = pointsArray[index] || [pointsArray?.[index - 1]?.[0] , pointsArray?.[index - 1]?.[1] + 10  ];
-
+           
             return (
               <g key={index}>
                 <rect
@@ -89,11 +89,11 @@ const Text = ({ data, fontProperties }) => {
                   id={`${data?.ID}-t${index + 1}`}
                   // fill='red'
                   alignment-baseline='middle'
-                  dy='0.7em'
+                  dy='0.6em'
                   x={points && points[0]}
                   y={points && points[1]}
                   font-family={fontProperties?.PName}
-                  font-size={!fontProperties?.Size ? '9px' : `${fontProperties?.Size - 4}px`}
+                  font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
                   fill={FCol ? rgbColor(FCol[index]) : 'black'}
                   font-style={
                     !fontProperties?.Italic
