@@ -49,7 +49,7 @@
 
         const newThumbPosition = Math.max(0, Math.min(maxThumbPosition, newPosition));
         const newScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
-        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
+        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue)  }}, 'WS')
 
         if (newScaledValue >= 1 && newScaledValue <= maxValue) {
           setScaledValue(newScaledValue);
@@ -127,7 +127,7 @@
           localStorage.setItem(data.ID, scrollEvent);
 
           console.log("horizontal increment")
-          handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
+          handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue) }}, 'WS')
 
           if (isHorizontal) {
             localStorage.setItem(
