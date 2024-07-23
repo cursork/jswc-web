@@ -1011,9 +1011,10 @@ const Grid = ({ data }) => {
                       minWidth: `${data?.width}px`,
                       maxWidth: `${data?.width}px`,
                       minheight: `${data?.height}px`,
-                      maxheight: `${data?.height}px`,
+                      maxheight: `${data
+                        ?.height}px`,
                       backgroundColor:
-                        selectedColumn === columni && data.type == "header"
+                      (selectedRow === rowi && data.type == "cell") || (selectedColumn === columni && data.type == "header" )
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
                       textAlign: data.type == "header" ? "center" : "left",
