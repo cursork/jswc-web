@@ -146,11 +146,42 @@ const GridEdit = ({ data }) => {
     };
     const handleDateChange = (event) => {
       setSelectedDate(event.target.value);
+
       const selectedDate = dayjs(event.target.value).format(ShortDate);
+      console.log("date picker",{input:event.target.value, ShortDate, selectedDate })
       let value = calculateDaysFromDate(event.target.value) + 1;
       setInputValue(selectedDate);
       setDateFormattedValue(value);
     };
+
+    const handleInputChange = (event) => {
+      setInputValue(event.target.value);
+    };
+
+    const handleDatePickerClick = () => {
+      inputRef.current.showPicker();
+    };
+  
+
+    const handleInputBlur = () => {
+      const [day, month, year] = inputValue.split('-');
+      const formattedDate = `${year}-${month}-${day}`; // Convert to standard format YYYY-MM-DD
+      const newDate = new Date(formattedDate)
+
+      const parsedDate = dayjs(newDate, ShortDate , true);
+      if (parsedDate.isValid()) {
+        const formattedDate = parsedDate.format('YYYY-MM-DD');
+        setSelectedDate(formattedDate);
+        const value = calculateDaysFromDate(formattedDate) + 1;
+        setDateFormattedValue(value);
+      } else {
+        // Handle invalid date input
+        console.warn('Invalid date entered');
+      }
+      setIsEditable(false);
+      handleEditEvents();
+    };
+
     return (
       <>
         {!isEditable ? (
@@ -164,6 +195,7 @@ const GridEdit = ({ data }) => {
           </div>
         ) : (
           <>
+          <div style={{ display: 'flex', alignItems: 'center'}}>
             <input
               ref={dateRef}
               id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
@@ -175,20 +207,30 @@ const GridEdit = ({ data }) => {
                 paddingLeft: '5px',
               }}
               value={inputValue}
+              onChange={handleInputChange}
               type='text'
-              readOnly
+              // readOnly
               onClick={(e) => {
-                e.stopPropagation();
-                handleTextClick();
+                // e.stopPropagation();
+                // handleTextClick();
               }}
-              onBlur={() => {
-                setIsEditable(false);
-                handleEditEvents();
-              }}
+              onBlur= { handleInputBlur }
               onKeyDown={(e) => {
                 e.stopPropagation();
               }}
             />
+             <button
+              onClick={handleDatePickerClick}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+            📅
+          </button>
+          </div>
             <input
               id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
               type='date'
@@ -199,6 +241,7 @@ const GridEdit = ({ data }) => {
                 display: 'none',
               }}
             />
+           
           </>
         )}
       </>
