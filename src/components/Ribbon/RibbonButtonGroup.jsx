@@ -67,13 +67,10 @@ const CustomRibbonButtonGroup = ({ data }) => {
         const iconKey = Icons?.[i] || 'MdOutlineQuestionMark';
         const IconComponent = AppIcons?.[iconKey] || MdOutlineQuestionMark;
 
-        console.log({title, ImageList, ImagesData, imageIndex, image, iconKey, IconComponent, image: image?.Properties?.Files?.[imageIndex] })
-       
-
         return (
           <Col
             key={`col-${i}`}
-            id={data?.ID}
+            id={`${data?.ID}-${i}`}
             md={colSize}
             className='d-flex align-items-center justify-content-center'
             style={{ cursor: 'pointer' }}
