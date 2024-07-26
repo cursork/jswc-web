@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppDataContext } from './context';
 import { SelectComponent } from './components';
 import {
@@ -6,6 +6,7 @@ import {
   checkSupportedProperties,
   findFormParentID,
   deleteFormAndSiblings,
+  rgbColor,
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
@@ -30,6 +31,7 @@ const App = () => {
   const { reRender } = useForceRerender();
   const [messageBoxData, setMessageBoxData] = useState(null);
   const [options, setOptions] = useState(null)
+  let colors = {}
 
   const dataRef = useRef({});
   const appRef = useRef(null);
@@ -74,6 +76,51 @@ const App = () => {
     };
   }, []);
 
+  // Helper function to get color from the index
+  function getColor(index, defaultColor) {
+    // console.log("property getcolor",colors, index, colors?.[index])
+    return colors?.[index] || defaultColor; // Fallback to default if not found
+  }
+
+  function getRequiredRGBChannel(val) {
+    // console.log("property_initial", val);
+
+    const newValue = val.map((value) => {
+      // console.log("property_map1", value);
+  
+      // Check if the value is an array of arrays or an array of numbers
+      if (Array.isArray(value) && value?.every((item) => typeof item === 'number' && item >= 0)) {
+        // console.log("property condition 2")
+        // Case 3: Array of numbers (e.g., [-1, 0])
+        return value;
+      }
+
+      if(typeof value === "number" && value < 0){
+        return getColor(value)
+      }
+      
+      // console.log("property here")
+      const modifiedValue = value.map((nestVal) => {
+        // console.log("property here")
+        if (Array.isArray(nestVal)) {
+          // Nested array (e.g., [-5, [255, 0, 0]])
+          return nestVal.map((item) => (typeof item === 'number' && item < 0 ? getColor(item) : item));
+        } else if (typeof nestVal === 'number' && nestVal < 0) {
+          // Single negative number (e.g., -6)
+          return getColor(nestVal);
+        } else {
+          // Otherwise, return the value as is
+          // console.log("property else")
+          return nestVal;
+        }
+      });
+  
+      // console.log("property_modified", modifiedValue);
+      return modifiedValue;
+    });
+    return newValue
+  }
+
   const handleData = (data, mode) => {
     const splitID = data.ID.split('.');
 
@@ -98,7 +145,7 @@ const App = () => {
           localStorage.clear();
         }
         // Overwrite the existing object with new properties
-
+        
         currentLevel[finalKey] = {
           ID: data.ID,
           ...data,
@@ -116,10 +163,26 @@ const App = () => {
         };
       }
     } else {
+      let newData = {...data}
       // Create a new object at the final level
+      if(data.Properties.hasOwnProperty('FillCol') || data.Properties.hasOwnProperty('FCol') || data.Properties.hasOwnProperty('FStyle') ) {
+        // console.log({_property_before: data?.Properties, colors})
+        newData = {
+          ...newData,
+          Properties:{
+            ...newData?.Properties,
+            ...newData?.Properties?.FillCol && ({FillCol: getRequiredRGBChannel(newData.Properties.FillCol)}),
+            ...newData?.Properties?.FCol && ({FCol: getRequiredRGBChannel(newData.Properties.FCol)}),
+            ...newData?.Properties?.BCol && ({BCol: getRequiredRGBChannel(newData.Properties.BCol)})
+          }
+        }
+        // console.log({_property_after: newData?.Properties})
+      }
+        
+      
       currentLevel[finalKey] = {
-        ID: data.ID,
-        ...data,
+        ID: newData.ID,
+        ...newData,
       };
     }
 
@@ -1151,6 +1214,7 @@ const App = () => {
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
         JSON.parse(event.data).Options.ID == 'Mode' && setOptions(JSON.parse(event.data).Options.Properties)
+        if(JSON.parse(event.data).Options.ID == 'Colors') setColorFunc(JSON.parse(event.data).Options.Properties.Standard)
       } else if (keys[0] == 'FormatCell') {
         const formatCellEvent = JSON.parse(event.data);
         const { FormatCell } = formatCellEvent;
@@ -1191,10 +1255,17 @@ const App = () => {
 
   // const updatedData = _.cloneDeep(dataRef.current);
   console.log('App', dataRef.current);
-  console.log("horizontal app state", dataRef?.current?.F1?.LEFTRIGHT?.Properties)
+
+  const setColorFunc = (colorStandardArray)=>{
+    const reqColors = colorStandardArray?.reduce((prev, current)=>{
+      return {...prev, [current?.[0]]: current[2] }
+    },{})
+    // console.log("property setcolord", reqColors)
+    colors = {...reqColors}
+  }
 
   const formParentID = findFormParentID(dataRef.current);
-
+  
   const handleMsgBoxClose = (button, ID) => {
     console.log(`Button pressed: ${button}`);
     setMessageBoxData(null);
@@ -1217,6 +1288,7 @@ const App = () => {
           setProceed,
           proceedEventArray,
           setProceedEventArray,
+          colors
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}
