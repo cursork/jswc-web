@@ -183,7 +183,7 @@ export const rgbColor = (rgbArray) => {
       !Array.isArray(rgbArray) ||
       (rgbArray.length !== 3 && !(Array.isArray(rgbArray[0]) && rgbArray[0].length === 3))
     ) {
-      console.log("Invalid RGB array");
+      // console.log("Invalid RGB array");
       return null;
     }
 
@@ -192,12 +192,12 @@ export const rgbColor = (rgbArray) => {
       rgbArray = rgbArray[0];
     }
 
-    console.log("Processed RGB array", { rgbArray });
+    // console.log("Processed RGB array", { rgbArray });
     const [r, g, b] = rgbArray;
 
     // Ensure all values are within the valid RGB range (0-255)
     if ([r, g, b].some(color => color < 0 || color > 255)) {
-      console.log("RGB values out of range");
+      // console.log("RGB values out of range");
       return null;
     }
 
