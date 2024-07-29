@@ -7,9 +7,9 @@ import { VscError } from "react-icons/vsc";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 
 const MsgBox = ({ data, onClose, isDesktop, options }) => {
-  console.log("msgbox", data, options?.Desktop);
+  // console.log("msgbox", data, options?.Desktop);
   const { Caption, Text, Style, Btns } = data?.Properties;
-  console.log({ Caption, Text, Style, Btns, isDesktop });
+  // console.log({ Caption, Text, Style, Btns, isDesktop });
   const Icon = () => {
     switch (Style) {
       case "Info":

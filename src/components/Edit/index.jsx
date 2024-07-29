@@ -200,8 +200,6 @@ const Edit = ({
     const nextSibling = grandParent.previousSibling;
 
     const querySelector = getObjectTypeById(dataRef.current, nextSibling?.id);
-    console.log(nextSibling?.id);
-    console.log(querySelector);
     const element = nextSibling?.querySelectorAll(querySelector);
 
     triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
@@ -357,7 +355,6 @@ const Edit = ({
 
   const handleEditEvents = () => {
     // check that the Edit is inside the Grid
-    console.log({location})
     if (location == 'inGrid') {
       if (value != emitValue) {
         triggerChangeEvent();

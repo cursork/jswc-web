@@ -175,7 +175,7 @@ const App = () => {
       // Create a new object at the final level
       try{
         if(data.Properties.hasOwnProperty('FillCol') || data.Properties.hasOwnProperty('FCol') || data.Properties.hasOwnProperty('BCol') ) {
-          console.log('compare', {_property_before: data?.Properties, colors})
+          // console.log('compare', {_property_before: data?.Properties, colors})
           newData = {
             ...data,
             Properties:{
@@ -185,10 +185,10 @@ const App = () => {
               ...data?.Properties?.BCol && ({BCol: getRequiredRGBChannel(data.Properties.BCol)})
             }
           }
-          console.log('compare', {_property_after: newData?.Properties})
+          // console.log('compare', {_property_after: newData?.Properties})
         }
       }catch(error){
-        console.log('compare error',{error})
+        console.log({error})
       }
       
       currentLevel[finalKey] = {
@@ -285,7 +285,7 @@ const App = () => {
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
         let windowCreationEvent = JSON.parse(event.data).WC;
-        console.log({windowCreationEvent})
+        // console.log({windowCreationEvent})
         if (windowCreationEvent?.Properties?.Type == 'Form') {
           localStorage.clear();
           const updatedData = deleteFormAndSiblings(dataRef.current);
@@ -366,16 +366,16 @@ const App = () => {
         }
 
         setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-        serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal ws ", {WSThumbValue: JSON.parse(event.data).WS.Properties.Thumb})
+        // serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal ws ", {WSThumbValue: JSON.parse(event.data).WS.Properties.Thumb})
         handleData(JSON.parse(event.data).WS, 'WS');
       } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
-        console.log("issue server event", {serverEvent})
+        // console.log("issue server event", {serverEvent})
 
         const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
         // serverEvent.ID == "F1.LEFTRIGHT" &&  console.log("horizontal wg", serverEvent.ID, getObjectById(dataRef.current, serverEvent?.ID))
         const Type = refData?.Properties?.Type;
-        console.log("issue refData", {refData, Type})
+        // console.log("issue refData", {refData, Type})
 
         // If didn't have any type on WG then return an ErrorMessage
 
@@ -393,7 +393,7 @@ const App = () => {
 
         if (Type == 'Grid') {
           const { Values } = Properties;
-          console.log("issue values", { Values})
+          // console.log("issue values", { Values})
 
           const supportedProperties = ['Values', 'CurCell'];
 
@@ -416,7 +416,7 @@ const App = () => {
               },
             });
             
-            serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal event", event);
+            // serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal event", event);
             return webSocket.send(event);
           }
 
@@ -425,7 +425,7 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             return (serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key]);
           });
-          console.log("issue check properties", {})
+          // console.log("issue check properties", {})
 
           // Values[Row - 1][Col - 1] = Value;
           console.log(
@@ -764,7 +764,7 @@ const App = () => {
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
           if (!localStorage.getItem(serverEvent.ID)) {
-            serverEvent.ID == "F1.LEFTRIGHT" && console.log("horizontal scroll event",
+            console.log(
               JSON.stringify({
                 WG: {
                   ID: serverEvent.ID,
@@ -797,7 +797,7 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
 
-          console.log("horizontal scroll",
+          console.log(
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
@@ -904,7 +904,6 @@ const App = () => {
 
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
 
-          console.log('server', serverEvent);
 
           if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
@@ -1092,7 +1091,6 @@ const App = () => {
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
-        console.log("issue", {nqEvent})
         const { Event, ID, Info, NoCallback = 0 } = nqEvent;
 
         const appElement = getObjectById(dataRef.current, ID);
@@ -1157,7 +1155,6 @@ const App = () => {
       else if (keys[0] == "EC"){
         const serverEvent = JSON.parse(event.data).EC;
         const { EventID, Proceed } = serverEvent
-        console.log("waiting", {EventID, Proceed})
         setProceedEventArray((prev) => ({...prev, [EventID]: Proceed}));
         setProceed(Proceed)
         localStorage.setItem(EventID, Proceed);
@@ -1272,14 +1269,13 @@ const App = () => {
     const reqColors = colorStandardArray?.reduce((prev, current)=>{
       return {...prev, [current?.[0]]: current[2] }
     },{})
-    // console.log("property setcolord", reqColors)
     colors = {...reqColors}
   }
 
   const formParentID = findFormParentID(dataRef.current);
   
   const handleMsgBoxClose = (button, ID) => {
-    console.log(`Button pressed: ${button}`);
+    // console.log(`Button pressed: ${button}`);
     setMessageBoxData(null);
     // Send event back to server via WebSocket
     socket.send(JSON.stringify({Event: { EventName: button, ID: ID }}));

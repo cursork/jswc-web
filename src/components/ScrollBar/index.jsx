@@ -7,7 +7,7 @@
   const ScrollBar = ({ data }) => {
     const { FA } = Icons;
     const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach } = data?.Properties;
-    console.log("thumb", Thumb, "data", data )
+    // console.log("thumb", Thumb, "data", data )
     const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
     const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -126,7 +126,7 @@
           console.log('Event', scrollEvent);
           localStorage.setItem(data.ID, scrollEvent);
 
-          console.log("horizontal increment")
+          // console.log("horizontal increment")
           handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue) }}, 'WS')
 
           if (isHorizontal) {
@@ -231,7 +231,7 @@
 
     const attachStyle = calculateAttachStyle();
 
-    console.log({attachStyle})
+    // console.log({attachStyle})
 
 
     const trackStyle = {
@@ -284,7 +284,7 @@
           })
         );
 
-        console.log("horizontal increment")
+        // console.log("horizontal increment")
         handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) }}, 'WS')
 
         localStorage.setItem(
