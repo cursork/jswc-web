@@ -83,9 +83,12 @@ const App = () => {
   }
 
   function getRequiredRGBChannel(val) {
-    // console.log("property_initial", val);
+    // console.log("compare initial value", val);
+    if (typeof val === 'number'){
+      val = [val]
+    }
 
-    const newValue = val.map((value) => {
+    const newValue = val?.map((value) => {
       // console.log("property_map1", value);
   
       // Check if the value is an array of arrays or an array of numbers
@@ -98,9 +101,13 @@ const App = () => {
       if(typeof value === "number" && value < 0){
         return getColor(value)
       }
+
+      if(typeof value === "number" && value >= 0){
+        return value;
+      }
       
-      // console.log("property here")
-      const modifiedValue = value.map((nestVal) => {
+      // console.log("compare property here", value)
+      const modifiedValue = value?.map((nestVal) => {
         // console.log("property here")
         if (Array.isArray(nestVal)) {
           // Nested array (e.g., [-5, [255, 0, 0]])
@@ -118,6 +125,7 @@ const App = () => {
       // console.log("property_modified", modifiedValue);
       return modifiedValue;
     });
+    // console.log('compare final', newValue)
     return newValue
   }
 
@@ -163,27 +171,31 @@ const App = () => {
         };
       }
     } else {
-      let newData = {...data}
+      let newData = JSON.parse(JSON.stringify(data))
       // Create a new object at the final level
-      if(data.Properties.hasOwnProperty('FillCol') || data.Properties.hasOwnProperty('FCol') || data.Properties.hasOwnProperty('FStyle') ) {
-        // console.log({_property_before: data?.Properties, colors})
-        newData = {
-          ...newData,
-          Properties:{
-            ...newData?.Properties,
-            ...newData?.Properties?.FillCol && ({FillCol: getRequiredRGBChannel(newData.Properties.FillCol)}),
-            ...newData?.Properties?.FCol && ({FCol: getRequiredRGBChannel(newData.Properties.FCol)}),
-            ...newData?.Properties?.BCol && ({BCol: getRequiredRGBChannel(newData.Properties.BCol)})
+      try{
+        if(data.Properties.hasOwnProperty('FillCol') || data.Properties.hasOwnProperty('FCol') || data.Properties.hasOwnProperty('BCol') ) {
+          console.log('compare', {_property_before: data?.Properties, colors})
+          newData = {
+            ...data,
+            Properties:{
+              ...data?.Properties,
+              ...data?.Properties?.FillCol && ({FillCol: getRequiredRGBChannel(data.Properties.FillCol)}),
+              ...data?.Properties?.FCol && ({FCol: getRequiredRGBChannel(data.Properties.FCol)}),
+              ...data?.Properties?.BCol && ({BCol: getRequiredRGBChannel(data.Properties.BCol)})
+            }
           }
+          console.log('compare', {_property_after: newData?.Properties})
         }
-        // console.log({_property_after: newData?.Properties})
+      }catch(error){
+        console.log('compare error',{error})
       }
-        
       
       currentLevel[finalKey] = {
-        ID: newData.ID,
+        ID: data.ID,
         ...newData,
       };
+      // console.log('compare', {data, newData})
     }
 
     reRender();
