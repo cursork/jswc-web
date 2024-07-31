@@ -370,7 +370,7 @@ const App = () => {
         handleData(JSON.parse(event.data).WS, 'WS');
       } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
-        // console.log("issue server event", {serverEvent})
+        console.log({serverEvent})
 
         const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
         // serverEvent.ID == "F1.LEFTRIGHT" &&  console.log("horizontal wg", serverEvent.ID, getObjectById(dataRef.current, serverEvent?.ID))
