@@ -425,7 +425,7 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             return (serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key]);
           });
-          // console.log("issue check properties", {})
+          // console.log("issue check properties", {local: serverPropertiesObj, app: Properties})
 
           // Values[Row - 1][Col - 1] = Value;
           console.log(
@@ -1140,6 +1140,14 @@ const App = () => {
               },
             },
             'WS'
+          );
+          localStorage.setItem(
+            ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [Info[0], Info[1]],
+              },
+            })
           );
           // reRender();
           return;
