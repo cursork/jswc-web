@@ -603,7 +603,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowLeft") {
-        if (childExists || parentExists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
         // console.log("issue arrow left prev", {selectedRow, selectedColumn})
         setSelectedColumn((prev) =>
           Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
@@ -645,7 +645,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowUp") {
-        if (childExists || parentExists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
         setSelectedRow((prev) => Math.max(prev - 1, 1));
         if (!localStoragValue) {
           if (selectedRow == 1 && RowTitles?.length > 0) return;
@@ -682,7 +682,7 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowDown") {
-        if (childExists || parentExists) await waitForProceed();
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
