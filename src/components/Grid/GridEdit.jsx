@@ -15,7 +15,7 @@ const GridEdit = ({ data }) => {
 
   const { FieldType, Decimal } = data?.typeObj?.Properties;
   const { dataRef, findDesiredData, handleData, socket, socketData } = useAppData();
-  data?.typeObj?.ID === "F1.Holdings.TEXT" && console.log("edit data", {data, dataRef, socketData, property: findDesiredData(data?.typeObj?.ID)})
+  // data?.typeObj?.ID === "F1.Holdings.TEXT" && console.log("edit data", {data, dataRef, socketData, property: findDesiredData(data?.typeObj?.ID)})
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
   const { ShortDate, Thousand, Decimal: decimalSeparator } = dateFormat?.Properties;
   const [inputValue, setInputValue] = useState(
@@ -334,6 +334,7 @@ const GridEdit = ({ data }) => {
             }}
             decimalScale={Decimal}
             value={inputValue}
+            onSelect={handleSelect}
             decimalSeparator={decimalSeparator}
             thousandSeparator={Thousand}
             onBlur={(e) => {
