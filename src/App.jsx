@@ -393,7 +393,7 @@ const App = () => {
 
         if (Type == 'Grid') {
           const { Values } = Properties;
-          // console.log("issue values", { Values})
+          console.log("values", { Values})
 
           const supportedProperties = ['Values', 'CurCell'];
 
