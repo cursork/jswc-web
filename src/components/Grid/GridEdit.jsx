@@ -5,15 +5,18 @@ import { calculateDateAfterDays, getObjectById, calculateDaysFromDate } from '..
 import dayjs from 'dayjs';
 
 const GridEdit = ({ data }) => {
-  // console.log({data})
+  // console.log("grid data", {data})
   const inputRef = useRef(null);
   const dateRef = useRef(null);
+  const divRef = useRef(null);
   const [isEditable, setIsEditable] = useState(false);
 
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
 
 
-  const { FieldType, Decimal } = data?.typeObj?.Properties;
+  const { FieldType, Decimal, SelText } = data?.typeObj?.Properties;
+  // console.log({value: data.value, focused: data.focused, datatype: data?.typeObj.ID, SelText})
+
   const { dataRef, findDesiredData, handleData, socket, socketData } = useAppData();
   // data?.typeObj?.ID === "F1.Holdings.TEXT" && console.log("edit data", {data, dataRef, socketData, property: findDesiredData(data?.typeObj?.ID)})
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
@@ -26,6 +29,55 @@ const GridEdit = ({ data }) => {
   const [selectedDate, setSelectedDate] = useState(
     FieldType == 'Date' ? dayjs(calculateDateAfterDays(data?.value)) : new Date()
   );
+
+  const findFirstNonSpaceIndex = (content) => {
+    // Trim leading spaces from the string
+    const trimmedContent = content.trimStart();
+    
+    // Find the index of the trimmed substring in the original string
+    const firstNonSpaceIndex = content.indexOf(trimmedContent[0]);
+  
+    return firstNonSpaceIndex;
+  };
+ 
+  useEffect(() => {
+    if (!isEditable && divRef.current && SelText && SelText.length === 2 && data?.focused) {
+      const [start, end] = SelText;
+      const textNode = divRef.current.firstChild;
+
+      console.log({ textNode });
+
+      // Check if textNode is wrapped in an object
+      const actualTextNode = textNode?.nodeType ? textNode : textNode?.textNode;
+      // Find the text node inside the div
+
+      if (actualTextNode?.nodeType === Node.TEXT_NODE) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        const adjustedEnd = Math.min(end - 1, actualTextNode.length);
+
+        
+        const parent = actualTextNode.parentNode;
+        const content = parent.textContent.trim();
+        console.log("use effect", {content: data?.formattedValue})  
+
+        if(data?.formattedValue){
+          console.log("content", {index: findFirstNonSpaceIndex(data?.formattedValue)})
+          const reqIndex = findFirstNonSpaceIndex(data?.formattedValue)
+          range.setStart(actualTextNode, Math.min(start - 1 + reqIndex, actualTextNode.length));
+          range.setEnd(actualTextNode ,Math.min(end - 1 + reqIndex, actualTextNode.length));
+        }
+        else{
+          range.setStart(actualTextNode, Math.min(start - 1, actualTextNode.length));
+          range.setEnd(actualTextNode, adjustedEnd);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  }, [SelText, isEditable, data.focused]);
 
 
   const handleSelect = (event) => {
@@ -51,6 +103,47 @@ const GridEdit = ({ data }) => {
     // setStartIndex(start);
     // setEndIndex(end);
   };
+
+  const handleDivSelect = () => {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const textNode = range.startContainer;
+  
+    if (textNode.nodeType === Node.TEXT_NODE) {
+     
+  
+      // If textNode is wrapped in an object
+      const actualTextNode = textNode.nodeType ? textNode : textNode.textNode;
+    
+      const parent = actualTextNode.parentNode;
+      const content = parent.textContent.trim();
+      // console.log({actualTextNode, parent, content, ac: actualTextNode.textContent})
+
+      let start = range.startOffset;
+      let end = range.endOffset;
+  
+      // Adjust the start and end based on actual content length
+      const startIndex = content.indexOf(actualTextNode.textContent);
+      console.log({startIndex})
+      start -= startIndex;
+      end -= startIndex;
+  
+      const selectedText = content.substring(start, end);
+      // console.log({ data, actualTextNode, start, end, selectedText });
+  
+      localStorage.setItem(data?.typeObj?.ID, JSON.stringify({ Event: { Info: [start + 1, end + 1] } }));
+      handleData(
+        {
+          ID: data?.typeObj?.ID,
+          Properties: {
+            SelText: [start + 1, end + 1],
+          },
+        },
+        'WS'
+      );
+    }
+  };
+  
 
   const triggerCellChangedEvent = () => {
     // const gridEvent = findDesiredData(data?.gridId);
@@ -123,6 +216,16 @@ const GridEdit = ({ data }) => {
   }, [data.focused]);
 
   useEffect(() => {
+    localStorage.setItem(data?.typeObj?.ID, JSON.stringify({Event: {Info: [1, 1]}}))
+    handleData(
+      {
+        ID: data?.typeObj?.ID,
+        Properties: {
+          SelText: [1,1],
+        },
+      },
+      'WS'
+    );
     return () => console.log('unmount');
   }, []);
 
@@ -281,6 +384,8 @@ const GridEdit = ({ data }) => {
       <>
         {!isEditable ? (
           <div
+            ref={divRef}
+            // onMouseUp={handleDivSelect}
             onDoubleClick={() => {
               setIsEditable(true);
             }}
@@ -305,7 +410,7 @@ const GridEdit = ({ data }) => {
                   paddingRight: '5px',
                 }}
                 readOnly
-                decimalScale={Decimal}
+                decimalScale={Decimal}  
                 value={data?.value}
                 decimalSeparator={decimalSeparator}
                 thousandSeparator={Thousand}
@@ -355,6 +460,8 @@ const GridEdit = ({ data }) => {
     <>
       {!isEditable ? (
         <div
+          ref={divRef}
+          onMouseUp={handleDivSelect}
           onDoubleClick={() => {
             setIsEditable(true);
           }}
@@ -375,7 +482,7 @@ const GridEdit = ({ data }) => {
         <input
           type='text'
           id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
-          // ref={inputRef}
+          ref={inputRef}
           style={{
             outline: 0,
             border: 0,

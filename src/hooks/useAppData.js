@@ -10,6 +10,21 @@ const useAppData = () => {
     return findData;
   };
 
+  const findAggregatedPropertiesData = (ID) => {
+    const findAllData = socketData.filter((obj)=> obj.ID === ID)
+    const reqObj = {
+      ID: ID,
+      Properties: {}
+    }
+    findAllData.forEach(element => {
+      reqObj.Properties = {
+        ...reqObj.Properties,
+        ...element.Properties
+      }
+    });
+    return reqObj
+  }
+
   const getObjType = (ID) => {
     const findData = socketData?.find((obj) => obj.ID == ID);
     return findData?.Properties?.Type;
@@ -28,7 +43,8 @@ const useAppData = () => {
     setProceed,
     proceedEventArray,
     setProceedEventArray,
-    colors
+    colors,
+    findAggregatedPropertiesData
   };
 };
 export default useAppData;

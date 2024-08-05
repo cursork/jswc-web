@@ -345,18 +345,18 @@ const App = () => {
               'WS'
             );
           }
-          //  else if (data?.Properties.hasOwnProperty('SelText')) {
-          //   setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-          //   return handleData(
-          //     {
-          //       ID: serverEvent.ID,
-          //       Properties: {
-          //         SelText: value,
-          //       },
-          //     },
-          //     'WS'
-          //   );
-          // }
+           else if (data?.Properties.hasOwnProperty('SelText')) {
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            return handleData(
+              {
+                ID: serverEvent.ID,
+                Properties: {
+                  SelText: value,
+                },
+              },
+              'WS'
+            );
+          }
         }
 
         if (data?.Properties?.Type == 'Combo') {
