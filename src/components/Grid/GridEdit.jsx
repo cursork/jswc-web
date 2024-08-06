@@ -461,7 +461,7 @@ const GridEdit = ({ data }) => {
       {!isEditable ? (
         <div
           ref={divRef}
-          onMouseUp={handleDivSelect}
+          // onMouseUp={handleDivSelect}
           onDoubleClick={() => {
             setIsEditable(true);
           }}
