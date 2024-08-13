@@ -720,7 +720,84 @@ const Grid = ({ data }) => {
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
+      } else if (event.key === "PageDown"){
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+        if (!localStoragValue) {
+          if (selectedRow == rows - 1) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == rows - 1) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow + 9,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
+        );
+
+      } else if (event.key === "PageUp"){
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        setSelectedRow((prev) => Math.max(prev - 9, 1));
+        if (!localStoragValue) {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow - 9,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
+        );
+
       }
+
     };
 
     // updatePosition();
