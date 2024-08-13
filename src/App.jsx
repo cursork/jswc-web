@@ -1165,12 +1165,22 @@ const App = () => {
           );
           // reRender();
           return;
-        }
-        else if (Event == 'Select'){
+        } else if (Event == 'Select'){
           const element = document.getElementById(nqEvent.ID)
           if(element) element.click()
+        } else if (Event == 'Scroll'){
+          webSocket.send(
+            JSON.stringify({
+              Event: {
+                EventName: 'Scroll',
+                ID: ID,
+                Info: [Info[0], Info[1]],
+              },
+            })
+          );
         }
-
+        const thumbValue = Info[0]> 0 ? Info[0]: Info[1]
+        // handleData({ID: ID, Properties: {Thumb: thumbValue  }}, 'WS')
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
       } 
