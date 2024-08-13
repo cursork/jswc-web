@@ -1179,8 +1179,8 @@ const App = () => {
             })
           );
         }
-        const thumbValue = Info[0]> 0 ? Info[0]: Info[1]
-        // handleData({ID: ID, Properties: {Thumb: thumbValue  }}, 'WS')
+        const thumbValue = Info[1]
+        handleData({ID: ID, Properties: {Thumb: thumbValue  }}, 'WS')
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
       } 
