@@ -345,18 +345,18 @@ const App = () => {
               'WS'
             );
           }
-          //  else if (data?.Properties.hasOwnProperty('SelText')) {
-          //   setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
-          //   return handleData(
-          //     {
-          //       ID: serverEvent.ID,
-          //       Properties: {
-          //         SelText: value,
-          //       },
-          //     },
-          //     'WS'
-          //   );
-          // }
+           else if (data?.Properties.hasOwnProperty('SelText')) {
+            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+            return handleData(
+              {
+                ID: serverEvent.ID,
+                Properties: {
+                  SelText: value,
+                },
+              },
+              'WS'
+            );
+          }
         }
 
         if (data?.Properties?.Type == 'Combo') {
@@ -1165,12 +1165,22 @@ const App = () => {
           );
           // reRender();
           return;
-        }
-        else if (Event == 'Select'){
+        } else if (Event == 'Select'){
           const element = document.getElementById(nqEvent.ID)
           if(element) element.click()
+        } else if (Event == 'Scroll'){
+          webSocket.send(
+            JSON.stringify({
+              Event: {
+                EventName: 'Scroll',
+                ID: ID,
+                Info: [Info[0], Info[1]],
+              },
+            })
+          );
         }
-
+        const thumbValue = Info[1]
+        handleData({ID: ID, Properties: {Thumb: thumbValue  }}, 'WS')
         const element = document.getElementById(nqEvent.ID);
         element && element.focus();
       } 

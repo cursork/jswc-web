@@ -318,10 +318,12 @@ const Grid = ({ data }) => {
   const {
     findDesiredData,
     socket,
+    socketData,
     proceed,
     setProceed,
     proceedEventArray,
-    setProceedEventArray
+    setProceedEventArray,
+    findAggregatedPropertiesData
   } = useAppData();
   // console.log("waiting", { proceed, setProceed, proceedEventArray });
 
@@ -376,8 +378,8 @@ const Grid = ({ data }) => {
 
   useEffect(() => {
     if (CurCell) {
-      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
-      let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0] 
+      let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1] - 1
       setSelectedRow((prev) => prev !== CurCell[0] ? defaultRow : prev);
       setSelectedColumn((prev) => prev !== CurCell[1] ? defaultCol : prev);
     }
@@ -718,7 +720,84 @@ const Grid = ({ data }) => {
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
+      } else if (event.key === "PageDown"){
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+        if (!localStoragValue) {
+          if (selectedRow == rows - 1) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == rows - 1) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow + 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow + 9,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
+        );
+
+      } else if (event.key === "PageUp"){
+        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        setSelectedRow((prev) => Math.max(prev - 9, 1));
+        if (!localStoragValue) {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+              },
+            })
+          );
+        } else {
+          if (selectedRow == 1 && RowTitles?.length > 0) return;
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow - 9,
+                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+        }
+        handleCellMove(
+          selectedRow - 9,
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          0
+        );
+
       }
+
     };
 
     // updatePosition();
@@ -857,9 +936,12 @@ const Grid = ({ data }) => {
 
         for (let j = 0; j < columns; j++) {
           let cellType = CellTypes && CellTypes[i][j];
-          const type = findDesiredData(
+          const type = findAggregatedPropertiesData(
             Input?.length > 1 ? Input && Input[cellType - 1] : Input[0]
           );
+
+          // findAggregatedPropertiesData(Input?.length > 1 ? Input && Input[cellType - 1] : Input[0])
+          // console.log("index grid", type,  Input?.length > 1 ? Input && Input[cellType - 1] : Input[0])
           const event = data?.Properties?.Event && data?.Properties?.Event;
           const backgroundColor = BCol && BCol[cellType - 1];
           const cellFont = findDesiredData(
