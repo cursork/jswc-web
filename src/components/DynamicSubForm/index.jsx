@@ -1,11 +1,17 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from "react";
 
-import { excludeKeys, setStyle, getImageStyles, rgbColor, parseFlexStyles } from '../../utils';
-import SelectComponent from '../SelectComponent';
-import { useAppData } from '../../hooks';
+import {
+  excludeKeys,
+  setStyle,
+  getImageStyles,
+  rgbColor,
+  parseFlexStyles,
+} from "../../utils";
+import SelectComponent from "../SelectComponent";
+import { useAppData } from "../../hooks";
 
 const SubForm = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
+  const PORT = localStorage.getItem("PORT");
   const { findDesiredData } = useAppData();
   const {
     Size,
@@ -21,7 +27,7 @@ const SubForm = ({ data }) => {
   } = data?.Properties;
 
   const observedDiv = useRef(null);
-  const styles = setStyle(data?.Properties, 'absolute', Flex);
+  const styles = setStyle(data?.Properties, "absolute", Flex);
 
   const flexStyles = parseFlexStyles(Styles);
 
@@ -34,13 +40,27 @@ const SubForm = ({ data }) => {
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
 
   useEffect(() => {
-    localStorage.setItem(
-      data.ID,
-      JSON.stringify({
-        Size: Size && Size,
-        Posn: Posn && Posn,
-      })
-    );
+    let existingData;
+    if (data.ID === "F1.SCALE") {
+      setTimeout(() => {
+        existingData = JSON.parse(localStorage.getItem(data.ID));
+        if (existingData && existingData.Event?.ID === data.ID) {
+          existingData.Event = {
+            ...existingData.Event,
+            Size: data.Properties.Size || existingData.Event.Size,
+            Posn: data.Properties.Posn || existingData.Event.Posn,
+          };
+        }
+      }, 500);
+    } else {
+      localStorage.setItem(
+        data.ID,
+        JSON.stringify({
+          Size: Size && Size,
+          Posn: Posn && Posn,
+        })
+      );
+    }
   }, [data]);
 
   return (
@@ -52,7 +72,12 @@ const SubForm = ({ data }) => {
         // top: Posn && Posn[0],
         // left: Posn && Posn[1],
         // position: 'absolute',
-        display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
+        display:
+          Visible == 0
+            ? "none"
+            : data?.Properties.hasOwnProperty("Flex")
+            ? "flex"
+            : "block",
         background: BCol && rgbColor(BCol),
         ...updatedStyles,
       }}
