@@ -17,8 +17,8 @@ const Text = ({ data, fontProperties }) => {
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
-
+  const pointsArray =  Points[0]?.length && Points[0]?.map((y, i) => [Points[1]?.[i] ?? 0, y]);
+ 
   const calculateTextDimensions = (wordsArray, fontSize = 11) => {
     // Create a hidden div element to calculate text dimensions
     const container = document.createElement('div');
