@@ -38,15 +38,11 @@ const Text = ({ data, fontProperties }) => {
 
   const parentSize = JSON.parse(localStorage.getItem("formDimension"));
 
-  console.log("point", Points, data);
-
   const newPoints = flattenIfThreeLevels(Points);
-  console.log("newPoints", newPoints)
 
   const pointsArray =
     newPoints && newPoints[0].map((y, i) => [newPoints[1][i], y]);
 
-  console.log(pointsArray, "points", Points);
 
   const calculateTextDimensions = (wordsArray, fontSize = 11) => {
     // Create a hidden div element to calculate text dimensions
