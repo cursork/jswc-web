@@ -17,8 +17,9 @@ const Text = ({ data, fontProperties }) => {
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const pointsArray =  Points[0]?.length && Points[0]?.map((y, i) => [Points[1]?.[i] ?? 0, y]);
- 
+  const pointsArray =
+  Points && Points[0][0].map((x, i) => [x, Points[0][1][i]]);
+
   const calculateTextDimensions = (wordsArray, fontSize = 11) => {
     // Create a hidden div element to calculate text dimensions
     const container = document.createElement('div');
@@ -77,12 +78,16 @@ const Text = ({ data, fontProperties }) => {
               <g key={index}>
                 <rect
                   x={points && points[0]}
-                  y={points && points[1]}
+                  y={points && points[0]}
                   width={textWidth}
                   height={textHeight}
-                  transform={`translate(${points && points[0]}, ${points && points[1]}) rotate(${
-                    fontProperties?.Rotate * (180 / Math.PI)
-                  }) translate(${points && -points[0]}, ${points && -points[1]})`}
+                  transform={`translate(${points && points[0]}, ${
+                    points && points[1]
+                  }) rotate(${
+                    fontProperties?.rotate * (180 / Math.PI) ?? 0
+                  })  translate(${points && -points[0]}, ${
+                    points && -points[1]
+                  })`}
                   fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
                 />
                 <text
@@ -90,8 +95,8 @@ const Text = ({ data, fontProperties }) => {
                   // fill='red'
                   alignment-baseline='middle'
                   dy='0.6em'
-                  x={points && points[0]}
-                  y={points && points[1]}
+                  x={points &&  points[0]}
+                  y={points && points[0]}
                   font-family={fontProperties?.PName}
                   font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
                   fill={FCol ? rgbColor(FCol[index]) : 'black'}
@@ -110,9 +115,13 @@ const Text = ({ data, fontProperties }) => {
                       ? 'underline'
                       : 'none'
                   }
-                  transform={`translate(${points && points[0]}, ${points && points[1]}) rotate(${
-                    fontProperties?.Rotate * (180 / Math.PI)
-                  }) translate(${points && -points[0]}, ${points && -points[1]})`}
+                  transform={`translate(${points && points[0]}, ${
+                    points && points[1]
+                  }) rotate(${
+                    fontProperties?.rotate * (180 / Math.PI) ?? 0
+                  })  translate(${points && -points[0]}, ${
+                    points && -points[1]
+                  })`}
                 >
                   {text.replace(/ /g, '\u00A0')}
                 </text>
