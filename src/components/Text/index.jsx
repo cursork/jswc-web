@@ -73,20 +73,19 @@ const Text = ({ data, fontProperties }) => {
             const textHeight = dimensions?.height + 30; // replace with actual calculation
 
             const points = pointsArray[index] || [pointsArray?.[index - 1]?.[0] , pointsArray?.[index - 1]?.[1] + 10  ];
-           
             return (
               <g key={index}>
                 <rect
-                  x={points && points[0]}
+                  x={points && points[1]}
                   y={points && points[0]}
                   width={textWidth}
                   height={textHeight}
-                  transform={`translate(${points && points[0]}, ${
-                    points && points[1]
+                  transform={`translate(${points && points[1]}, ${
+                    points && points[0]
                   }) rotate(${
                     fontProperties?.rotate * (180 / Math.PI) ?? 0
-                  })  translate(${points && -points[0]}, ${
-                    points && -points[1]
+                  })  translate(${points && -points[1]}, ${
+                    points && -points[0]
                   })`}
                   fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
                 />
@@ -95,7 +94,7 @@ const Text = ({ data, fontProperties }) => {
                   // fill='red'
                   alignment-baseline='middle'
                   dy='0.6em'
-                  x={points &&  points[0]}
+                  x={points &&  points[1]}
                   y={points && points[0]}
                   font-family={fontProperties?.PName}
                   font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
@@ -115,12 +114,12 @@ const Text = ({ data, fontProperties }) => {
                       ? 'underline'
                       : 'none'
                   }
-                  transform={`translate(${points && points[0]}, ${
-                    points && points[1]
+                  transform={`translate(${points && points[1]}, ${
+                    points && points[0]
                   }) rotate(${
                     fontProperties?.rotate * (180 / Math.PI) ?? 0
-                  })  translate(${points && -points[0]}, ${
-                    points && -points[1]
+                  })  translate(${points && -points[1]}, ${
+                    points && -points[0]
                   })`}
                 >
                   {text.replace(/ /g, '\u00A0')}

@@ -62,24 +62,23 @@ const SubForm = ({ data }) => {
       );
     }
   }, [data]);
-
-  return (
+return (
     <div
       id={data.ID}
       style={{
-        // height: Size && Size[0],
-        // width: Size && Size[1],
-        // top: Posn && Posn[0],
-        // left: Posn && Posn[1],
-        // position: 'absolute',
         display:
-          Visible == 0
-            ? "none"
-            : data?.Properties.hasOwnProperty("Flex")
-            ? "flex"
-            : "block",
+        Visible == 0
+        ? "none"
+        : data?.Properties.hasOwnProperty("Flex")
+        ? "flex"
+        : "block",
         background: BCol && rgbColor(BCol),
         ...updatedStyles,
+        height: Size && Size[0],
+        width: Size && Size[1],
+        top: Posn && Posn[0],
+        left: Posn && Posn[1],
+        position: 'absolute',
       }}
       ref={observedDiv}
     >
