@@ -1,6 +1,6 @@
-import { getObjectById, rgbColor } from '../../utils';
-import { useAppData } from '../../hooks';
-import { useEffect, useState } from 'react';
+import { getObjectById, rgbColor } from "../../utils";
+import { useAppData } from "../../hooks";
+import { useEffect, useState } from "react";
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
@@ -10,31 +10,59 @@ function useForceRerender() {
   return { reRender };
 }
 
+const getNestingLevel = (array) => {
+  if (!Array.isArray(array)) {
+    return 0; // Not an array, so no nesting
+  }
+  return 1 + Math.max(0, ...array.map(getNestingLevel));
+};
+
+// Function to flatten an array by one level
+const flattenArrayOneLevel = (array) => {
+  return array.reduce((acc, val) => acc.concat(val), []);
+};
+
+// Function to flatten the array only if it's three levels deep
+const flattenIfThreeLevels = (arr) => {
+  if (getNestingLevel(arr) === 3) {
+    return flattenArrayOneLevel(arr);
+  } else {
+    return arr; // Return the original array if it's not three levels deep
+  }
+};
+
 const Text = ({ data, fontProperties }) => {
   const { Visible, Points, Text, FCol, BCol } = data?.Properties;
-  
+
   const { reRender } = useForceRerender();
 
-  const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+  const parentSize = JSON.parse(localStorage.getItem("formDimension"));
+
+  console.log("point", Points, data);
+
+  const newPoints = flattenIfThreeLevels(Points);
+  console.log("newPoints", newPoints)
 
   const pointsArray =
-  Points && Points[0][0].map((x, i) => [x, Points[0][1][i]]);
+    newPoints && newPoints[0].map((y, i) => [newPoints[1][i], y]);
+
+  console.log(pointsArray, "points", Points);
 
   const calculateTextDimensions = (wordsArray, fontSize = 11) => {
     // Create a hidden div element to calculate text dimensions
-    const container = document.createElement('div');
-    container.style.visibility = 'hidden';
-    container.style.position = 'fixed';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.fontSize = fontSize + 'px'; // Set font size
+    const container = document.createElement("div");
+    container.style.visibility = "hidden";
+    container.style.position = "fixed";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.fontSize = fontSize + "px"; // Set font size
 
     // Iterate through the array of words
     wordsArray.forEach((word) => {
       // Create a span element for each word
-      const span = document.createElement('div');
+      const span = document.createElement("div");
       span.textContent = word;
-      span.style.display = 'block'; // Start each word on a new line
+      span.style.display = "block"; // Start each word on a new line
       container.appendChild(span);
     });
 
@@ -57,72 +85,83 @@ const Text = ({ data, fontProperties }) => {
     <>
       <div
         style={{
-          position: 'absolute',
-          display: Visible == 0 ? 'none' : 'block',
+          position: "absolute",
+          display: Visible == 0 ? "none" : "block",
           top: 0,
           left: 0,
         }}
       >
-        <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
+        <svg
+          height={parentSize && parentSize[0]}
+          width={parentSize && parentSize[1]}
+        >
           {Text?.map((text, index) => {
             const dimensions = calculateTextDimensions(
               Text,
-              !fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`
+              !fontProperties?.Size ? "11px" : `${fontProperties?.Size}px`
             );
             const textWidth = dimensions?.width + 30; // replace with actual calculation
             const textHeight = dimensions?.height + 30; // replace with actual calculation
 
-            const points = pointsArray[index] || [pointsArray?.[index - 1]?.[0] , pointsArray?.[index - 1]?.[1] + 10  ];
+            const points = pointsArray[index] || [
+              pointsArray?.[index - 1]?.[0],
+              pointsArray?.[index - 1]?.[1] + 10,
+            ];
+
             return (
               <g key={index}>
                 <rect
-                  x={points && points[1]}
-                  y={points && points[0]}
+                  x={points && points[0]}
+                  y={points && points[1]}
                   width={textWidth}
                   height={textHeight}
-                  transform={`translate(${points && points[1]}, ${
-                    points && points[0]
+                  transform={`translate(${points && points[0]}, ${
+                    points && points[1]
                   }) rotate(${
-                    fontProperties?.rotate * (180 / Math.PI) ?? 0
-                  })  translate(${points && -points[1]}, ${
-                    points && -points[0]
+                    fontProperties?.Rotate * (180 / Math.PI)
+                  }) translate(${points && -points[0]}, ${
+                    points && -points[1]
                   })`}
-                  fill={BCol ? rgbColor(BCol) : 'transparent'} // Set your desired background color here
+                  fill={BCol ? rgbColor(BCol) : "transparent"} // Set your desired background color here
                 />
                 <text
                   id={`${data?.ID}-t${index + 1}`}
                   // fill='red'
-                  alignment-baseline='middle'
-                  dy='0.6em'
-                  x={points &&  points[1]}
-                  y={points && points[0]}
+                  alignment-baseline="middle"
+                  dy="0.6em"
+                  x={points && points[0]}
+                  y={points && points[1]}
                   font-family={fontProperties?.PName}
-                  font-size={!fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`}
-                  fill={FCol ? rgbColor(FCol[index]) : 'black'}
+                  font-size={
+                    !fontProperties?.Size ? "11px" : `${fontProperties?.Size}px`
+                  }
+                  fill={FCol ? rgbColor(FCol[index]) : "black"}
                   font-style={
                     !fontProperties?.Italic
-                      ? 'none'
+                      ? "none"
                       : fontProperties?.Italic == 1
-                      ? 'italic'
-                      : 'none'
+                      ? "italic"
+                      : "none"
                   }
-                  font-weight={!fontProperties?.Weight ? 0 : fontProperties?.Weight}
+                  font-weight={
+                    !fontProperties?.Weight ? 0 : fontProperties?.Weight
+                  }
                   text-decoration={
                     !fontProperties?.Underline
-                      ? 'none'
+                      ? "none"
                       : fontProperties?.Underline == 1
-                      ? 'underline'
-                      : 'none'
+                      ? "underline"
+                      : "none"
                   }
-                  transform={`translate(${points && points[1]}, ${
-                    points && points[0]
+                  transform={`translate(${points && points[0]}, ${
+                    points && points[1]
                   }) rotate(${
-                    fontProperties?.rotate * (180 / Math.PI) ?? 0
-                  })  translate(${points && -points[1]}, ${
-                    points && -points[0]
+                    fontProperties?.Rotate * (180 / Math.PI)
+                  }) translate(${points && -points[0]}, ${
+                    points && -points[1]
                   })`}
                 >
-                  {text.replace(/ /g, '\u00A0')}
+                  {text.replace(/ /g, "\u00A0")}
                 </text>
               </g>
             );
