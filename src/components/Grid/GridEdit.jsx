@@ -40,44 +40,41 @@ const GridEdit = ({ data }) => {
     return firstNonSpaceIndex;
   };
  
+
   useEffect(() => {
     if (!isEditable && divRef.current && SelText && SelText.length === 2 && data?.focused) {
       const [start, end] = SelText;
       const textNode = divRef.current.firstChild;
-
-      console.log({ textNode });
-
-      // Check if textNode is wrapped in an object
-      const actualTextNode = textNode?.nodeType ? textNode : textNode?.textNode;
-      // Find the text node inside the div
-
+  
+      console.log("text node", { textNode });
+  
+      // Determine the actual text node
+      const actualTextNode = textNode?.nodeType === Node.TEXT_NODE ? textNode : textNode?.textNode;
+  
       if (actualTextNode?.nodeType === Node.TEXT_NODE) {
         const range = document.createRange();
         const selection = window.getSelection();
-
-        const adjustedEnd = Math.min(end - 1, actualTextNode.length);
-
-        
-        const parent = actualTextNode.parentNode;
-        const content = parent.textContent.trim();
-        console.log("use effect", {content: data?.formattedValue})  
-
-        if(data?.formattedValue){
-          console.log("content", {index: findFirstNonSpaceIndex(data?.formattedValue)})
-          const reqIndex = findFirstNonSpaceIndex(data?.formattedValue)
-          range.setStart(actualTextNode, Math.min(start - 1 + reqIndex, actualTextNode.length));
-          range.setEnd(actualTextNode ,Math.min(end - 1 + reqIndex, actualTextNode.length));
-        }
-        else{
-          range.setStart(actualTextNode, Math.min(start - 1, actualTextNode.length));
+  
+        console.log({ range });
+        const reqIndex = findFirstNonSpaceIndex(data?.formattedValue)
+  
+        const adjustedStart = Math.max(0, Math.min(start - 1 + reqIndex, actualTextNode.length));
+        const adjustedEnd = Math.max(0, Math.min(end - 1 + reqIndex, actualTextNode.length));
+  
+        if (adjustedStart <= actualTextNode.length && adjustedEnd <= actualTextNode.length) {
+          range.setStart(actualTextNode, adjustedStart);
           range.setEnd(actualTextNode, adjustedEnd);
+  
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          console.error('Calculated offsets are out of bounds:', { adjustedStart, adjustedEnd, textNodeLength: actualTextNode.length });
         }
-
-        selection.removeAllRanges();
-        selection.addRange(range);
       }
     }
   }, [SelText, isEditable, data.focused]);
+  
+  
 
 
   const handleSelect = (event) => {
