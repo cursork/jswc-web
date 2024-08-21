@@ -35,7 +35,7 @@ const SubForm = ({ data }) => {
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
-  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData, data?.Properties);
 
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
 
@@ -74,11 +74,11 @@ return (
         : "block",
         background: BCol && rgbColor(BCol),
         ...updatedStyles,
-        height: Size && Size[0],
-        width: Size && Size[1],
-        top: Posn && Posn[0],
-        left: Posn && Posn[1],
-        position: 'absolute',
+        // height: Size && Size[0],
+        // width: Size && Size[1],
+        // top: Posn && Posn[0],
+        // left: Posn && Posn[1],
+        // position: 'absolute',
       }}
       ref={observedDiv}
     >

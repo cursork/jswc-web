@@ -1,15 +1,16 @@
-export const getImageStyles = (decideImageStyle, PORT, ImageData) => {
+export const getImageStyles = (decideImageStyle, PORT, ImageData, ImageSize) => {
   let imageStyles = null;
+
 
   if (decideImageStyle == 0) {
     imageStyles = {
       backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[0]: 0,
+      left: ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[1]: 0,
       backgroundRepeat: 'no-repeat',
-      height: '100%',
-      width: '100%',
+      height:ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[0]: '100%',
+      width: ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[1]: '100%',
     };
   }
 
