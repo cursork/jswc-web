@@ -35,6 +35,8 @@ import { useAppData } from '../hooks';
 import Chart from './Chart';
 import MessageBox from './MessageBox';
 
+import KendoChart from './KendoChart';
+
 const SelectComponent = ({
   data,
   inputValue = '',
@@ -168,6 +170,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Circle') return <Circle data={data} />;
   if (data?.Properties?.Type == 'ApexChart') return <Chart data={data} />;
   if (data?.Properties?.Type == 'MsgBox') return <MessageBox data= {data} />;
+  if (data?.Properties?.Type == 'KendoChart') return <KendoChart data={data} />;
 };
 
 export default SelectComponent;
