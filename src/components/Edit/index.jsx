@@ -282,6 +282,17 @@ const Edit = ({
       },
     });
     // console.log({event2})
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          Text:(FieldType && FieldType == 'LongNumeric') || FieldType == 'Numeric'
+          ? parseInt(emitValue)
+          : emitValue,
+        },
+      },
+      'WS'
+    );
     localStorage.setItem(data?.ID, event2);
     localStorage.setItem("shouldChangeEvent", data.Properties.hasOwnProperty("Event"))
 
