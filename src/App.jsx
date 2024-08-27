@@ -130,6 +130,8 @@ const App = () => {
   }
 
   const handleData = (data, mode) => {
+
+    console.log("handleData", data, mode)
     const splitID = data.ID.split('.');
 
     let currentLevel = dataRef.current;
@@ -328,7 +330,7 @@ const App = () => {
               {
                 ID: serverEvent.ID,
                 Properties: {
-                  Text: value,
+                  Text: serverEvent?.Properties.Text,
                 },
               },
               'WS'
@@ -339,7 +341,7 @@ const App = () => {
               {
                 ID: serverEvent.ID,
                 Properties: {
-                  Value: value,
+                  Value: serverEvent?.Properties.Value,
                 },
               },
               'WS'
@@ -351,7 +353,7 @@ const App = () => {
               {
                 ID: serverEvent.ID,
                 Properties: {
-                  SelText: value,
+                  SelText: serverEvent?.Properties.SelText,
                 },
               },
               'WS'
