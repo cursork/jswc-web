@@ -1,6 +1,7 @@
 import { useAppData } from '../../hooks';
 import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
 import Canvas from '../Canvas';
+import { Chart, ChartSeries, ChartSeriesItem } from '@progress/kendo-react-charts';
 
 const Rectangle = ({
   data,
@@ -49,6 +50,11 @@ const Rectangle = ({
       }}
       
     >
+      <Chart>
+        <ChartSeries>
+          <ChartSeriesItem data={[1, 1, 2, 3, 5, 8, 13]} name="Fibonacci" />
+        </ChartSeries>
+      </Chart>
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray?.map((rectanglePoints, index) => {
           return (
