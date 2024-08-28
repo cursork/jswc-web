@@ -45,6 +45,9 @@ const CustomRibbonButtonGroup = ({ data }) => {
       const ID = ImageListObj.split('.')[1];
       ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
     }
+  if(ImagesData){
+    localStorage.setItem("ImagesData", JSON.stringify(ImagesData));
+  }
     // const ID = getStringafterPeriod(ImageListObj);
     // ImageList = ID && JSON.parse(getObjectById(dataRef.current, ID));
   }
