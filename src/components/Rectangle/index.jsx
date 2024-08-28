@@ -50,11 +50,6 @@ const Rectangle = ({
       }}
       
     >
-      <Chart>
-        <ChartSeries>
-          <ChartSeriesItem data={[1, 1, 2, 3, 5, 8, 13]} name="Fibonacci" />
-        </ChartSeries>
-      </Chart>
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray?.map((rectanglePoints, index) => {
           return (
