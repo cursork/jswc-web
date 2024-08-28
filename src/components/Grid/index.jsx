@@ -840,9 +840,11 @@ const Grid = ({ data }) => {
     const eventId = uuidv4();
     setEventId(eventId);
     const shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
-  
-    const parentExists = Event?.some((item) => item[0].toLowerCase() === "keypress");
-  
+
+    const parentExists = Event?.some(
+      (item) => item[0].toLowerCase() === "keypress"
+    );
+
     const keys = Object.keys(data);
     let childKey;
     const checkArray = keys.reduce((prev, current) => {
@@ -860,7 +862,7 @@ const Grid = ({ data }) => {
       ];
     }, []);
     const childExists = checkArray.some((item) => item === true);
-  
+
     const parentKeyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
@@ -869,7 +871,7 @@ const Grid = ({ data }) => {
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
     });
-  
+
     const keyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
@@ -878,118 +880,133 @@ const Grid = ({ data }) => {
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
     });
-  
+
     if (parentExists && !childExists) {
       socket.send(parentKeyPressEvent);
     }
-  
+
     if (childExists) {
       socket.send(keyPressEvent);
     }
-  
-    const isNavigationKeys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key);
-  
+
+    const isNavigationKeys = [
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowDown",
+    ].includes(event.key);
+
     if (isNavigationKeys) {
       gridRef.current.focus();
     }
-  
+
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
-  
+
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
-  
-        if (selectedColumn >= columns) return;  // Prevent moving beyond the last column
-  
-        const newColumn = RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2;
+
+        if (selectedColumn >= columns) return; // Prevent moving beyond the last column
+
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2;
         updateLocalStorage(selectedRow, newColumn, localStoragValue);
-  
+
         handleCellMove(selectedRow, newColumn, 0);
-  
       } else if (event.key === "ArrowLeft") {
         if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
-        setSelectedColumn((prev) => Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0));
-  
-        if (selectedColumn <= 1 && RowTitles?.length > 0) return;  // Prevent moving before the first column
-  
-        const newColumn = RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn;
-        updateLocalStorage(selectedRow, newColumn, localStoragValue);
-  
-        handleCellMove(selectedRow, newColumn, 0);
-  
-      } else if (event.key === "ArrowUp") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
+
+        setSelectedColumn((prev) => {
+          const demoCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
+          if (demoCol <= 0) return prev; // Prevent moving before the first column
+    
+          const actualNewColumn = RowTitles?.length > 0 ? demoCol : prev;
+          updateLocalStorage(selectedRow, actualNewColumn, localStoragValue);
+          handleCellMove(selectedRow, actualNewColumn, 0);
+    
+          return demoCol;
+        });
+    
+    }
+    else if (event.key === "ArrowUp") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.max(prev - 1, 1));
-  
-        if (selectedRow <= 1 && RowTitles?.length > 0) return;  // Prevent moving before the first row
-  
+
+        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
+
         const newRow = selectedRow - 1;
-        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-  
+
         handleCellMove(newRow, newColumn, 0);
-  
       } else if (event.key === "ArrowDown") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-  
-        if (selectedRow >= rows - 1) return;  // Prevent moving beyond the last row
-  
+
+        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
+
         const newRow = selectedRow + 1;
-        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-  
+
         handleCellMove(newRow, newColumn, 0);
-  
       } else if (event.key === "PageDown") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
-  
-        if (selectedRow >= rows - 1) return;  // Prevent moving beyond the last row
-  
+
+        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
+
         const newRow = Math.min(selectedRow + 9, rows - 1);
-        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-  
+
         handleCellMove(newRow, newColumn, 0);
-  
       } else if (event.key === "PageUp") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-  
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.max(prev - 9, 1));
-  
-        if (selectedRow <= 1 && RowTitles?.length > 0) return;  // Prevent moving before the first row
-  
+
+        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
+
         const newRow = Math.max(selectedRow - 9, 1);
-        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-  
+
         handleCellMove(newRow, newColumn, 0);
       }
     };
-  
+
     const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
       const newValue = {
         Event: {
           CurCell: [newRow, newColumn],
-          ...(localStoragValue?.Event?.Values && { Values: localStoragValue.Event.Values }),
+          ...(localStoragValue?.Event?.Values && {
+            Values: localStoragValue.Event.Values,
+          }),
         },
       };
       localStorage.setItem(data?.ID, JSON.stringify(newValue));
     };
-  
+
     setTimeout(() => {
       updatePosition();
     }, 120);
   };
-  
-  
+
   const modifyGridData = () => {
     let data = [];
     // Push the header Information
@@ -1248,12 +1265,17 @@ const Grid = ({ data }) => {
               {row.map((data, columni) => {
                 //  selectedRow === rowi && console.log("issue arrow focus", selectedRow, rowi )
                 const isFocused =
-                  selectedRow === rowi && selectedColumn === columni;
+                  selectedRow === rowi &&
+                  selectedColumn ===
+                    (row[0].type !== "cell" ? columni + 1 : columni);
 
                 return (
                   <div
                     onClick={(e) => {
-                      handleCellClick(rowi, columni);
+                      handleCellClick(
+                        rowi,
+                        row[0].type !== "cell" ? columni + 1 : columni
+                      );
                       // handleCellMove(rowi, columni + 1, '');
                     }}
                     id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
@@ -1273,7 +1295,9 @@ const Grid = ({ data }) => {
                       maxheight: `${data?.height}px`,
                       backgroundColor:
                         (selectedRow === rowi && data.type == "cell") ||
-                        (selectedColumn === columni && data.type == "header")
+                        (selectedColumn ===
+                          (row[0].type !== "cell" ? columni + 1 : columni) &&
+                          data.type == "header")
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
                       textAlign: data.type == "header" ? "center" : "left",
