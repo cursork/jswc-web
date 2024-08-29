@@ -912,7 +912,7 @@ const Grid = ({ data }) => {
         if (selectedColumn >= columns) return; // Prevent moving beyond the last column
 
         const newColumn =
-          RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2;
+         RowTitles ? RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2: selectedColumn+1;
         updateLocalStorage(selectedRow, newColumn, localStoragValue);
 
         handleCellMove(selectedRow, newColumn, 0);
@@ -921,10 +921,12 @@ const Grid = ({ data }) => {
 
         setSelectedColumn((prev) => {
           const demoCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
-          if (demoCol <= 0) return prev; // Prevent moving before the first column
+          console.log("handle", {demoCol, RowTitles})
+          if (demoCol <= 0) return prev; 
     
-          const actualNewColumn = RowTitles?.length > 0 ? demoCol : prev;
+          const actualNewColumn = RowTitles ?  RowTitles?.length > 0 ? demoCol : prev : demoCol;
           updateLocalStorage(selectedRow, actualNewColumn, localStoragValue);
+          console.log("handle",{selectedRow, actualNewColumn});
           handleCellMove(selectedRow, actualNewColumn, 0);
     
           return demoCol;
@@ -1260,6 +1262,69 @@ const Grid = ({ data }) => {
         }}
       >
         {gridData?.map((row, rowi) => {
+  return (
+    <div style={{ display: "flex" }} id={`row-${rowi}`}>
+      {row.map((data, columni) => {
+        const adjustedColumnIndex =
+          row[0].type !== "cell" || row[0].type !== "header"  ? columni + 1 : columni;
+
+        const isFocused =
+          selectedRow === rowi && selectedColumn === adjustedColumnIndex;
+
+        const isSelectedCell =
+          selectedRow === rowi && data.type === "cell";
+
+        const isSelectedHeader =
+          selectedColumn === adjustedColumnIndex &&
+          data.type === "header";
+
+        return (
+          <div
+            onClick={() => {
+              handleCellClick(rowi, adjustedColumnIndex);
+            }}
+            id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
+            style={{
+              borderRight: isFocused
+                ? "1px solid blue"
+                : "1px solid  #EFEFEF",
+              borderBottom: isFocused
+                ? "1px solid blue"
+                : "1px solid  #EFEFEF",
+              fontSize: "12px",
+              minHeight: `${data?.height}px`,
+              maxHeight: `${data?.height}px`,
+              minWidth: `${data?.width}px`,
+              maxWidth: `${data?.width}px`,
+              backgroundColor:
+                isSelectedCell || isSelectedHeader
+                  ? "lightblue"
+                  : rgbColor(data?.backgroundColor),
+              textAlign: data.type === "header" ? "center" : "left",
+              overflow: "hidden",
+            }}
+          >
+            <Component
+              key={data?.type}
+              data={{
+                ...data,
+                row: rowi,
+                column: columni,
+                gridValues: Values,
+                gridEvent: Event,
+                showInput: ShowInput,
+                gridId: gridId,
+                focused: isFocused,
+                backgroundColor: data?.backgroundColor,
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+})}
+        {/* {gridData?.map((row, rowi) => {
           return (
             <div style={{ display: "flex" }} id={`row-${rowi}`}>
               {row.map((data, columni) => {
@@ -1268,6 +1333,15 @@ const Grid = ({ data }) => {
                   selectedRow === rowi &&
                   selectedColumn ===
                     (row[0].type !== "cell" ? columni + 1 : columni);
+
+
+                    
+
+//                     const isSelectedCell = selectedRow === rowi && data.type === "cell";
+// const isSelectedHeader =
+//   selectedColumn === (row[0].type === "cell" || row[0].type === "header" ? columni + 1 : columni) &&
+//   data.type === "header";
+
 
                 return (
                   <div
@@ -1296,7 +1370,7 @@ const Grid = ({ data }) => {
                       backgroundColor:
                         (selectedRow === rowi && data.type == "cell") ||
                         (selectedColumn ===
-                          (row[0].type !== "cell" ? columni + 1 : columni) &&
+                          (row[0].type === "cell" || row[0].type === "header"  ? columni +1 : columni) &&
                           data.type == "header")
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
@@ -1323,7 +1397,7 @@ const Grid = ({ data }) => {
               })}
             </div>
           );
-        })}
+        })} */}
       </div>
     </>
   );
