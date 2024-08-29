@@ -370,10 +370,10 @@ const Grid = ({ data }) => {
   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
   let defaultCol = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1];
   const [selectedRow, setSelectedRow] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[0]
   );
   const [selectedColumn, setSelectedColumn] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[1]
   );
 
   useEffect(() => {
@@ -384,8 +384,8 @@ const Grid = ({ data }) => {
           ? 1
           : 0
         : CurCell[1] - 1;
-      setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev));
-      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev));
+      setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev ));
+      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev+1));
     }
   }, [CurCell]);
 
