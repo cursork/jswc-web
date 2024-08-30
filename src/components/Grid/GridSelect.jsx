@@ -74,7 +74,10 @@ const GridSelect = ({ data }) => {
   return (
     <select
       onKeyDown={(e) => e.preventDefault()}
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) =>
+        console.log("click")
+       
+        }
       ref={selectRef}
       value={comboInput}
       style={{ border: 0, outline: 0, width: '100%', height: '100%' }}

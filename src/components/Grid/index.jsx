@@ -323,7 +323,7 @@ const Grid = ({ data }) => {
     setProceed,
     proceedEventArray,
     setProceedEventArray,
-    findAggregatedPropertiesData
+    findAggregatedPropertiesData,
   } = useAppData();
   // console.log("waiting", { proceed, setProceed, proceedEventArray });
 
@@ -367,33 +367,38 @@ const Grid = ({ data }) => {
   const [width, setWidth] = useState(Size[1]);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
-  let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
-  let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+  let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
+  let defaultCol = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1];
   const [selectedRow, setSelectedRow] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
+    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[0]
   );
   const [selectedColumn, setSelectedColumn] = useState(
-    !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[1]
   );
 
   useEffect(() => {
     if (CurCell) {
-      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0] 
-      let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1] - 1
-      setSelectedRow((prev) => prev !== CurCell[0] ? defaultRow : prev);
-      setSelectedColumn((prev) => prev !== CurCell[1] ? defaultCol : prev);
+      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
+      let defaultCol = !CurCell
+        ? RowTitles?.length > 0
+          ? 1
+          : 0
+        : CurCell[1] - 1;
+      setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev ));
+      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev+1));
     }
   }, [CurCell]);
-  
+
+  console.log("nq", { CurCell, selectedRow, selectedColumn });
+
   // useEffect(()=>{
   //   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
   //   let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   //   setSelectedRow( defaultRow === 0 ? 0: defaultRow  )
   //   setSelectedColumn( defaultCol === 0 ? 0: defaultCol -1 )
-    
+
   // },[])
   // console.log("issue arrow nq", CurCell, selectedRow, selectedColumn)
-
 
   const style = setStyle(data?.Properties);
 
@@ -412,7 +417,13 @@ const Grid = ({ data }) => {
 
   const handleCellMove = (row, column, mouseClick) => {
     if (column > columns || column == 0) return;
-    // console.log("waiting handle cell move", row, column, selectedRow, selectedColumn)
+    console.log("nq: waiting handle cell move", {
+      row,
+      column,
+      selectedRow,
+      selectedColumn,
+    });
+
     const cellChanged = JSON.parse(localStorage.getItem("isChanged"));
     const cellMoveEvent = JSON.stringify({
       Event: {
@@ -441,7 +452,7 @@ const Grid = ({ data }) => {
       })
     );
   };
-  
+
   const waitForProceed = (localStorageBool) => {
     return new Promise((resolve) => {
       const checkProceed = () => {
@@ -460,32 +471,397 @@ const Grid = ({ data }) => {
       checkProceed();
       // setTimeout(() => {
       //   checkProceed();
-      // }, 80); 
+      // }, 80);
     });
   };
 
+  // const handleKeyDown = (event) => {
+  //   const isAltPressed = event.altKey ? 4 : 0;
+  //   const isCtrlPressed = event.ctrlKey ? 2 : 0;
+  //   const isShiftPressed = event.shiftKey ? 1 : 0;
+  //   const charCode = event.key.charCodeAt(0);
+  //   const eventId = uuidv4();
+  //   setEventId(eventId);
+  //   let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+  //   const parentExists =
+  //     Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
+
+  //   let keys = Object.keys(data);
+  //   let childKey;
+  //   const checkArray = keys.reduce((prev, current) => {
+  //     if (
+  //       data[current]?.Properties?.Event?.some(
+  //         (item) => item[0].toLowerCase() === "keypress"
+  //       )
+  //     )
+  //       childKey = current;
+  //     return [
+  //       ...prev,
+  //       data[current]?.Properties?.Event?.some(
+  //         (item) => item[0].toLowerCase() === "keypress"
+  //       ),
+  //     ];
+  //   }, []);
+  //   const childExists = checkArray.some((item) => item === true);
+
+  //   // const childExists = data?.E1?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")
+
+  //   const parentKeyPressEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "KeyPress",
+  //       ID: data?.ID,
+  //       EventID: eventId,
+  //       Info: [event.key, charCode, event.keyCode, shiftState],
+  //     },
+  //   });
+
+  //   const keyPressEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "KeyPress",
+  //       ID: data[childKey]?.ID,
+  //       EventID: eventId,
+  //       Info: [event.key, charCode, event.keyCode, shiftState],
+  //     },
+  //   });
+
+  //   if (parentExists && !!!childExists) {
+  //     socket.send(parentKeyPressEvent);
+  //   }
+
+  //   if (childExists) {
+  //     socket.send(keyPressEvent);
+  //   }
+
+  //   // setTimeout(()=>{
+  //   // }, 100)
+
+  //   const isNavigationKeys = [
+  //     "ArrowRight",
+  //     "ArrowLeft",
+  //     "ArrowUp",
+  //     "ArrowDown",
+  //   ].some((key) => event.key === key);
+
+  //   if (isNavigationKeys) {
+  //     gridRef.current.focus();
+  //   }
+
+  //   let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
+  //   // console.log("waiting initial local storage", localStoragValue)
+
+  //   const updatePosition = async () => {
+  //     if (event.key === "ArrowRight") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       // console.log("waiting await proceed done")
+  //       // console.log("issue arrow right initial", {selectedRow, selectedColumn})
+  //       setSelectedColumn((prev) => Math.min(prev + 1, columns));
+  //       // console.log("issue arrow right", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0
+  //       //   ? selectedColumn + 1
+  //       //   : selectedColumn + 1 })
+  //       if (!localStoragValue) {
+  //         console.log(
+  //           "writing local storage",
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0
+  //                   ? selectedColumn + 1
+  //                   : selectedColumn + 2,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //         if (RowTitles?.length > 0 && selectedColumn == columns) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0
+  //                   ? selectedColumn + 1
+  //                   : selectedColumn + 2,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (RowTitles?.length > 0 && selectedColumn == columns) return;
+  //         console.log(
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0
+  //                   ? selectedColumn + 1
+  //                   : selectedColumn + 2,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0
+  //                   ? selectedColumn + 1
+  //                   : selectedColumn + 2,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+
+  //       handleCellMove(
+  //         selectedRow,
+  //         RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+  //         0
+  //       );
+  //     } else if (event.key === "ArrowLeft") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       // console.log("issue arrow left prev", {selectedRow, selectedColumn})
+  //       setSelectedColumn((prev) =>
+  //         Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
+  //       );
+  //       // console.log("issue arrow left", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn})
+
+  //       if (!localStoragValue) {
+  //         if (RowTitles?.length > 0 && selectedColumn == 1) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (RowTitles?.length > 0 && selectedColumn == 1) return;
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow,
+  //                 RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+  //       handleCellMove(
+  //         selectedRow,
+  //         RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+  //         0
+  //       );
+  //     } else if (event.key === "ArrowUp") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       setSelectedRow((prev) => Math.max(prev - 1, 1));
+  //       if (!localStoragValue) {
+  //         if (selectedRow == 1 && RowTitles?.length > 0) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow - 1,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (selectedRow == 1 && RowTitles?.length > 0) return;
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow - 1,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+  //       handleCellMove(
+  //         selectedRow - 1,
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //         0
+  //       );
+  //     } else if (event.key === "ArrowDown") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
+  //       if (!localStoragValue) {
+  //         if (selectedRow == rows - 1) return;
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow + 1,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (selectedRow == rows - 1) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow + 1,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+  //       handleCellMove(
+  //         selectedRow + 1,
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //         0
+  //       );
+  //     } else if (event.key === "PageDown") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+
+  //       console.log("nq", { selectedRow });
+  //       if (!localStoragValue) {
+  //         if (selectedRow == rows - 1) return;
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow + 9 > 10 ? 10 : selectedRow,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (selectedRow == rows - 1) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow + 9 > 10 ? 10 : selectedRow,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+  //       handleCellMove(
+  //         selectedRow + 9 > 10 ? 10 : selectedRow,
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //         0
+  //       );
+  //     } else if (event.key === "PageUp") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+  //       setSelectedRow((prev) => Math.max(prev - 9, 1));
+  //       if (!localStoragValue) {
+  //         if (selectedRow == 1 && RowTitles?.length > 0) return;
+
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow - 9,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //             },
+  //           })
+  //         );
+  //       } else {
+  //         if (selectedRow == 1 && RowTitles?.length > 0) return;
+  //         localStorage.setItem(
+  //           data?.ID,
+  //           JSON.stringify({
+  //             Event: {
+  //               CurCell: [
+  //                 selectedRow - 9,
+  //                 RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //               ],
+  //               Values: localStoragValue?.Event?.Values,
+  //             },
+  //           })
+  //         );
+  //       }
+  //       handleCellMove(
+  //         selectedRow - 9,
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+  //         0
+  //       );
+  //     }
+  //   };
+
+  //   // updatePosition();
+  //   setTimeout(() => {
+  //     updatePosition();
+  //   }, 120);
+  // };
+
   const handleKeyDown = (event) => {
-    
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
     const charCode = event.key.charCodeAt(0);
     const eventId = uuidv4();
     setEventId(eventId);
-    let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+    const shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const parentExists = Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
+    const parentExists = Event?.some(
+      (item) => item[0].toLowerCase() === "keypress"
+    );
 
-    let keys = Object.keys(data)
-    let childKey
-    const checkArray = keys.reduce((prev, current)=> {
-      if(data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")) childKey = current
-      return [...prev, data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")]
-    },[])
-    const childExists = checkArray.some(item => item === true)
-
-
-    // const childExists = data?.E1?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")
+    const keys = Object.keys(data);
+    let childKey;
+    const checkArray = keys.reduce((prev, current) => {
+      if (
+        data[current]?.Properties?.Event?.some(
+          (item) => item[0].toLowerCase() === "keypress"
+        )
+      )
+        childKey = current;
+      return [
+        ...prev,
+        data[current]?.Properties?.Event?.some(
+          (item) => item[0].toLowerCase() === "keypress"
+        ),
+      ];
+    }, []);
+    const childExists = checkArray.some((item) => item === true);
 
     const parentKeyPressEvent = JSON.stringify({
       Event: {
@@ -496,9 +872,8 @@ const Grid = ({ data }) => {
       },
     });
 
-
     const keyPressEvent = JSON.stringify({
-      Event: { 
+      Event: {
         EventName: "KeyPress",
         ID: data[childKey]?.ID,
         EventID: eventId,
@@ -506,306 +881,132 @@ const Grid = ({ data }) => {
       },
     });
 
-    if(parentExists && !!!childExists){
-      socket.send(parentKeyPressEvent)
+    if (parentExists && !childExists) {
+      socket.send(parentKeyPressEvent);
     }
 
     if (childExists) {
       socket.send(keyPressEvent);
     }
 
-
-    // setTimeout(()=>{
-    // }, 100)
-
     const isNavigationKeys = [
       "ArrowRight",
       "ArrowLeft",
       "ArrowUp",
       "ArrowDown",
-    ].some((key) => event.key === key);
+    ].includes(event.key);
 
     if (isNavigationKeys) {
       gridRef.current.focus();
     }
 
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
-    // console.log("waiting initial local storage", localStoragValue)
-
 
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
-        if (childExists || parentExists)  await waitForProceed(localStorage.getItem(eventId));
-        // console.log("waiting await proceed done")
-        // console.log("issue arrow right initial", {selectedRow, selectedColumn})
-        setSelectedColumn((prev) => Math.min(prev + 1, columns));
-        // console.log("issue arrow right", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0
-        //   ? selectedColumn + 1
-        //   : selectedColumn + 1 })
-        if (!localStoragValue) {
-          console.log("writing local storage", JSON.stringify({
-            Event: {
-              CurCell: [
-                selectedRow,
-                RowTitles?.length > 0
-                  ? selectedColumn + 1
-                  : selectedColumn + 2,
-              ],
-            },
-          }) )
-          if (RowTitles?.length > 0 && selectedColumn == columns) return;
-          
-          localStorage.setItem(
-            data?.ID,   
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow,
-                  RowTitles?.length > 0
-                    ? selectedColumn + 1
-                    : selectedColumn + 2,
-                ],
-              },
-            })
-          );
-        } 
-        else {
-          if (RowTitles?.length > 0 && selectedColumn == columns) return;
-          console.log(JSON.stringify({
-            Event: {
-              CurCell: [
-                selectedRow,
-                RowTitles?.length > 0
-                  ? selectedColumn + 1
-                  : selectedColumn + 2,
-              ],
-              Values: localStoragValue?.Event?.Values,
-            },
-          }) )
-          
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow,
-                  RowTitles?.length > 0
-                    ? selectedColumn + 1
-                    : selectedColumn + 2,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
 
-        handleCellMove(
-          selectedRow,
-          RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
-          0
-        );
+        setSelectedColumn((prev) => Math.min(prev + 1, columns));
+
+        if (selectedColumn >= columns) return; // Prevent moving beyond the last column
+
+        const newColumn =
+         RowTitles ? RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2: selectedColumn+1;
+        updateLocalStorage(selectedRow, newColumn, localStoragValue);
+
+        handleCellMove(selectedRow, newColumn, 0);
       } else if (event.key === "ArrowLeft") {
         if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-        // console.log("issue arrow left prev", {selectedRow, selectedColumn})
-        setSelectedColumn((prev) =>
-          Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
-        );
-        // console.log("issue arrow left", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn})
-        
-        if (!localStoragValue) {
-          if (RowTitles?.length > 0 && selectedColumn == 1) return;
 
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow,
-                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
-                ],
-              },
-            })
-          );
-        } else {
-          if (RowTitles?.length > 0 && selectedColumn == 1) return;
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow,
-                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
-        handleCellMove(
-          selectedRow,
-          RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
-          0
-        );
-      } else if (event.key === "ArrowUp") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        setSelectedColumn((prev) => {
+          const demoCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
+          console.log("handle", {demoCol, RowTitles})
+          if (demoCol <= 0) return prev; 
+    
+          const actualNewColumn = RowTitles ?  RowTitles?.length > 0 ? demoCol : prev : demoCol;
+          updateLocalStorage(selectedRow, actualNewColumn, localStoragValue);
+          console.log("handle",{selectedRow, actualNewColumn});
+          handleCellMove(selectedRow, actualNewColumn, 0);
+    
+          return demoCol;
+        });
+    
+    }
+    else if (event.key === "ArrowUp") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.max(prev - 1, 1));
-        if (!localStoragValue) {
-          if (selectedRow == 1 && RowTitles?.length > 0) return;
 
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow - 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-              },
-            })
-          );
-        } else {
-          if (selectedRow == 1 && RowTitles?.length > 0) return;
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow - 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
-        handleCellMove(
-          selectedRow - 1,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-          0
-        );
+        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
+
+        const newRow = selectedRow - 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        updateLocalStorage(newRow, newColumn, localStoragValue);
+
+        handleCellMove(newRow, newColumn, 0);
       } else if (event.key === "ArrowDown") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-        if (!localStoragValue) {
-          if (selectedRow == rows - 1) return;
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow + 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-              },
-            })
-          );
-        } else {
-          if (selectedRow == rows - 1) return;
 
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow + 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
-        handleCellMove(
-          selectedRow + 1,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-          0
-        );
-      } else if (event.key === "PageDown"){
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
+
+        const newRow = selectedRow + 1;
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        updateLocalStorage(newRow, newColumn, localStoragValue);
+
+        handleCellMove(newRow, newColumn, 0);
+      } else if (event.key === "PageDown") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
-        if (!localStoragValue) {
-          if (selectedRow == rows - 1) return;
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow + 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-              },
-            })
-          );
-        } else {
-          if (selectedRow == rows - 1) return;
 
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow + 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
-        handleCellMove(
-          selectedRow + 9,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-          0
-        );
+        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
 
-      } else if (event.key === "PageUp"){
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        const newRow = Math.min(selectedRow + 9, rows - 1);
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        updateLocalStorage(newRow, newColumn, localStoragValue);
+
+        handleCellMove(newRow, newColumn, 0);
+      } else if (event.key === "PageUp") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+
         setSelectedRow((prev) => Math.max(prev - 9, 1));
-        if (!localStoragValue) {
-          if (selectedRow == 1 && RowTitles?.length > 0) return;
 
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow - 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-              },
-            })
-          );
-        } else {
-          if (selectedRow == 1 && RowTitles?.length > 0) return;
-          localStorage.setItem(
-            data?.ID,
-            JSON.stringify({
-              Event: {
-                CurCell: [
-                  selectedRow - 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-                ],
-                Values: localStoragValue?.Event?.Values,
-              },
-            })
-          );
-        }
-        handleCellMove(
-          selectedRow - 9,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
-          0
-        );
+        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
 
+        const newRow = Math.max(selectedRow - 9, 1);
+        const newColumn =
+          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        updateLocalStorage(newRow, newColumn, localStoragValue);
+
+        handleCellMove(newRow, newColumn, 0);
       }
-
     };
 
-    // updatePosition();
-    setTimeout(()=>{
-      updatePosition();
-    }, 120)
+    const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
+      const newValue = {
+        Event: {
+          CurCell: [newRow, newColumn],
+          ...(localStoragValue?.Event?.Values && {
+            Values: localStoragValue.Event.Values,
+          }),
+        },
+      };
+      localStorage.setItem(data?.ID, JSON.stringify(newValue));
+    };
 
-   
+    setTimeout(() => {
+      updatePosition();
+    }, 120);
   };
 
   const modifyGridData = () => {
@@ -1061,17 +1262,94 @@ const Grid = ({ data }) => {
         }}
       >
         {gridData?.map((row, rowi) => {
+  return (
+    <div style={{ display: "flex" }} id={`row-${rowi}`}>
+      {row.map((data, columni) => {
+        const adjustedColumnIndex =
+          row[0].type !== "cell" || row[0].type !== "header"  ? columni + 1 : columni;
+
+        const isFocused =
+          selectedRow === rowi && selectedColumn === adjustedColumnIndex;
+
+        const isSelectedCell =
+          selectedRow === rowi && data.type === "cell";
+
+        const isSelectedHeader =
+          selectedColumn === adjustedColumnIndex &&
+          data.type === "header";
+
+        return (
+          <div
+            onClick={() => {
+              handleCellClick(rowi, adjustedColumnIndex);
+            }}
+            id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
+            style={{
+              borderRight: isFocused
+                ? "1px solid blue"
+                : "1px solid  #EFEFEF",
+              borderBottom: isFocused
+                ? "1px solid blue"
+                : "1px solid  #EFEFEF",
+              fontSize: "12px",
+              minHeight: `${data?.height}px`,
+              maxHeight: `${data?.height}px`,
+              minWidth: `${data?.width}px`,
+              maxWidth: `${data?.width}px`,
+              backgroundColor:
+                isSelectedCell || isSelectedHeader
+                  ? "lightblue"
+                  : rgbColor(data?.backgroundColor),
+              textAlign: data.type === "header" ? "center" : "left",
+              overflow: "hidden",
+            }}
+          >
+            <Component
+              key={data?.type}
+              data={{
+                ...data,
+                row: rowi,
+                column: columni,
+                gridValues: Values,
+                gridEvent: Event,
+                showInput: ShowInput,
+                gridId: gridId,
+                focused: isFocused,
+                backgroundColor: data?.backgroundColor,
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+})}
+        {/* {gridData?.map((row, rowi) => {
           return (
             <div style={{ display: "flex" }} id={`row-${rowi}`}>
               {row.map((data, columni) => {
                 //  selectedRow === rowi && console.log("issue arrow focus", selectedRow, rowi )
                 const isFocused =
-                  selectedRow === rowi && selectedColumn === columni;
+                  selectedRow === rowi &&
+                  selectedColumn ===
+                    (row[0].type !== "cell" ? columni + 1 : columni);
+
+
+                    
+
+//                     const isSelectedCell = selectedRow === rowi && data.type === "cell";
+// const isSelectedHeader =
+//   selectedColumn === (row[0].type === "cell" || row[0].type === "header" ? columni + 1 : columni) &&
+//   data.type === "header";
+
 
                 return (
                   <div
                     onClick={(e) => {
-                      handleCellClick(rowi, columni);
+                      handleCellClick(
+                        rowi,
+                        row[0].type !== "cell" ? columni + 1 : columni
+                      );
                       // handleCellMove(rowi, columni + 1, '');
                     }}
                     id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
@@ -1088,10 +1366,12 @@ const Grid = ({ data }) => {
                       minWidth: `${data?.width}px`,
                       maxWidth: `${data?.width}px`,
                       minheight: `${data?.height}px`,
-                      maxheight: `${data
-                        ?.height}px`,
+                      maxheight: `${data?.height}px`,
                       backgroundColor:
-                      (selectedRow === rowi && data.type == "cell") || (selectedColumn === columni && data.type == "header" )
+                        (selectedRow === rowi && data.type == "cell") ||
+                        (selectedColumn ===
+                          (row[0].type === "cell" || row[0].type === "header"  ? columni +1 : columni) &&
+                          data.type == "header")
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
                       textAlign: data.type == "header" ? "center" : "left",
@@ -1117,7 +1397,7 @@ const Grid = ({ data }) => {
               })}
             </div>
           );
-        })}
+        })} */}
       </div>
     </>
   );
