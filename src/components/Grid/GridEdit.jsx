@@ -10,6 +10,7 @@ const GridEdit = ({ data }) => {
   const dateRef = useRef(null);
   const divRef = useRef(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [selected, setSelected] = useState(false);
 
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
 
@@ -40,53 +41,63 @@ const GridEdit = ({ data }) => {
     return firstNonSpaceIndex;
   };
  
-
   useEffect(() => {
     if (!isEditable && divRef.current && SelText && SelText.length === 2 && data?.focused) {
       const [start, end] = SelText;
       const textNode = divRef.current.firstChild;
-  
-      console.log("text node", { textNode });
-  
-      // Determine the actual text node
-      const actualTextNode = textNode?.nodeType === Node.TEXT_NODE ? textNode : textNode?.textNode;
-  
+
+      console.log({ textNode });
+
+      // Check if textNode is wrapped in an object
+      const actualTextNode = textNode?.nodeType ? textNode : textNode?.textNode;
+      // Find the text node inside the div
+
       if (actualTextNode?.nodeType === Node.TEXT_NODE) {
         const range = document.createRange();
         const selection = window.getSelection();
-  
-        console.log({ range });
-        const reqIndex = findFirstNonSpaceIndex(data?.formattedValue)
-  
-        const adjustedStart = Math.max(0, Math.min(start - 1 + reqIndex, actualTextNode.length));
-        const adjustedEnd = Math.max(0, Math.min(end - 1 + reqIndex, actualTextNode.length));
-  
-        if (adjustedStart <= actualTextNode.length && adjustedEnd <= actualTextNode.length) {
-          range.setStart(actualTextNode, adjustedStart);
-          range.setEnd(actualTextNode, adjustedEnd);
-  
-          selection.removeAllRanges();
-          selection.addRange(range);
-        } else {
-          console.error('Calculated offsets are out of bounds:', { adjustedStart, adjustedEnd, textNodeLength: actualTextNode.length });
+
+        const adjustedEnd = Math.min(end - 1, actualTextNode.length);
+
+        
+        const parent = actualTextNode.parentNode;
+        const content = parent.textContent.trim();
+        console.log("use effect", {content: data?.formattedValue})  
+
+        if(data?.formattedValue){
+          console.log("content", {index: findFirstNonSpaceIndex(data?.formattedValue)})
+          const reqIndex = findFirstNonSpaceIndex(data?.formattedValue)
+          range.setStart(actualTextNode, Math.min(start - 1 + reqIndex, actualTextNode.length));
+          range.setEnd(actualTextNode ,Math.min(end - 1 + reqIndex, actualTextNode.length));
         }
+        else{
+          range.setStart(actualTextNode, Math.min(start - 1, actualTextNode.length));
+          range.setEnd(actualTextNode, adjustedEnd);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
     }
   }, [SelText, isEditable, data.focused]);
-  
-  
 
 
   const handleSelect = (event) => {
+    console.log("select")
     console.log({event})
     const input = event.target;
     const start = input.selectionStart + 1;
     const end = input.selectionEnd + 1;
     const selectedText = input.value.substring(start, end);
     console.log({data, input, start, end})
+    setSelected(!!selectedText)
 
-    localStorage.setItem(data?.typeObj?.ID, JSON.stringify({Event: {Info: [start, end]}}))
-    handleData(
+    console.log("select",!!selectedText);
+
+    if(!!selectedText)
+    {
+
+      localStorage.setItem(data?.typeObj?.ID, JSON.stringify({Event: {Info: [start, end]}}))
+      handleData(
       {
         ID: data?.typeObj?.ID,
         Properties: {
@@ -95,6 +106,19 @@ const GridEdit = ({ data }) => {
       },
       'WS'
     );
+  }else{
+    localStorage.setItem(data?.typeObj?.ID, JSON.stringify({Event: {Info: [1, 1]}}))
+    handleData(
+      {
+        ID: data?.typeObj?.ID,
+        Properties: {
+          SelText: [1,1],
+        },
+      },
+      'WS'
+    );
+
+  }
     
     // setSelection(selectedText);
     // setStartIndex(start);
@@ -213,6 +237,9 @@ const GridEdit = ({ data }) => {
   }, [data.focused]);
 
   useEffect(() => {
+    console.log("select useEffect",{selected})
+    if(selected) {return}
+    console.log("select useEffect 2",{selected})
     localStorage.setItem(data?.typeObj?.ID, JSON.stringify({Event: {Info: [1, 1]}}))
     handleData(
       {
@@ -223,8 +250,8 @@ const GridEdit = ({ data }) => {
       },
       'WS'
     );
-    return () => console.log('unmount');
-  }, []);
+    return () => {console.log('select unmount')};
+  }, [ data.focused]);
 
   const handleEditEvents = () => {
     if (FieldType == 'Date') {
