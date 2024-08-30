@@ -594,7 +594,7 @@ const App = () => {
           const { Info } = Event;
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => { 
-            return (serverPropertiesObj[key] = key == 'Value' ? Info : key == 'SelText' ? Info: Info.toString());
+            return (serverPropertiesObj[key] = key == 'Value' ? Info : key == 'SelText' ? Info: "");
           });
 
           console.log(
