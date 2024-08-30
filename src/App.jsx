@@ -593,10 +593,17 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
           const serverPropertiesObj = {};
-          serverEvent.Properties.map((key) => { 
-            return (serverPropertiesObj[key] = key == 'Value' ? Info : key == 'SelText' ? Info: "");
+          serverEvent.Properties.map((key) => {
+            serverPropertiesObj[key] =
+              key === "Value" || key === "SelText"
+                ? Info
+                : key === "Text"
+                ? Array.isArray(Info)
+                  ? ""
+                  : Info
+                : Info.toString();
           });
-
+          
           console.log(
             JSON.stringify({
               WG: {
