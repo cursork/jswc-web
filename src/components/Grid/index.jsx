@@ -370,14 +370,15 @@ const Grid = ({ data }) => {
   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
   let defaultCol = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1];
   const [selectedRow, setSelectedRow] = useState(
-    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[0]
+    !CurCell ? (RowTitles ? (RowTitles?.length > 0 ? 1 : 0) : 1) : CurCell[0]
   );
   const [selectedColumn, setSelectedColumn] = useState(
-    !CurCell ? (RowTitles ? RowTitles?.length > 0 ? 1 : 0 : 1) : CurCell[1]
+    !CurCell ? (RowTitles ? (RowTitles?.length > 0 ? 1 : 0) : 1) : CurCell[1]
   );
 
   useEffect(() => {
     if (CurCell) {
+      console.log("handle ,cucell true")
       let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
       let defaultCol = !CurCell
         ? RowTitles?.length > 0
@@ -385,11 +386,11 @@ const Grid = ({ data }) => {
           : 0
         : CurCell[1] - 1;
       setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev ));
-      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev+1));
+      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev));
     }
   }, [CurCell]);
 
-  console.log("nq", { CurCell, selectedRow, selectedColumn });
+  console.log("nq", { CurCell, selectedRow, selectedColumn, RowTitles });
 
   // useEffect(()=>{
   //   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
@@ -431,7 +432,7 @@ const Grid = ({ data }) => {
         EventName: "CellMove",
         Info: [
           row,
-          column,
+          RowTitles ? column-1 : column,
           0,
           0,
           mouseClick,
@@ -832,6 +833,182 @@ const Grid = ({ data }) => {
   //   }, 120);
   // };
 
+  // const handleKeyDown = (event) => {
+  //   const isAltPressed = event.altKey ? 4 : 0;
+  //   const isCtrlPressed = event.ctrlKey ? 2 : 0;
+  //   const isShiftPressed = event.shiftKey ? 1 : 0;
+  //   const charCode = event.key.charCodeAt(0);
+  //   const eventId = uuidv4();
+  //   setEventId(eventId);
+  //   const shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+  //   const parentExists = Event?.some(
+  //     (item) => item[0].toLowerCase() === "keypress"
+  //   );
+
+  //   const keys = Object.keys(data);
+  //   let childKey;
+  //   const checkArray = keys.reduce((prev, current) => {
+  //     if (
+  //       data[current]?.Properties?.Event?.some(
+  //         (item) => item[0].toLowerCase() === "keypress"
+  //       )
+  //     )
+  //       childKey = current;
+  //     return [
+  //       ...prev,
+  //       data[current]?.Properties?.Event?.some(
+  //         (item) => item[0].toLowerCase() === "keypress"
+  //       ),
+  //     ];
+  //   }, []);
+  //   const childExists = checkArray.some((item) => item === true);
+
+  //   const parentKeyPressEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "KeyPress",
+  //       ID: data?.ID,
+  //       EventID: eventId,
+  //       Info: [event.key, charCode, event.keyCode, shiftState],
+  //     },
+  //   });
+
+  //   const keyPressEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "KeyPress",
+  //       ID: data[childKey]?.ID,
+  //       EventID: eventId,
+  //       Info: [event.key, charCode, event.keyCode, shiftState],
+  //     },
+  //   });
+
+  //   if (parentExists && !childExists) {
+  //     socket.send(parentKeyPressEvent);
+  //   }
+
+  //   if (childExists) {
+  //     socket.send(keyPressEvent);
+  //   }
+
+  //   const isNavigationKeys = [
+  //     "ArrowRight",
+  //     "ArrowLeft",
+  //     "ArrowUp",
+  //     "ArrowDown",
+  //   ].includes(event.key);
+
+  //   if (isNavigationKeys) {
+  //     gridRef.current.focus();
+  //   }
+
+  //   let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
+
+  //   const updatePosition = async () => {
+  //     if (event.key === "ArrowRight") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedColumn((prev) => Math.min(prev + 1, columns));
+
+  //       if (selectedColumn >= columns) return; // Prevent moving beyond the last column
+
+  //       const newColumn =
+  //        RowTitles ? RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2: selectedColumn+1;
+  //       updateLocalStorage(selectedRow, newColumn, localStoragValue);
+
+  //       handleCellMove(selectedRow, newColumn, 0);
+  //     } else if (event.key === "ArrowLeft") {
+  //       if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedColumn((prev) => {
+  //         const demoCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
+  //         console.log("handle", {demoCol, RowTitles})
+  //         if (demoCol <= 0) return prev; 
+    
+  //         const actualNewColumn = RowTitles ?  RowTitles?.length > 0 ? demoCol : prev : demoCol;
+  //         updateLocalStorage(selectedRow, actualNewColumn, localStoragValue);
+  //         console.log("handle",{selectedRow, actualNewColumn});
+  //         handleCellMove(selectedRow, actualNewColumn, 0);
+    
+  //         return demoCol;
+  //       });
+    
+  //   }
+  //   else if (event.key === "ArrowUp") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedRow((prev) => Math.max(prev - 1, 1));
+
+  //       if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
+
+  //       const newRow = selectedRow - 1;
+  //       const newColumn =
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+  //       updateLocalStorage(newRow, newColumn, localStoragValue);
+
+  //       handleCellMove(newRow, newColumn, 0);
+  //     } else if (event.key === "ArrowDown") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
+
+  //       if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
+
+  //       const newRow = selectedRow + 1;
+  //       const newColumn =
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+  //       updateLocalStorage(newRow, newColumn, localStoragValue);
+
+  //       handleCellMove(newRow, newColumn, 0);
+  //     } else if (event.key === "PageDown") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+
+  //       if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
+
+  //       const newRow = Math.min(selectedRow + 9, rows - 1);
+  //       const newColumn =
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+  //       updateLocalStorage(newRow, newColumn, localStoragValue);
+
+  //       handleCellMove(newRow, newColumn, 0);
+  //     } else if (event.key === "PageUp") {
+  //       if (childExists || parentExists)
+  //         await waitForProceed(localStorage.getItem(eventId));
+
+  //       setSelectedRow((prev) => Math.max(prev - 9, 1));
+
+  //       if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
+
+  //       const newRow = Math.max(selectedRow - 9, 1);
+  //       const newColumn =
+  //         RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+  //       updateLocalStorage(newRow, newColumn, localStoragValue);
+
+  //       handleCellMove(newRow, newColumn, 0);
+  //     }
+  //   };
+
+  //   const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
+  //     const newValue = {
+  //       Event: {
+  //         CurCell: [newRow, newColumn],
+  //         ...(localStoragValue?.Event?.Values && {
+  //           Values: localStoragValue.Event.Values,
+  //         }),
+  //       },
+  //     };
+  //     localStorage.setItem(data?.ID, JSON.stringify(newValue));
+  //   };
+
+  //   setTimeout(() => {
+  //     updatePosition();
+  //   }, 120);
+  // };
   const handleKeyDown = (event) => {
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
@@ -840,11 +1017,11 @@ const Grid = ({ data }) => {
     const eventId = uuidv4();
     setEventId(eventId);
     const shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
-
+  
     const parentExists = Event?.some(
       (item) => item[0].toLowerCase() === "keypress"
     );
-
+  
     const keys = Object.keys(data);
     let childKey;
     const checkArray = keys.reduce((prev, current) => {
@@ -862,7 +1039,7 @@ const Grid = ({ data }) => {
       ];
     }, []);
     const childExists = checkArray.some((item) => item === true);
-
+  
     const parentKeyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
@@ -871,7 +1048,7 @@ const Grid = ({ data }) => {
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
     });
-
+  
     const keyPressEvent = JSON.stringify({
       Event: {
         EventName: "KeyPress",
@@ -880,118 +1057,104 @@ const Grid = ({ data }) => {
         Info: [event.key, charCode, event.keyCode, shiftState],
       },
     });
-
+  
     if (parentExists && !childExists) {
       socket.send(parentKeyPressEvent);
     }
-
+  
     if (childExists) {
       socket.send(keyPressEvent);
     }
-
-    const isNavigationKeys = [
-      "ArrowRight",
-      "ArrowLeft",
-      "ArrowUp",
-      "ArrowDown",
-    ].includes(event.key);
-
+  
+    const isNavigationKeys = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key);
+  
     if (isNavigationKeys) {
       gridRef.current.focus();
     }
-
+  
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
-
+  
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
-
+  
         if (selectedColumn >= columns) return; // Prevent moving beyond the last column
-
-        const newColumn =
-         RowTitles ? RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2: selectedColumn+1;
+  
+        const newColumn = RowTitles ? RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2 : selectedColumn + 1;
         updateLocalStorage(selectedRow, newColumn, localStoragValue);
-
+  
         handleCellMove(selectedRow, newColumn, 0);
       } else if (event.key === "ArrowLeft") {
         if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedColumn((prev) => {
           const demoCol = Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0);
-          console.log("handle", {demoCol, RowTitles})
-          if (demoCol <= 0) return prev; 
-    
-          const actualNewColumn = RowTitles ?  RowTitles?.length > 0 ? demoCol : prev : demoCol;
+          if (demoCol <= 0) return prev;
+  
+          const actualNewColumn = RowTitles ? RowTitles?.length > 0 ? demoCol : prev : demoCol;
           updateLocalStorage(selectedRow, actualNewColumn, localStoragValue);
-          console.log("handle",{selectedRow, actualNewColumn});
           handleCellMove(selectedRow, actualNewColumn, 0);
-    
+  
           return demoCol;
         });
-    
-    }
-    else if (event.key === "ArrowUp") {
+      } else if (event.key === "ArrowUp") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedRow((prev) => Math.max(prev - 1, 1));
-
-        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
-
+  
+        if (selectedRow <= 1 && RowTitles?.length > 0) return;
+  
         const newRow = selectedRow - 1;
-        const newColumn =
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-
+  
         handleCellMove(newRow, newColumn, 0);
       } else if (event.key === "ArrowDown") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
-
-        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
-
+  
+        if (selectedRow >= rows - 1) return;
+  
         const newRow = selectedRow + 1;
-        const newColumn =
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-
+  
         handleCellMove(newRow, newColumn, 0);
       } else if (event.key === "PageDown") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
-
-        if (selectedRow >= rows - 1) return; // Prevent moving beyond the last row
-
+  
+        if (selectedRow >= rows - 1) return;
+  
         const newRow = Math.min(selectedRow + 9, rows - 1);
-        const newColumn =
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-
+  
         handleCellMove(newRow, newColumn, 0);
       } else if (event.key === "PageUp") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-
+  
         setSelectedRow((prev) => Math.max(prev - 9, 1));
-
-        if (selectedRow <= 1 && RowTitles?.length > 0) return; // Prevent moving before the first row
-
+  
+        if (selectedRow <= 1 && RowTitles?.length > 0) return;
+  
         const newRow = Math.max(selectedRow - 9, 1);
-        const newColumn =
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
+        const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
-
+  
         handleCellMove(newRow, newColumn, 0);
       }
     };
-
+  
     const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
       const newValue = {
         Event: {
@@ -1003,11 +1166,12 @@ const Grid = ({ data }) => {
       };
       localStorage.setItem(data?.ID, JSON.stringify(newValue));
     };
-
+  
     setTimeout(() => {
       updatePosition();
     }, 120);
   };
+  
 
   const modifyGridData = () => {
     let data = [];
