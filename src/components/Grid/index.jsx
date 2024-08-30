@@ -1158,7 +1158,7 @@ const Grid = ({ data }) => {
     const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
       const newValue = {
         Event: {
-          CurCell: [newRow, newColumn],
+          CurCell: [newRow, RowTitles ? newColumn-1: newColumn],
           ...(localStoragValue?.Event?.Values && {
             Values: localStoragValue.Event.Values,
           }),
@@ -1355,7 +1355,7 @@ const Grid = ({ data }) => {
         data?.ID,
         JSON.stringify({
           Event: {
-            CurCell: [row, RowTitles?.length > 0 ? column : column + 1],
+            CurCell: [row, RowTitles ? column-1: column],
           },
         })
       );
@@ -1364,7 +1364,7 @@ const Grid = ({ data }) => {
         data?.ID,
         JSON.stringify({
           Event: {
-            CurCell: [row, RowTitles?.length > 0 ? column : column + 1],
+            CurCell: [row, RowTitles ? column-1: column],
             Values: localStoragValue?.Event?.Values,
           },
         })
