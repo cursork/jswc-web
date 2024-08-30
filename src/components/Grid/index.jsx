@@ -384,7 +384,7 @@ const Grid = ({ data }) => {
         ? RowTitles?.length > 0
           ? 1
           : 0
-        : CurCell[1] - 1;
+        : CurCell[1]+1;
       setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev ));
       setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev));
     }
@@ -1129,11 +1129,14 @@ const Grid = ({ data }) => {
       } else if (event.key === "PageDown") {
         if (childExists || parentExists)
           await waitForProceed(localStorage.getItem(eventId));
-  
+        
+        
         setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+        console.log("Page Down")
   
+        console.log("nq page down:",{selectedColumn, selectedRow})
         if (selectedRow >= rows - 1) return;
-  
+console.log("nq page down:",{selectedColumn, selectedRow})
         const newRow = Math.min(selectedRow + 9, rows - 1);
         const newColumn = RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1;
         updateLocalStorage(newRow, newColumn, localStoragValue);
@@ -1156,9 +1159,10 @@ const Grid = ({ data }) => {
     };
   
     const updateLocalStorage = (newRow, newColumn, localStoragValue) => {
+      console.log("NQ PAGE DOWN", {newRow, newColumn})
       const newValue = {
         Event: {
-          CurCell: [newRow, RowTitles ? newColumn-1: newColumn],
+          CurCell: [newRow, newColumn-1],
           ...(localStoragValue?.Event?.Values && {
             Values: localStoragValue.Event.Values,
           }),
