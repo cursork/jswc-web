@@ -93,7 +93,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
   }
 
   return (
-    <Row>
+    <div className="" style={{width:"fit-content"}}>
       {Captions.map((title, i) => {
         // i = 0
         console.log("imgData", title);
@@ -116,7 +116,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
             key={`col-${i}`}
             id={`${data?.ID}-${i}`}
             md={colSize}
-            className="d-flex align-items-center justify-content-center"
+            className="d-flex align-items-center justify-content-left gap-1"
             style={{ cursor: "pointer" }}
             onClick={() => handleButtonEvent(i + 1)}
           >
@@ -128,9 +128,9 @@ const CustomRibbonButtonGroup = ({ data }) => {
                 }}
                 src={`http://localhost:${PORT}/${result.imgUrl}`}
                 alt={title}
-              />
-            ) : image ? (
-              <img
+                />
+              ) : image ? (
+                <img
                 style={{
                   width: ImageList?.Properties?.Size?.[1],
                   height: ImageList?.Properties?.Size?.[0],
@@ -153,7 +153,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
           </Col>
         );
       })}
-    </Row>
+    </div>
   );
 };
 
