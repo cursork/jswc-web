@@ -465,7 +465,6 @@ const Grid = ({ data }) => {
   };
 
   const handleKeyDown = (event) => {
-    
     const isAltPressed = event.altKey ? 4 : 0;
     const isCtrlPressed = event.ctrlKey ? 2 : 0;
     const isShiftPressed = event.shiftKey ? 1 : 0;
@@ -722,7 +721,8 @@ const Grid = ({ data }) => {
         );
       } else if (event.key === "PageDown"){
         if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-        setSelectedRow((prev) => Math.min(prev + 9, rows - 1));
+        const demoRow = Math.min(selectedRow+9,10)
+        setSelectedRow(demoRow);
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
           localStorage.setItem(
@@ -730,7 +730,7 @@ const Grid = ({ data }) => {
             JSON.stringify({
               Event: {
                 CurCell: [
-                  selectedRow + 9,
+                  demoRow,
                   RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
               },
@@ -744,7 +744,7 @@ const Grid = ({ data }) => {
             JSON.stringify({
               Event: {
                 CurCell: [
-                  selectedRow + 9,
+                  demoRow,
                   RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
                 Values: localStoragValue?.Event?.Values,
@@ -753,7 +753,7 @@ const Grid = ({ data }) => {
           );
         }
         handleCellMove(
-          selectedRow + 9,
+          demoRow,
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
@@ -1006,7 +1006,7 @@ const Grid = ({ data }) => {
       );
     }
 
-    handleCellMove(row, column, 1);
+    handleCellMove(row, RowTitles?.length > 0 ? column : column + 1, 1);
 
     // handleData(
     //   {
