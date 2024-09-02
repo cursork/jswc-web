@@ -6,11 +6,11 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData, ImageSize) => 
     imageStyles = {
       backgroundImage: `url(http://localhost:${PORT}${ImageData?.Properties?.File})`,
       position: 'absolute',
-      top: ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[0]: 0,
-      left: ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[1]: 0,
+      top: ImageSize && ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[0]: 0,
+      left: ImageSize && ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[1]: 0,
       backgroundRepeat: 'no-repeat',
-      height:ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[0]: '100%',
-      width: ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[1]: '100%',
+      height:ImageSize && ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[0]: '100%',
+      width:ImageSize && ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[1]: '100%',
     };
   }
 
