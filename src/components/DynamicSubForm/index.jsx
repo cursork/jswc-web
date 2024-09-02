@@ -47,8 +47,8 @@ const SubForm = ({ data }) => {
         if (existingData && existingData.Event?.ID === data.ID) {
           existingData.Event = {
             ...existingData.Event,
-            Size: data.Properties.Size || existingData.Event.Size,
-            Posn: data.Properties.Posn || existingData.Event.Posn,
+            Size: data.Properties?.Size || existingData.Event?.Size,
+            Posn: data.Properties?.Posn || existingData.Event?.Posn,
           };
         }
       }, 500);
