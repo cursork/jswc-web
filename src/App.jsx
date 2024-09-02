@@ -11,6 +11,7 @@ import {
 import './App.css';
 import * as _ from 'lodash';
 import MsgBox from './components/MessageBox';
+import version from "../version.json"
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
@@ -277,9 +278,17 @@ const App = () => {
       });
 
       webSocket.send(event);
-
-      webSocket.send(layout);
-      // webSocket.send('Initialise');4
+      // webSocket.send(layout);
+      
+      const eventInit = JSON.stringify({
+        [layout]:{
+          Version: version.version,
+          Name: version.name,
+        }
+      });
+      
+      webSocket.send(eventInit);
+      // webSocket.send('Initialise')
     };
     webSocket.onmessage = (event) => {
       localStorage.setItem('PORT', runningPort);
