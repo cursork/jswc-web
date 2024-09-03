@@ -91,6 +91,8 @@ const Form = ({ data }) => {
     sendDeviceCapabilities();
   }, [dimensions]);
 
+  console.log("App Form",{formStyles,styles,data })
+
   return (
     <div
       onMouseUp={(e) => {
@@ -131,7 +133,9 @@ const Form = ({ data }) => {
         console.log(mousedownEvent);
         socket.send(mousedownEvent);
       }}
-      id={data?.ID}
+      id={data?.ID+
+        "form"
+      }
       style={{
         ...formStyles,
         ...styles,
@@ -139,6 +143,7 @@ const Form = ({ data }) => {
         position: 'relative',
         border: '1px solid #F0F0F0',
         display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
+        flexDirection: data?.Properties.hasOwnProperty('Flex') ? 'column' : undefined,
         ...imageStyles,
         // overflow: 'hidden',
       }}
