@@ -336,3 +336,6 @@ This project uses the following open-source packages:
 - yaeti (0.0.6) - Licensed under [MIT](https://github.com/ibc/yaeti)
 - yallist (3.1.1) - Licensed under [ISC](https://github.com/isaacs/yallist)
 - yocto-queue (0.1.0) - Licensed under [MIT](https://github.com/sindresorhus/yocto-queue)
+- Merriweather (1.1.0) - Licensed under [OFL](https://github.com/EbenSorkin/Merriweather)
+- Noto Sans (1.1.0) - Licensed under [OFL](https://github.com/notofonts/latin-greek-cyrillic)
+- Nimbus Mono (2.0.0) - Licensed under [GPL](https://www.fontsquirrel.com/license/nimbus-mono)
