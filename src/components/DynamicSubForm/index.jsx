@@ -29,16 +29,19 @@ const SubForm = ({ data }) => {
   const observedDiv = useRef(null);
   const styles = setStyle(data?.Properties, "absolute", Flex);
 
+
+  
   const flexStyles = parseFlexStyles(Styles);
-
+  
   const updatedData = excludeKeys(data);
-
+  
   const ImageData = findDesiredData(Picture && Picture[0]);
-
+  
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData, data?.Properties);
-
+  
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
-
+  
+  console.log("App Subform",{ styles, data, updatedStyles, flexStyles,} )
   useEffect(() => {
     let existingData;
     if (data.ID === "F1.SCALE") {
