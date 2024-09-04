@@ -36,6 +36,7 @@ import Chart from './Chart';
 import MessageBox from './MessageBox';
 
 import KendoChart from './KendoChart';
+import KendoGrid from './KendoGrid';
 
 const SelectComponent = ({
   data,
@@ -171,6 +172,9 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'ApexChart') return <Chart data={data} />;
   if (data?.Properties?.Type == 'MsgBox') return <MessageBox data= {data} />;
   if (data?.Properties?.Type == 'KendoChart') return <KendoChart data={data} />;
+  if (data?.Properties?.Type == 'KendoGrid') return <KendoGrid data={data} />;
+
+  console.log("UNKNOWN: " + data?.Properties?.Type);
 };
 
 export default SelectComponent;
