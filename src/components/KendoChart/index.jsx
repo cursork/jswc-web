@@ -1,10 +1,11 @@
 import { useAppData } from '../../hooks';
 
-import { Chart, ChartLegend, ChartLegendItem, ChartSeries, ChartSeriesItem } from '@progress/kendo-react-charts';
+import '@progress/kendo-theme-default/dist/all.css';
+import { Chart, ChartCategoryAxis, ChartCategoryAxisItem, ChartLegend, ChartLegendItem, ChartSeries, ChartSeriesItem, ChartValueAxis, ChartValueAxisItem } from '@progress/kendo-react-charts';
 
 const KendoChart = ({ data }) => {
   const { Options, Posn, Series, Size, ChartType, Event } = data?.Properties;
-  const { socket } = useAppData(); // TODO! sync and have callbacks to APL
+  const { socket } = useAppData(); // TODO! callbacks to APL on interaction
 
   const chartDefaultV4Colors = [
     "#ff6358",
@@ -20,6 +21,8 @@ const KendoChart = ({ data }) => {
       <Chart
         style={{ width: Size && Size[1], height: Size && Size[0] }}
         seriesColors={chartDefaultV4Colors}
+        pannable
+        zoomable
       >
         <ChartLegend labels={
           Series.map((_, i) =>
