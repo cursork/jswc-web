@@ -21,6 +21,7 @@ export const setStyle = (Properties, position = "absolute", Flex = 0) => {
   if (Flex == "fill") {
     return {
       display: "flex",
+      height: "100vh",
       flexDirection: "column",
       flex: 1,
     };
@@ -30,7 +31,7 @@ export const setStyle = (Properties, position = "absolute", Flex = 0) => {
     return {
       display: "flex",
       flexDirection: "column",
-      gap: "5px",
+      margin: "5px",
     };
   }
   if (Flex === "row") {
