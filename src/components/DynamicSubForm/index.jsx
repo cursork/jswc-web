@@ -14,8 +14,8 @@ const SubForm = ({ data }) => {
   const PORT = localStorage.getItem("PORT");
   const { findDesiredData } = useAppData();
   const {
-    Size=[600,400],
-    Posn=[50,50],
+    Size,
+    Posn,
     Picture,
     Visible,
     BCol,
@@ -59,7 +59,7 @@ const SubForm = ({ data }) => {
       localStorage.setItem(
         data.ID,
         JSON.stringify({
-          Size: Size && Size,
+          Size: Size ? Size : [600,400],
           Posn: Posn && Posn,
         })
       );

@@ -44,8 +44,13 @@ export const setStyle = (Properties, position = "absolute", Flex = 0) => {
     };
   }
 
+
+  console.log(
+    "App", Properties?.hasOwnProperty("Posn"), Properties
+  )
+
   return {
-    ...(Properties?.hasOwnProperty("Posn")
+    ...(Properties?.hasOwnProperty("Posn") && Properties.Posn[1]
       ? { position: "absolute" }
       : { position: "relative" }),
     // position: Properties?.Posn ? 'absolute' : 'relative',
