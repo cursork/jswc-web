@@ -5,7 +5,7 @@ export const parseFlexStyles = (inputString, type) => {
   } else {
     newInputString = inputString;
   }
-  const stylesArray = newInputString?.split(",").map((style) => style.trim());
+  const stylesArray =newInputString && newInputString?.split(",").map((style) => style.trim());
   const stylesObject = {};
 
   stylesArray?.forEach((style) => {

@@ -14,8 +14,8 @@ const SubForm = ({ data }) => {
   const PORT = localStorage.getItem("PORT");
   const { findDesiredData } = useAppData();
   const {
-    Size,
-    Posn,
+    Size=[600,400],
+    Posn=[50,50],
     Picture,
     Visible,
     BCol,
@@ -41,7 +41,7 @@ const SubForm = ({ data }) => {
   
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
   
-  console.log("App Subform",{ styles, data, updatedStyles, flexStyles,} )
+  console.log("App Subform",{ styles, data, updatedStyles, flexStyles,Size, Posn} )
   useEffect(() => {
     let existingData;
     if (data.ID === "F1.SCALE") {
@@ -67,7 +67,7 @@ const SubForm = ({ data }) => {
   }, [data]);
 return (
     <div
-      id={data.ID}
+      id={data.ID + "subform"}
       style={{
         display:
         Visible == 0
