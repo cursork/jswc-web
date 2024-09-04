@@ -1,10 +1,15 @@
-export const parseFlexStyles = (inputString) => {
-  console.log({inputString});
-  const stylesArray =inputString && inputString[1]?.split(',').map((style) => style.trim());
+export const parseFlexStyles = (inputString, type) => {
+  let newInputString;
+  if (type === "Form") {
+    newInputString = inputString && inputString[1];
+  } else {
+    newInputString = inputString;
+  }
+  const stylesArray = newInputString?.split(",").map((style) => style.trim());
   const stylesObject = {};
 
   stylesArray?.forEach((style) => {
-    const [property, value] = style?.split(':').map((item) => item.trim());
+    const [property, value] = style?.split(":").map((item) => item.trim());
     const camelCaseProperty = property?.replace(/-([a-z])/g, (match, letter) =>
       letter?.toUpperCase()
     );
