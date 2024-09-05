@@ -1146,11 +1146,11 @@ const App = () => {
                 },
               });
           
-              console.log(event);
+              // console.log(event);
               webSocket.send(event);
               return;
             }
-          }, 500);
+          }, 1000);
           
 
           const result = checkSupportedProperties(
