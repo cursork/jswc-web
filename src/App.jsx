@@ -1141,7 +1141,7 @@ const App = () => {
                   ID: serverEvent.ID,
                   WGID: serverEvent.WGID,
                   Properties: {
-                    SVG: localStorage.getItem(serverEvent.ID)
+                    SVG: JSON.parse(localStorage.getItem(serverEvent.ID))
                   },
                 },
               });
