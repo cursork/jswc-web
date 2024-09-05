@@ -11,6 +11,7 @@ import {
 import './App.css';
 import * as _ from 'lodash';
 import MsgBox from './components/MessageBox';
+import version from "../version.json"
 
 function useForceRerender() {
   const [_state, setState] = useState(true);
@@ -276,9 +277,17 @@ const App = () => {
         },
       });
       webSocket.send(event);
-
-      webSocket.send(layout);
-      // webSocket.send('Initialise');4
+      // webSocket.send(layout);
+      
+      const eventInit = JSON.stringify({
+        [layout]:{
+          Version: version.version,
+          Name: version.name,
+        }
+      });
+      
+      webSocket.send(eventInit);
+      // webSocket.send('Initialise')
     };
     webSocket.onmessage = (event) => {
       localStorage.setItem('PORT', runningPort);
@@ -1111,6 +1120,42 @@ const App = () => {
 
           console.log(event);
           return webSocket.send(event);
+        }
+        if (Type === "ApexChart") {
+          const supportedProperties = ["SVG"];
+
+          setTimeout(() => {
+            
+            if (localStorage.getItem(serverEvent.ID)) {
+              const serverPropertiesObj = {};
+          
+              // Properly map the properties
+              serverEvent.Properties.map((key) => {
+                return (serverPropertiesObj[key] = Properties[key]);
+              });
+          
+              // Correct the event object with valid JSON syntax
+              const event = JSON.stringify({
+                WG: {
+                  ID: serverEvent.ID,
+                  WGID: serverEvent.WGID,
+                  Properties: {
+                    SVG: localStorage.getItem(serverEvent.ID)
+                  },
+                },
+              });
+          
+              console.log(event);
+              webSocket.send(event);
+              return;
+            }
+          }, 500);
+          
+
+          const result = checkSupportedProperties(
+            supportedProperties,
+            serverEvent?.Properties
+          );
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;

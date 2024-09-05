@@ -40,8 +40,8 @@ const Label = ({ data, gridValue }) => {
       fontStyle: !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none',
       fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
       background: BCol && rgbColor(BCol),
-      paddingLeft: '10px',
-      paddingRight: '10px'
+      // paddingLeft: '10px',
+      // paddingRight: '10px'
     };
   }
 
