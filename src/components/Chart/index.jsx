@@ -138,7 +138,16 @@ const Chart = ({ data }) => {
   //   ],
   // };
 
-  console.log("chart",chartSvg)
+  // console.log("chart",chartSvg)
+  // console.log("chart", data)
+
+
+  // const getCurve = {
+  //   bar: "straight",
+  //   MOVAVG:"straight",
+  // }
+
+  
 
   const options = {
     ...Options,
@@ -154,7 +163,7 @@ const Chart = ({ data }) => {
         }),
       },
     },
-    stroke: { curve: 'smooth' }
+    // stroke: { curve: 'smooth'}
   };
 
   return (
