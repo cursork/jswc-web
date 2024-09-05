@@ -138,6 +138,8 @@ const Chart = ({ data }) => {
   //   ],
   // };
 
+  console.log("chart",chartSvg)
+
   const options = {
     ...Options,
     chart: {
@@ -152,6 +154,7 @@ const Chart = ({ data }) => {
         }),
       },
     },
+    stroke: { curve: 'smooth' }
   };
 
   return (
