@@ -1,10 +1,13 @@
 import ReactApexChart from 'react-apexcharts';
 import { useAppData } from '../../hooks';
 import { setStyle } from '../../utils';
+import { useEffect, useRef, useState } from 'react';
 
 const Chart = ({ data }) => {
   const { Options, Posn, Series, Size, ChartType, Event } = data?.Properties;
-  const { socket } = useAppData();
+
+  const [chartSvg, setChartSvg] = useState(null);
+  const { socket, handleData } = useAppData();
   const styles = setStyle(data?.Properties);
 
   const stringifyCircularJSON = (obj) => {
@@ -17,6 +20,38 @@ const Chart = ({ data }) => {
       return v;
     });
   };
+
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const chartInstance = chartRef.current.chart.paper(); 
+      const svg = chartInstance.svg()
+      setChartSvg(svg);
+      if(svg)
+      {
+        localStorage.setItem(data.ID, JSON.stringify(svg));
+        handleData(
+          {
+            ID: data?.ID,
+            Properties: {
+              SVG: svg,
+            },
+          },
+          'WS'
+        );
+
+        const event = JSON.stringify({
+          WG: {
+            ID: data?.ID,
+            SVG: svg,
+          },
+        });
+        socket.send(event);
+        
+      }
+    }
+  }, [chartRef.current]);
 
   const sendEvent = (event, chartContext, config, chartConfig) => {
     const obj = {
@@ -126,15 +161,17 @@ const Chart = ({ data }) => {
       },
     },
   };
+
   return (
     <div style={{ position: 'absolute', top: Posn && Posn[0], left: Posn && Posn[1], ...styles }}>
       <ReactApexChart
-        options={options}
+      ref={chartRef}  
+      options={options}
         width={Size && Size[1]}
         height={Size && Size[0]}
         type={ChartType}
         series={Series}
-      />
+        />
     </div>
   );
 };
