@@ -1,9 +1,11 @@
 import ReactApexChart from 'react-apexcharts';
 import { useAppData } from '../../hooks';
+import { setStyle } from '../../utils';
 
 const Chart = ({ data }) => {
   const { Options, Posn, Series, Size, ChartType, Event } = data?.Properties;
   const { socket } = useAppData();
+  const styles = setStyle(data?.Properties);
 
   const stringifyCircularJSON = (obj) => {
     const seen = new WeakSet();
@@ -36,7 +38,7 @@ const Chart = ({ data }) => {
     console.log(Event);
     socket.send(Event);
   };
-
+  
   // const options = {
   //   chart: {
   //     parentHeightOffset: 0,
@@ -125,7 +127,7 @@ const Chart = ({ data }) => {
     },
   };
   return (
-    <div style={{ position: 'absolute', top: Posn && Posn[0], left: Posn && Posn[1] }}>
+    <div style={{ position: 'absolute', top: Posn && Posn[0], left: Posn && Posn[1], ...styles }}>
       <ReactApexChart
         options={options}
         width={Size && Size[1]}
