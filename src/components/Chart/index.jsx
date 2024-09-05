@@ -40,14 +40,6 @@ const Chart = ({ data }) => {
           },
           'WS'
         );
-
-        const event = JSON.stringify({
-          WG: {
-            ID: data?.ID,
-            SVG: svg,
-          },
-        });
-        socket.send(event);
         
       }
     }
