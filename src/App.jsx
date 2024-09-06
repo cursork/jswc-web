@@ -32,6 +32,7 @@ const App = () => {
   const { reRender } = useForceRerender();
   const [messageBoxData, setMessageBoxData] = useState(null);
   const [options, setOptions] = useState(null)
+  const [fontScale, setFontScale] = useState(null);
   let colors = {}
 
   const dataRef = useRef({});
@@ -61,6 +62,11 @@ const App = () => {
       }
     };
   }, [layout]);
+
+  useEffect(() => {
+    console.log("fontScale", fontScale)
+    localStorage.setItem("fontScale", fontScale);
+  },[fontScale])
 
   useEffect(() => {
     const container = appRef.current;
@@ -1287,7 +1293,7 @@ const App = () => {
           const joinedString = Info && Info[0];
           const font = JSON.parse(getObjectById(dataRef.current, Info && Info[1]));
           const fontProperties = font && font?.Properties;
-          const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size);
+          const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size * fontScale);
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
           console.log(event);
           return webSocket.send(event);
@@ -1308,6 +1314,10 @@ const App = () => {
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
+        console.log("label", JSON.parse(event.data).Options)
+        
+        JSON.parse(event.data).Options.ID == 'Fonts' && setFontScale(JSON.parse(event.data).Options.Properties.Scale)
+        JSON.parse(event.data).Options.ID == 'Fonts' &&   console.log("label", JSON.parse(event.data).Options.Properties.Scale)
         JSON.parse(event.data).Options.ID == 'Mode' && setOptions(JSON.parse(event.data).Options.Properties)
         if(JSON.parse(event.data).Options.ID == 'Colors') setColorFunc(JSON.parse(event.data).Options.Properties.Standard)
       } else if (keys[0] == 'FormatCell') {
@@ -1382,7 +1392,8 @@ const App = () => {
           setProceed,
           proceedEventArray,
           setProceedEventArray,
-          colors
+          colors,
+          fontScale
         }}
       >
         {dataRef && formParentID && <SelectComponent data={dataRef.current[formParentID]} />}

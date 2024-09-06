@@ -13,6 +13,7 @@ import { useAppData } from '../../hooks';
 import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
 
+
 const Edit = ({
   data,
   value,
@@ -23,7 +24,7 @@ const Edit = ({
   values = [],
   T = '',
 }) => {
-  const { socket, dataRef, findDesiredData, handleData, addChangeEvent } = useAppData();
+  const { socket, dataRef, findDesiredData, handleData, addChangeEvent , fontScale} = useAppData();
 
   const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
 
@@ -431,7 +432,7 @@ const Edit = ({
   styles = {
     ...styles,
     fontFamily: fontProperties?.PName,
-    fontSize: !fontProperties?.Size ? '12px' : `${fontProperties?.Size}px`,
+    fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`,
     textDecoration: !fontProperties?.Underline
       ? 'none'
       : fontProperties?.Underline == 1
