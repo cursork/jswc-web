@@ -2,13 +2,16 @@ import { rgbColor, setStyle } from '../utils';
 import '../styles/font.css';
 import { useAppData } from '../hooks';
 
+
 const Label = ({ data, gridValue }) => {
   let styles = setStyle(data?.Properties);
-  const { findDesiredData } = useAppData();
+  const { findDesiredData, fontScale } = useAppData();
   const haveColor = data?.Properties.hasOwnProperty('FCol');
   const haveFontProperty = data?.Properties.hasOwnProperty('Font');
 
   const { Visible, FontObj, Caption, Size, BCol } = data?.Properties;
+
+  console.log("label", "noting", fontScale)
   // console.log("label", {data, BCol, Caption,  background: rgbColor(BCol)})
 
 
@@ -31,7 +34,7 @@ const Label = ({ data, gridValue }) => {
     styles = {
       ...styles,
       fontFamily: fontProperties?.PName,
-      fontSize: !fontProperties?.Size ? '11px' : `${fontProperties?.Size}px`,
+      fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`,
       textDecoration: !fontProperties?.Underline
         ? 'none'
         : fontProperties?.Underline == 1

@@ -1037,7 +1037,7 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
-        id={data?.ID}
+        id={data?.ID+"cell"}
         style={{
           ...style,
           height,
@@ -1062,7 +1062,7 @@ const Grid = ({ data }) => {
       >
         {gridData?.map((row, rowi) => {
           return (
-            <div style={{ display: "flex" }} id={`row-${rowi}`}>
+            <div style={{ display: "flex" }} id={`row-${rowi}-cell`}>
               {row.map((data, columni) => {
                 //  selectedRow === rowi && console.log("issue arrow focus", selectedRow, rowi )
                 const isFocused =
@@ -1074,7 +1074,7 @@ const Grid = ({ data }) => {
                       handleCellClick(rowi, columni);
                       // handleCellMove(rowi, columni + 1, '');
                     }}
-                    id={`${gridId}.r${rowi + 1}.c${columni + 1}`}
+                    id={`${gridId}.r${rowi + 1}.c${columni + 1}-cell2`}
                     style={{
                       borderRight: isFocused
                         ? "1px solid blue"
@@ -1094,7 +1094,7 @@ const Grid = ({ data }) => {
                       (selectedRow === rowi && data.type == "cell") || (selectedColumn === columni && data.type == "header" )
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
-                      textAlign: data.type == "header" ? "center" : "left",
+                      textAlign: data.type == "header" ? "center" : "end",
                       overflow: "hidden",
                     }}
                   >

@@ -25,25 +25,26 @@ const Chart = ({ data }) => {
 
   useEffect(() => {
     if (chartRef.current) {
-      const chartInstance = chartRef.current.chart.paper(); 
-      const svg = chartInstance.svg()
-      setChartSvg(svg);
-      if(svg)
-      {
-        localStorage.setItem(data.ID, JSON.stringify(svg));
-        handleData(
-          {
-            ID: data?.ID,
-            Properties: {
-              SVG: svg,
+      setTimeout(() => {
+        const chartInstance = chartRef.current.chart.paper(); 
+        const svg = chartInstance.svg();
+        if (svg) {
+          setChartSvg(svg);
+          localStorage.setItem(data.ID, JSON.stringify(svg));
+          handleData(
+            {
+              ID: data?.ID,
+              Properties: {
+                SVG: svg,
+              },
             },
-          },
-          'WS'
-        );
-        
-      }
+            'WS'
+          );
+        }
+      }, 500); 
     }
   }, [chartRef.current]);
+  
 
   const sendEvent = (event, chartContext, config, chartConfig) => {
     const obj = {
@@ -138,6 +139,17 @@ const Chart = ({ data }) => {
   //   ],
   // };
 
+  console.log("chart",chartSvg)
+  // console.log("chart", data)
+
+
+  // const getCurve = {
+  //   bar: "straight",
+  //   MOVAVG:"straight",
+  // }
+
+  
+
   const options = {
     ...Options,
     chart: {
@@ -152,6 +164,7 @@ const Chart = ({ data }) => {
         }),
       },
     },
+    // stroke: { curve: 'smooth'}
   };
 
   return (

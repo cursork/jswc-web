@@ -2,7 +2,8 @@ import { AppDataContext } from '../context';
 import { useContext } from 'react';
 
 const useAppData = () => {
-  const { socketData, dataRef, socket, handleData, focusedElement, reRender, proceed, setProceed, proceedEventArray, setProceedEventArray, colors } = 
+          
+          const { socketData, dataRef, socket, handleData, focusedElement, reRender, proceed, setProceed, proceedEventArray, setProceedEventArray, colors,   fontScale} = 
   useContext(AppDataContext);
 
   const findDesiredData = (ID) => {
@@ -44,7 +45,9 @@ const useAppData = () => {
     proceedEventArray,
     setProceedEventArray,
     colors,
-    findAggregatedPropertiesData
+    findAggregatedPropertiesData,
+    fontScale
+    
   };
 };
 export default useAppData;

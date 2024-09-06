@@ -23,7 +23,7 @@ const SubForm = ({ data }) => {
     JustifyContent,
     Display,
     Flex = 0,
-    Styles,
+    CSS,
   } = data?.Properties;
 
   const observedDiv = useRef(null);
@@ -31,7 +31,7 @@ const SubForm = ({ data }) => {
 
 
   
-  const flexStyles = parseFlexStyles(Styles);
+  const flexStyles = parseFlexStyles(CSS);
   
   const updatedData = excludeKeys(data);
   
@@ -42,6 +42,29 @@ const SubForm = ({ data }) => {
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
   
   console.log("App Subform",{ styles, data, updatedStyles, flexStyles,Size, Posn} )
+  // useEffect(() => {
+  //   let existingData;
+  //   if (data.ID === "F1.SCALE") {
+  //     setTimeout(() => {
+  //       existingData = JSON.parse(localStorage.getItem(data.ID));
+  //       if (existingData && existingData.Event?.ID === data.ID) {
+  //         existingData.Event = {
+  //           ...existingData.Event,
+  //           Size: data.Properties?.Size || existingData.Event?.Size,
+  //           Posn: data.Properties?.Posn || existingData.Event?.Posn,
+  //         };
+  //       }
+  //     }, 500);
+  //   } else {
+  //     localStorage.setItem(
+  //       data.ID,
+  //       JSON.stringify({
+  //         Size: Size && Size,
+  //         Posn: Posn && Posn,
+  //       })
+  //     );
+  //   }
+  // }, [data]);
   useEffect(() => {
     let existingData;
     if (data.ID === "F1.SCALE") {
@@ -55,16 +78,25 @@ const SubForm = ({ data }) => {
           };
         }
       }, 500);
+    } else if (data.ID === "F1.BX") {
+      localStorage.setItem(
+        data.ID,
+        JSON.stringify({
+          Size: Size || [600, 400], // Default size if none provided
+          Posn: Posn || [50, 50], // Default position if none provided
+        })
+      );
     } else {
       localStorage.setItem(
         data.ID,
         JSON.stringify({
-          Size: Size ? Size : [600,400],
+          Size: Size && Size,
           Posn: Posn && Posn,
         })
       );
     }
   }, [data]);
+  
 return (
     <div
       id={data.ID + "subform"}

@@ -22,6 +22,7 @@ const flattenArrayOneLevel = (array) => {
   return array.reduce((acc, val) => acc.concat(val), []);
 };
 
+
 // Function to flatten the array only if it's three levels deep
 const flattenIfThreeLevels = (arr) => {
   if (getNestingLevel(arr) === 3) {
@@ -33,6 +34,7 @@ const flattenIfThreeLevels = (arr) => {
 
 const Text = ({ data, fontProperties }) => {
   const { Visible, Points, Text, FCol, BCol } = data?.Properties;
+  const {  fontScale} = useAppData();
 
   const { reRender } = useForceRerender();
 
@@ -94,7 +96,7 @@ const Text = ({ data, fontProperties }) => {
           {Text?.map((text, index) => {
             const dimensions = calculateTextDimensions(
               Text,
-              !fontProperties?.Size ? "11px" : `${fontProperties?.Size}px`
+              fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`
             );
             const textWidth = dimensions?.width + 30; // replace with actual calculation
             const textHeight = dimensions?.height + 30; // replace with actual calculation
@@ -129,7 +131,7 @@ const Text = ({ data, fontProperties }) => {
                   y={points && points[1]}
                   font-family={fontProperties?.PName}
                   font-size={
-                    !fontProperties?.Size ? "11px" : `${fontProperties?.Size}px`
+                    fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`
                   }
                   fill={FCol ? rgbColor(FCol[index]) : "black"}
                   font-style={
