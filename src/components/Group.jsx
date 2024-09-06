@@ -11,7 +11,7 @@ import { useAppData, useResizeObserver } from '../hooks';
 
 const Group = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const { Visible, Picture, Border = 1, Size, Flex = 0, Styles } = data?.Properties;
+  const { Visible, Picture, Border = 1, Size, Flex = 0, CSS } = data?.Properties;
   const { findDesiredData } = useAppData();
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -29,7 +29,7 @@ const Group = ({ data }) => {
 
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
 
-  const flexStyles = parseFlexStyles(Styles);
+  const flexStyles = parseFlexStyles(CSS);
 
   const updatedData = excludeKeys(data);
 

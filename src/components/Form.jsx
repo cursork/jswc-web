@@ -25,9 +25,11 @@ const Form = ({ data }) => {
     Posn,
     Flex = 0,
     Event,
-    Styles,
+    CSS,
   } = data?.Properties;
-  const styles = parseFlexStyles(Styles, "Form");
+  const styles = parseFlexStyles(CSS, "Form");
+
+  console.log("form after parsing", {styles, CSS, Flex});
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -106,7 +108,8 @@ const Form = ({ data }) => {
             : { Size: [halfViewportHeight, halfViewportWidth] }),
         },
         "relative",
-        Flex
+        Flex,
+        "Form"
       )
     );
   }, [data]);
@@ -168,7 +171,7 @@ const Form = ({ data }) => {
         position: "relative",
         border: "1px solid #F0F0F0",
         display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
-        flexDirection: data?.Properties.hasOwnProperty('Flex') ? 'column' : undefined,
+      
         ...imageStyles,
         // overflow: 'hidden',
       }}
