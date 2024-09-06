@@ -44,6 +44,29 @@ export const setStyle = (Properties, position = "absolute", Flex = 0) => {
     };
   }
 
+  if (Flex == "fill") {
+    return {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+    };
+  }
+
+
+  if(Flex === "column"){
+    return {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: "5px"
+    };
+  }
+  if(Flex === "row"){
+   return{ flexDirection:'row',
+    justifyContent: "space-between", gap: "5px", alignItems: "end"
+   };
+    
+  }
+
   return {
     ...(Properties?.hasOwnProperty("Posn") && Properties.Posn[1]
       ? { position: "absolute" }

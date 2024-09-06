@@ -276,7 +276,6 @@ const App = () => {
           PPI: 200,
         },
       });
-
       webSocket.send(event);
       // webSocket.send(layout);
       
