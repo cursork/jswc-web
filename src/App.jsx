@@ -1261,7 +1261,7 @@ const App = () => {
           container.style.position = 'fixed';
           container.style.top = '0';
           container.style.left = '0';
-          container.style.fontSize = fontSize + 'px'; // Set font size
+          container.style.fontSize = (fontSize * fontScale) + 'px'; 
 
           // Iterate through the array of words
           wordsArray.forEach((word) => {
@@ -1290,6 +1290,7 @@ const App = () => {
           const font = JSON.parse(getObjectById(dataRef.current, Info && Info[1]));
           const fontProperties = font && font?.Properties;
           const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size);
+          // console.log({textDimensions: textDimensions})
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
           console.log(event);
           return webSocket.send(event);
