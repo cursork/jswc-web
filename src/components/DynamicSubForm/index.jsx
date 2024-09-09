@@ -99,7 +99,7 @@ const SubForm = ({ data }) => {
   
 return (
     <div
-      id={data.ID + "subform"}
+      id={data.ID}
       style={{
         display:
         Visible == 0

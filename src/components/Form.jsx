@@ -29,7 +29,7 @@ const Form = ({ data }) => {
   } = data?.Properties;
   const styles = parseFlexStyles(CSS, "Form");
 
-  console.log("form after parsing", {styles, CSS, Flex});
+  console.log("form after parsing", { styles, CSS, Flex });
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
@@ -129,7 +129,6 @@ const Form = ({ data }) => {
 
   // console.log("App Form stringify", JSON.stringify(updatedStyles));
 
-
   return (
     <div
       onMouseUp={(e) => {
@@ -170,17 +169,20 @@ const Form = ({ data }) => {
         console.log(mousedownEvent);
         socket.send(mousedownEvent);
       }}
-      id={data?.ID+
-        "form"
-      }
+      id={data?.ID}
       style={{
         ...formStyles,
         ...styles,
         background: BCol ? rgbColor(BCol) : "#F0F0F0",
         position: "relative",
         border: "1px solid #F0F0F0",
-        display: Visible == 0 ? 'none' : data?.Properties.hasOwnProperty('Flex') ? 'flex' : 'block',
-      
+        display:
+          Visible == 0
+            ? "none"
+            : data?.Properties.hasOwnProperty("Flex")
+            ? "flex"
+            : "block",
+
         ...imageStyles,
         // overflow: 'hidden',
       }}
