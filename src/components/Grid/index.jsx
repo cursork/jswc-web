@@ -1096,6 +1096,7 @@ const Grid = ({ data }) => {
                           : rgbColor(data?.backgroundColor),
                       textAlign: data.type == "header" ? "center" : "end",
                       overflow: "hidden",
+                      lineHeight: `${data?.height}px`,
                     }}
                   >
                     <Component
