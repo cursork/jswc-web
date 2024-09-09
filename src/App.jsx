@@ -285,6 +285,7 @@ const App = () => {
         [layout]:{
           Version: version.version,
           Name: version.name,
+          URL: window.location.href,
         }
       });
       
