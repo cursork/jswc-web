@@ -63,10 +63,6 @@ const App = () => {
     };
   }, [layout]);
 
-  useEffect(() => {
-    console.log("fontScale", fontScale)
-    localStorage.setItem("fontScale", fontScale);
-  },[fontScale])
 
   useEffect(() => {
     const container = appRef.current;
@@ -1293,7 +1289,7 @@ const App = () => {
           const joinedString = Info && Info[0];
           const font = JSON.parse(getObjectById(dataRef.current, Info && Info[1]));
           const fontProperties = font && font?.Properties;
-          const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size * fontScale);
+          const textDimensions = calculateTextDimensions(joinedString, fontProperties?.Size);
           const event = JSON.stringify({ WX: { Info: textDimensions, WGID } });
           console.log(event);
           return webSocket.send(event);
