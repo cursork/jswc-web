@@ -79,6 +79,10 @@ const App = () => {
     };
   }, []);
 
+  if (fontScale) {
+    localStorage.setItem("fontscale", fontScale);
+  }
+
   // Helper function to get color from the index
   function getColor(index, defaultColor) {
     // console.log("property getcolor",colors, index, colors?.[index])
@@ -1126,39 +1130,24 @@ const App = () => {
         }
         if (Type === "ApexChart") {
           const supportedProperties = ["SVG"];
-
-          setTimeout(() => {
-            
-            if (localStorage.getItem(serverEvent.ID)) {
-              const serverPropertiesObj = {};
-          
-              // Properly map the properties
-              serverEvent.Properties.map((key) => {
-                return (serverPropertiesObj[key] = Properties[key]);
-              });
-          
-              // Correct the event object with valid JSON syntax
-              const event = JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  WGID: serverEvent.WGID,
-                  Properties: {
-                    SVG: JSON.parse(localStorage.getItem(serverEvent.ID))
-                  },
-                },
-              });
-          
-              // console.log(event);
-              webSocket.send(event);
-              return;
-            }
-          }, 1000);
-          
-
-          const result = checkSupportedProperties(
-            supportedProperties,
-            serverEvent?.Properties
+          const { SVG } = Properties;
+          const data = JSON.parse(
+            getObjectById(dataRef.current, serverEvent.ID)
           );
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              WGID: serverEvent.WGID,
+              Properties: {
+                SVG: SVG,
+              },
+            },
+          });
+
+          // console.log(event);
+          webSocket.send(event);
+          return;
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
@@ -1255,14 +1244,17 @@ const App = () => {
       } else if (keys[0] == 'WX') {
         const serverEvent = JSON.parse(event.data).WX;
         const { Method, Info, WGID, ID } = serverEvent;
-        const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+        // const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+        const calculateTextDimensions = (wordsArray, fontSize = 12) => {
           // Create a hidden div element to calculate text dimensions
+          const scale =localStorage.getItem("fontscale")
+          console.log("fontScale dimension: " ,scale)
           const container = document.createElement('div');
           container.style.visibility = 'hidden';
           container.style.position = 'fixed';
           container.style.top = '0';
           container.style.left = '0';
-          container.style.fontSize = (fontSize * fontScale) + 'px'; 
+          container.style.fontSize = (fontSize * scale) + 'px'; 
 
           // Iterate through the array of words
           wordsArray.forEach((word) => {
@@ -1313,6 +1305,7 @@ const App = () => {
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
         console.log("label", JSON.parse(event.data).Options)
+
         
         JSON.parse(event.data).Options.ID == 'Fonts' && setFontScale(JSON.parse(event.data).Options.Properties.Scale)
         JSON.parse(event.data).Options.ID == 'Fonts' &&   console.log("label", JSON.parse(event.data).Options.Properties.Scale)

@@ -25,7 +25,8 @@ const GridLabel = ({ data }) => {
 
   let fontStyles = {
     fontFamily: fontProperties?.PName,
-    fontSize: !fontProperties?.Size ? '11px' : '12px',
+    fontSize: !fontProperties?.Size ? '12px' : '12px',
+    // fontSize: !fontProperties?.Size ? '11px' : '12px',
     textDecoration: !fontProperties?.Underline
       ? 'none'
       : fontProperties?.Underline == 1

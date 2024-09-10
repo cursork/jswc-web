@@ -46,7 +46,8 @@ const Text = ({ data, fontProperties }) => {
     newPoints && newPoints[0].map((y, i) => [newPoints[1][i], y]);
 
 
-  const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+  // const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+  const calculateTextDimensions = (wordsArray, fontSize = 12) => {
     // Create a hidden div element to calculate text dimensions
     const container = document.createElement("div");
     container.style.visibility = "hidden";
@@ -96,7 +97,7 @@ const Text = ({ data, fontProperties }) => {
           {Text?.map((text, index) => {
             const dimensions = calculateTextDimensions(
               Text,
-              fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`
+              fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${12 * fontScale}px`
             );
             const textWidth = dimensions?.width + 30; // replace with actual calculation
             const textHeight = dimensions?.height + 30; // replace with actual calculation
@@ -131,7 +132,7 @@ const Text = ({ data, fontProperties }) => {
                   y={points && points[1]}
                   font-family={fontProperties?.PName}
                   font-size={
-                    fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`
+                    fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${12 * fontScale}px`
                   }
                   fill={FCol ? rgbColor(FCol[index]) : "black"}
                   font-style={

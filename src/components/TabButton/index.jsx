@@ -12,7 +12,8 @@ const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, active
       id={data.ID}
       style={{
         border: '1px solid #DFDFDF',
-        fontSize: '11px',
+        fontSize: '12px',
+        // fontSize: '11px',
         paddingTop: '2px',
         paddingBottom: '2px',
         paddingLeft: '4px',
