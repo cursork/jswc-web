@@ -5,7 +5,7 @@ import '@progress/kendo-theme-default/dist/all.css';
 
 // ColTitles and Values must be indexed the same
 const KendoGrid = ({ data }) => {
-  const { ColTitles, Values, Posn, Attributes } = data?.Properties;
+  const { ColTitles, Values, Posn, Options } = data?.Properties;
 
   const gridData = Values.map((row) => {
       let gd = {};
@@ -14,9 +14,6 @@ const KendoGrid = ({ data }) => {
       );
       return gd;
     });
-
-  const attrs = {};
-  Attributes.forEach((kv) => attrs[kv[0]] = kv[1]);
 
   const initialFilter = {
     logic: "and",
@@ -32,10 +29,10 @@ const KendoGrid = ({ data }) => {
       <Grid
       data={orderBy(filterBy(gridData, filter), sort)}
       navigatable={true}
-      filterable={attrs['filterable'] == 1}
+      filterable={Options['filterable'] == 1}
       filter={filter}
       onFilterChange={(e) => setFilter(e.filter)}
-      sortable={attrs['sortable'] == 1 ? {
+      sortable={Options['sortable'] == 1 ? {
         allowUnsort: true,
         mode: "multiple",
       } : undefined}
