@@ -51,7 +51,8 @@ const Group = ({ data }) => {
       {data?.Properties?.Caption != '' && (
         <span
           style={{
-            fontSize: '10px',
+            fontSize: '12px',
+            // fontSize: '10px',
             position: 'relative',
             bottom: 14,
             left: 10,

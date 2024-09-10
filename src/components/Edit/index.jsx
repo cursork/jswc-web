@@ -432,7 +432,8 @@ const Edit = ({
   styles = {
     ...styles,
     fontFamily: fontProperties?.PName,
-    fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`,
+    fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${12 * fontScale}px`,
+    // fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`,
     textDecoration: !fontProperties?.Underline
       ? 'none'
       : fontProperties?.Underline == 1

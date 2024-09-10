@@ -1255,7 +1255,8 @@ const App = () => {
       } else if (keys[0] == 'WX') {
         const serverEvent = JSON.parse(event.data).WX;
         const { Method, Info, WGID, ID } = serverEvent;
-        const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+        // const calculateTextDimensions = (wordsArray, fontSize = 11) => {
+        const calculateTextDimensions = (wordsArray, fontSize = 12) => {
           // Create a hidden div element to calculate text dimensions
           const container = document.createElement('div');
           container.style.visibility = 'hidden';
