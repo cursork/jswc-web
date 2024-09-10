@@ -1130,39 +1130,24 @@ const App = () => {
         }
         if (Type === "ApexChart") {
           const supportedProperties = ["SVG"];
-
-          setTimeout(() => {
-            
-            if (localStorage.getItem(serverEvent.ID)) {
-              const serverPropertiesObj = {};
-          
-              // Properly map the properties
-              serverEvent.Properties.map((key) => {
-                return (serverPropertiesObj[key] = Properties[key]);
-              });
-          
-              // Correct the event object with valid JSON syntax
-              const event = JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  WGID: serverEvent.WGID,
-                  Properties: {
-                    SVG: JSON.parse(localStorage.getItem(serverEvent.ID))
-                  },
-                },
-              });
-          
-              // console.log(event);
-              webSocket.send(event);
-              return;
-            }
-          }, 1000);
-          
-
-          const result = checkSupportedProperties(
-            supportedProperties,
-            serverEvent?.Properties
+          const { SVG } = Properties;
+          const data = JSON.parse(
+            getObjectById(dataRef.current, serverEvent.ID)
           );
+
+          const event = JSON.stringify({
+            WG: {
+              ID: serverEvent.ID,
+              WGID: serverEvent.WGID,
+              Properties: {
+                SVG: SVG,
+              },
+            },
+          });
+
+          // console.log(event);
+          webSocket.send(event);
+          return;
         }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
