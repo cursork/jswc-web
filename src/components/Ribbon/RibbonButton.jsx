@@ -34,7 +34,6 @@ const CustomRibbonButton = ({ data }) => {
 
   const ImageData = getImageFromData(data);
 
-
   const handleSelectEvent = () => {
     const selectEvent = JSON.stringify({
       Event: {
@@ -69,7 +68,7 @@ const CustomRibbonButton = ({ data }) => {
                 width: ImageData.imageSize[1],
                 height: ImageData.imageSize[0],
               }}
-              src={`${window.location.protocol}//${window.location.hostname}:${PORT}/${ImageData.imageUrl}`}
+              src={`${import.meta.env.VITE_CLIENT_URL}${ImageData.imageUrl}`}
               alt="Image"
             />
           ) : ImageIndex ? (
@@ -80,7 +79,7 @@ const CustomRibbonButton = ({ data }) => {
                 height:
                   ImageList?.Properties?.Size && ImageList?.Properties?.Size[0],
               }}
-              src={`${window.location.protocol}//${window.location.hostname}:${PORT}/${
+              src={`${import.meta.env.VITE_CLIENT_URL}${
                 ImageList?.Properties?.Files[ImageIndex - 1]
               }`}
               alt="Image"

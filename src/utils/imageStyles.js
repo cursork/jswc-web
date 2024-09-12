@@ -1,56 +1,79 @@
-export const getImageStyles = (decideImageStyle, PORT, ImageData, ImageSize) => {
+export const getImageStyles = (
+  decideImageStyle,
+  PORT,
+  ImageData,
+  ImageSize
+) => {
   let imageStyles = null;
-
 
   if (decideImageStyle == 0) {
     imageStyles = {
-      backgroundImage: `url(${window.location.protocol}//${window.location.hostname}:${PORT}${ImageData?.Properties?.File})`,
-      position: 'absolute',
-      top: ImageSize && ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[0]: 0,
-      left: ImageSize && ImageSize.Posn && ImageSize.Posn.length ? ImageSize.Posn[1]: 0,
-      backgroundRepeat: 'no-repeat',
-      height:ImageSize && ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[0]: '100%',
-      width:ImageSize && ImageSize.Size && ImageSize.Size.length ? ImageSize.Size[1]: '100%',
+      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+        ImageData?.Properties?.File
+      })`,
+      position: "absolute",
+      top:
+        ImageSize && ImageSize.Posn && ImageSize.Posn.length
+          ? ImageSize.Posn[0]
+          : 0,
+      left:
+        ImageSize && ImageSize.Posn && ImageSize.Posn.length
+          ? ImageSize.Posn[1]
+          : 0,
+      backgroundRepeat: "no-repeat",
+      height:
+        ImageSize && ImageSize.Size && ImageSize.Size.length
+          ? ImageSize.Size[0]
+          : "100%",
+      width:
+        ImageSize && ImageSize.Size && ImageSize.Size.length
+          ? ImageSize.Size[1]
+          : "100%",
     };
   }
 
   if (decideImageStyle == 1) {
     imageStyles = {
-      backgroundImage: `url(${window.location.protocol}//${window.location.hostname}:${PORT}${ImageData?.Properties?.File})`,
-      backgroundRepeat: 'repeat',
+      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+        ImageData?.Properties?.File
+      })`,
+      backgroundRepeat: "repeat",
     };
   }
 
   if (decideImageStyle == 2) {
     imageStyles = {
-      backgroundImage: `url(${window.location.protocol}//${window.location.hostname}:${PORT}${ImageData?.Properties?.File})`,
-      backgroundSize: '100% 100%',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center center',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+        ImageData?.Properties?.File
+      })`,
+      backgroundSize: "100% 100%",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
     };
   }
 
   if (decideImageStyle == 3) {
     imageStyles = {
-      backgroundImage: `url(${window.location.protocol}//${window.location.hostname}:${PORT}${ImageData?.Properties?.File})`,
-      backgroundPosition:
-        'center center' /* Center the background image horizontally and vertically */,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundRepeat: 'no-repeat',
+      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+        ImageData?.Properties?.File
+      })`,
+      backgroundPosition: "center center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundRepeat: "no-repeat",
     };
   }
 
-  if (ImageData?.Properties?.Type == 'Icon') {
+  if (ImageData?.Properties?.Type == "Icon") {
     imageStyles = {
       ...imageStyles,
-      height: '32px',
-      width: '32px',
-      backgroundSize: 'cover',
+      height: "32px",
+      width: "32px",
+      backgroundSize: "cover",
     };
   }
 
@@ -109,5 +132,5 @@ export const getImageStyles = (decideImageStyle, PORT, ImageData, ImageSize) => 
 // }
 
 export const renderImage = (PORT, ImageData) => {
-  return `${window.location.protocol}//${window.location.hostname}:${PORT}${ImageData?.Properties?.File}`;
+  return `${import.meta.env.VITE_CLIENT_URL}${ImageData?.Properties?.File}`;
 };
