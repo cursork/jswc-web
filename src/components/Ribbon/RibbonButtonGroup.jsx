@@ -1,7 +1,7 @@
 import * as AppIcons from "./RibbonIcons";
 import { Col } from "reactstrap";
 import { useAppData } from "../../hooks";
-import { getObjectById } from "../../utils";
+import { getCurrentUrl, getObjectById } from "../../utils";
 import { MdOutlineQuestionMark } from "react-icons/md";
 
 const CustomRibbonButtonGroup = ({ data }) => {
@@ -126,7 +126,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
                   width: result.imgSize[0],
                   height: result.imgSize[1],
                 }}
-                src={`${import.meta.env.VITE_CLIENT_URL}${result.imgUrl}`}
+                src={`${getCurrentUrl()}${result.imgUrl}`}
                 alt={title}
                 />
               ) : image ? (
@@ -135,7 +135,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
                   width: ImageList?.Properties?.Size?.[1],
                   height: ImageList?.Properties?.Size?.[0],
                 }}
-                src={`${import.meta.env.VITE_CLIENT_URL}${image?.Properties?.Files?.[imageIndex]}`}
+                src={`${getCurrentUrl()}${image?.Properties?.Files?.[imageIndex]}`}
                 alt={title}
               />
             ) : (

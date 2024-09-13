@@ -7,6 +7,7 @@ import {
   findFormParentID,
   deleteFormAndSiblings,
   rgbColor,
+  getCurrentUrl,
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
@@ -267,19 +268,14 @@ const App = () => {
 
   const fetchData = () => {
     let zoom = Math.round(window.devicePixelRatio * 100);
-    const envUrl =import.meta.env.VITE_SOCKET_URL
+    const envUrl =getCurrentUrl()
     const url = URL.parse(envUrl)
-  
-    
-    // webSocketRef.current = new WebSocket(`ws://${window.location.hostname}:${runningPort}/`);
 
     const protocol = url.protocol === "https:" ? "wss" : "ws";
     const urlPort = url.port && url.protocol !== "https:" ? `:${url.port}` : "";
     const path = url.pathname || "/"; 
     
     webSocketRef.current = new WebSocket(`${protocol}://${url.hostname}${urlPort}${path}`);
-
-
 
     const webSocket = webSocketRef.current;
     setSocket(webSocket);

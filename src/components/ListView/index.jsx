@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { setStyle, createListViewObjects } from '../../utils';
+import { setStyle, createListViewObjects, getCurrentUrl } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const ListView = ({ data }) => {
@@ -88,7 +88,7 @@ const ListView = ({ data }) => {
               {Images.length > 0 ? (
                 <img
                   style={{ width: imageWidth, height: imageHeight }}
-                  src={`${import.meta.env.VITE_CLIENT_URL}${Images[ImageIndex[index] - 1]}`}
+                  src={`${getCurrentUrl()}${Images[ImageIndex[index] - 1]}`}
                 />
               ) : null}
               <span style={{ fontSize: '12px' }}>{item}</span>
@@ -190,7 +190,7 @@ const ListView = ({ data }) => {
                 >
                   <div className='d-flex align-items-center'>
                     {report?.image ? (
-                      <img src={`${import.meta.env.VITE_CLIENT_URL}${ImageData?.Properties?.File}`} />
+                      <img src={`${url}${ImageData?.Properties?.File}`} />
                     ) : null}
                     <span style={{ fontSize: '12px' }}>{report?.title}</span>
                   </div>

@@ -5,6 +5,7 @@ import {
   calculateSumFromString,
   findParentIndex,
   extractStringUntilSecondPeriod,
+  getCurrentUrl,
 } from '../../utils';
 import { useAppData } from '../../hooks';
 import { useEffect, useState, useRef } from 'react';
@@ -84,7 +85,7 @@ const Treeview = ({ data }) => {
 
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={`${import.meta.env.VITE_CLIENT_URL}${ImageList?.Properties?.Files[index - 1]}`} />
+        <img src={`${getCurrentUrl()}${ImageList?.Properties?.Files[index - 1]}`} />
         <div>{title}</div>
       </div>
     );

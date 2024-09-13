@@ -1,3 +1,5 @@
+import { getCurrentUrl } from "./index";
+
 export const getImageStyles = (
   decideImageStyle,
   PORT,
@@ -6,9 +8,11 @@ export const getImageStyles = (
 ) => {
   let imageStyles = null;
 
+  const url = getCurrentUrl()
+
   if (decideImageStyle == 0) {
     imageStyles = {
-      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+      backgroundImage: `url(${url}${
         ImageData?.Properties?.File
       })`,
       position: "absolute",
@@ -34,7 +38,7 @@ export const getImageStyles = (
 
   if (decideImageStyle == 1) {
     imageStyles = {
-      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+      backgroundImage: `url(${url}${
         ImageData?.Properties?.File
       })`,
       backgroundRepeat: "repeat",
@@ -43,7 +47,7 @@ export const getImageStyles = (
 
   if (decideImageStyle == 2) {
     imageStyles = {
-      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+      backgroundImage: `url(${url}${
         ImageData?.Properties?.File
       })`,
       backgroundSize: "100% 100%",
@@ -57,7 +61,7 @@ export const getImageStyles = (
 
   if (decideImageStyle == 3) {
     imageStyles = {
-      backgroundImage: `url(${import.meta.env.VITE_CLIENT_URL}${
+      backgroundImage: `url(${url}${
         ImageData?.Properties?.File
       })`,
       backgroundPosition: "center center",
@@ -132,5 +136,5 @@ export const getImageStyles = (
 // }
 
 export const renderImage = (PORT, ImageData) => {
-  return `${import.meta.env.VITE_CLIENT_URL}${ImageData?.Properties?.File}`;
+  return `${getCurrentUrl()}${ImageData?.Properties?.File}`;
 };
