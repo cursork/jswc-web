@@ -496,6 +496,8 @@ const GridEdit = ({ data }) => {
           onKeyDown={(e) => console.log({ e })}
           // onDoubleClick={() => setShowInput(true)}
           style={{
+            display: 'flex',
+            align: data?.align,
             backgroundColor: data?.backgroundColor,
             outline: 0,
             height: '100%',
@@ -516,7 +518,9 @@ const GridEdit = ({ data }) => {
             border: 0,
             width: '100%',
             height: '100%',
+            display: 'flex',
             backgroundColor: data?.backgroundColor,
+            align:data?.align,
             paddingLeft: '5px',
             paddingRight: '5px'
           }}
