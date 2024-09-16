@@ -184,7 +184,13 @@ const Button = ({
     const exists = Event && Event.some((item) => item[0] === 'Select');
     if (!exists) return;
     console.log(triggerEvent);
-    socket.send(triggerEvent);
+    const event = JSON.stringify({
+      Event: {
+        EventName: "Select",
+        ID: data?.ID,
+      },
+    });
+    socket.send(event);
   };
 
   const handleCheckBoxEvent = (value) => {
@@ -358,8 +364,16 @@ const Button = ({
       });
       const exists = Event && Event.some((item) => item[0] === 'Select');
       if (!exists) return;
+
+      const event = JSON.stringify({
+        Event: {
+          EventName: "Select",
+          ID: data?.ID,
+        },
+      });
       console.log(emitEvent);
-      socket.send(emitEvent);
+      
+      socket.send(event);
     };
 
     const handleRadioButton = (id, value) => {

@@ -79,22 +79,42 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   };
 
   const handleSelectEvent = (value) => {
+    const NewSelItems = new Array(Items.length).fill(0);
+    handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          ...data?.Properties,
+          SelItems: NewSelItems,
+          Text: Items && Items[value],
+        },
+      },
+      "WS"
+    );
     const triggerEvent = JSON.stringify({
       Event: {
-        EventName: 'Select',
+        EventName: "Select",
         ID: data?.ID,
         Info: parseInt(value + 1),
         Text: Items && Items[value],
+        SelItems: NewSelItems,
         Posn: [position?.top, position?.left],
         Size: [Size && Size[0], Size && Size[1]],
       },
     });
 
+    const event = JSON.stringify({
+      Event: {
+        EventName: "Select",
+        ID: data?.ID,
+      },
+    });
+
     localStorage.setItem(data?.ID, triggerEvent);
-    const exists = Event && Event.some((item) => item[0] === 'Select');
+    const exists = Event && Event.some((item) => item[0] === "Select");
     if (!exists) return;
     console.log(triggerEvent);
-    socket.send(triggerEvent);
+    socket.send(event);
   };
 
   const handleSelItemsEvent = (value) => {

@@ -382,7 +382,7 @@ const App = () => {
 
         if (data?.Properties?.Type == 'Combo') {
           if (serverEvent?.Properties.hasOwnProperty('SelItems')) {
-            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+           setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
             value = serverEvent?.Properties.SelItems;
             const indextoFind = value.indexOf(1);
             let Text = data?.Properties?.Items[indextoFind];
@@ -406,12 +406,12 @@ const App = () => {
       } else if (keys[0] == 'WG') {
         const serverEvent = JSON.parse(event.data).WG;
         // console.log({serverEvent})
-
+        
         const refData = JSON.parse(getObjectById(dataRef.current, serverEvent?.ID));
         // serverEvent.ID == "F1.LEFTRIGHT" &&  console.log("horizontal wg", serverEvent.ID, getObjectById(dataRef.current, serverEvent?.ID))
         const Type = refData?.Properties?.Type;
         // console.log("issue refData", {refData, Type})
-
+        
         // If didn't have any type on WG then return an ErrorMessage
 
         const errorEvent = JSON.stringify({
@@ -649,84 +649,76 @@ const App = () => {
           );
         }
 
-        if (Type == 'Combo') {
-          const { SelItems, Items } = Properties;
-          const supportedProperties = ['Text', 'SelItems', 'Posn', 'Size'];
+        if (Type == "Combo") {
+          const { SelItems, Items, Text } = Properties;
+          const supportedProperties = ["Text", "SelItems", "Posn", "Size"];
 
-          const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
+          const result = checkSupportedProperties(
+            supportedProperties,
+            serverEvent?.Properties
+          );
 
-          if (!localStorage.getItem(serverEvent.ID)) {
+         if (!localStorage.getItem(serverEvent.ID)) {
             const serverPropertiesObj = {};
             serverEvent.Properties.map((key) => {
-              return (serverPropertiesObj[key] = Properties[key]);
+              serverPropertiesObj[key] = Properties[key];
             });
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverPropertiesObj,
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
-            return webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverPropertiesObj,
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                },
-              })
-            );
+
+            const message = {
+              WG: {
+                ID: serverEvent.ID,
+                Properties: serverPropertiesObj,
+                WGID: serverEvent.WGID,
+                ...(result?.NotSupported?.length > 0
+                  ? { NotSupported: result.NotSupported }
+                  : null),
+              },
+            };
+
+            console.log(JSON.stringify(message));
+            return webSocket.send(JSON.stringify(message));
           }
+
+          // Parse the event data from localStorage
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info, Size, Posn } = Event;
 
-          if (SelItems) {
-            SelItems?.fill(0);
-            let indexToChange = Info - 1;
-            SelItems[indexToChange] = 1;
+          let newSelItems = SelItems || new Array(Items.length).fill(0);
+
+          if (Text) {
+            const indexToChange = Items.indexOf(Text); 
+            if (indexToChange >= 0) {
+              newSelItems.fill(0); 
+              newSelItems[indexToChange] = 1;
+            }
           }
 
+    
           const serverPropertiesObj = {};
-
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] =
-              key == 'SelItems' ? SelItems : key == 'Items' ? Items[indexToChange] : Event[key]);
+            serverPropertiesObj[key] =
+              key === "SelItems"
+                ? newSelItems
+                : key === "Items"
+                ? Items[Info]
+                : Event[key];
           });
 
-          console.log(
-            JSON.stringify({
-              WG: {
-                ID: serverEvent.ID,
-                Properties: serverPropertiesObj,
-                WGID: serverEvent.WGID,
-                ...(result && result.NotSupported && result.NotSupported.length > 0
-                  ? { NotSupported: result.NotSupported }
-                  : null),
-              },
-            })
-          );
-          return webSocket.send(
-            JSON.stringify({
-              WG: {
-                ID: serverEvent.ID,
-                Properties: serverPropertiesObj,
-                WGID: serverEvent.WGID,
-                ...(result && result.NotSupported && result.NotSupported.length > 0
-                  ? { NotSupported: result.NotSupported }
-                  : null),
-              },
-            })
-          );
-        }
+          const message = {
+            WG: {
+              ID: serverEvent.ID,
+              Properties: serverPropertiesObj,
+              WGID: serverEvent.WGID,
+              ...(result?.NotSupported?.length > 0
+                ? { NotSupported: result.NotSupported }
+                : null),
+            },
+          };
 
+          console.log(JSON.stringify(message));
+          return webSocket.send(JSON.stringify(message));
+        }
+      
         if (Type == 'List') {
           const { SelItems } = Properties;
 
