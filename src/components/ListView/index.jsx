@@ -60,6 +60,45 @@ const ListView = ({ data }) => {
     handleListViewEvent(index, shiftState, eventName);
   };
 
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
   const ImageListView = ({
     orientation = 'row',
     Images = [],
@@ -76,6 +115,8 @@ const ListView = ({ data }) => {
       <div
         className={`d-flex flex-wrap flex-${parentOrientation}`}
         style={{ ...styles, border: !Border ? null : '1px solid black', ...style }}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
       >
         {listViewItems?.map((item, index) => {
           return (
@@ -147,7 +188,7 @@ const ListView = ({ data }) => {
       />
     );
   }
-  if (View && View == 'Report') {
+  if (View && View == 'Report') {  
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
 
@@ -158,8 +199,12 @@ const ListView = ({ data }) => {
       !ImageIndex ? [] : ImageIndex
     );
 
+
+
+
     return (
-      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' }}>
+      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' }} 
+     >
         {/* Header of the component */}
         <div className='d-flex align-items-center'>
           {ColTitles?.map((title, index, array) => {

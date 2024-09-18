@@ -1093,8 +1093,8 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        // onMouseDown={handleMouseDown}
+        // onMouseUp={handleMouseUp}
         id={data?.ID}
         style={{
           ...style,
