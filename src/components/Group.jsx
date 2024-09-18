@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   setStyle,
   excludeKeys,
   getImageStyles,
   extractStringUntilSecondPeriod,
   parseFlexStyles,
-} from '../utils';
-import SelectComponent from './SelectComponent';
-import { useAppData, useResizeObserver } from '../hooks';
+} from "../utils";
+import SelectComponent from "./SelectComponent";
+import { useAppData, useResizeObserver } from "../hooks";
 
 const Group = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
-  const { Visible, Picture, Border = 1, Size, Flex = 0, CSS } = data?.Properties;
+  const PORT = localStorage.getItem("PORT");
+  const {
+    Visible,
+    Picture,
+    Border = 1,
+    Size,
+    Flex = 0,
+    CSS,
+  } = data?.Properties;
   const { findDesiredData } = useAppData();
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
@@ -33,7 +40,46 @@ const Group = ({ data }) => {
 
   const updatedData = excludeKeys(data);
 
-  const styles = setStyle(data?.Properties, 'absolute', Flex);
+  const styles = setStyle(data?.Properties, "absolute", Flex);
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
 
   return (
     <div
@@ -41,22 +87,24 @@ const Group = ({ data }) => {
         ...styles,
         width,
         height,
-        border: Border == 0 ? 'none' : '1px solid #E9E9E9',
-        display: Visible == 0 ? 'none' : 'block',
+        border: Border == 0 ? "none" : "1px solid #E9E9E9",
+        display: Visible == 0 ? "none" : "block",
         ...imageStyles,
         ...flexStyles,
       }}
       id={data?.ID}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
-      {data?.Properties?.Caption != '' && (
+      {data?.Properties?.Caption != "" && (
         <span
           style={{
-            fontSize: '12px',
+            fontSize: "12px",
             // fontSize: '10px',
-            position: 'relative',
+            position: "relative",
             bottom: 14,
             left: 10,
-            background: '#F1F1F1 ',
+            background: "#F1F1F1 ",
           }}
         >
           {data?.Properties?.Caption}

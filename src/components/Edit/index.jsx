@@ -7,34 +7,44 @@ import {
   rgbColor,
   getObjectById,
   getObjectTypeById,
-} from '../../utils';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useAppData } from '../../hooks';
-import dayjs from 'dayjs';
-import { NumericFormat } from 'react-number-format';
-
+} from "../../utils";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useAppData } from "../../hooks";
+import dayjs from "dayjs";
+import { NumericFormat } from "react-number-format";
 
 const Edit = ({
   data,
   value,
-  event = '',
-  row = '',
-  column = '',
-  location = '',
+  event = "",
+  row = "",
+  column = "",
+  location = "",
   values = [],
-  T = '',
+  T = "",
 }) => {
-  const { socket, dataRef, findDesiredData, handleData, addChangeEvent , fontScale} = useAppData();
+  const {
+    socket,
+    dataRef,
+    findDesiredData,
+    handleData,
+    addChangeEvent,
+    fontScale,
+  } = useAppData();
 
-  const dateFormat = JSON.parse(getObjectById(dataRef.current, 'Locale'));
+  const dateFormat = JSON.parse(getObjectById(dataRef.current, "Locale"));
 
-  const { ShortDate, Thousand, Decimal: decimalSeparator } = dateFormat?.Properties;
+  const {
+    ShortDate,
+    Thousand,
+    Decimal: decimalSeparator,
+  } = dateFormat?.Properties;
 
   let styles = { ...setStyle(data?.Properties) };
-  const [inputType, setInputType] = useState('text');
-  const [inputValue, setInputValue] = useState('');
-  const [emitValue, setEmitValue] = useState('');
-  const [initialValue, setInitialValue] = useState('');
+  const [inputType, setInputType] = useState("text");
+  const [inputValue, setInputValue] = useState("");
+  const [emitValue, setEmitValue] = useState("");
+  const [initialValue, setInitialValue] = useState("");
   const [prevFocused, setprevFocused] = useState("⌈");
   const dateInputRef = useRef();
 
@@ -51,23 +61,23 @@ const Edit = ({
     Border = 0,
   } = data?.Properties;
 
-  const hasTextProperty = data?.Properties.hasOwnProperty('Text');
-  const hasValueProperty = data?.Properties.hasOwnProperty('Value');
-  const isPassword = data?.Properties.hasOwnProperty('Password');
+  const hasTextProperty = data?.Properties.hasOwnProperty("Text");
+  const hasValueProperty = data?.Properties.hasOwnProperty("Value");
+  const isPassword = data?.Properties.hasOwnProperty("Password");
   const inputRef = useRef(null);
   const font = findDesiredData(FontObj && FontObj);
   const fontProperties = font && font?.Properties;
 
   const decideInputValue = useCallback(() => {
-    if (location === 'inGrid') {
-      if (FieldType === 'Date') {
+    if (location === "inGrid") {
+      if (FieldType === "Date") {
         setEmitValue(value);
         setInitialValue(value);
         const date = calculateDateAfterDays(value); // Custom function to calculate date
         return setInputValue(dayjs(date).format(ShortDate));
       }
 
-      if (FieldType === 'LongNumeric') {
+      if (FieldType === "LongNumeric") {
         setEmitValue(value);
         setInitialValue(value);
         return setInputValue(value);
@@ -82,7 +92,9 @@ const Edit = ({
       if (isPassword) {
         setInitialValue(generateAsteriskString(data?.Properties?.Text?.length)); // Custom function to generate asterisks
         setEmitValue(data?.Properties?.Text);
-        return setInputValue(generateAsteriskString(data?.Properties?.Text?.length));
+        return setInputValue(
+          generateAsteriskString(data?.Properties?.Text?.length)
+        );
       } else {
         setEmitValue(data?.Properties?.Text);
         setInitialValue(data?.Properties?.Text);
@@ -92,16 +104,29 @@ const Edit = ({
 
     if (hasValueProperty) {
       if (isPassword) {
-        setInitialValue(generateAsteriskString(data?.Properties?.Value?.length)); // Custom function to generate asterisks
+        setInitialValue(
+          generateAsteriskString(data?.Properties?.Value?.length)
+        ); // Custom function to generate asterisks
         setEmitValue(data?.Properties?.Value);
-        return setInputValue(generateAsteriskString(data?.Properties?.Value?.length));
+        return setInputValue(
+          generateAsteriskString(data?.Properties?.Value?.length)
+        );
       } else {
         setInitialValue(data?.Properties?.Value);
         setEmitValue(data?.Properties?.Value);
         return setInputValue(data?.Properties?.Value);
       }
     }
-  }, [location, FieldType, value, ShortDate, hasTextProperty, isPassword, data, hasValueProperty]);
+  }, [
+    location,
+    FieldType,
+    value,
+    ShortDate,
+    hasTextProperty,
+    isPassword,
+    data,
+    hasValueProperty,
+  ]);
 
   // check that the Edit is in the Grid or not
 
@@ -112,12 +137,12 @@ const Edit = ({
   };
 
   const decideInputType = useCallback(() => {
-    if (FieldType === 'Numeric') {
-      setInputType('number');
-    } else if (FieldType === 'Date') {
-      setInputType('date');
+    if (FieldType === "Numeric") {
+      setInputType("number");
+    } else if (FieldType === "Date") {
+      setInputType("date");
     } else if (isPassword) {
-      setInputType('password');
+      setInputType("password");
     }
   }, [FieldType, isPassword]);
 
@@ -131,16 +156,20 @@ const Edit = ({
 
   // Checks for the Styling of the Edit Field
 
-  if (location == 'inGrid') {
-    styles = { ...styles, border: 'none', color: FCol ? rgbColor(FCol) : 'black' };
+  if (location == "inGrid") {
+    styles = {
+      ...styles,
+      border: "none",
+      color: FCol ? rgbColor(FCol) : "black",
+    };
   } else {
     styles = {
       ...styles,
       borderTop: 0,
       borderLeft: 0,
       borderRight: 0,
-      borderBottom: '1px solid black',
-      color: FCol ? rgbColor(FCol) : 'black',
+      borderBottom: "1px solid black",
+      color: FCol ? rgbColor(FCol) : "black",
     };
   }
 
@@ -148,26 +177,26 @@ const Edit = ({
     const Event = JSON.stringify({
       Event: {
         ID: extractStringUntilSecondPeriod(data?.ID),
-        EventName: 'CellMove',
+        EventName: "CellMove",
         Info: [row, column, 0, 0, 0, value],
       },
     });
 
-    const exists = event && event.some((item) => item[0] === 'CellMove');
+    const exists = event && event.some((item) => item[0] === "CellMove");
     if (!exists) return;
     console.log(Event);
     socket.send(Event);
   };
 
   const handleCellMove = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
     triggerCellMoveEvent(parseInt(row) + 1, parseInt(column), emitValue);
 
-    const element = nextSibling?.querySelectorAll('input');
+    const element = nextSibling?.querySelectorAll("input");
     if (!element) return;
     element &&
       element.forEach((inputElement) => {
@@ -178,7 +207,7 @@ const Edit = ({
   };
 
   const handleRightArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
 
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
@@ -187,7 +216,7 @@ const Edit = ({
 
     let element = nextSibling?.querySelectorAll(querySelector);
 
-    if (element?.length == 0) element = nextSibling?.querySelectorAll('span');
+    if (element?.length == 0) element = nextSibling?.querySelectorAll("span");
 
     triggerCellMoveEvent(parseInt(row), parseInt(column) + 1, emitValue);
     element && element[0]?.focus();
@@ -195,7 +224,7 @@ const Edit = ({
     element && element[0]?.select();
   };
   const handleLeftArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
 
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
@@ -211,19 +240,19 @@ const Edit = ({
     // }
 
     if (!element) return;
-    if (querySelector == 'select') return element && element[0].focus();
+    if (querySelector == "select") return element && element[0].focus();
 
     return element && element[0]?.select();
   };
   const handleUpArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
 
     triggerCellMoveEvent(parseInt(row) - 1, parseInt(column), emitValue);
-    const element = nextSibling?.querySelectorAll('input');
+    const element = nextSibling?.querySelectorAll("input");
     if (!element) return;
     element &&
       element.forEach((inputElement) => {
@@ -234,12 +263,12 @@ const Edit = ({
   };
 
   const handleKeyPress = (e) => {
-    if (e.key == 'ArrowRight') handleRightArrow();
-    else if (e.key == 'ArrowLeft') handleLeftArrow();
-    else if (e.key == 'ArrowDown') handleCellMove();
-    else if (e.key == 'Enter') handleCellMove();
-    else if (e.key == 'ArrowUp') handleUpArrow();
-    const exists = Event && Event.some((item) => item[0] === 'KeyPress');
+    if (e.key == "ArrowRight") handleRightArrow();
+    else if (e.key == "ArrowLeft") handleLeftArrow();
+    else if (e.key == "ArrowDown") handleCellMove();
+    else if (e.key == "Enter") handleCellMove();
+    else if (e.key == "ArrowUp") handleUpArrow();
+    const exists = Event && Event.some((item) => item[0] === "KeyPress");
     if (!exists) return;
 
     const isAltPressed = e.altKey ? 4 : 0;
@@ -251,7 +280,7 @@ const Edit = ({
     console.log(
       JSON.stringify({
         Event: {
-          EventName: 'KeyPress',
+          EventName: "KeyPress",
           ID: data?.ID,
           Info: [e.key, charCode, e.keyCode, shiftState],
         },
@@ -261,7 +290,7 @@ const Edit = ({
     socket.send(
       JSON.stringify({
         Event: {
-          EventName: 'KeyPress',
+          EventName: "KeyPress",
           ID: data?.ID,
           Info: [e.key, charCode, e.keyCode, shiftState],
         },
@@ -270,14 +299,14 @@ const Edit = ({
   };
 
   const triggerChangeEvent = () => {
-    const focusedId = localStorage.getItem('current-focus');
+    const focusedId = localStorage.getItem("current-focus");
 
     const event2 = JSON.stringify({
       Event: {
-        EventName: 'Change',
+        EventName: "Change",
         ID: data?.ID,
         Info:
-          (FieldType && FieldType == 'LongNumeric') || FieldType == 'Numeric'
+          (FieldType && FieldType == "LongNumeric") || FieldType == "Numeric"
             ? parseInt(emitValue)
             : emitValue,
       },
@@ -287,60 +316,68 @@ const Edit = ({
       {
         ID: data?.ID,
         Properties: {
-          Text:(FieldType && FieldType == 'LongNumeric') || FieldType == 'Numeric'
-          ? parseInt(emitValue)
-          : emitValue,
+          Text:
+            (FieldType && FieldType == "LongNumeric") || FieldType == "Numeric"
+              ? parseInt(emitValue)
+              : emitValue,
         },
       },
-      'WS'
+      "WS"
     );
     localStorage.setItem(data?.ID, event2);
-    localStorage.setItem("shouldChangeEvent", data.Properties.hasOwnProperty("Event"))
+    localStorage.setItem(
+      "shouldChangeEvent",
+      data.Properties.hasOwnProperty("Event")
+    );
 
     const prevFocusedID = JSON.parse(localStorage.getItem(prevFocused));
-  
-  if (!!data.Properties.hasOwnProperty("Event")) {
-    const event1 = JSON.stringify({
-      Event: {
-        EventName: "Change",
-        ID: prevFocused,
-        Info: [data?.ID],
-      },
-    });
-    const originalValue =
-      data?.Properties?.Text || data?.Properties?.Value || "";
 
-    console.log("value focused", { value, emitValue, originalValue },  prevFocusedID,
-      prevFocusedID.Event.EventName !== "Select",
-      originalValue !== emitValue);
+    if (!!data.Properties.hasOwnProperty("Event")) {
+      const event1 = JSON.stringify({
+        Event: {
+          EventName: "Change",
+          ID: prevFocused,
+          Info: [data?.ID],
+        },
+      });
+      const originalValue =
+        data?.Properties?.Text || data?.Properties?.Value || "";
 
-    if (
-      prevFocused &&
-      prevFocusedID.Event.EventName !== "Select" &&
-      originalValue !== emitValue &&
-      prevFocused !== data.ID
-    ) {
       console.log(
-        "focused",
+        "value focused",
+        { value, emitValue, originalValue },
         prevFocusedID,
         prevFocusedID.Event.EventName !== "Select",
         originalValue !== emitValue
       );
-      socket.send(event1);
+
+      if (
+        prevFocused &&
+        prevFocusedID.Event.EventName !== "Select" &&
+        originalValue !== emitValue &&
+        prevFocused !== data.ID
+      ) {
+        console.log(
+          "focused",
+          prevFocusedID,
+          prevFocusedID.Event.EventName !== "Select",
+          originalValue !== emitValue
+        );
+        socket.send(event1);
+      }
     }
-  }
-    const exists = Event && Event.some((item) => item[0] === 'Change');
+    const exists = Event && Event.some((item) => item[0] === "Change");
     if (!exists) return;
 
     const event = JSON.stringify({
       Event: {
-        EventName: 'Change',
+        EventName: "Change",
         ID: data?.ID,
         Info: [],
       },
     });
 
-    localStorage.setItem('change-event', event);
+    localStorage.setItem("change-event", event);
   };
 
   const triggerCellChangedEvent = () => {
@@ -355,12 +392,12 @@ const Edit = ({
           CurCell: [parseInt(row), parseInt(column)],
         },
       },
-      'WS'
+      "WS"
     );
 
     const cellChangedEvent = JSON.stringify({
       Event: {
-        EventName: 'CellChanged',
+        EventName: "CellChanged",
         ID: extractStringUntilSecondPeriod(data?.ID),
         Row: parseInt(row),
         Col: parseInt(column),
@@ -370,7 +407,7 @@ const Edit = ({
 
     const updatedGridValues = JSON.stringify({
       Event: {
-        EventName: 'CellChanged',
+        EventName: "CellChanged",
         Values: values,
         CurCell: [row, column],
       },
@@ -384,10 +421,13 @@ const Edit = ({
       },
     });
 
-    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
+    localStorage.setItem(
+      extractStringUntilSecondPeriod(data?.ID),
+      updatedGridValues
+    );
 
     // localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), cellChangedEvent);
-    const exists = event && event.some((item) => item[0] === 'CellChanged');
+    const exists = event && event.some((item) => item[0] === "CellChanged");
     if (!exists) return;
     console.log(cellChangedEvent);
     socket.send(cellChangedEvent);
@@ -400,7 +440,7 @@ const Edit = ({
 
   const handleEditEvents = () => {
     // check that the Edit is inside the Grid
-    if (location == 'inGrid') {
+    if (location == "inGrid") {
       if (value != emitValue) {
         triggerChangeEvent();
         triggerCellChangedEvent();
@@ -411,17 +451,17 @@ const Edit = ({
   };
 
   const handleGotFocus = () => {
-    const previousFocusedId = localStorage.getItem('current-focus');
+    const previousFocusedId = localStorage.getItem("current-focus");
     setprevFocused(previousFocusedId);
     const gotFocusEvent = JSON.stringify({
       Event: {
-        EventName: 'GotFocus',
+        EventName: "GotFocus",
         ID: data?.ID,
-        Info: !previousFocusedId ? [''] : [previousFocusedId],
+        Info: !previousFocusedId ? [""] : [previousFocusedId],
       },
     });
-    localStorage.setItem('current-focus', data?.ID);
-    const exists = Event && Event.some((item) => item[0] === 'GotFocus');
+    localStorage.setItem("current-focus", data?.ID);
+    const exists = Event && Event.some((item) => item[0] === "GotFocus");
 
     if (!exists || previousFocusedId == data?.ID) return;
     console.log(gotFocusEvent);
@@ -432,20 +472,26 @@ const Edit = ({
   styles = {
     ...styles,
     fontFamily: fontProperties?.PName,
-    fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${12 * fontScale}px`,
+    fontSize: fontProperties?.Size
+      ? `${fontProperties.Size * fontScale}px`
+      : `${12 * fontScale}px`,
     // fontSize: fontProperties?.Size ? `${fontProperties.Size * fontScale}px` : `${11 * fontScale}px`,
     textDecoration: !fontProperties?.Underline
-      ? 'none'
+      ? "none"
       : fontProperties?.Underline == 1
-      ? 'underline'
-      : 'none',
-    fontStyle: !fontProperties?.Italic ? 'none' : fontProperties?.Italic == 1 ? 'italic' : 'none',
+      ? "underline"
+      : "none",
+    fontStyle: !fontProperties?.Italic
+      ? "none"
+      : fontProperties?.Italic == 1
+      ? "italic"
+      : "none",
     fontWeight: !fontProperties?.Weight ? 0 : fontProperties?.Weight,
   };
 
   // Date Picker component
 
-  if (inputType == 'date') {
+  if (inputType == "date") {
     const handleTextClick = () => {
       inputRef.current.select();
       inputRef.current.showPicker();
@@ -457,6 +503,45 @@ const Edit = ({
       setInputValue(selectedDate);
       setEmitValue(value);
     };
+    const handleMouseDown = (e) => {
+      const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+      const x = e.clientX;
+      const y = e.clientY;
+      const button = e.button;
+
+      const mousedownEvent = JSON.stringify({
+        Event: {
+          EventName: "MouseDown",
+          ID: data?.ID,
+          Info: [x, y, button, shiftState],
+        },
+      });
+
+      const exists = Event && Event.some((item) => item[0] === "MouseDown");
+      if (!exists) return;
+      console.log(mousedownEvent);
+      socket.send(mousedownEvent);
+    };
+
+    const handleMouseUp = (e) => {
+      const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+      const x = e.clientX;
+      const y = e.clientY;
+      const button = e.button;
+
+      const mouseUpEvent = JSON.stringify({
+        Event: {
+          EventName: "MouseUp",
+          ID: data?.ID,
+          Info: [x, y, button, shiftState],
+        },
+      });
+
+      const exists = Event && Event.some((item) => item[0] === "MouseUp");
+      if (!exists) return;
+      console.log(mouseUpEvent);
+      socket.send(mouseUpEvent);
+    };
 
     return (
       <>
@@ -464,41 +549,43 @@ const Edit = ({
           id={data?.ID}
           style={{
             ...styles,
-            borderRadius: '2px',
-            fontSize: '12px',
+            borderRadius: "2px",
+            fontSize: "12px",
             zIndex: 1,
-            display: Visible == 0 ? 'none' : 'block',
-            paddingLeft: '5px',
+            display: Visible == 0 ? "none" : "block",
+            paddingLeft: "5px",
           }}
           value={inputValue}
-          type='text'
+          type="text"
           readOnly
           onClick={handleTextClick}
           onBlur={() => {
             handleEditEvents();
           }}
           onKeyDown={(e) => handleKeyPress(e)}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
         />
         <input
           id={data?.ID}
-          type='date'
+          type="date"
           ref={inputRef}
           onChange={handleDateChange}
           style={{
             ...styles,
-            position: 'absolute',
+            position: "absolute",
             zIndex: 1,
-            display: 'none',
+            display: "none",
           }}
         />
       </>
     );
   }
 
-  if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
+  if (FieldType == "LongNumeric" || FieldType == "Numeric") {
     return (
       <NumericFormat
-        className='currency'
+        className="currency"
         allowLeadingZeros={true}
         // ref={inputRef}
         getInputRef={inputRef}
@@ -506,18 +593,18 @@ const Edit = ({
         id={data?.ID}
         style={{
           ...styles,
-          width: !Size ? '100%' : Size[1],
+          width: !Size ? "100%" : Size[1],
           zIndex: 1,
-          display: Visible == 0 ? 'none' : 'block',
+          display: Visible == 0 ? "none" : "block",
 
           border:
-            (Border && Border == '1') || (EdgeStyle && EdgeStyle == 'Ridge')
-              ? '1px solid #6A6A6A'
-              : 'none',
-          textAlign: 'right',
-          verticalAlign: 'text-top',
-          paddingBottom: '6px',
-          paddingRight: '2px',
+            (Border && Border == "1") || (EdgeStyle && EdgeStyle == "Ridge")
+              ? "1px solid #6A6A6A"
+              : "none",
+          textAlign: "right",
+          verticalAlign: "text-top",
+          paddingBottom: "6px",
+          paddingRight: "2px",
         }}
         onValueChange={(value) => {
           const { formattedValue } = value;
@@ -543,7 +630,7 @@ const Edit = ({
       onClick={handleInputClick}
       type={inputType}
       onChange={(e) => {
-        if (FieldType == 'Char') {
+        if (FieldType == "Char") {
           setEmitValue(e.target.value);
           setInputValue(e.target.value);
         }
@@ -558,15 +645,15 @@ const Edit = ({
       onKeyDown={(e) => handleKeyPress(e)}
       style={{
         ...styles,
-        width: !Size ? '100%' : Size[1],
-        borderRadius: '2px',
+        width: !Size ? "100%" : Size[1],
+        borderRadius: "2px",
         zIndex: 1,
-        display: Visible == 0 ? 'none' : 'block',
-        paddingLeft: '5px',
+        display: Visible == 0 ? "none" : "block",
+        paddingLeft: "5px",
         border:
-          (Border && Border == '1') || (EdgeStyle && EdgeStyle == 'Ridge')
-            ? '1px solid #6A6A6A'
-            : 'none',
+          (Border && Border == "1") || (EdgeStyle && EdgeStyle == "Ridge")
+            ? "1px solid #6A6A6A"
+            : "none",
       }}
       maxLength={MaxLength}
       onFocus={handleGotFocus}

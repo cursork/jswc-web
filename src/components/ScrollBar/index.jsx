@@ -197,6 +197,45 @@ const ScrollBar = ({ data }) => {
   useEffect(() => {
     setScaledValue((prevValue) => Math.min( Thumb, maxValue ));
   }, [Thumb]);
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
   
   return (
     <div
@@ -204,6 +243,8 @@ const ScrollBar = ({ data }) => {
       onMouseEnter={handleTrackMouseEnter}
       onMouseLeave={handleTrackMouseLeave}
       style={isHorizontal ? horizontalPosition : verticalPosition}
+      onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
     >
       <div>
         <div

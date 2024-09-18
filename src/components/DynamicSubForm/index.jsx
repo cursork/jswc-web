@@ -12,7 +12,7 @@ import { useAppData } from "../../hooks";
 
 const SubForm = ({ data }) => {
   const PORT = localStorage.getItem("PORT");
-  const { findDesiredData } = useAppData();
+  const { findDesiredData, socket } = useAppData();
   const {
     Size,
     Posn,
@@ -29,19 +29,29 @@ const SubForm = ({ data }) => {
   const observedDiv = useRef(null);
   const styles = setStyle(data?.Properties, "absolute", Flex);
 
-
-  
   const flexStyles = parseFlexStyles(CSS);
-  
+
   const updatedData = excludeKeys(data);
-  
+
   const ImageData = findDesiredData(Picture && Picture[0]);
-  
-  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData, data?.Properties);
-  
+
+  const imageStyles = getImageStyles(
+    Picture && Picture[1],
+    PORT,
+    ImageData,
+    data?.Properties
+  );
+
   let updatedStyles = { ...styles, ...imageStyles, ...flexStyles };
-  
-  console.log("App Subform",{ styles, data, updatedStyles, flexStyles,Size, Posn} )
+
+  console.log("App Subform", {
+    styles,
+    data,
+    updatedStyles,
+    flexStyles,
+    Size,
+    Posn,
+  });
   useEffect(() => {
     let existingData;
     if (data.ID === "F1.SCALE") {
@@ -73,17 +83,56 @@ const SubForm = ({ data }) => {
       );
     }
   }, [data]);
-  
-return (
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
+
+  return (
     <div
       id={data.ID}
       style={{
         display:
-        Visible == 0
-        ? "none"
-        : data?.Properties.hasOwnProperty("Flex")
-        ? "flex"
-        : "block",
+          Visible == 0
+            ? "none"
+            : data?.Properties.hasOwnProperty("Flex")
+            ? "flex"
+            : "block",
         background: BCol && rgbColor(BCol),
         ...updatedStyles,
         // height: Size && Size[0],
@@ -93,6 +142,8 @@ return (
         // position: 'absolute',
       }}
       ref={observedDiv}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       {Object.keys(updatedData).map((key) => {
         return <SelectComponent data={updatedData[key]} />;

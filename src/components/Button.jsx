@@ -1,25 +1,33 @@
-import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById } from '../utils';
-import { useAppData, useResizeObserver } from '../hooks';
-import { useEffect, useState } from 'react';
-import { useRef } from 'react';
-import { getObjectById, getImageStyles } from '../utils';
+import {
+  setStyle,
+  extractStringUntilSecondPeriod,
+  getObjectTypeById,
+} from "../utils";
+import { useAppData, useResizeObserver } from "../hooks";
+import { useEffect, useState } from "react";
+import { useRef } from "react";
+import { getObjectById, getImageStyles } from "../utils";
 
 const Button = ({
   data,
   inputValue,
-  event = '',
-  row = '',
-  column = '',
-  location = '',
+  event = "",
+  row = "",
+  column = "",
+  location = "",
   values = [],
 }) => {
-  const PORT = localStorage.getItem('PORT');
+  const PORT = localStorage.getItem("PORT");
 
-  const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
+  const parentSize = JSON.parse(
+    localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+  );
 
   const styles = setStyle(data?.Properties);
-  const { socket, findDesiredData, dataRef, handleData, reRender } = useAppData();
-  const { Picture, State, Visible, Event, Caption, Align, Posn, Size } = data?.Properties;
+  const { socket, findDesiredData, dataRef, handleData, reRender } =
+    useAppData();
+  const { Picture, State, Visible, Event, Caption, Align, Posn, Size } =
+    data?.Properties;
   const inputRef = useRef();
 
   const dimensions = useResizeObserver(
@@ -30,22 +38,28 @@ const Button = ({
 
   const [radioValue, setRadioValue] = useState(State ? State : 0);
 
-  const hasCaption = data.Properties.hasOwnProperty('Caption');
+  const hasCaption = data.Properties.hasOwnProperty("Caption");
 
-  const isCheckBox = data?.Properties?.Style && data?.Properties?.Style == 'Check';
+  const isCheckBox =
+    data?.Properties?.Style && data?.Properties?.Style == "Check";
 
-  const isRadio = data?.Properties?.Style && data?.Properties?.Style == 'Radio';
+  const isRadio = data?.Properties?.Style && data?.Properties?.Style == "Radio";
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
 
   const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
-  const [position, setPosition] = useState({ top: Posn && Posn[0], left: Posn && Posn[1] });
-  const [parentOldDimensions, setParentOldDimensions] = useState(parentSize?.Size);
+  const [position, setPosition] = useState({
+    top: Posn && Posn[0],
+    left: Posn && Posn[1],
+  });
+  const [parentOldDimensions, setParentOldDimensions] = useState(
+    parentSize?.Size
+  );
 
   const decideInput = () => {
-    if (location == 'inGrid') {
+    if (location == "inGrid") {
       return setCheckInput(inputValue);
     }
     setCheckInput(State && State);
@@ -74,25 +88,28 @@ const Button = ({
 
     calculateTop = Math.max(0, Math.min(calculateTop, dimensions.height));
 
-    setPosition({ top: Math.round(calculateTop), left: Math.round(calculateLeft) });
+    setPosition({
+      top: Math.round(calculateTop),
+      left: Math.round(calculateLeft),
+    });
 
     setParentOldDimensions([dimensions?.height, dimensions?.width]);
     handleData(
       {
         ID: data?.ID,
         Properties: {
-          ...(data?.Properties?.hasOwnProperty('Posn')
+          ...(data?.Properties?.hasOwnProperty("Posn")
             ? { Posn: [Math.round(calculateTop), Math.round(calculateLeft)] }
             : {}),
         },
       },
-      'WS'
+      "WS"
     );
 
     if (!localStorage.getItem(data?.ID)) {
       const event = JSON.stringify({
         Event: {
-          EventName: 'Select',
+          EventName: "Select",
           ID: data?.ID,
           Value: 0,
           Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
@@ -106,7 +123,7 @@ const Button = ({
       const { Value } = Event;
       const event = JSON.stringify({
         Event: {
-          EventName: 'Select',
+          EventName: "Select",
           ID: data?.ID,
           Value,
           Posn: [Math.round(calculateTop), Math.round(calculateLeft)],
@@ -132,12 +149,12 @@ const Button = ({
             CurCell: [row, column],
           },
         },
-        'WS'
+        "WS"
       );
 
     const triggerEvent = JSON.stringify({
       Event: {
-        EventName: 'CellChanged',
+        EventName: "CellChanged",
         ID: extractStringUntilSecondPeriod(data?.ID),
         Row: parseInt(row),
         Col: parseInt(column),
@@ -147,7 +164,7 @@ const Button = ({
 
     const updatedGridValues = JSON.stringify({
       Event: {
-        EventName: 'CellChanged',
+        EventName: "CellChanged",
         Values: values,
         CurCell: [row, column],
       },
@@ -161,8 +178,11 @@ const Button = ({
       },
     });
 
-    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
-    const exists = event && event.some((item) => item[0] === 'CellChanged');
+    localStorage.setItem(
+      extractStringUntilSecondPeriod(data?.ID),
+      updatedGridValues
+    );
+    const exists = event && event.some((item) => item[0] === "CellChanged");
     if (!exists) return;
     console.log(triggerEvent);
     console.log(formatCellEvent);
@@ -173,7 +193,7 @@ const Button = ({
   const handleSelectEvent = (value) => {
     const triggerEvent = JSON.stringify({
       Event: {
-        EventName: 'Select',
+        EventName: "Select",
         ID: data?.ID,
         Value: value ? 1 : 0,
         Posn: [position?.top, position?.left],
@@ -181,7 +201,7 @@ const Button = ({
       },
     });
     localStorage.setItem(data?.ID, triggerEvent);
-    const exists = Event && Event.some((item) => item[0] === 'Select');
+    const exists = Event && Event.some((item) => item[0] === "Select");
     if (!exists) return;
     console.log(triggerEvent);
     const event = JSON.stringify({
@@ -194,7 +214,7 @@ const Button = ({
   };
 
   const handleCheckBoxEvent = (value) => {
-    if (location == 'inGrid') {
+    if (location == "inGrid") {
       handleSelectEvent(value);
       handleCellChangedEvent(value);
     } else {
@@ -206,24 +226,24 @@ const Button = ({
     const Event = JSON.stringify({
       Event: {
         ID: extractStringUntilSecondPeriod(data?.ID),
-        EventName: 'CellMove',
+        EventName: "CellMove",
         Info: [row, column, 0, 0, 0, checkInput ? 1 : 0],
       },
     });
-    const exists = event && event.some((item) => item[0] === 'CellMove');
+    const exists = event && event.some((item) => item[0] === "CellMove");
     if (!exists) return;
     console.log(Event);
     socket.send(Event);
   };
 
   const handleCellMove = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.nextSibling;
     triggerCellMoveEvent(row + 1, column);
-    const element = nextSibling?.querySelectorAll('input');
+    const element = nextSibling?.querySelectorAll("input");
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
@@ -233,7 +253,7 @@ const Button = ({
   };
 
   const handleRightArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const nextSibling = grandParent.nextSibling;
@@ -241,12 +261,12 @@ const Button = ({
     triggerCellMoveEvent(row, column + 1);
     const element = nextSibling?.querySelectorAll(querySelector);
 
-    if (querySelector == 'select') return element && element[0].focus();
+    if (querySelector == "select") return element && element[0].focus();
 
     return element && element[0].select();
   };
   const handleLeftArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     console.log(inputRef);
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
@@ -260,13 +280,13 @@ const Button = ({
     return element && element[0]?.select();
   };
   const handleUpArrow = () => {
-    if (location !== 'inGrid') return;
+    if (location !== "inGrid") return;
     const parent = inputRef.current.parentElement;
     const grandParent = parent.parentElement;
     const superParent = grandParent.parentElement;
     const nextSibling = superParent.previousSibling;
     triggerCellMoveEvent(row - 1, column);
-    const element = nextSibling?.querySelectorAll('input');
+    const element = nextSibling?.querySelectorAll("input");
     element &&
       element.forEach((inputElement) => {
         if (inputElement.id === data?.ID) {
@@ -276,25 +296,25 @@ const Button = ({
   };
 
   const handleKeyPress = (e) => {
-    if (e.key == 'Enter') handleCellMove();
-    else if (e.key == 'ArrowRight') handleRightArrow();
-    else if (e.key == 'ArrowLeft') handleLeftArrow();
-    else if (e.key == 'ArrowDown') handleCellMove();
-    else if (e.key == 'ArrowUp') handleUpArrow();
+    if (e.key == "Enter") handleCellMove();
+    else if (e.key == "ArrowRight") handleRightArrow();
+    else if (e.key == "ArrowLeft") handleLeftArrow();
+    else if (e.key == "ArrowDown") handleCellMove();
+    else if (e.key == "ArrowUp") handleUpArrow();
   };
 
   //handle got focus event on all controls
   const handleGotFocus = () => {
-    const previousFocusedId = localStorage.getItem('current-focus');
+    const previousFocusedId = localStorage.getItem("current-focus");
     const gotFocusEvent = JSON.stringify({
       Event: {
-        EventName: 'GotFocus',
+        EventName: "GotFocus",
         ID: data?.ID,
-        Info: !previousFocusedId ? [''] : [previousFocusedId],
+        Info: !previousFocusedId ? [""] : [previousFocusedId],
       },
     });
-    localStorage.setItem('current-focus', data?.ID);
-    const exists = Event && Event.some((item) => item[0] === 'GotFocus');
+    localStorage.setItem("current-focus", data?.ID);
+    const exists = Event && Event.some((item) => item[0] === "GotFocus");
 
     if (!exists || previousFocusedId == data?.ID) return;
     console.log(gotFocusEvent);
@@ -303,14 +323,14 @@ const Button = ({
 
   if (isCheckBox) {
     let checkBoxPosition = null;
-    if (Align && Align == 'Left') {
-      checkBoxPosition = { position: 'absolute', right: 0, top: 3 };
-    } else if (!Align || Align == 'Right') {
-      checkBoxPosition = { position: 'absolute', left: 0, top: 3 };
+    if (Align && Align == "Left") {
+      checkBoxPosition = { position: "absolute", right: 0, top: 3 };
+    } else if (!Align || Align == "Right") {
+      checkBoxPosition = { position: "absolute", left: 0, top: 3 };
     }
 
-    if (location == 'inGrid') {
-      checkBoxPosition = { ...checkBoxPosition, marginLeft: '5px' };
+    if (location == "inGrid") {
+      checkBoxPosition = { ...checkBoxPosition, marginLeft: "5px" };
     }
 
     return (
@@ -319,11 +339,15 @@ const Button = ({
         style={{
           ...styles,
           zIndex: 1,
-          display: Visible == 0 ? 'none' : 'block',
+          display: Visible == 0 ? "none" : "block",
         }}
       >
-        {Align && Align == 'Left' ? (
-          <div style={{ fontSize: '12px', position: 'absolute', top: 0, left: 0 }}>{Caption}</div>
+        {Align && Align == "Left" ? (
+          <div
+            style={{ fontSize: "12px", position: "absolute", top: 0, left: 0 }}
+          >
+            {Caption}
+          </div>
         ) : null}
 
         <input
@@ -331,7 +355,7 @@ const Button = ({
           ref={inputRef}
           onKeyDown={(e) => handleKeyPress(e)}
           id={data?.ID}
-          type='checkbox'
+          type="checkbox"
           style={checkBoxPosition}
           checked={checkInput}
           onChange={(e) => {
@@ -339,8 +363,12 @@ const Button = ({
             handleCheckBoxEvent(e.target.checked);
           }}
         />
-        {!Align || Align == 'Right' ? (
-          <div style={{ fontSize: '12px', position: 'absolute', top: 0, left: 16 }}>{Caption}</div>
+        {!Align || Align == "Right" ? (
+          <div
+            style={{ fontSize: "12px", position: "absolute", top: 0, left: 16 }}
+          >
+            {Caption}
+          </div>
         ) : null}
       </div>
     );
@@ -348,21 +376,21 @@ const Button = ({
 
   if (isRadio) {
     let radioPosition = null;
-    if (Align && Align == 'Left') {
-      radioPosition = { position: 'absolute', right: 0, top: 3 };
-    } else if (!Align || Align == 'Right') {
-      radioPosition = { position: 'absolute', left: 0, top: 3 };
+    if (Align && Align == "Left") {
+      radioPosition = { position: "absolute", right: 0, top: 3 };
+    } else if (!Align || Align == "Right") {
+      radioPosition = { position: "absolute", left: 0, top: 3 };
     }
 
     const handleRadioSelectEvent = (value) => {
       const emitEvent = JSON.stringify({
         Event: {
-          EventName: 'Select',
+          EventName: "Select",
           ID: data?.ID,
           Value: value,
         },
       });
-      const exists = Event && Event.some((item) => item[0] === 'Select');
+      const exists = Event && Event.some((item) => item[0] === "Select");
       if (!exists) return;
 
       const event = JSON.stringify({
@@ -372,13 +400,15 @@ const Button = ({
         },
       });
       console.log(emitEvent);
-      
+
       socket.send(event);
     };
 
     const handleRadioButton = (id, value) => {
-      const parentElement = document.getElementById(extractStringUntilSecondPeriod(data?.ID));
-      var radioInputs = parentElement.getElementsByTagName('input');
+      const parentElement = document.getElementById(
+        extractStringUntilSecondPeriod(data?.ID)
+      );
+      var radioInputs = parentElement.getElementsByTagName("input");
       for (var i = 0; i < radioInputs.length; i++) {
         var radioId = radioInputs[i].id;
         const button = JSON.parse(getObjectById(dataRef.current, radioId));
@@ -390,7 +420,7 @@ const Button = ({
               State: data?.ID == button?.ID ? 1 : 0,
             },
           },
-          'WS'
+          "WS"
         );
       }
 
@@ -406,33 +436,82 @@ const Button = ({
         style={{
           ...styles,
           zIndex: 1,
-          display: Visible == 0 ? 'none' : 'block',
+          display: Visible == 0 ? "none" : "block",
         }}
       >
-        {Align && Align == 'Left' ? (
-          <div style={{ fontSize: '12px', position: 'absolute', top: 2, left: 0 }}>{Caption}</div>
+        {Align && Align == "Left" ? (
+          <div
+            style={{ fontSize: "12px", position: "absolute", top: 2, left: 0 }}
+          >
+            {Caption}
+          </div>
         ) : null}
         <input
           onFocus={handleGotFocus}
           name={extractStringUntilSecondPeriod(data?.ID)}
           id={data?.ID}
           checked={radioValue}
-          type='radio'
+          type="radio"
           value={Caption}
           onChange={(e) => {
             handleRadioButton(data?.ID, e.target.checked);
           }}
         />
-        {!Align || Align == 'Right' ? (
-          <div style={{ fontSize: '12px', position: 'absolute', top: 2, left: 16 }}>{Caption}</div>
+        {!Align || Align == "Right" ? (
+          <div
+            style={{ fontSize: "12px", position: "absolute", top: 2, left: 16 }}
+          >
+            {Caption}
+          </div>
         ) : null}
       </div>
     );
   }
 
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
   return (
     <div
       id={data?.ID}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       onClick={() => {
         console.log(
           JSON.stringify({
@@ -442,16 +521,19 @@ const Button = ({
             },
           })
         );
-        if (localStorage.getItem("current-focus") && localStorage.getItem("shouldChangeEvent")=== "true") {
-        console.log(
-          JSON.stringify({
-            Event: {
-              EventName: "Change",
-              ID: localStorage.getItem("current-focus"),
-              Info: [data?.ID]
-            },
-          })
-        );
+        if (
+          localStorage.getItem("current-focus") &&
+          localStorage.getItem("shouldChangeEvent") === "true"
+        ) {
+          console.log(
+            JSON.stringify({
+              Event: {
+                EventName: "Change",
+                ID: localStorage.getItem("current-focus"),
+                Info: [data?.ID],
+              },
+            })
+          );
 
           socket.send(
             JSON.stringify({
@@ -463,8 +545,6 @@ const Button = ({
             })
           );
         }
-
-      
 
         socket.send(
           JSON.stringify({
@@ -479,27 +559,33 @@ const Button = ({
       }}
       style={{
         ...styles,
-        border: '1px solid black',
-        textAlign: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'white',
-        borderRadius: '4px',
-        borderColor: '#ccc',
-        fontSize: '12px',
+        border: "1px solid black",
+        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "white",
+        borderRadius: "4px",
+        borderColor: "#ccc",
+        fontSize: "12px",
         // fontSize: '11px',
-        cursor: 'pointer',
+        cursor: "pointer",
         zIndex: 1,
-        display: Visible == 0 ? 'none' : 'flex',
-        ...(data?.Properties?.hasOwnProperty('Posn') ? { top: position?.top } : {}),
-        ...(data?.Properties?.hasOwnProperty('Posn') ? { left: position?.left } : {}),
+        display: Visible == 0 ? "none" : "flex",
+        ...(data?.Properties?.hasOwnProperty("Posn")
+          ? { top: position?.top }
+          : {}),
+        ...(data?.Properties?.hasOwnProperty("Posn")
+          ? { left: position?.left }
+          : {}),
         // left: position?.left,
       }}
     >
-      {ImageData ? <div style={{ ...imageStyles, width: '100%', height: '100%' }}></div> : null}
+      {ImageData ? (
+        <div style={{ ...imageStyles, width: "100%", height: "100%" }}></div>
+      ) : null}
 
       {hasCaption
-        ? data?.Properties?.Caption?.includes('&')
+        ? data?.Properties?.Caption?.includes("&")
           ? data?.Properties?.Caption?.substring(1)
           : data?.Properties?.Caption
         : null}

@@ -34,7 +34,7 @@ const flattenIfThreeLevels = (arr) => {
 
 const Text = ({ data, fontProperties }) => {
   const { Visible, Points, Text, FCol, BCol } = data?.Properties;
-  const {  fontScale} = useAppData();
+const { socket, fontScale} = useAppData();
 
   const { reRender } = useForceRerender();
 
@@ -79,7 +79,45 @@ const Text = ({ data, fontProperties }) => {
   };
 
   // Text can be the array []  so Map the Text not the Points
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
 
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
   return (
     <>
       <div
@@ -89,6 +127,8 @@ const Text = ({ data, fontProperties }) => {
           top: 0,
           left: 0,
         }}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
       >
         <svg
           height={parentSize && parentSize[0]}
