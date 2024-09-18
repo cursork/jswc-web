@@ -889,6 +889,7 @@ const Grid = ({ data }) => {
           ? null
           : body.push(obj);
         for (let j = 0; j <= columns; j++) {
+          if(!Values[i][j]) continue;
           let obj = {
             type: "cell",
             value: Values[i][j],
@@ -1037,7 +1038,7 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
-        id={data?.ID+"cell"}
+        id={data?.ID}
         style={{
           ...style,
           height,
@@ -1051,13 +1052,13 @@ const Grid = ({ data }) => {
               ? "scroll"
               : HScroll == -1 || HScroll == -2
               ? "auto"
-              : "hidden",
+              : "auto",
           overflowY:
             VScroll == -3
               ? "scroll"
               : VScroll == -1 || HScroll == -2
               ? "auto"
-              : "hidden",
+              : "auto",
         }}
       >
         {gridData?.map((row, rowi) => {
