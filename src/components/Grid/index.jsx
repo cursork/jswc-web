@@ -323,7 +323,7 @@ const Grid = ({ data }) => {
     setProceed,
     proceedEventArray,
     setProceedEventArray,
-    findAggregatedPropertiesData
+    findAggregatedPropertiesData,
   } = useAppData();
   // console.log("waiting", { proceed, setProceed, proceedEventArray });
 
@@ -367,8 +367,8 @@ const Grid = ({ data }) => {
   const [width, setWidth] = useState(Size[1]);
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
-  let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
-  let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
+  let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
+  let defaultCol = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1];
   const [selectedRow, setSelectedRow] = useState(
     !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
   );
@@ -376,24 +376,67 @@ const Grid = ({ data }) => {
     !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   );
 
+  const handleMouseDown = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mousedownEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseDown",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseDown");
+    if (!exists) return;
+    console.log(mousedownEvent);
+    socket.send(mousedownEvent);
+  };
+
+  const handleMouseUp = (e) => {
+    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+    const x = e.clientX;
+    const y = e.clientY;
+    const button = e.button;
+
+    const mouseUpEvent = JSON.stringify({
+      Event: {
+        EventName: "MouseUp",
+        ID: data?.ID,
+        Info: [x, y, button, shiftState],
+      },
+    });
+
+    const exists = Event && Event.some((item) => item[0] === "MouseUp");
+    if (!exists) return;
+    console.log(mouseUpEvent);
+    socket.send(mouseUpEvent);
+  };
+
   useEffect(() => {
     if (CurCell) {
-      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0] 
-      let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1] - 1
-      setSelectedRow((prev) => prev !== CurCell[0] ? defaultRow : prev);
-      setSelectedColumn((prev) => prev !== CurCell[1] ? defaultCol : prev);
+      let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
+      let defaultCol = !CurCell
+        ? RowTitles?.length > 0
+          ? 1
+          : 0
+        : CurCell[1] - 1;
+      setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev));
+      setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev));
     }
   }, [CurCell]);
-  
+
   // useEffect(()=>{
   //   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
   //   let defaultCol =  !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   //   setSelectedRow( defaultRow === 0 ? 0: defaultRow  )
   //   setSelectedColumn( defaultCol === 0 ? 0: defaultCol -1 )
-    
+
   // },[])
   // console.log("issue arrow nq", CurCell, selectedRow, selectedColumn)
-
 
   const style = setStyle(data?.Properties);
 
@@ -441,7 +484,7 @@ const Grid = ({ data }) => {
       })
     );
   };
-  
+
   const waitForProceed = (localStorageBool) => {
     return new Promise((resolve) => {
       const checkProceed = () => {
@@ -460,7 +503,7 @@ const Grid = ({ data }) => {
       checkProceed();
       // setTimeout(() => {
       //   checkProceed();
-      // }, 80); 
+      // }, 80);
     });
   };
 
@@ -473,16 +516,26 @@ const Grid = ({ data }) => {
     setEventId(eventId);
     let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
 
-    const parentExists = Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
+    const parentExists =
+      Event && Event?.some((item) => item[0].toLowerCase() === "keypress");
 
-    let keys = Object.keys(data)
-    let childKey
-    const checkArray = keys.reduce((prev, current)=> {
-      if(data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")) childKey = current
-      return [...prev, data[current]?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")]
-    },[])
-    const childExists = checkArray.some(item => item === true)
-
+    let keys = Object.keys(data);
+    let childKey;
+    const checkArray = keys.reduce((prev, current) => {
+      if (
+        data[current]?.Properties?.Event?.some(
+          (item) => item[0].toLowerCase() === "keypress"
+        )
+      )
+        childKey = current;
+      return [
+        ...prev,
+        data[current]?.Properties?.Event?.some(
+          (item) => item[0].toLowerCase() === "keypress"
+        ),
+      ];
+    }, []);
+    const childExists = checkArray.some((item) => item === true);
 
     // const childExists = data?.E1?.Properties?.Event?.some((item) => item[0].toLowerCase() === "keypress")
 
@@ -495,9 +548,8 @@ const Grid = ({ data }) => {
       },
     });
 
-
     const keyPressEvent = JSON.stringify({
-      Event: { 
+      Event: {
         EventName: "KeyPress",
         ID: data[childKey]?.ID,
         EventID: eventId,
@@ -505,14 +557,13 @@ const Grid = ({ data }) => {
       },
     });
 
-    if(parentExists && !!!childExists){
-      socket.send(parentKeyPressEvent)
+    if (parentExists && !!!childExists) {
+      socket.send(parentKeyPressEvent);
     }
 
     if (childExists) {
       socket.send(keyPressEvent);
     }
-
 
     // setTimeout(()=>{
     // }, 100)
@@ -531,10 +582,10 @@ const Grid = ({ data }) => {
     let localStoragValue = JSON.parse(localStorage.getItem(data?.ID));
     // console.log("waiting initial local storage", localStoragValue)
 
-
     const updatePosition = async () => {
       if (event.key === "ArrowRight") {
-        if (childExists || parentExists)  await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
         // console.log("waiting await proceed done")
         // console.log("issue arrow right initial", {selectedRow, selectedColumn})
         setSelectedColumn((prev) => Math.min(prev + 1, columns));
@@ -542,20 +593,8 @@ const Grid = ({ data }) => {
         //   ? selectedColumn + 1
         //   : selectedColumn + 1 })
         if (!localStoragValue) {
-          console.log("writing local storage", JSON.stringify({
-            Event: {
-              CurCell: [
-                selectedRow,
-                RowTitles?.length > 0
-                  ? selectedColumn + 1
-                  : selectedColumn + 2,
-              ],
-            },
-          }) )
-          if (RowTitles?.length > 0 && selectedColumn == columns) return;
-          
-          localStorage.setItem(
-            data?.ID,   
+          console.log(
+            "writing local storage",
             JSON.stringify({
               Event: {
                 CurCell: [
@@ -567,21 +606,37 @@ const Grid = ({ data }) => {
               },
             })
           );
-        } 
-        else {
           if (RowTitles?.length > 0 && selectedColumn == columns) return;
-          console.log(JSON.stringify({
-            Event: {
-              CurCell: [
-                selectedRow,
-                RowTitles?.length > 0
-                  ? selectedColumn + 1
-                  : selectedColumn + 2,
-              ],
-              Values: localStoragValue?.Event?.Values,
-            },
-          }) )
-          
+
+          localStorage.setItem(
+            data?.ID,
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0
+                    ? selectedColumn + 1
+                    : selectedColumn + 2,
+                ],
+              },
+            })
+          );
+        } else {
+          if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          console.log(
+            JSON.stringify({
+              Event: {
+                CurCell: [
+                  selectedRow,
+                  RowTitles?.length > 0
+                    ? selectedColumn + 1
+                    : selectedColumn + 2,
+                ],
+                Values: localStoragValue?.Event?.Values,
+              },
+            })
+          );
+
           localStorage.setItem(
             data?.ID,
             JSON.stringify({
@@ -604,13 +659,14 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowLeft") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
         // console.log("issue arrow left prev", {selectedRow, selectedColumn})
         setSelectedColumn((prev) =>
           Math.max(prev - 1, RowTitles?.length > 0 ? 1 : 0)
         );
         // console.log("issue arrow left", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn})
-        
+
         if (!localStoragValue) {
           if (RowTitles?.length > 0 && selectedColumn == 1) return;
 
@@ -646,7 +702,8 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowUp") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
         setSelectedRow((prev) => Math.max(prev - 1, 1));
         if (!localStoragValue) {
           if (selectedRow == 1 && RowTitles?.length > 0) return;
@@ -683,7 +740,8 @@ const Grid = ({ data }) => {
           0
         );
       } else if (event.key === "ArrowDown") {
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
         setSelectedRow((prev) => Math.min(prev + 1, rows - 1));
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
@@ -719,9 +777,10 @@ const Grid = ({ data }) => {
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
-      } else if (event.key === "PageDown"){
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
-        const demoRow = Math.min(selectedRow+9,10)
+      } else if (event.key === "PageDown") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
+        const demoRow = Math.min(selectedRow + 9, 10);
         setSelectedRow(demoRow);
         if (!localStoragValue) {
           if (selectedRow == rows - 1) return;
@@ -757,9 +816,9 @@ const Grid = ({ data }) => {
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
-
-      } else if (event.key === "PageUp"){
-        if (childExists || parentExists) await waitForProceed(localStorage.getItem(eventId));
+      } else if (event.key === "PageUp") {
+        if (childExists || parentExists)
+          await waitForProceed(localStorage.getItem(eventId));
         setSelectedRow((prev) => Math.max(prev - 9, 1));
         if (!localStoragValue) {
           if (selectedRow == 1 && RowTitles?.length > 0) return;
@@ -795,17 +854,13 @@ const Grid = ({ data }) => {
           RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
-
       }
-
     };
 
     // updatePosition();
-    setTimeout(()=>{
+    setTimeout(() => {
       updatePosition();
-    }, 120)
-
-   
+    }, 120);
   };
 
   const modifyGridData = () => {
@@ -889,7 +944,7 @@ const Grid = ({ data }) => {
           ? null
           : body.push(obj);
         for (let j = 0; j <= columns; j++) {
-          if(!Values[i][j]) continue;
+          if (!Values[i][j]) continue;
           let obj = {
             type: "cell",
             value: Values[i][j],
@@ -1038,6 +1093,8 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
         id={data?.ID}
         style={{
           ...style,
@@ -1075,7 +1132,9 @@ const Grid = ({ data }) => {
                       handleCellClick(rowi, columni);
                       // handleCellMove(rowi, columni + 1, '');
                     }}
-                    id={`${gridId}.r${rowi + 1}.c${columni + 1}-cell2-${data.type}`}
+                    id={`${gridId}.r${rowi + 1}.c${columni + 1}-cell2-${
+                      data.type
+                    }`}
                     style={{
                       borderRight: isFocused
                         ? "1px solid blue"
@@ -1089,10 +1148,10 @@ const Grid = ({ data }) => {
                       minWidth: `${data?.width}px`,
                       maxWidth: `${data?.width}px`,
                       minheight: `${data?.height}px`,
-                      maxheight: `${data
-                        ?.height}px`,
+                      maxheight: `${data?.height}px`,
                       backgroundColor:
-                      (selectedRow === rowi && data.type == "cell") || (selectedColumn === columni && data.type == "header" )
+                        (selectedRow === rowi && data.type == "cell") ||
+                        (selectedColumn === columni && data.type == "header")
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
                       textAlign: data.type == "header" ? "center" : "end",
