@@ -330,7 +330,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         left: position?.left,
       }}
       onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+      onMouseUp={handleMouseUp}
     >
       <select
         ref={inputRef}
