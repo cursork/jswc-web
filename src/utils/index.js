@@ -4,6 +4,101 @@ export * from "./flexStyles";
 export * from "./getType";
 export * from "./getLastTabButton";
 
+
+export const handleMouseDown = (e, socket, Event, data) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+  const x = e.clientX;
+  const y = e.clientY;
+  const button = e.button;
+
+  const mousedownEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseDown",
+      ID: data?.ID,
+      Info: [x, y, button, shiftState],
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseDown");
+  if (!exists) return;
+  console.log(mousedownEvent);
+  socket.send(mousedownEvent);
+};
+
+export const handleMouseUp = (e, socket, Event, data) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+  const x = e.clientX;
+  const y = e.clientY;
+  const button = e.button;
+
+  const mouseUpEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseUp",
+      ID: data?.ID,
+      Info: [x, y, button, shiftState],
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseUp");
+  if (!exists) return;
+  console.log(mouseUpEvent);
+  socket.send(mouseUpEvent);
+};
+
+export const handleMouseEnter = (e, socket, Event, data) => {
+  const previousObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
+
+  const mouseEnterEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseEnter",
+      ID: data?.ID,
+      Info: [previousObjectName], 
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseEnter");
+  if (!exists) return;
+  console.log(mouseEnterEvent);
+  socket.send(mouseEnterEvent);
+};
+
+export const handleMouseLeave = (e, socket, Event, data) => {
+  const newObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
+
+  const mouseLeaveEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseLeave",
+      ID: data?.ID,
+      Info: [newObjectName], 
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseLeave");
+  if (!exists) return;
+  console.log(mouseLeaveEvent);
+  socket.send(mouseLeaveEvent);
+};
+
+export const handleMouseMove = (e, socket, Event, data) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+  const x = e.clientX;
+  const y = e.clientY;
+  const button = e.buttons;
+
+  const mouseMoveEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseMove",
+      ID: data?.ID,
+      Info: [y, x, button, shiftState], 
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseMove");
+  if (!exists) return;
+  console.log(mouseMoveEvent);
+  socket.send(mouseMoveEvent);
+};
+
 export const setStyle = (Properties, position = "absolute", Flex = 0) => {
   if (Flex == 2) {
     return {

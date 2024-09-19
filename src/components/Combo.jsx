@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave } from '../utils';
 
 import { useAppData, useResizeObserver } from '../hooks';
 import { useState, useRef } from 'react';
@@ -280,45 +280,6 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   };
 
   // console.log({ comboInput });
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
-
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
 
   return (
     <div
@@ -329,8 +290,21 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
         top: position?.top,
         left: position?.left,
       }}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event,data);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data);
+      }}
+      onMouseEnter={(e) => {
+        handleMouseEnter(e, socket, Event, data);
+      }}
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data);
+      }}
+      onMouseLeave={(e) => {
+        handleMouseLeave(e, socket, Event, data);
+      }}
     >
       <select
         ref={inputRef}
@@ -349,7 +323,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
           handleSelItemsEvent(e.target.value);
         }}
       >
-        {Items && Items.map((item, i) => <option value={item}>{item}</option>)}
+        {Items && Items.map((item, i) => <option value={item} key={i}>{item}</option>)}
       </select>
     </div>
   );

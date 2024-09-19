@@ -1,4 +1,4 @@
-import { getObjectById, rgbColor } from "../../utils";
+import { getObjectById, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from "../../utils";
 import { useAppData } from "../../hooks";
 import { useEffect, useState } from "react";
 
@@ -33,7 +33,7 @@ const flattenIfThreeLevels = (arr) => {
 };
 
 const Text = ({ data, fontProperties }) => {
-  const { Visible, Points, Text, FCol, BCol } = data?.Properties;
+  const { Visible, Points, Text, FCol, BCol, Event } = data?.Properties;
 const { socket, fontScale} = useAppData();
 
   const { reRender } = useForceRerender();
@@ -79,45 +79,7 @@ const { socket, fontScale} = useAppData();
   };
 
   // Text can be the array []  so Map the Text not the Points
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
-
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
+ 
   return (
     <>
       <div
@@ -127,8 +89,21 @@ const { socket, fontScale} = useAppData();
           top: 0,
           left: 0,
         }}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        onMouseDown={(e) => {
+          handleMouseDown(e, socket, Event,data);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e, socket, Event, data);
+        }}
+        onMouseEnter={(e) => {
+          handleMouseEnter(e, socket, Event, data);
+        }}
+        onMouseMove={(e) => {
+          handleMouseMove(e, socket, Event, data);
+        }}
+        onMouseLeave={(e) => {
+          handleMouseLeave(e, socket, Event, data);
+        }}
       >
         <svg
           height={parentSize && parentSize[0]}

@@ -295,6 +295,11 @@ import {
   generateHeader,
   extractStringUntilSecondPeriod,
   rgbColor,
+  handleMouseDown,
+  handleMouseMove,
+  handleMouseLeave,
+  handleMouseEnter,
+  handleMouseUp,
 } from "../../utils";
 import { useResizeObserver, useAppData } from "../../hooks";
 import GridEdit from "./GridEdit";
@@ -376,45 +381,7 @@ const Grid = ({ data }) => {
     !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   );
 
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
-
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
+ 
 
   useEffect(() => {
     if (CurCell) {
@@ -1093,8 +1060,21 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        onMouseDown={(e) => {
+          handleMouseDown(e, socket, Event,data);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e, socket, Event, data);
+        }}
+        onMouseEnter={(e) => {
+          handleMouseEnter(e, socket, Event, data);
+        }}
+        onMouseMove={(e) => {
+          handleMouseMove(e, socket, Event, data);
+        }}
+        onMouseLeave={(e) => {
+          handleMouseLeave(e, socket, Event, data);
+        }}
         id={data?.ID}
         style={{
           ...style,

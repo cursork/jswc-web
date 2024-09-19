@@ -1,11 +1,11 @@
-import { extractStringUntilSecondPeriod, setStyle } from '../utils';
+import { extractStringUntilSecondPeriod, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, setStyle } from '../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useAppData, useResizeObserver } from '../hooks';
 
 const List = ({ data }) => {
   const {socket} = useAppData()
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems, Visible, Size } = data?.Properties;
+  const { Items, SelItems, Visible, Size, Event } = data?.Properties;
   const ref = useRef();
   const [selectedItem, _] = useState(1);
   const [items, setItems] = useState(SelItems);
@@ -41,45 +41,6 @@ const List = ({ data }) => {
 
     setItems(updatedArray);
   };
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
-
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
 
   return (
     <div
@@ -90,8 +51,21 @@ const List = ({ data }) => {
         border: '1px solid black',
         display: Visible == 0 ? 'none' : 'block',
       }}
-      onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event,data);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data);
+      }}
+      onMouseEnter={(e) => {
+        handleMouseEnter(e, socket, Event, data);
+      }}
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data);
+      }}
+      onMouseLeave={(e) => {
+        handleMouseLeave(e, socket, Event, data);
+      }}
     >
       {Items &&
         Items.map((item, index) =>

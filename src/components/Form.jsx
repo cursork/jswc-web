@@ -4,6 +4,11 @@ import {
   rgbColor,
   getImageStyles,
   parseFlexStyles,
+  handleMouseDown,
+  handleMouseUp,
+  handleMouseEnter,
+  handleMouseMove,
+  handleMouseLeave,
 } from "../utils";
 import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver, useWindowDimensions } from "../hooks";
@@ -131,44 +136,21 @@ const Form = ({ data }) => {
 
   return (
     <div
-      onMouseUp={(e) => {
-        const shiftState = e.shiftKey ? 1 : 0; // Shift state: 1 for Shift, 0 for no Shift
-        const x = e.clientX; // X position of the mouse
-        const y = e.clientY; // Y position of the mouse
-        const button = e.button;
-
-        const mouseUpEvent = JSON.stringify({
-          Event: {
-            EventName: "MouseUp",
-            ID: data?.ID,
-            Info: [x, y, button, shiftState],
-          },
-        });
-
-        const exists = Event && Event.some((item) => item[0] === "MouseUp");
-        if (!exists) return;
-        console.log(mouseUpEvent);
-        socket.send(mouseUpEvent);
-      }}
-      onMouseDown={(e) => {
-        const shiftState = e.shiftKey ? 1 : 0; // Shift state: 1 for Shift, 0 for no Shift
-        const x = e.clientX; // X position of the mouse
-        const y = e.clientY; // Y position of the mouse
-        const button = e.button;
-
-        const mousedownEvent = JSON.stringify({
-          Event: {
-            EventName: "MouseDown",
-            ID: data?.ID,
-            Info: [x, y, button, shiftState],
-          },
-        });
-
-        const exists = Event && Event.some((item) => item[0] === "MouseDown");
-        if (!exists) return;
-        console.log(mousedownEvent);
-        socket.send(mousedownEvent);
-      }}
+    onMouseDown={(e) => {
+      handleMouseDown(e, socket, Event,data);
+    }}
+    onMouseUp={(e) => {
+      handleMouseUp(e, socket, Event, data);
+    }}
+    onMouseEnter={(e) => {
+      handleMouseEnter(e, socket, Event, data);
+    }}
+    onMouseMove={(e) => {
+      handleMouseMove(e, socket, Event, data);
+    }}
+    onMouseLeave={(e) => {
+      handleMouseLeave(e, socket, Event, data);
+    }}
       id={data?.ID}
       style={{
         ...formStyles,
@@ -187,8 +169,8 @@ const Form = ({ data }) => {
         // overflow: 'hidden',
       }}
     >
-      {Object.keys(updatedData).map((key) => {
-        return <SelectComponent data={updatedData[key]} />;
+      {Object.keys(updatedData).map((key, i) => {
+        return <SelectComponent data={updatedData[key]} key={i} />;
       })}
     </div>
   );

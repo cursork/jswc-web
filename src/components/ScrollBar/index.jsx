@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp } from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
@@ -22,12 +23,14 @@ const ScrollBar = ({ data }) => {
   const trackHeight = !Size ? parentSize && parentSize[0] : Size && Size[0];
   const trackWidth = !Size ? parentSize && parentSize[1] : Size && Size[1];
 
-  const handleTrackMouseEnter = () => {
+  const handleTrackMouseEnter = (e) => {
     setShowButtons(true);
+    handleMouseEnter(e, socket, Event, data)
   };
-
-  const handleTrackMouseLeave = () => {
+  
+  const handleTrackMouseLeave = (e) => {
     setShowButtons(false);
+    handleMouseLeave(e, socket, Event, data)
   };
 
   // Updated handleThumbDrag function to only emit the event after the drag is complete
@@ -197,54 +200,26 @@ const ScrollBar = ({ data }) => {
   useEffect(() => {
     setScaledValue((prevValue) => Math.min( Thumb, maxValue ));
   }, [Thumb]);
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
 
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
 
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
 
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
-
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
-
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
-  
   return (
     <div
       id={data?.ID}
       onMouseEnter={handleTrackMouseEnter}
       onMouseLeave={handleTrackMouseLeave}
       style={isHorizontal ? horizontalPosition : verticalPosition}
-      onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event,data);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data);
+      }}
+      
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data);
+      }}
+    
     >
       <div>
         <div

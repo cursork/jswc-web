@@ -18,6 +18,7 @@ const Group = ({ data }) => {
     Size,
     Flex = 0,
     CSS,
+    Event,
   } = data?.Properties;
   const { findDesiredData } = useAppData();
   const dimensions = useResizeObserver(
@@ -41,45 +42,45 @@ const Group = ({ data }) => {
   const updatedData = excludeKeys(data);
 
   const styles = setStyle(data?.Properties, "absolute", Flex);
-  const handleMouseDown = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
+ 
+  //   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
+  //   const x = e.clientX;
+  //   const y = e.clientY;
+  //   const button = e.button;
 
-    const mousedownEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseDown",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
+  //   const mousedownEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "MouseDown",
+  //       ID: data?.ID,
+  //       Info: [x, y, button, shiftState],
+  //     },
+  //   });
 
-    const exists = Event && Event.some((item) => item[0] === "MouseDown");
-    if (!exists) return;
-    console.log(mousedownEvent);
-    socket.send(mousedownEvent);
-  };
+  //   const exists = Event && Event.some((item) => item[0] === "MouseDown");
+  //   if (!exists) return;
+  //   console.log(mousedownEvent);
+  //   socket.send(mousedownEvent);
+  // };
 
-  const handleMouseUp = (e) => {
-    const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-    const x = e.clientX;
-    const y = e.clientY;
-    const button = e.button;
+  // const handleMouseUp = (e) => {
+  //   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+  //   const x = e.clientX;
+  //   const y = e.clientY;
+  //   const button = e.button;
 
-    const mouseUpEvent = JSON.stringify({
-      Event: {
-        EventName: "MouseUp",
-        ID: data?.ID,
-        Info: [x, y, button, shiftState],
-      },
-    });
+  //   const mouseUpEvent = JSON.stringify({
+  //     Event: {
+  //       EventName: "MouseUp",
+  //       ID: data?.ID,
+  //       Info: [x, y, button, shiftState],
+  //     },
+  //   });
 
-    const exists = Event && Event.some((item) => item[0] === "MouseUp");
-    if (!exists) return;
-    console.log(mouseUpEvent);
-    socket.send(mouseUpEvent);
-  };
+  //   const exists = Event && Event.some((item) => item[0] === "MouseUp");
+  //   if (!exists) return;
+  //   console.log(mouseUpEvent);
+  //   socket.send(mouseUpEvent);
+  // };
 
   return (
     <div
@@ -93,8 +94,21 @@ const Group = ({ data }) => {
         ...flexStyles,
       }}
       id={data?.ID}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event,data);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data);
+      }}
+      onMouseEnter={(e) => {
+        handleMouseEnter(e, socket, Event, data);
+      }}
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data);
+      }}
+      onMouseLeave={(e) => {
+        handleMouseLeave(e, socket, Event, data);
+      }}
     >
       {data?.Properties?.Caption != "" && (
         <span

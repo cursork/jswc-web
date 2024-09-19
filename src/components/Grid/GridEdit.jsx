@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useAppData } from '../../hooks';
-import { calculateDateAfterDays, getObjectById, calculateDaysFromDate } from '../../utils';
+import { calculateDateAfterDays, getObjectById, calculateDaysFromDate, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave } from '../../utils';
 import dayjs from 'dayjs';
 
 const GridEdit = ({ data }) => {
@@ -15,7 +15,9 @@ const GridEdit = ({ data }) => {
   const [dateFormattedValue, setDateFormattedValue] = useState(data?.value);
 
 
-  const { FieldType, Decimal, SelText } = data?.typeObj?.Properties;
+  const { FieldType, Decimal, SelText, Event } = data?.typeObj?.Properties;
+  
+
   // console.log({value: data.value, focused: data.focused, datatype: data?.typeObj.ID, SelText})
 
   const { dataRef, findDesiredData, handleData, socket, socketData } = useAppData();
@@ -413,6 +415,21 @@ const GridEdit = ({ data }) => {
             onDoubleClick={() => {
               setIsEditable(true);
             }}
+            onMouseDown={(e) => {
+              handleMouseDown(e, socket, Event,data);
+            }}
+            onMouseUp={(e) => {
+              handleMouseUp(e, socket, Event, data);
+            }}
+            onMouseEnter={(e) => {
+              handleMouseEnter(e, socket, Event, data);
+            }}
+            onMouseMove={(e) => {
+              handleMouseMove(e, socket, Event, data);
+            }}
+            onMouseLeave={(e) => {
+              handleMouseLeave(e, socket, Event, data);
+            }}
             style={{
               backgroundColor: data?.backgroundColor,
               outline: 0,
@@ -477,6 +494,21 @@ const GridEdit = ({ data }) => {
               e.stopPropagation();
               handleKeyPress(e);
             }}
+            onMouseDown={(e) => {
+              handleMouseDown(e, socket, Event,data);
+            }}
+            onMouseUp={(e) => {
+              handleMouseUp(e, socket, Event, data);
+            }}
+            onMouseEnter={(e) => {
+              handleMouseEnter(e, socket, Event, data);
+            }}
+            onMouseMove={(e) => {
+              handleMouseMove(e, socket, Event, data);
+            }}
+            onMouseLeave={(e) => {
+              handleMouseLeave(e, socket, Event, data);
+            }}
           />
         )}
       </>
@@ -502,6 +534,21 @@ const GridEdit = ({ data }) => {
             width: '100%',
             paddingLeft: '5px',
             paddingRight: '5px'
+          }}
+          onMouseDown={(e) => {
+            handleMouseDown(e, socket, Event,data);
+          }}
+          onMouseUp={(e) => {
+            handleMouseUp(e, socket, Event, data);
+          }}
+          onMouseEnter={(e) => {
+            handleMouseEnter(e, socket, Event, data);
+          }}
+          onMouseMove={(e) => {
+            handleMouseMove(e, socket, Event, data);
+          }}
+          onMouseLeave={(e) => {
+            handleMouseLeave(e, socket, Event, data);
           }}
         >
           {!data?.formattedValue ? data?.value : data?.formattedValue}
@@ -539,6 +586,21 @@ const GridEdit = ({ data }) => {
             handleEditEvents();
           }}
           autoFocus
+            onMouseDown={(e) => {
+          handleMouseDown(e, socket, Event,data);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e, socket, Event, data);
+        }}
+        onMouseEnter={(e) => {
+          handleMouseEnter(e, socket, Event, data);
+        }}
+        onMouseMove={(e) => {
+          handleMouseMove(e, socket, Event, data);
+        }}
+        onMouseLeave={(e) => {
+          handleMouseLeave(e, socket, Event, data);
+        }}
         />
       )}
     </>
