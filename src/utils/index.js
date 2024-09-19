@@ -450,3 +450,14 @@ export const createListViewObjects = (
 
   return result;
 };
+
+export const getCurrentUrl = () => {
+  const currentUrl = window.location.origin;
+  const path = window.location.pathname !== "/" ? window.location.pathname : "";
+
+  if (window.location.hostname === "localhost") {
+    return `http://localhost:22322` + path;
+  } else {
+    return currentUrl + path;
+  }
+};

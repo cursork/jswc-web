@@ -7,6 +7,7 @@ import {
   findFormParentID,
   deleteFormAndSiblings,
   rgbColor,
+  getCurrentUrl,
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
@@ -42,8 +43,7 @@ const App = () => {
     dataRef.current = {};
     setSocketData([]);
     localStorage.clear();
-    const currentPort = window.location.port;
-    fetchData(currentPort);
+    fetchData();
 
     const handleBeforeUnload = () => {
       // Attempt to send a closing message before the tab is closed
@@ -266,14 +266,16 @@ const App = () => {
     reRender();
   }
 
-  const fetchData = (port) => {
-    const runningPort = port == '5173' ? '22322' : port;
+  const fetchData = () => {
     let zoom = Math.round(window.devicePixelRatio * 100);
-    console.log("Socket",{socket: window.location})
-    webSocketRef.current = new WebSocket(`ws://${window.location.hostname}:${runningPort}/`);
+    const envUrl =getCurrentUrl()
+    const url = URL.parse(envUrl)
 
-
-
+    const protocol = url.protocol === "https:" ? "wss" : "ws";
+    const urlPort = url.port && url.protocol !== "https:" ? `:${url.port}` : "";
+    const path = url.pathname || "/"; 
+    
+    webSocketRef.current = new WebSocket(`${protocol}://${url.hostname}${urlPort}${path}`);
 
     const webSocket = webSocketRef.current;
     setSocket(webSocket);
@@ -301,7 +303,7 @@ const App = () => {
       // webSocket.send('Initialise')
     };
     webSocket.onmessage = (event) => {
-      localStorage.setItem('PORT', runningPort);
+      localStorage.setItem('PORT', "22322");
       // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
