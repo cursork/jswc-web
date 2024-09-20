@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles } from '../utils';
 
 import { useAppData, useResizeObserver } from '../hooks';
 import { useState, useRef } from 'react';
@@ -6,6 +6,9 @@ import { useEffect } from 'react';
 
 const Combo = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
   const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
+  const {CSS} = data.Properties;
+
+  const customStyles = parseFlexStyles(CSS)
 
   const inputRef = useRef();
 
@@ -317,6 +320,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
           fontSize: '12px',
           height: location === 'inGrid' ? null : '100%',
           zIndex: 1,
+          ...customStyles
         }}
         onChange={(e) => {
           setComboInput(e.target.value);

@@ -1,10 +1,11 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, renderImage } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, renderImage } from '../../utils';
 
 const Image = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
   const { findDesiredData, socket } = useAppData();
-  const { Points, Picture, Visible,Event } = data?.Properties;
+  const { Points, Picture, Visible,Event, CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
 
   const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
@@ -18,6 +19,7 @@ const Image = ({ data }) => {
         top: 0,
         left: 0,
         display: Visible == 0 ? 'none' : 'block',
+        ...customStyles
       }}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);

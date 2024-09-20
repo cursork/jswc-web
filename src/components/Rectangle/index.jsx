@@ -1,5 +1,5 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor } from '../../utils';
 import Canvas from '../Canvas';
 
 const Rectangle = ({
@@ -7,9 +7,10 @@ const Rectangle = ({
   parentSize = JSON.parse(localStorage.getItem('formDimension')),
   posn = [0, 0],
 }) => {
-  const { Points, Size, FCol, Radius, Visible, FStyle, FillCol, Event } = data?.Properties;
+  const { Points, Size, FCol, Radius, Visible, FStyle, FillCol, Event,CSS } = data?.Properties;
   const {socket} = useAppData()
-  
+
+    const customStyles = parseFlexStyles(CSS)
   const pointsArray = Points && Points[0].map((y, i) => [Points[1][i], y]);
   const sizeArray = Size && Size[0].map((y, i) => [Size[1][i], y]);
 
@@ -23,6 +24,7 @@ const Rectangle = ({
         top: 0,
         left: 0,
         display: Visible == 0 ? 'none' : 'block',
+        ...customStyles
       }}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);

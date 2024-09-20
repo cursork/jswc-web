@@ -1,6 +1,7 @@
-export const parseFlexStyles = (inputString, type) => {
+export const parseFlexStyles = (inputString) => {
+  console.log({inputString})
   let newInputString;
-  if (type === "Form" && Array.isArray(inputString)) {
+  if (Array.isArray(inputString)) {
     newInputString = inputString && inputString[1];
   } else {
     newInputString = inputString;

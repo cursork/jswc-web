@@ -1,11 +1,12 @@
-import { extractStringUntilSecondPeriod, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, setStyle } from '../utils';
+import { extractStringUntilSecondPeriod, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, setStyle } from '../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useAppData, useResizeObserver } from '../hooks';
 
 const List = ({ data }) => {
   const {socket} = useAppData()
   const styles = setStyle(data?.Properties);
-  const { Items, SelItems, Visible, Size, Event } = data?.Properties;
+  const { Items, SelItems, Visible, Size, Event, CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
   const ref = useRef();
   const [selectedItem, _] = useState(1);
   const [items, setItems] = useState(SelItems);
@@ -78,20 +79,23 @@ const List = ({ data }) => {
                 display: 'flex',
                 alignItems: 'center',
                 padding: '1px',
+                ...customStyles,
               }}
-            >
+              
+              >
               {item}
             </div>
           ) : (
             <div
-              onClick={() => handleClick(index)}
-              style={{
-                cursor: 'pointer',
-                fontSize: '12px',
-                height: '14px',
-                padding: '1px',
-                display: 'flex',
-                alignItems: 'center',
+            onClick={() => handleClick(index)}
+            style={{
+              cursor: 'pointer',
+              fontSize: '12px',
+              height: '14px',
+              padding: '1px',
+              display: 'flex',
+              alignItems: 'center',
+              ...customStyles,
               }}
             >
               {item}

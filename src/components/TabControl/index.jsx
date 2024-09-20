@@ -1,12 +1,13 @@
-import { setStyle, excludeKeys, getLastTabButton, rgbColor } from '../../utils';
+import { setStyle, excludeKeys, getLastTabButton, rgbColor, parseFlexStyles } from '../../utils';
 import SubForm from '../DynamicSubForm';
 import TabButton from '../TabButton';
 import { useEffect, useState } from 'react';
 
 const TabControl = ({ data }) => {
-  const { BCol, FCol, ActiveBCol } = data?.Properties;
+  const { BCol, FCol, ActiveBCol, CSS } = data?.Properties;
 
   let styles = setStyle(data?.Properties);
+  const customStyles = parseFlexStyles(CSS)
   const updatedData = excludeKeys(data);
   const Id = getLastTabButton(updatedData);
 
@@ -28,7 +29,7 @@ const TabControl = ({ data }) => {
   return (
     <div
       id={data?.ID}
-      style={{ ...updatedStyles }}
+      style={{ ...updatedStyles,...customStyles}}
     >
       {/* Render the Buttons */}
       <div style={{ display: 'flex', alignItems: 'end', marginLeft: '3px' }}>

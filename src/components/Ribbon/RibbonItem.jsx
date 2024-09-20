@@ -1,17 +1,18 @@
 import { RibbonGroupItem } from 'react-bootstrap-ribbon';
-import { excludeKeys } from '../../utils';
+import { excludeKeys, parseFlexStyles } from '../../utils';
 import SelectComponent from '../SelectComponent';
 
 const CustomRibbonItem = ({ data }) => {
   const updatedData = excludeKeys(data);
 
-  const { Size } = data?.Properties;
+  const { Size, CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
   const size = Size || 12;
 
   return (
     <div
       id={data?.ID}
-      style={{ display: 'flex', justifyContent: 'center' }}
+      style={{ display: 'flex', justifyContent: 'center',...customStyles }}
       className={`col-${size}`}
     >
       {Object.keys(updatedData).map((key) => {

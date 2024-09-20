@@ -1,10 +1,12 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor } from '../../utils';
 
 const Ecllipse = ({ data }) => {
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 
-  const { FillCol, Start, FCol, Size, End, Points, Event } = data?.Properties;
+  const { FillCol, Start, FCol, Size, End, Points, Event, CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
+  
 const {socket} = useAppData()
   const generatePieChartPaths = (startAngles, Points) => {
     // const myPoints = Points && Points[0];
@@ -99,6 +101,7 @@ const {socket} = useAppData()
         position: 'absolute',
         top: 0,
         left: 0,
+        ...customStyles,
       }}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);

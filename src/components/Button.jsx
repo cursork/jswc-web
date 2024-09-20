@@ -7,6 +7,7 @@ import {
   handleMouseEnter,
   handleMouseDown,
   handleMouseUp,
+  parseFlexStyles,
 } from "../utils";
 import { useAppData, useResizeObserver } from "../hooks";
 import { useEffect, useState } from "react";
@@ -30,11 +31,12 @@ const Button = ({
 
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData, reRender } =
-    useAppData();
-  const { Picture, State, Visible, Event, Caption, Align, Posn, Size } =
-    data?.Properties;
+  useAppData();
+  const { Picture, State, Visible, Event, Caption, Align, Posn, Size , CSS} =
+  data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
   const inputRef = useRef();
-
+  
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilSecondPeriod(data?.ID))
   );
@@ -370,7 +372,7 @@ const Button = ({
         />
         {!Align || Align == "Right" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 0, left: 16 }}
+            style={{ fontSize: "12px", position: "absolute", top: 0, left: 16,...customStyles }}
           >
             {Caption}
           </div>
@@ -442,11 +444,12 @@ const Button = ({
           ...styles,
           zIndex: 1,
           display: Visible == 0 ? "none" : "block",
+          ...customStyles
         }}
       >
         {Align && Align == "Left" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 2, left: 0 }}
+            style={{ fontSize: "12px", position: "absolute", top: 2, left: 0, ...customStyles }}
           >
             {Caption}
           </div>
@@ -464,7 +467,7 @@ const Button = ({
         />
         {!Align || Align == "Right" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 2, left: 16 }}
+            style={{ fontSize: "12px", position: "absolute", top: 2, left: 16, ...customStyles }}
           >
             {Caption}
           </div>
@@ -557,6 +560,7 @@ const Button = ({
         ...(data?.Properties?.hasOwnProperty("Posn")
           ? { left: position?.left }
           : {}),
+          ...customStyles,
         // left: position?.left,
       }}
     >

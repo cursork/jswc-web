@@ -1,11 +1,12 @@
-import { setStyle } from '../../utils';
+import { parseFlexStyles, setStyle } from '../../utils';
 import './textArea.css';
 import '../../styles/font.css';
 
 const TextArea = ({ data }) => {
   let styles = setStyle(data?.Properties);
 
-  const { Text, Font } = data?.Properties;
+  const { Text, Font, CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
 
   let updatesStyles = {
     ...styles,
@@ -13,6 +14,7 @@ const TextArea = ({ data }) => {
     scrollbarColor: 'transparent transparent',
     fontFamily: Font && Font[0],
     fontSize: Font && `${Font[1]}`,
+    ...customStyles
   };
 
   return (

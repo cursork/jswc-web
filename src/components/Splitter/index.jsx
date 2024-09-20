@@ -4,6 +4,7 @@ import VerticalSplitter from './VerticalSplitter';
 import HorizontalSplitter from './HorizontalSplitter';
 import { useAppData } from '../../hooks';
 
+
 const Splitter = ({ data }) => {
   const { Style, Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
 

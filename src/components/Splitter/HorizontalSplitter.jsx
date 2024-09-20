@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppData, useResizeObserver } from '../../hooks';
-import { extractStringUntilSecondPeriod } from '../../utils';
+import { extractStringUntilSecondPeriod, parseFlexStyles } from '../../utils';
 
 const HorizontalSplitter = ({ data }) => {
   const { Size: SubformSize, Posn: SubFormPosn } = JSON.parse(
     localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
   );
 
-  const { Posn, SplitObj1, SplitObj2, Event, Size } = data?.Properties;
+
+  const { Posn, SplitObj1, SplitObj2, Event, Size, CSS } = data?.Properties;
+  
+  const customStyles = parseFlexStyles(CSS)
+
   const [position, setPosition] = useState({ top: Posn && Posn[0] });
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
@@ -187,6 +191,7 @@ const HorizontalSplitter = ({ data }) => {
     position: 'absolute',
     top: position?.top,
     left: 0,
+    ...customStyles
   };
 
   return <div id={data?.ID} style={horizontalStyles} onMouseDown={(e) => handleMouseDown(e)}></div>;

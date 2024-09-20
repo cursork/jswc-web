@@ -32,7 +32,7 @@ const Form = ({ data }) => {
     Event,
     CSS,
   } = data?.Properties;
-  const styles = parseFlexStyles(CSS, "Form");
+  const styles = parseFlexStyles(CSS);
 
   console.log("form after parsing", { styles, CSS, Flex });
   const updatedData = excludeKeys(data);

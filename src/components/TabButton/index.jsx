@@ -1,11 +1,12 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor } from '../../utils';
 
 const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, activebgColor }) => {
   const { socket } = useAppData();
-  const { Caption, Event } = data?.Properties;
+  const { Caption, Event , CSS} = data?.Properties;
 
   const emitEvent = Event && Event[0];
+  const customStyles = parseFlexStyles(CSS)
 
   
   return (
@@ -44,6 +45,7 @@ const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, active
         borderBottom: activeTab == data?.ID ? '0px' : '1px solid  #DFDFDF',
         color: !fontColor ? 'black' : rgbColor(fontColor),
         fontWeight: 600,
+        ...customStyles
       }}
       onClick={() => {
         console.log(

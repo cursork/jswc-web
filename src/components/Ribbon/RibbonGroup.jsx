@@ -1,4 +1,4 @@
-import { excludeKeys, rgbColor } from '../../utils';
+import { excludeKeys, parseFlexStyles, rgbColor } from '../../utils';
 import { RibbonGroup } from 'react-bootstrap-ribbon';
 import SelectComponent from '../SelectComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,7 +6,8 @@ import 'react-bootstrap-ribbon/dist/react-bootstrap-ribbon.css';
 
 const CustomRibbonGroup = ({ data }) => {
   const updatedData = excludeKeys(data);
-  const { Size, Title, BorderCol } = data?.Properties;
+  const { Size, Title, BorderCol, CSS } = data?.Properties;
+  const customStyle = parseFlexStyles(CSS)
 
   const size = Size || 1;
 
@@ -19,6 +20,7 @@ const CustomRibbonGroup = ({ data }) => {
           position: 'relative',
           height: '100%',
           alignItems: 'center',
+          ...customStyle
         }}
         className='row'
       >

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useAppData, useResizeObserver } from '../../hooks';
-import { extractStringUntilSecondPeriod } from '../../utils';
+import { extractStringUntilSecondPeriod, parseFlexStyles } from '../../utils';
 
 const VerticalSplitter = ({ data }) => {
   const { Size: SubformSize } = JSON.parse(
     localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
   );
 
-  const { Posn, SplitObj1, SplitObj2, Event } = data?.Properties;
+  const { Posn, SplitObj1, SplitObj2, Event,CSS } = data?.Properties;
+  const customStyles = parseFlexStyles(CSS)
   const [position, setPosition] = useState({ left: Posn && Posn[1] });
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
@@ -81,6 +82,7 @@ const VerticalSplitter = ({ data }) => {
     position: 'absolute',
     top: Posn && Posn[0],
     left: position?.left,
+    ...customStyles
   };
 
   useEffect(() => {

@@ -12,6 +12,7 @@ import {
   handleMouseEnter,
   handleMouseMove,
   handleMouseLeave,
+  parseFlexStyles,
 } from "../../utils";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAppData } from "../../hooks";
@@ -64,6 +65,7 @@ const Edit = ({
     Size,
     EdgeStyle,
     Border = 0,
+    CSS,
   } = data?.Properties;
 
   const hasTextProperty = data?.Properties.hasOwnProperty("Text");
@@ -72,6 +74,7 @@ const Edit = ({
   const inputRef = useRef(null);
   const font = findDesiredData(FontObj && FontObj);
   const fontProperties = font && font?.Properties;
+  const customStyles = parseFlexStyles(CSS)
 
   const decideInputValue = useCallback(() => {
     if (location === "inGrid") {
@@ -520,6 +523,7 @@ const Edit = ({
             zIndex: 1,
             display: Visible == 0 ? "none" : "block",
             paddingLeft: "5px",
+            ...customStyles
           }}
           value={inputValue}
           type="text"
@@ -584,6 +588,7 @@ const Edit = ({
           verticalAlign: "text-top",
           paddingBottom: "6px",
           paddingRight: "2px",
+          ...customStyles
         }}
         onValueChange={(value) => {
           const { formattedValue } = value;
@@ -633,6 +638,7 @@ const Edit = ({
           (Border && Border == "1") || (EdgeStyle && EdgeStyle == "Ridge")
             ? "1px solid #6A6A6A"
             : "none",
+        ...customStyles
       }}
       maxLength={MaxLength}
       onFocus={handleGotFocus}

@@ -1,9 +1,10 @@
 import { useAppData } from "../../hooks";
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from "../../utils";
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor } from "../../utils";
 
 const Poly = ({ data }) => {
-  const { FCol, FillCol, LWidth, Points, FStyle, Visible, Event } = data?.Properties;
+  const { FCol, FillCol, LWidth, Points, FStyle, Visible, Event, CSS } = data?.Properties;
   const { socket } = useAppData();
+  const customStyles = parseFlexStyles(CSS)
 
   const parentSize = JSON.parse(localStorage.getItem("formDimension"));
   const hasFCol = data?.Properties.hasOwnProperty("FCol");
@@ -11,7 +12,7 @@ const Poly = ({ data }) => {
   return (
     <div
       id={data?.ID}
-      style={{ position: "absolute", display: Visible == 0 ? "none" : "block" }}
+      style={{ position: "absolute", display: Visible == 0 ? "none" : "block" ,...customStyles}}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);
       }}

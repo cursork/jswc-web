@@ -1,13 +1,14 @@
 import ReactApexChart from 'react-apexcharts';
 import { useAppData } from '../../hooks';
-import { setStyle } from '../../utils';
+import { parseFlexStyles, setStyle } from '../../utils';
 import { useEffect, useRef, useState } from 'react';
 
 const Chart = ({ data }) => {
-  const { Options, Posn, Series, Size, ChartType, Event } = data?.Properties;
+  const { Options, Posn, Series, Size, ChartType, Event, CSS } = data?.Properties;
 
   const [chartSvg, setChartSvg] = useState(null);
   const { socket, handleData } = useAppData();
+  const customStyles = parseFlexStyles(CSS)
   const styles = setStyle(data?.Properties);
 
   const stringifyCircularJSON = (obj) => {
@@ -168,15 +169,23 @@ const Chart = ({ data }) => {
   };
 
   return (
-    <div style={{ position: 'absolute', top: Posn && Posn[0], left: Posn && Posn[1], ...styles }}>
+    <div
+      style={{
+        position: "absolute",
+        top: Posn && Posn[0],
+        left: Posn && Posn[1],
+        ...styles,
+        ...customStyles,
+      }}
+    >
       <ReactApexChart
-      ref={chartRef}  
-      options={options}
+        ref={chartRef}
+        options={options}
         width={Size && Size[1]}
         height={Size && Size[0]}
         type={ChartType}
         series={Series}
-        />
+      />
     </div>
   );
 };

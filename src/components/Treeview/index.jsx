@@ -11,6 +11,7 @@ import {
   handleMouseMove,
   handleMouseLeave,
   getCurrentUrl,
+  parseFlexStyles,
 } from '../../utils';
 import { useAppData } from '../../hooks';
 import { useEffect, useState, useRef } from 'react';
@@ -21,7 +22,9 @@ import './TreeView.css';
 
 const Treeview = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
-  const { Depth, Items, ImageListObj, ImageIndex, Visible, Event } = data?.Properties;
+  const { Depth, Items, ImageListObj, ImageIndex, Visible, Event, CSS } = data?.Properties;
+
+  const customStyles = parseFlexStyles(CSS)
 
   const [nodeData, setNodeData] = useState([]);
 
@@ -232,6 +235,7 @@ const Treeview = ({ data }) => {
         paddingTop: '3px',
         display: Visible == 0 ? 'none' : 'block',
         overflowY: 'scroll',
+        ...customStyles
       }}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);

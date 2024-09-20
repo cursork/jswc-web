@@ -4,7 +4,7 @@ import { useAppData } from '../../hooks';
 const Timer = ({ data }) => {
   const { socket } = useAppData();
 
-  const { Interval, FireOnce, Active, Event } = data?.Properties;
+  const { Interval, FireOnce, Active, Event, } = data?.Properties;
 
   let eventFire = !FireOnce ? 0 : FireOnce;
 

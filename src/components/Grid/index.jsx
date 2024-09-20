@@ -300,6 +300,7 @@ import {
   handleMouseLeave,
   handleMouseEnter,
   handleMouseUp,
+  parseFlexStyles,
 } from "../../utils";
 import { useResizeObserver, useAppData } from "../../hooks";
 import GridEdit from "./GridEdit";
@@ -366,6 +367,7 @@ const Grid = ({ data }) => {
     HScroll = 0,
     Attach,
     Event,
+    CSS
   } = data?.Properties;
 
   const [height, setHeight] = useState(Size[0]);
@@ -1046,6 +1048,7 @@ const Grid = ({ data }) => {
   };
 
   const gridData = modifyGridData();
+  const customStyles = parseFlexStyles(CSS)
 
   return (
     <>
@@ -1096,6 +1099,7 @@ const Grid = ({ data }) => {
               : VScroll == -1 || HScroll == -2
               ? "auto"
               : "auto",
+          ...customStyles,
         }}
       >
         {gridData?.map((row, rowi) => {

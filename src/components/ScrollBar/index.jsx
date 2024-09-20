@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles } from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach, CSS } = data?.Properties;
+
+  const customStyles = parseFlexStyles(CSS)
   const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -184,7 +186,8 @@ const ScrollBar = ({ data }) => {
     top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
     ...(VScroll === -1 ? {left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0 }: {right: 0}),
     display: Visible == 0 ? 'none' : 'block',
-    ...attachStyle
+    ...attachStyle,
+    ...customStyles
   };
 
   const horizontalPosition = {
@@ -194,7 +197,8 @@ const ScrollBar = ({ data }) => {
     width: defaultSize[1] + 'px',
     height: defaultSize[0],
     display: Visible == 0 ? 'none' : 'block',
-    ...attachStyle
+    ...attachStyle,
+    ...customStyles
   };
 
   useEffect(() => {

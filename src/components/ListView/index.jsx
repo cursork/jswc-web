@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { setStyle, createListViewObjects, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave,getCurrentUrl } from '../../utils';
+import { setStyle, createListViewObjects, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave,getCurrentUrl, parseFlexStyles } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const ListView = ({ data }) => {
@@ -7,8 +7,9 @@ const ListView = ({ data }) => {
 
   const { findDesiredData, socket } = useAppData();
 
-  const { View, Border, ColTitles, ImageIndex, ImageListObj, Items, ReportInfo, Event } =
+  const { View, Border, ColTitles, ImageIndex, ImageListObj, Items, ReportInfo, Event,CSS } =
     data && data?.Properties;
+    const customStyles = parseFlexStyles(CSS)
 
   const styles = setStyle(data?.Properties);
 
@@ -76,7 +77,7 @@ const ListView = ({ data }) => {
     return (
       <div
         className={`d-flex flex-wrap flex-${parentOrientation}`}
-        style={{ ...styles, border: !Border ? null : '1px solid black', ...style }}
+        style={{ ...styles, border: !Border ? null : '1px solid black', ...style, ...customStyles }}
         onMouseDown={(e) => {
           handleMouseDown(e, socket, Event,data);
         }}
@@ -178,7 +179,7 @@ const ListView = ({ data }) => {
 
 
     return (
-      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' }} 
+      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' ,...customStyles}} 
      >
         {/* Header of the component */}
         <div className='d-flex align-items-center'>

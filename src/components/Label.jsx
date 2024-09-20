@@ -1,4 +1,4 @@
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor, setStyle } from "../utils";
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor, setStyle } from "../utils";
 import "../styles/font.css";
 import { useAppData } from "../hooks";
 
@@ -10,7 +10,9 @@ const Label = ({ data, gridValue }) => {
   const haveColor = data?.Properties.hasOwnProperty("FCol");
   const haveFontProperty = data?.Properties.hasOwnProperty("Font");
 
-  const { Visible, FontObj, Caption, Size, BCol, Event } = data?.Properties;
+  const { Visible, FontObj, Caption, Size, BCol, Event, CSS } = data?.Properties;
+
+  const customStyles = parseFlexStyles(CSS)
 
   console.log("label", "noting", fontScale);
   // console.log("label", {data, BCol, Caption,  background: rgbColor(BCol)})
@@ -59,7 +61,7 @@ const Label = ({ data, gridValue }) => {
   return (
     <div
       id={data?.ID}
-      style={{ ...styles, display: Visible == 0 ? "none" : "block" }}
+      style={{ ...styles, display: Visible == 0 ? "none" : "block" ,...customStyles}}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);
       }}

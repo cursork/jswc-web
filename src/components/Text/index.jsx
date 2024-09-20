@@ -33,8 +33,10 @@ const flattenIfThreeLevels = (arr) => {
 };
 
 const Text = ({ data, fontProperties }) => {
-  const { Visible, Points, Text, FCol, BCol, Event } = data?.Properties;
+  const { Visible, Points, Text, FCol, BCol, Event , CSS} = data?.Properties;
 const { socket, fontScale} = useAppData();
+
+const customStyles = parseFlexStyles(CSS)
 
   const { reRender } = useForceRerender();
 
@@ -174,6 +176,7 @@ const { socket, fontScale} = useAppData();
                   }) translate(${points && -points[0]}, ${
                     points && -points[1]
                   })`}
+                  style={{...customStyles}}
                 >
                   {text.replace(/ /g, "\u00A0")}
                 </text>

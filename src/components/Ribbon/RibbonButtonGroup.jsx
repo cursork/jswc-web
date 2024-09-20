@@ -1,7 +1,7 @@
 import * as AppIcons from "./RibbonIcons";
 import { Col } from "reactstrap";
 import { useAppData } from "../../hooks";
-import { getCurrentUrl, getObjectById } from "../../utils";
+import { getCurrentUrl, getObjectById, parseFlexStyles } from "../../utils";
 import { MdOutlineQuestionMark } from "react-icons/md";
 
 const CustomRibbonButtonGroup = ({ data }) => {
@@ -9,7 +9,9 @@ const CustomRibbonButtonGroup = ({ data }) => {
   const PORT = localStorage.getItem("PORT");
   let ImageList = JSON.parse(localStorage.getItem("ImageList"));
 
-  const { Captions, Icons, Event, ImageIndex, ImageListObj } = data?.Properties;
+  const { Captions, Icons, Event, ImageIndex, ImageListObj, CSS } = data?.Properties;
+
+  const customStyles = parseFlexStyles(CSS)
 
   const colSize = Captions?.length == 4 ? 6 : 12;
 
@@ -117,7 +119,7 @@ const CustomRibbonButtonGroup = ({ data }) => {
             id={`${data?.ID}-${i}`}
             md={colSize}
             className="d-flex align-items-center justify-content-left gap-1"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer" ,   ...customStyles}}
             onClick={() => handleButtonEvent(i + 1)}
           >
             {result && result?.imgUrl ? (

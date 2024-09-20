@@ -1,4 +1,4 @@
-import { excludeKeys, getObjectById, getStringafterPeriod } from '../../utils';
+import { excludeKeys, getObjectById, getStringafterPeriod, parseFlexStyles } from '../../utils';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-ribbon/dist/react-bootstrap-ribbon.css';
@@ -11,8 +11,10 @@ import { useEffect } from 'react';
 const CustomRibbon = ({ data }) => {
   const updatedData = excludeKeys(data);
   const { dataRef } = useAppData();
-  const { Visible, Size, ImageListObj } = data?.Properties;
+  const { Visible, Size, ImageListObj, CSS } = data?.Properties;
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
+
+  const customStyles = parseFlexStyles(CSS)
 
   useEffect(() => {
     const ID = getStringafterPeriod(ImageListObj);
@@ -34,6 +36,7 @@ const CustomRibbon = ({ data }) => {
         height: !Size ? '8rem' : Size[0],
         width: !Size ? parentSize && parentSize[1] : Size && Size[1],
         display: Visible == 0 ? 'none' : 'flex',
+        ...customStyles
       }}
     >
       {Object.keys(updatedData).map((key) => {
