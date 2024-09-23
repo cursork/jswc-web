@@ -19,7 +19,7 @@ const TextArea = ({ data }) => {
 
   return (
     <div style={{ overflow: 'hidden' }}>
-      <textarea className='textArea' style={updatesStyles} defaultValue={Text} />
+      <textarea className='ewc-textArea' style={updatesStyles} defaultValue={Text} />
     </div>
   );
 };
