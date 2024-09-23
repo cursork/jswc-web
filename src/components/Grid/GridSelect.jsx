@@ -81,7 +81,7 @@ const GridSelect = ({ data }) => {
       ref={selectRef}
       value={comboInput}
       style={{ border: 0, outline: 0, width: '100%', height: '100%' }}
-      id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+      id={`${data?.typeObj?.ID}`}
       onChange={(e) => {
         setComboInput(e.target.value);
         handleSelItemsEvent(e.target.value);

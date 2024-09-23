@@ -91,24 +91,25 @@ const GridLabel = ({ data }) => {
           }}
           onDoubleClick={handleDoubleClick}
           onBlur={handleBlur}
-          onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data?.gridId);
-          }}
-          onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data?.gridId);
-          }}
-          onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data?.gridId);
-          }}
-          onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data?.gridId);
-          }}
-          onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data?.gridId);
-          }}
-          onWheel={(e) => {
-            handleMouseWheel(e, socket, Event, data?.gridId);
-          }}
+          id={data.gridId}
+          // onMouseDown={(e) => {
+          //   handleMouseDown(e, socket, Event,data?.gridId);
+          // }}
+          // onMouseUp={(e) => {
+          //   handleMouseUp(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseEnter={(e) => {
+          //   handleMouseEnter(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseMove={(e) => {
+          //   handleMouseMove(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseLeave={(e) => {
+          //   handleMouseLeave(e, socket, Event, data?.gridId);
+          // }}
+          // onWheel={(e) => {
+          //   handleMouseWheel(e, socket, Event, data?.gridId);
+          // }}
         >
           {data?.formattedValue}
         </div>

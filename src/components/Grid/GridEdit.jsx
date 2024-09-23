@@ -355,7 +355,7 @@ const GridEdit = ({ data }) => {
           <div style={{ display: 'flex', alignItems: 'center'}}>
             <input
               ref={dateRef}
-              id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+              id={`${data?.typeObj?.ID}`}
               style={{
                 border: 0,
                 outline: 0,
@@ -389,7 +389,7 @@ const GridEdit = ({ data }) => {
           </button>
           </div>
             <input
-              id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+              id={`${data?.typeObj?.ID}`}
               type='date'
               value={dayjs(new Date(selectedDate)).format('YYYY-MM-DD')}
               ref={inputRef}
@@ -416,24 +416,24 @@ const GridEdit = ({ data }) => {
             onDoubleClick={() => {
               setIsEditable(true);
             }}
-            onMouseDown={(e) => {
-              handleMouseDown(e, socket, Event,data?.gridId);
-            }}
-            onMouseUp={(e) => {
-              handleMouseUp(e, socket, Event, data?.gridId);
-            }}
-            onMouseEnter={(e) => {
-              handleMouseEnter(e, socket, Event, data?.gridId);
-            }}
-            onMouseMove={(e) => {
-              handleMouseMove(e, socket, Event, data?.gridId);
-            }}
-            onMouseLeave={(e) => {
-              handleMouseLeave(e, socket, Event, data?.gridId);
-            }}
-            onWheel={(e) => {
-              handleMouseWheel(e, socket, Event, data?.gridId);
-            }}
+            // onMouseDown={(e) => {
+            //   handleMouseDown(e, socket, Event,data?.gridId);
+            // }}
+            // onMouseUp={(e) => {
+            //   handleMouseUp(e, socket, Event, data?.gridId);
+            // }}
+            // onMouseEnter={(e) => {
+            //   handleMouseEnter(e, socket, Event, data?.gridId);
+            // }}
+            // onMouseMove={(e) => {
+            //   handleMouseMove(e, socket, Event, data?.gridId);
+            // }}
+            // onMouseLeave={(e) => {
+            //   handleMouseLeave(e, socket, Event, data?.gridId);
+            // }}
+            // onWheel={(e) => {
+            //   handleMouseWheel(e, socket, Event, data?.gridId);
+            // }}
             style={{
               backgroundColor: data?.backgroundColor,
               outline: 0,
@@ -446,7 +446,7 @@ const GridEdit = ({ data }) => {
               <NumericFormat
                 className='currency'
                 allowLeadingZeros={true}
-                id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+                id={`${data?.typeObj?.ID}`}
                 style={{
                   width: '100%',
                   border: 0,
@@ -471,7 +471,7 @@ const GridEdit = ({ data }) => {
             className='currency'
             allowLeadingZeros={true}
             getInputRef={inputRef}
-            id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+            id={`${data?.typeObj?.ID}`}
             style={{
               width: '100%',
               border: 0,
@@ -542,31 +542,31 @@ const GridEdit = ({ data }) => {
             paddingLeft: '5px',
             paddingRight: '5px'
           }}
-          onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data?.gridId);
-          }}
-          onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data?.gridId);
-          }}
-          onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data?.gridId);
-          }}
-          onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data?.gridId);
-          }}
-          onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data?.gridId);
-          }}
-          onWheel={(e) => {
-            handleMouseWheel(e, socket, Event, data?.gridId);
-          }}
+          // onMouseDown={(e) => {
+          //   handleMouseDown(e, socket, Event,data?.gridId);
+          // }}
+          // onMouseUp={(e) => {
+          //   handleMouseUp(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseEnter={(e) => {
+          //   handleMouseEnter(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseMove={(e) => {
+          //   handleMouseMove(e, socket, Event, data?.gridId);
+          // }}
+          // onMouseLeave={(e) => {
+          //   handleMouseLeave(e, socket, Event, data?.gridId);
+          // }}
+          // onWheel={(e) => {
+          //   handleMouseWheel(e, socket, Event, data?.gridId);
+          // }}
         >
           {!data?.formattedValue ? data?.value : data?.formattedValue}
         </div>
       ) : (
         <input
           type='text'
-          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+          id={`${data?.typeObj?.ID}`}
           ref={inputRef}
           style={{
             outline: 0,

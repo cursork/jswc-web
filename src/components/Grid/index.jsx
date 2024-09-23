@@ -1066,24 +1066,24 @@ const Grid = ({ data }) => {
         tabIndex={0}
         ref={gridRef}
         onKeyDown={handleKeyDown}
-        // onMouseDown={(e) => {
-        //   handleMouseDown(e, socket, Event,data);
-        // }}
-        // onMouseUp={(e) => {
-        //   handleMouseUp(e, socket, Event, data?.ID);
-        // }}
-        // onMouseEnter={(e) => {
-        //   handleMouseEnter(e, socket, Event, data?.ID);
-        // }}
-        // onMouseMove={(e) => {
-        //   handleMouseMove(e, socket, Event, data, "grid");
-        // }}
-        // onMouseLeave={(e) => {
-        //   handleMouseLeave(e, socket, Event, data?.ID);
-        // }}
-        // onWheel={(e) => {
-        //   handleMouseWheel(e, socket, Event, data?.ID);
-        // }}
+        onMouseDown={(e) => {
+          handleMouseDown(e, socket, Event,data?.ID);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e, socket, Event, data?.ID);
+        }}
+        onMouseEnter={(e) => {
+          handleMouseEnter(e, socket, Event, data?.ID);
+        }}
+        onMouseMove={(e) => {
+          handleMouseMove(e, socket, Event, data?.ID);
+        }}
+        onMouseLeave={(e) => {
+          handleMouseLeave(e, socket, Event, data?.ID);
+        }}
+        onWheel={(e) => {
+          handleMouseWheel(e, socket, Event, data?.ID);
+        }}
         id={data?.ID}
         style={{
           ...style,
