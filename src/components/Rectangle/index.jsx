@@ -1,5 +1,5 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles, rgbColor } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
 import Canvas from '../Canvas';
 
 const Rectangle = ({
@@ -30,16 +30,19 @@ const Rectangle = ({
         handleMouseDown(e, socket, Event,data);
       }}
       onMouseUp={(e) => {
-        handleMouseUp(e, socket, Event, data);
+        handleMouseUp(e, socket, Event, data?.ID);
       }}
       onMouseEnter={(e) => {
-        handleMouseEnter(e, socket, Event, data);
+        handleMouseEnter(e, socket, Event, data?.ID);
       }}
       onMouseMove={(e) => {
-        handleMouseMove(e, socket, Event, data);
+        handleMouseMove(e, socket, Event, data?.ID);
       }}
       onMouseLeave={(e) => {
-        handleMouseLeave(e, socket, Event, data);
+        handleMouseLeave(e, socket, Event, data?.ID);
+      }}
+      onWheel={(e) => {
+        handleMouseWheel(e, socket, Event, data?.ID);
       }}
       
     >

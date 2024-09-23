@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useAppData } from '../../hooks';
-import { calculateDateAfterDays, getObjectById, calculateDaysFromDate, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave } from '../../utils';
+import { calculateDateAfterDays, getObjectById, calculateDaysFromDate, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, handleMouseWheel } from '../../utils';
 import dayjs from 'dayjs';
 
 const GridEdit = ({ data }) => {
@@ -404,6 +404,7 @@ const GridEdit = ({ data }) => {
       </>
     );
   }
+  console.log("gridEdit", Event, data)
 
   if (FieldType == 'LongNumeric' || FieldType == 'Numeric') {
     return (
@@ -416,19 +417,22 @@ const GridEdit = ({ data }) => {
               setIsEditable(true);
             }}
             onMouseDown={(e) => {
-              handleMouseDown(e, socket, Event,data);
+              handleMouseDown(e, socket, Event,data?.gridId);
             }}
             onMouseUp={(e) => {
-              handleMouseUp(e, socket, Event, data);
+              handleMouseUp(e, socket, Event, data?.gridId);
             }}
             onMouseEnter={(e) => {
-              handleMouseEnter(e, socket, Event, data);
+              handleMouseEnter(e, socket, Event, data?.gridId);
             }}
             onMouseMove={(e) => {
-              handleMouseMove(e, socket, Event, data);
+              handleMouseMove(e, socket, Event, data?.gridId);
             }}
             onMouseLeave={(e) => {
-              handleMouseLeave(e, socket, Event, data);
+              handleMouseLeave(e, socket, Event, data?.gridId);
+            }}
+            onWheel={(e) => {
+              handleMouseWheel(e, socket, Event, data?.gridId);
             }}
             style={{
               backgroundColor: data?.backgroundColor,
@@ -495,19 +499,22 @@ const GridEdit = ({ data }) => {
               handleKeyPress(e);
             }}
             onMouseDown={(e) => {
-              handleMouseDown(e, socket, Event,data);
+              handleMouseDown(e, socket, Event,data?.gridId);
             }}
             onMouseUp={(e) => {
-              handleMouseUp(e, socket, Event, data);
+              handleMouseUp(e, socket, Event, data?.gridId);
             }}
             onMouseEnter={(e) => {
-              handleMouseEnter(e, socket, Event, data);
+              handleMouseEnter(e, socket, Event, data?.gridId);
             }}
             onMouseMove={(e) => {
-              handleMouseMove(e, socket, Event, data);
+              handleMouseMove(e, socket, Event, data?.gridId);
             }}
             onMouseLeave={(e) => {
-              handleMouseLeave(e, socket, Event, data);
+              handleMouseLeave(e, socket, Event, data?.gridId);
+            }}
+            onWheel={(e) => {
+              handleMouseWheel(e, socket, Event, data?.gridId);
             }}
           />
         )}
@@ -536,19 +543,22 @@ const GridEdit = ({ data }) => {
             paddingRight: '5px'
           }}
           onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data);
+            handleMouseDown(e, socket, Event,data?.gridId);
           }}
           onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data);
+            handleMouseUp(e, socket, Event, data?.gridId);
           }}
           onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data);
+            handleMouseEnter(e, socket, Event, data?.gridId);
           }}
           onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data);
+            handleMouseMove(e, socket, Event, data?.gridId);
           }}
           onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data);
+            handleMouseLeave(e, socket, Event, data?.gridId);
+          }}
+          onWheel={(e) => {
+            handleMouseWheel(e, socket, Event, data?.gridId);
           }}
         >
           {!data?.formattedValue ? data?.value : data?.formattedValue}
@@ -587,19 +597,22 @@ const GridEdit = ({ data }) => {
           }}
           autoFocus
             onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event,data);
+          handleMouseDown(e, socket, Event,data?.gridId);
         }}
         onMouseUp={(e) => {
-          handleMouseUp(e, socket, Event, data);
+          handleMouseUp(e, socket, Event, data?.gridId);
         }}
         onMouseEnter={(e) => {
-          handleMouseEnter(e, socket, Event, data);
+          handleMouseEnter(e, socket, Event, data?.gridId);
         }}
         onMouseMove={(e) => {
-          handleMouseMove(e, socket, Event, data);
+          handleMouseMove(e, socket, Event,  data?.gridId);
         }}
         onMouseLeave={(e) => {
-          handleMouseLeave(e, socket, Event, data);
+          handleMouseLeave(e, socket, Event, data?.gridId);
+        }}
+        onWheel={(e) => {
+          handleMouseWheel(e, socket, Event, data?.gridId);
         }}
         />
       )}

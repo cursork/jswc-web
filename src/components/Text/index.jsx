@@ -1,4 +1,4 @@
-import { getObjectById, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, rgbColor } from "../../utils";
+import { getObjectById, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, rgbColor } from "../../utils";
 import { useAppData } from "../../hooks";
 import { useEffect, useState } from "react";
 
@@ -95,16 +95,19 @@ const customStyles = parseFlexStyles(CSS)
           handleMouseDown(e, socket, Event,data);
         }}
         onMouseUp={(e) => {
-          handleMouseUp(e, socket, Event, data);
+          handleMouseUp(e, socket, Event, data?.ID);
         }}
         onMouseEnter={(e) => {
-          handleMouseEnter(e, socket, Event, data);
+          handleMouseEnter(e, socket, Event, data?.ID);
         }}
         onMouseMove={(e) => {
-          handleMouseMove(e, socket, Event, data);
+          handleMouseMove(e, socket, Event, data?.ID);
         }}
         onMouseLeave={(e) => {
-          handleMouseLeave(e, socket, Event, data);
+          handleMouseLeave(e, socket, Event, data?.ID);
+        }}
+        onWheel={(e) => {
+          handleMouseWheel(e, socket, Event, data?.ID);
         }}
       >
         <svg

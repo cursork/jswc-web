@@ -1,7 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel } from '../../utils';
+import { useAppData } from '../../hooks';
 
 const GridLabel = ({ data }) => {
   const labelRef = useRef();
+  const {socket} = useAppData()
   const [isEditable, setisEditable] = useState(false);
 
   useEffect(() => {
@@ -12,6 +15,8 @@ const GridLabel = ({ data }) => {
 
   useEffect(()=>{
   }, [isEditable])
+
+  const {  Event } = data?.typeObj?.Properties;
 
   const fontProperties = data?.cellFont && data?.cellFont?.Properties;
 
@@ -86,6 +91,24 @@ const GridLabel = ({ data }) => {
           }}
           onDoubleClick={handleDoubleClick}
           onBlur={handleBlur}
+          onMouseDown={(e) => {
+            handleMouseDown(e, socket, Event,data?.gridId);
+          }}
+          onMouseUp={(e) => {
+            handleMouseUp(e, socket, Event, data?.gridId);
+          }}
+          onMouseEnter={(e) => {
+            handleMouseEnter(e, socket, Event, data?.gridId);
+          }}
+          onMouseMove={(e) => {
+            handleMouseMove(e, socket, Event, data?.gridId);
+          }}
+          onMouseLeave={(e) => {
+            handleMouseLeave(e, socket, Event, data?.gridId);
+          }}
+          onWheel={(e) => {
+            handleMouseWheel(e, socket, Event, data?.gridId);
+          }}
         >
           {data?.formattedValue}
         </div>
@@ -104,6 +127,24 @@ const GridLabel = ({ data }) => {
           }}
           onBlur={handleBlur}
           ref={labelRef}
+          onMouseDown={(e) => {
+            handleMouseDown(e, socket, Event,data?.gridId);
+          }}
+          onMouseUp={(e) => {
+            handleMouseUp(e, socket, Event, data?.gridId);
+          }}
+          onMouseEnter={(e) => {
+            handleMouseEnter(e, socket, Event, data?.gridId);
+          }}
+          onMouseMove={(e) => {
+            handleMouseMove(e, socket, Event, data?.gridId);
+          }}
+          onMouseLeave={(e) => {
+            handleMouseLeave(e, socket, Event, data?.gridId);
+          }}
+          onWheel={(e) => {
+            handleMouseWheel(e, socket, Event, data?.gridId);
+          }}
         >
           {data?.focused?  data?.value: data?.formattedValue}
         </div>

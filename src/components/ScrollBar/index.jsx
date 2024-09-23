@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles } from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
@@ -27,12 +27,12 @@ const ScrollBar = ({ data }) => {
 
   const handleTrackMouseEnter = (e) => {
     setShowButtons(true);
-    handleMouseEnter(e, socket, Event, data)
+    handleMouseEnter(e, socket, Event, data?.ID)
   };
   
   const handleTrackMouseLeave = (e) => {
     setShowButtons(false);
-    handleMouseLeave(e, socket, Event, data)
+    handleMouseLeave(e, socket, Event, data?.ID)
   };
 
   // Updated handleThumbDrag function to only emit the event after the drag is complete
@@ -212,16 +212,19 @@ const ScrollBar = ({ data }) => {
       id={data?.ID}
       onMouseEnter={handleTrackMouseEnter}
       onMouseLeave={handleTrackMouseLeave}
+      onWheel={(e) => {
+        handleMouseWheel(e, socket, Event, data?.ID);
+      }}
       style={isHorizontal ? horizontalPosition : verticalPosition}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);
       }}
       onMouseUp={(e) => {
-        handleMouseUp(e, socket, Event, data);
+        handleMouseUp(e, socket, Event, data?.ID);
       }}
       
       onMouseMove={(e) => {
-        handleMouseMove(e, socket, Event, data);
+        handleMouseMove(e, socket, Event, data?.ID);
       }}
     
     >

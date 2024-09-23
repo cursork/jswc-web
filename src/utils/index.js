@@ -5,7 +5,7 @@ export * from "./getType";
 export * from "./getLastTabButton";
 
 
-export const handleMouseDown = (e, socket, Event, data) => {
+export const handleMouseDown = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
   const x = e.clientX;
   const y = e.clientY;
@@ -14,8 +14,8 @@ export const handleMouseDown = (e, socket, Event, data) => {
   const mousedownEvent = JSON.stringify({
     Event: {
       EventName: "MouseDown",
-      ID: data?.ID,
-      Info: [x, y, button, shiftState],
+      ID: ID,
+      Info: [y, x, button, shiftState],
     },
   });
 
@@ -25,7 +25,7 @@ export const handleMouseDown = (e, socket, Event, data) => {
   socket.send(mousedownEvent);
 };
 
-export const handleMouseUp = (e, socket, Event, data) => {
+export const handleMouseUp = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
   const x = e.clientX;
   const y = e.clientY;
@@ -34,8 +34,8 @@ export const handleMouseUp = (e, socket, Event, data) => {
   const mouseUpEvent = JSON.stringify({
     Event: {
       EventName: "MouseUp",
-      ID: data?.ID,
-      Info: [x, y, button, shiftState],
+      ID,
+      Info: [y, x, button, shiftState],
     },
   });
 
@@ -45,30 +45,30 @@ export const handleMouseUp = (e, socket, Event, data) => {
   socket.send(mouseUpEvent);
 };
 
-export const handleMouseEnter = (e, socket, Event, data) => {
+export const handleMouseEnter = (e, socket, Event, ID) => {
   const previousObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
 
   const mouseEnterEvent = JSON.stringify({
     Event: {
       EventName: "MouseEnter",
-      ID: data?.ID,
+      ID,
       Info: [previousObjectName], 
     },
   });
 
   const exists = Event && Event.some((item) => item[0] === "MouseEnter");
   if (!exists) return;
-  console.log(mouseEnterEvent);
+  console.log("mouseEnter",mouseEnterEvent);
   socket.send(mouseEnterEvent);
 };
 
-export const handleMouseLeave = (e, socket, Event, data) => {
+export const handleMouseLeave = (e, socket, Event, ID) => {
   const newObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
 
   const mouseLeaveEvent = JSON.stringify({
     Event: {
       EventName: "MouseLeave",
-      ID: data?.ID,
+      ID,
       Info: [newObjectName], 
     },
   });
@@ -79,25 +79,52 @@ export const handleMouseLeave = (e, socket, Event, data) => {
   socket.send(mouseLeaveEvent);
 };
 
-export const handleMouseMove = (e, socket, Event, data) => {
+export const handleMouseMove = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
   const x = e.clientX;
   const y = e.clientY;
   const button = e.buttons;
-
+  
   const mouseMoveEvent = JSON.stringify({
     Event: {
       EventName: "MouseMove",
-      ID: data?.ID,
+      ID,
       Info: [y, x, button, shiftState], 
     },
   });
-
+  
+  // console.log("mouseMove1", mouseMoveEvent);
   const exists = Event && Event.some((item) => item[0] === "MouseMove");
   if (!exists) return;
-  console.log(mouseMoveEvent);
+  // console.log(mouseMoveEvent);
+  // console.log("mouseMove2", mouseMoveEvent);
   socket.send(mouseMoveEvent);
 };
+
+export const handleMouseWheel = (e, socket, Event, ID) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); 
+  const x = e.clientX;
+  const y = e.clientY;
+  const button = e.buttons;
+  const delta = e.deltaY;
+  const lines = e.deltaMode === 1 ? e.deltaY : -1; 
+  const wheelDelta = Math.sign(e.deltaY); 
+
+  const mouseWheelEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseWheel",
+      ID,
+      Info: [y, x, button, shiftState, delta, lines, wheelDelta],
+    },
+  });
+
+
+  const exists = Event && Event.some((item) => item[0] === "MouseWheel");
+  if (!exists) return;
+  console.log(mouseWheelEvent);
+  socket.send(mouseWheelEvent);
+};
+
 
 export const setStyle = (Properties, position = "absolute", Flex = 0) => {
   if (Flex == 2) {

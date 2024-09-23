@@ -13,6 +13,7 @@ import {
   handleMouseMove,
   handleMouseLeave,
   parseFlexStyles,
+  handleMouseWheel,
 } from "../../utils";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAppData } from "../../hooks";
@@ -534,19 +535,22 @@ const Edit = ({
           }}
           onKeyDown={(e) => handleKeyPress(e)}
           onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data);
+            handleMouseDown(e, socket, Event,data?.ID);
           }}
           onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data);
+            handleMouseUp(e, socket, Event, data?.ID);
           }}
           onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data);
+            handleMouseEnter(e, socket, Event, data?.ID);
           }}
           onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data);
+            handleMouseMove(e, socket, Event, data?.ID);
           }}
           onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data);
+            handleMouseLeave(e, socket, Event, data?.ID);
+          }}
+          onWheel={(e) => {
+            handleMouseWheel(e, socket, Event, data?.ID);
           }}
         />
         <input
@@ -565,6 +569,8 @@ const Edit = ({
     );
   }
 
+
+  console.log("Edit data", data, FieldType, Event)
   if (FieldType == "LongNumeric" || FieldType == "Numeric") {
     return (
       <NumericFormat
@@ -602,6 +608,24 @@ const Edit = ({
         onBlur={() => handleEditEvents()}
         onKeyDown={(e) => handleKeyPress(e)}
         onFocus={handleGotFocus}
+        onMouseDown={(e) => {
+          handleMouseDown(e, socket, Event,data?.ID);
+        }}
+        onMouseUp={(e) => {
+          handleMouseUp(e, socket, Event, data?.ID);
+        }}
+        onMouseEnter={(e) => {
+          handleMouseEnter(e, socket, Event, data?.ID);
+        }}
+        onMouseMove={(e) => {
+          handleMouseMove(e, socket, Event, data?.ID);
+        }}
+        onMouseLeave={(e) => {
+          handleMouseLeave(e, socket, Event, data?.ID);
+        }}
+        onWheel={(e) => {
+          handleMouseWheel(e, socket, Event, data?.ID);
+        }}
       />
     );
   }
@@ -642,6 +666,24 @@ const Edit = ({
       }}
       maxLength={MaxLength}
       onFocus={handleGotFocus}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event,data);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data?.ID);
+      }}
+      onMouseEnter={(e) => {
+        handleMouseEnter(e, socket, Event, data?.ID);
+      }}
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data?.ID);
+      }}
+      onMouseLeave={(e) => {
+        handleMouseLeave(e, socket, Event, data?.ID);
+      }}
+      onWheel={(e) => {
+        handleMouseWheel(e, socket, Event, data?.ID);
+      }}
     />
   );
 };

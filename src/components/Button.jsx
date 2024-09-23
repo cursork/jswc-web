@@ -8,6 +8,7 @@ import {
   handleMouseDown,
   handleMouseUp,
   parseFlexStyles,
+  handleMouseWheel,
 } from "../utils";
 import { useAppData, useResizeObserver } from "../hooks";
 import { useEffect, useState } from "react";
@@ -34,6 +35,11 @@ const Button = ({
   useAppData();
   const { Picture, State, Visible, Event, Caption, Align, Posn, Size , CSS} =
   data?.Properties;
+
+
+  
+  console.log("data Button", data)
+
   const customStyles = parseFlexStyles(CSS)
   const inputRef = useRef();
   
@@ -481,19 +487,22 @@ const Button = ({
     <div
       id={data?.ID}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event,data?.ID);
       }}
       onMouseUp={(e) => {
-        handleMouseUp(e, socket, Event, data);
+        handleMouseUp(e, socket, Event, data?.ID);
       }}
       onMouseEnter={(e) => {
-        handleMouseEnter(e, socket, Event, data);
+        handleMouseEnter(e, socket, Event, data?.ID);
       }}
       onMouseMove={(e) => {
-        handleMouseMove(e, socket, Event, data);
+        handleMouseMove(e, socket, Event, data?.ID);
       }}
       onMouseLeave={(e) => {
-        handleMouseLeave(e, socket, Event, data);
+        handleMouseLeave(e, socket, Event, data?.ID);
+      }}
+      onWheel={(e) => {
+        handleMouseWheel(e, socket, Event, data?.ID);
       }}
       onClick={() => {
         console.log(
