@@ -906,7 +906,7 @@ const Grid = ({ data }) => {
             : Array.isArray(CellHeights)
             ? CellHeights[i]
             : CellHeights,
-          align: "start",
+          align: "end",
           backgroundColor: rgbColor(backgroundColor),
         };
         TitleWidth == undefined
@@ -951,7 +951,7 @@ const Grid = ({ data }) => {
             : Array.isArray(CellHeights)
             ? CellHeights[i]
             : CellHeights,
-          align: "start",
+          align: "end",
           backgroundColor: rgbColor(backgroundColor),
         };
 
@@ -1052,8 +1052,6 @@ const Grid = ({ data }) => {
   const gridData = modifyGridData();
   const customStyles = parseFlexStyles(CSS)
 
-  console.log("data grid", data, data.ID, Event)
-
   return (
     <>
       {/* <style>
@@ -1146,10 +1144,9 @@ const Grid = ({ data }) => {
                         (selectedColumn === columni && data.type == "header")
                           ? "lightblue"
                           : rgbColor(data?.backgroundColor),
-                      textAlign: data.type == "header" ? "center" : "end",
+                      textAlign: data.type == "header" ? "center" : data?.align,
                       overflow: "hidden",
                       lineHeight: `${data?.height}px`,
-                      // padding: "0px 5px"
                     }}
                   >
                     <Component
