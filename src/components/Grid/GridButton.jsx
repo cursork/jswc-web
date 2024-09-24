@@ -150,7 +150,7 @@ const GridButton = ({ data }) => {
               style={{
                 backgroundColor: data?.backgroundColor,
                 outline: 0,
-                marginTop: "3px",
+                marginTop: "3.5px",
                 marginLeft: "5px",
               }}
               // onMouseDown={(e) => {
@@ -191,7 +191,7 @@ const GridButton = ({ data }) => {
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
-            marginTop: "3px",
+            marginTop: "3.5px",
             marginLeft: "5px",
           }}
           onDoubleClick={(e)=>{
