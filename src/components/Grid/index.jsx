@@ -1126,9 +1126,7 @@ const Grid = ({ data }) => {
                       handleCellClick(rowi, columni);
                       // handleCellMove(rowi, columni + 1, '');
                     }}
-                    id={`${gridId}.r${rowi + 1}.c${columni + 1}-cell2-${
-                      data.type
-                    }`}
+                    id={`${gridId}`}
                     style={{
                       borderRight: isFocused
                         ? "1px solid blue"
