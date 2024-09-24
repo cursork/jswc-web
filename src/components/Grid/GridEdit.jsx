@@ -453,8 +453,8 @@ const GridEdit = ({ data }) => {
                   outline: 0,
                   backgroundColor: data?.backgroundColor,
                   textAlign: 'right',
-                  paddingRight: '5px',
-                  paddingLeft: '5px'
+                  // paddingRight: '5px',
+                  // paddingLeft: '5px'
                 }}
                 readOnly
                 decimalScale={Decimal}  

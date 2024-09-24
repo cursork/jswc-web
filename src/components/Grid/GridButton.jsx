@@ -150,7 +150,8 @@ const GridButton = ({ data }) => {
               style={{
                 backgroundColor: data?.backgroundColor,
                 outline: 0,
-                marginLeft: "3px",
+                marginTop: "3px",
+                marginLeft: "5px",
               }}
               // onMouseDown={(e) => {
               //   handleMouseDown(e, socket, Event,data?.gridId);
@@ -185,11 +186,13 @@ const GridButton = ({ data }) => {
             setCheckInput(e.target.checked);
             handleCheckBoxEvent(e.target.checked);
           }}
+
           onBlur={() => setShowInput(false)}
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
-            marginLeft: "3px",
+            marginTop: "3px",
+            marginLeft: "5px",
           }}
           onDoubleClick={(e)=>{
             handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
