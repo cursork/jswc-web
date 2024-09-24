@@ -8,7 +8,7 @@ const ScrollBar = ({ data }) => {
   const { FA } = Icons;
   const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach, CSS } = data?.Properties;
 
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(CSS);
   const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -27,12 +27,12 @@ const ScrollBar = ({ data }) => {
 
   const handleTrackMouseEnter = (e) => {
     setShowButtons(true);
-    handleMouseEnter(e, socket, Event, data?.ID)
+    handleMouseEnter(e, socket, Event, data?.ID);
   };
   
   const handleTrackMouseLeave = (e) => {
     setShowButtons(false);
-    handleMouseLeave(e, socket, Event, data?.ID)
+    handleMouseLeave(e, socket, Event, data?.ID);
   };
 
   // Updated handleThumbDrag function to only emit the event after the drag is complete
@@ -52,8 +52,10 @@ const ScrollBar = ({ data }) => {
       
       const newScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
 
-      // Update the UI with the thumb's new position without emitting the event yet
-      setScaledValue(newScaledValue);
+      // Throttle UI update to avoid rapid updates and possible race conditions
+      requestAnimationFrame(() => {
+        setScaledValue(newScaledValue);
+      });
     };
 
     const handleMouseUp = () => {
@@ -116,7 +118,7 @@ const ScrollBar = ({ data }) => {
         console.log('Event', scrollEvent);
         localStorage.setItem(data.ID, scrollEvent);
 
-        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue) }}, 'WS')
+        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue) }}, 'WS');
 
         const exists = Event && Event.some((item) => item[0] === 'Scroll');
         if (exists) {
@@ -147,7 +149,7 @@ const ScrollBar = ({ data }) => {
         attachStyle.top = `${defaultPosn[0]}px`;
       } 
 
-      if (leftAttach === 'Left' || leftAttach === 'Right' ) {
+      if (leftAttach === 'Left' || leftAttach === 'Right') {
         attachStyle.left = `${defaultPosn[1]}px`;
       } 
       
@@ -166,13 +168,13 @@ const ScrollBar = ({ data }) => {
   const attachStyle = calculateAttachStyle();
 
   const trackStyle = {
-    width: isHorizontal ? `${trackWidth}px` : defaultSize[1] +'px',
+    width: isHorizontal ? `${trackWidth}px` : defaultSize[1] + 'px',
     height: isHorizontal ? defaultSize[0] + 'px' : `${trackHeight}px`,
   };
 
   const thumbStyle = {
-    width: isHorizontal ? '40px' : defaultSize[1]-6 +'px',
-    height: isHorizontal ? defaultSize[0]-6 + 'px' : '40px',
+    width: isHorizontal ? '40px' : defaultSize[1] - 6 + 'px',
+    height: isHorizontal ? defaultSize[0] - 6 + 'px' : '40px',
     backgroundColor: '#9E9E9E',
     position: 'absolute',
     left: isHorizontal ? `${thumbPosition}px` : 2,
@@ -183,29 +185,27 @@ const ScrollBar = ({ data }) => {
 
   const verticalPosition = {
     position: 'absolute',
-    top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0,
-    ...(VScroll === -1 ? {left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0 }: {right: 0}),
+    top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0] : 0,
+    ...(VScroll === -1 ? {left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1] : 0 } : {right: 0}),
     display: Visible == 0 ? 'none' : 'block',
     ...attachStyle,
-    ...customStyles
+    ...customStyles,
   };
 
   const horizontalPosition = {
     position: 'absolute',
-    ...(HScroll === -1 ? {top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0]  : 0}: {bottom: 0} ),
-    left: HScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1]  : 0,
+    ...(HScroll === -1 ? {top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0] : 0 } : {bottom: 0}),
+    left: HScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1] : 0,
     width: defaultSize[1] + 'px',
     height: defaultSize[0],
     display: Visible == 0 ? 'none' : 'block',
     ...attachStyle,
-    ...customStyles
+    ...customStyles,
   };
 
   useEffect(() => {
-    setScaledValue((prevValue) => Math.min( Thumb, maxValue ));
+    setScaledValue((prevValue) => Math.min(Thumb, maxValue));
   }, [Thumb]);
-
-
 
   return (
     <div
@@ -217,19 +217,17 @@ const ScrollBar = ({ data }) => {
       }}
       style={isHorizontal ? horizontalPosition : verticalPosition}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event, data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
       }}
-      
       onMouseMove={(e) => {
         handleMouseMove(e, socket, Event, data?.ID);
       }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
       }}
-    
     >
       <div>
         <div
