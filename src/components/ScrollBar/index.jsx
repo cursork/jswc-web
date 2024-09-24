@@ -123,6 +123,9 @@ const ScrollBar = ({ data }) => {
   };
 
   const handleTrackClick = (event) => {
+    if (thumbRef.current && (event.target === thumbRef.current || thumbRef.current.contains(event.target))) {
+      return;
+    }
     if (thumbRef.current && trackRef.current) {
       const trackRect = trackRef.current.getBoundingClientRect();
       const clickPosition = isHorizontal
