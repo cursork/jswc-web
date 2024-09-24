@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useAppData } from '../../hooks';
-import { calculateDateAfterDays, getObjectById, calculateDaysFromDate, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, handleMouseWheel } from '../../utils';
+import { calculateDateAfterDays, getObjectById, calculateDaysFromDate, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, handleMouseWheel, handleMouseDoubleClick } from '../../utils';
 import dayjs from 'dayjs';
 
 const GridEdit = ({ data }) => {
@@ -343,7 +343,7 @@ const GridEdit = ({ data }) => {
       <>
         {!isEditable ? (
           <div
-            onDoubleClick={() => {
+            onDoubleClick={(e) => {
               setIsEditable(true);
             }}
             style={{ backgroundColor: data?.backgroundColor, outline: 0, paddingLeft: '5px',paddingRight: '5px' }}
@@ -355,7 +355,7 @@ const GridEdit = ({ data }) => {
           <div style={{ display: 'flex', alignItems: 'center'}}>
             <input
               ref={dateRef}
-              id={`${data?.typeObj?.ID}`}
+              id={`${data?.gridId}`}
               style={{
                 border: 0,
                 outline: 0,
@@ -389,7 +389,7 @@ const GridEdit = ({ data }) => {
           </button>
           </div>
             <input
-              id={`${data?.typeObj?.ID}`}
+              id={`${data?.gridId}`}
               type='date'
               value={dayjs(new Date(selectedDate)).format('YYYY-MM-DD')}
               ref={inputRef}
@@ -413,7 +413,7 @@ const GridEdit = ({ data }) => {
           <div
             ref={divRef}
             // onMouseUp={handleDivSelect}
-            onDoubleClick={() => {
+            onDoubleClick={(e) => {
               setIsEditable(true);
             }}
             // onMouseDown={(e) => {
@@ -446,7 +446,7 @@ const GridEdit = ({ data }) => {
               <NumericFormat
                 className='currency'
                 allowLeadingZeros={true}
-                id={`${data?.typeObj?.ID}`}
+                id={`${data?.gridId}`}
                 style={{
                   width: '100%',
                   border: 0,
@@ -471,7 +471,7 @@ const GridEdit = ({ data }) => {
             className='currency'
             allowLeadingZeros={true}
             getInputRef={inputRef}
-            id={`${data?.typeObj?.ID}`}
+            id={`${data?.gridId}`}
             style={{
               width: '100%',
               border: 0,
@@ -499,22 +499,25 @@ const GridEdit = ({ data }) => {
               handleKeyPress(e);
             }}
             onMouseDown={(e) => {
-              handleMouseDown(e, socket, Event,data?.gridId);
+              handleMouseDown(e, socket, Event,data?.typeObj?.ID);
             }}
             onMouseUp={(e) => {
-              handleMouseUp(e, socket, Event, data?.gridId);
+              handleMouseUp(e, socket, Event, data?.typeObj?.ID);
             }}
             onMouseEnter={(e) => {
-              handleMouseEnter(e, socket, Event, data?.gridId);
+              handleMouseEnter(e, socket, Event,data?.typeObj?.ID);
             }}
             onMouseMove={(e) => {
-              handleMouseMove(e, socket, Event, data?.gridId);
+              handleMouseMove(e, socket, Event, data?.typeObj?.ID);
             }}
             onMouseLeave={(e) => {
-              handleMouseLeave(e, socket, Event, data?.gridId);
+              handleMouseLeave(e, socket, Event, data?.typeObj?.ID);
             }}
             onWheel={(e) => {
-              handleMouseWheel(e, socket, Event, data?.gridId);
+              handleMouseWheel(e, socket, Event, data?.typeObj?.ID);
+            }}
+            onDoubleClick={(e)=>{
+              handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
             }}
           />
         )}
@@ -528,12 +531,12 @@ const GridEdit = ({ data }) => {
         <div
           ref={divRef}
           // onMouseUp={handleDivSelect}
-          onDoubleClick={() => {
+          onDoubleClick={(e) => {
             setIsEditable(true);
           }}
           autoFocus
           onKeyDown={(e) => console.log({ e })}
-          // onDoubleClick={() => setShowInput(true)}
+          // onDoubleClick={(e) => setShowInput(true)}
           style={{
             backgroundColor: data?.backgroundColor,
             outline: 0,
@@ -566,7 +569,7 @@ const GridEdit = ({ data }) => {
       ) : (
         <input
           type='text'
-          id={`${data?.typeObj?.ID}`}
+          id={`${data?.gridId}`}
           ref={inputRef}
           style={{
             outline: 0,
@@ -579,6 +582,7 @@ const GridEdit = ({ data }) => {
           }}
           onSelect={handleSelect}
           onDoubleClick={(e) => {
+            handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
             e.stopPropagation();
             // setIsEditable(true);
           }}
@@ -597,23 +601,24 @@ const GridEdit = ({ data }) => {
           }}
           autoFocus
             onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event,data?.gridId);
+          handleMouseDown(e, socket, Event,data?.typeObj?.ID);
         }}
         onMouseUp={(e) => {
-          handleMouseUp(e, socket, Event, data?.gridId);
+          handleMouseUp(e, socket, Event, data?.typeObj?.ID);
         }}
         onMouseEnter={(e) => {
-          handleMouseEnter(e, socket, Event, data?.gridId);
+          handleMouseEnter(e, socket, Event, data?.typeObj?.ID);
         }}
         onMouseMove={(e) => {
-          handleMouseMove(e, socket, Event,  data?.gridId);
+          handleMouseMove(e, socket, Event,  data?.typeObj?.ID);
         }}
         onMouseLeave={(e) => {
-          handleMouseLeave(e, socket, Event, data?.gridId);
+          handleMouseLeave(e, socket, Event, data?.typeObj?.ID);
         }}
         onWheel={(e) => {
-          handleMouseWheel(e, socket, Event, data?.gridId);
+          handleMouseWheel(e, socket, Event, data?.typeObj?.ID);
         }}
+      
         />
       )}
     </>

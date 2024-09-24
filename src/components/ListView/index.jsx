@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { setStyle, createListViewObjects, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave,getCurrentUrl, parseFlexStyles, handleMouseWheel } from '../../utils';
+import { setStyle, createListViewObjects, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave,getCurrentUrl, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const ListView = ({ data }) => {
@@ -95,6 +95,9 @@ const ListView = ({ data }) => {
         }}
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
+        }}
+        onDoubleClick={(e)=>{
+          handleMouseDoubleClick(e, socket, Event,data?.ID);
         }}
       >
         {listViewItems?.map((item, index) => {

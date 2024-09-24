@@ -1,4 +1,4 @@
-import { extractStringUntilSecondPeriod, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, setStyle } from '../utils';
+import { extractStringUntilSecondPeriod, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, setStyle } from '../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useAppData, useResizeObserver } from '../hooks';
 
@@ -69,6 +69,9 @@ const List = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       {Items &&

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel } from '../../utils';
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel } from '../../utils';
 import { useAppData } from '../../hooks';
 
 const GridLabel = ({ data }) => {
@@ -129,22 +129,25 @@ const GridLabel = ({ data }) => {
           onBlur={handleBlur}
           ref={labelRef}
           onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data?.gridId);
+            handleMouseDown(e, socket, Event,data?.typeObj?.ID);
           }}
           onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data?.gridId);
+            handleMouseUp(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data?.gridId);
+            handleMouseEnter(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data?.gridId);
+            handleMouseMove(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data?.gridId);
+            handleMouseLeave(e, socket, Event, data?.typeObj?.ID);
           }}
           onWheel={(e) => {
-            handleMouseWheel(e, socket, Event, data?.gridId);
+            handleMouseWheel(e, socket, Event, data?.typeObj?.ID);
+          }}
+          onDoubleClick={(e)=>{
+            handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
           }}
         >
           {data?.focused?  data?.value: data?.formattedValue}

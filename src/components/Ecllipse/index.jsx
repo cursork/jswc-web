@@ -1,5 +1,5 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
 
 const Ecllipse = ({ data }) => {
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
@@ -120,6 +120,9 @@ const {socket} = useAppData()
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>

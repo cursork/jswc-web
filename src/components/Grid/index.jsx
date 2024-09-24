@@ -302,6 +302,7 @@ import {
   handleMouseUp,
   parseFlexStyles,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from "../../utils";
 import { useResizeObserver, useAppData } from "../../hooks";
 import GridEdit from "./GridEdit";
@@ -1083,6 +1084,9 @@ const Grid = ({ data }) => {
         }}
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
+        }}
+        onDoubleClick={(e)=>{
+          handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
         }}
         id={data?.ID}
         style={{

@@ -45,6 +45,26 @@ export const handleMouseUp = (e, socket, Event, ID) => {
   socket.send(mouseUpEvent);
 };
 
+export const handleMouseDoubleClick = (e, socket, Event, ID) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+  const x = e.clientX;
+  const y = e.clientY;
+  const button = e.button;
+
+  const mouseUpEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseUp",
+      ID,
+      Info: [y, x, button, shiftState],
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseUp");
+  if (!exists) return;
+  console.log(mouseUpEvent);
+  socket.send(mouseUpEvent);
+};
+
 export const handleMouseEnter = (e, socket, Event, ID) => {
   const previousObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
 

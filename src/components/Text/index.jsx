@@ -1,4 +1,4 @@
-import { getObjectById, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, rgbColor } from "../../utils";
+import { getObjectById, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, rgbColor } from "../../utils";
 import { useAppData } from "../../hooks";
 import { useEffect, useState } from "react";
 
@@ -108,6 +108,9 @@ const customStyles = parseFlexStyles(CSS)
         }}
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
+        }}
+        onDoubleClick={(e)=>{
+          handleMouseDoubleClick(e, socket, Event,data?.ID);
         }}
       >
         <svg

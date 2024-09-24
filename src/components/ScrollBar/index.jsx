@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles } from '../../utils';
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles } from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
@@ -225,6 +225,9 @@ const ScrollBar = ({ data }) => {
       
       onMouseMove={(e) => {
         handleMouseMove(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     
     >

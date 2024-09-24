@@ -21,7 +21,7 @@ const GridCell = ({ data, keyPress }) => {
             textAlign: data?.typeObj?.Properties?.Justify,
             paddingRight: '5px',
           }}
-          onDoubleClick={() => setisEditable(true)}
+          onDoubleClick={(e) => setisEditable(true)}
         >
           {!data?.formattedValue ? data.value : data?.formattedValue}
         </div>

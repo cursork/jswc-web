@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel } from '../utils';
+import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../utils';
 
 import { useAppData, useResizeObserver } from '../hooks';
 import { useState, useRef } from 'react';
@@ -310,6 +310,9 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       <select

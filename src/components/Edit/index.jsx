@@ -14,6 +14,7 @@ import {
   handleMouseLeave,
   parseFlexStyles,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from "../../utils";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAppData } from "../../hooks";
@@ -552,6 +553,9 @@ const Edit = ({
           onWheel={(e) => {
             handleMouseWheel(e, socket, Event, data?.ID);
           }}
+          onDoubleClick={(e)=>{
+            handleMouseDoubleClick(e, socket, Event,data?.ID);
+          }}
         />
         <input
           id={data?.ID}
@@ -626,6 +630,9 @@ const Edit = ({
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
         }}
+        onDoubleClick={(e)=>{
+          handleMouseDoubleClick(e, socket, Event,data?.ID);
+        }}
       />
     );
   }
@@ -683,6 +690,9 @@ const Edit = ({
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     />
   );

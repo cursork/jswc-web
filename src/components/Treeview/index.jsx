@@ -13,6 +13,7 @@ import {
   getCurrentUrl,
   parseFlexStyles,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from '../../utils';
 import { useAppData } from '../../hooks';
 import { useEffect, useState, useRef } from 'react';
@@ -255,6 +256,9 @@ const Treeview = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       <Tree

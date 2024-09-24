@@ -10,6 +10,7 @@ import {
   handleMouseMove,
   handleMouseLeave,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from "../utils";
 import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver, useWindowDimensions } from "../hooks";
@@ -154,6 +155,9 @@ const Form = ({ data }) => {
     }}
     onWheel={(e) => {
       handleMouseWheel(e, socket, Event, data?.ID);
+    }}
+    onDoubleClick={(e)=>{
+      handleMouseDoubleClick(e, socket, Event,data?.ID);
     }}
       id={data?.ID}
       style={{

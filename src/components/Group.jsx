@@ -7,6 +7,9 @@ import {
   parseFlexStyles,
   handleMouseWheel,
   handleMouseEnter,
+  handleMouseLeave,
+  handleMouseMove,
+  handleMouseDoubleClick,
 } from "../utils";
 import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver } from "../hooks";
@@ -113,6 +116,9 @@ const Group = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       {data?.Properties?.Caption != "" && (

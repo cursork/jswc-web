@@ -1,5 +1,5 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, renderImage } from '../../utils';
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, renderImage } from '../../utils';
 
 const Image = ({ data }) => {
   const PORT = localStorage.getItem('PORT');
@@ -38,6 +38,9 @@ const Image = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
       
     >

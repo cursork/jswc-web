@@ -12,6 +12,7 @@ import {
   handleMouseUp,
   handleMouseDown,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from "../../utils";
 import SelectComponent from "../SelectComponent";
 import { useAppData } from "../../hooks";
@@ -128,6 +129,9 @@ const SubForm = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       {Object.keys(updatedData).map((key) => {

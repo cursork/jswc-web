@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useAppData } from "../../hooks";
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel } from "../../utils";
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel } from "../../utils";
 
 const GridButton = ({ data }) => {
   console.log("GridButton", data);
@@ -121,14 +121,14 @@ const GridButton = ({ data }) => {
           // onWheel={(e) => {
           //   handleMouseWheel(e, socket, Event, data?.gridId);
           // }}
-          id={`${data?.typeObj?.ID}`}
-          onDoubleClick={() => {
+          id={`${data?.gridId}`}
+          onDoubleClick={(e) => {
             setShowInput(true);
             setisFocused(true);
           }}
           ref={buttonRef}
           tabIndex={"1"}
-          // onDoubleClick={() => setShowInput(true)}
+          // onDoubleClick={(e) => setShowInput(true)}
           style={{
             backgroundColor: data?.backgroundColor,
             ...fontStyles,
@@ -139,7 +139,7 @@ const GridButton = ({ data }) => {
           {!data?.formattedValue ? (
             <input
               ref={buttonRef}
-              id={`${data?.typeObj?.ID}`}
+              id={`${data?.gridId}`}
               type="checkbox"
               checked={checkInput}
               onChange={(e) => {
@@ -178,7 +178,7 @@ const GridButton = ({ data }) => {
       ) : (
         <input
           ref={buttonRef}
-          id={`${data?.typeObj?.ID}.r${data?.row + 1}.c${data?.column + 1}`}
+          id={`${data?.gridId}`}
           type="checkbox"
           checked={checkInput}
           onChange={(e) => {
@@ -191,23 +191,26 @@ const GridButton = ({ data }) => {
             outline: 0,
             marginLeft: "3px",
           }}
+          onDoubleClick={(e)=>{
+            handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
+          }}
           onMouseDown={(e) => {
-            handleMouseDown(e, socket, Event,data?.gridId);
+            handleMouseDown(e, socket, Event,data?.typeObj?.ID);
           }}
           onMouseUp={(e) => {
-            handleMouseUp(e, socket, Event, data?.gridId);
+            handleMouseUp(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseEnter={(e) => {
-            handleMouseEnter(e, socket, Event, data?.gridId);
+            handleMouseEnter(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseMove={(e) => {
-            handleMouseMove(e, socket, Event, data?.gridId);
+            handleMouseMove(e, socket, Event, data?.typeObj?.ID);
           }}
           onMouseLeave={(e) => {
-            handleMouseLeave(e, socket, Event, data?.gridId);
+            handleMouseLeave(e, socket, Event, data?.typeObj?.ID);
           }}
           onWheel={(e) => {
-            handleMouseWheel(e, socket, Event, data?.gridId);
+            handleMouseWheel(e, socket, Event, data?.typeObj?.ID);
           }}
         />
       )}

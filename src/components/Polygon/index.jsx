@@ -1,5 +1,5 @@
 import { useAppData } from "../../hooks";
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from "../../utils";
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from "../../utils";
 
 const Poly = ({ data }) => {
   const { FCol, FillCol, LWidth, Points, FStyle, Visible, Event, CSS } = data?.Properties;
@@ -30,6 +30,9 @@ const Poly = ({ data }) => {
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
     >
       <svg

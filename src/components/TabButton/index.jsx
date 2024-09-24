@@ -1,5 +1,5 @@
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
+import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from '../../utils';
 
 const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, activebgColor }) => {
   const { socket } = useAppData();
@@ -29,6 +29,9 @@ const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, active
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
       style={{
         border: '1px solid #DFDFDF',

@@ -9,6 +9,7 @@ import {
   handleMouseUp,
   parseFlexStyles,
   handleMouseWheel,
+  handleMouseDoubleClick,
 } from "../utils";
 import { useAppData, useResizeObserver } from "../hooks";
 import { useEffect, useState } from "react";
@@ -503,6 +504,9 @@ const Button = ({
       }}
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e)=>{
+        handleMouseDoubleClick(e, socket, Event,data?.ID);
       }}
       onClick={() => {
         console.log(
