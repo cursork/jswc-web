@@ -53,13 +53,13 @@ export const handleMouseDoubleClick = (e, socket, Event, ID) => {
 
   const mouseUpEvent = JSON.stringify({
     Event: {
-      EventName: "MouseUp",
+      EventName: "MouseDblClick",
       ID,
       Info: [y, x, button, shiftState],
     },
   });
 
-  const exists = Event && Event.some((item) => item[0] === "MouseUp");
+  const exists = Event && Event.some((item) => item[0] === "MouseDblClick");
   if (!exists) return;
   console.log(mouseUpEvent);
   socket.send(mouseUpEvent);
