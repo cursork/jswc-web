@@ -1,4 +1,4 @@
-import { getObjectById, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, rgbColor } from "../../utils";
+import { getObjectById, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, rgbColor } from "../../utils";
 import { useAppData } from "../../hooks";
 import { useEffect, useState } from "react";
 
