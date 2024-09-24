@@ -2,11 +2,33 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
-import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles } from '../../utils';
+import {
+  handleMouseDoubleClick,
+  handleMouseDown,
+  handleMouseEnter,
+  handleMouseLeave,
+  handleMouseMove,
+  handleMouseUp,
+  handleMouseWheel,
+  parseFlexStyles,
+} from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach, CSS } = data?.Properties;
+  const {
+    Align,
+    Type,
+    Thumb,
+    Range,
+    Event,
+    Visible,
+    Size,
+    Posn,
+    VScroll,
+    HScroll,
+    Attach,
+    CSS,
+  } = data?.Properties;
 
   const customStyles = parseFlexStyles(CSS);
   const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
@@ -29,28 +51,37 @@ const ScrollBar = ({ data }) => {
     setShowButtons(true);
     handleMouseEnter(e, socket, Event, data?.ID);
   };
-  
+
   const handleTrackMouseLeave = (e) => {
     setShowButtons(false);
     handleMouseLeave(e, socket, Event, data?.ID);
   };
 
-  // Updated handleThumbDrag function to only emit the event after the drag is complete
   const handleThumbDrag = (event) => {
     event.preventDefault();
 
     const startPosition = isHorizontal ? event.clientX : event.clientY;
-    let newThumbPosition = thumbPosition;
+    const thumbStyleProp = isHorizontal ? 'left' : 'top';
+    const initialThumbPosition = thumbRef.current
+      ? parseFloat(thumbRef.current.style[thumbStyleProp]) || 0
+      : 0;
+    let newThumbPosition = initialThumbPosition;
 
-    const handleMouseMove = (moveEvent) => {
+    const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
+
+    const handleMouseMoveEvent = (moveEvent) => {
       const currentPosition = isHorizontal ? moveEvent.clientX : moveEvent.clientY;
       const delta = currentPosition - startPosition;
-      newThumbPosition = thumbPosition + delta;
+      newThumbPosition = initialThumbPosition + delta;
 
-      const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
       newThumbPosition = Math.max(0, Math.min(maxThumbPosition, newThumbPosition));
-      
+
       const newScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
+
+      // Update the thumb's position directly for immediate visual feedback
+      if (thumbRef.current) {
+        thumbRef.current.style[thumbStyleProp] = `${newThumbPosition}px`;
+      }
 
       // Throttle UI update to avoid rapid updates and possible race conditions
       requestAnimationFrame(() => {
@@ -58,14 +89,12 @@ const ScrollBar = ({ data }) => {
       });
     };
 
-    const handleMouseUp = () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+    const handleMouseUpEvent = () => {
+      window.removeEventListener('mousemove', handleMouseMoveEvent);
+      window.removeEventListener('mouseup', handleMouseUpEvent);
 
-      // Final thumb position and scaled value when the drag is complete
-      const finalThumbPosition = Math.max(0, Math.min(maxThumbPosition, newThumbPosition));
-      const finalScaledValue = (finalThumbPosition / maxThumbPosition) * maxValue;
-      const roundedScaledValue = Math.round(finalScaledValue) === 0 ? 1 : Math.round(finalScaledValue);
+      const finalScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
+      const roundedScaledValue = Math.round(finalScaledValue) || 1;
 
       // Update the thumb value in the data
       handleData({ ID: data?.ID, Properties: { Thumb: roundedScaledValue } }, 'WS');
@@ -84,25 +113,37 @@ const ScrollBar = ({ data }) => {
 
       const exists = Event && Event.some((item) => item[0] === 'Scroll');
       if (exists) {
-        socket.send(scrollEvent); // Only send the event after the drag is complete
+        socket.send(scrollEvent);
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMoveEvent);
+    window.addEventListener('mouseup', handleMouseUpEvent);
   };
 
   const handleTrackClick = (event) => {
-    if (thumbRef.current) {
+    if (thumbRef.current && trackRef.current) {
       const trackRect = trackRef.current.getBoundingClientRect();
-      const clickPosition = isHorizontal ? event.clientX - trackRect.left : event.clientY - trackRect.top;
+      const clickPosition = isHorizontal
+        ? event.clientX - trackRect.left
+        : event.clientY - trackRect.top;
 
-      const newScaledValue = isHorizontal
-        ? (clickPosition / trackWidth) * maxValue
-        : (clickPosition / (trackHeight - 50)) * maxValue;
+      const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
+
+      const newThumbPosition = Math.max(
+        0,
+        Math.min(maxThumbPosition, clickPosition - 20) // Adjust for thumb size
+      );
+
+      const newScaledValue = (newThumbPosition / maxThumbPosition) * maxValue;
 
       if (newScaledValue >= 1 && newScaledValue <= maxValue) {
         setScaledValue(newScaledValue);
+
+        // Update the thumb's position directly
+        if (thumbRef.current) {
+          thumbRef.current.style[isHorizontal ? 'left' : 'top'] = `${newThumbPosition}px`;
+        }
 
         const scrollEvent = JSON.stringify({
           Event: {
@@ -118,7 +159,10 @@ const ScrollBar = ({ data }) => {
         console.log('Event', scrollEvent);
         localStorage.setItem(data.ID, scrollEvent);
 
-        handleData({ID: data?.ID, Properties: {Thumb: Math.round(newScaledValue) === 0 ? 1: Math.round(newScaledValue) }}, 'WS');
+        handleData(
+          { ID: data?.ID, Properties: { Thumb: Math.round(newScaledValue) || 1 } },
+          'WS'
+        );
 
         const exists = Event && Event.some((item) => item[0] === 'Scroll');
         if (exists) {
@@ -128,40 +172,32 @@ const ScrollBar = ({ data }) => {
     }
   };
 
-  let thumbPosition = (scaledValue / maxValue) * (trackHeight - 40);
-
-  if (isHorizontal) {
-    thumbPosition = (scaledValue / maxValue) * (trackWidth - 40);
-  }
-
-  const maxThumbPosition = isHorizontal ? trackWidth - 50 : trackHeight - 100;
-
   const defaultPosn = Posn || [0, 0];
   const defaultSize = Size || [parentSize[0], parentSize[1]];
 
   const calculateAttachStyle = () => {
     let attachStyle = {};
-  
+
     if (Attach) {
       const [topAttach, leftAttach, bottomAttach, rightAttach] = Attach;
-  
+
       if (topAttach === 'Top' || topAttach === 'Bottom') {
         attachStyle.top = `${defaultPosn[0]}px`;
-      } 
+      }
 
       if (leftAttach === 'Left' || leftAttach === 'Right') {
         attachStyle.left = `${defaultPosn[1]}px`;
-      } 
-      
+      }
+
       if (bottomAttach === 'Bottom' || bottomAttach === 'Top') {
         attachStyle.bottom = `${defaultPosn[0]}px`;
-      } 
-  
-      if (rightAttach === 'Right' ||  rightAttach === 'Left') {
+      }
+
+      if (rightAttach === 'Right' || rightAttach === 'Left') {
         attachStyle.right = `${defaultPosn[1]}px`;
-      } 
+      }
     }
-  
+
     return attachStyle;
   };
 
@@ -170,15 +206,18 @@ const ScrollBar = ({ data }) => {
   const trackStyle = {
     width: isHorizontal ? `${trackWidth}px` : defaultSize[1] + 'px',
     height: isHorizontal ? defaultSize[0] + 'px' : `${trackHeight}px`,
+    position: 'relative',
   };
+
+  const thumbPosition = (scaledValue / maxValue) * (isHorizontal ? trackWidth - 50 : trackHeight - 100);
 
   const thumbStyle = {
     width: isHorizontal ? '40px' : defaultSize[1] - 6 + 'px',
     height: isHorizontal ? defaultSize[0] - 6 + 'px' : '40px',
     backgroundColor: '#9E9E9E',
     position: 'absolute',
-    left: isHorizontal ? `${thumbPosition}px` : 2,
-    top: isHorizontal ? 2 : `${thumbPosition}px`,
+    left: isHorizontal ? `${thumbPosition}px` : '2px',
+    top: isHorizontal ? '2px' : `${thumbPosition}px`,
     cursor: 'pointer',
     borderRadius: '5px',
   };
@@ -186,7 +225,9 @@ const ScrollBar = ({ data }) => {
   const verticalPosition = {
     position: 'absolute',
     top: VScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0] : 0,
-    ...(VScroll === -1 ? {left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1] : 0 } : {right: 0}),
+    ...(VScroll === -1
+      ? { left: VScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1] : 0 }
+      : { right: 0 }),
     display: Visible == 0 ? 'none' : 'block',
     ...attachStyle,
     ...customStyles,
@@ -194,7 +235,9 @@ const ScrollBar = ({ data }) => {
 
   const horizontalPosition = {
     position: 'absolute',
-    ...(HScroll === -1 ? {top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0] : 0 } : {bottom: 0}),
+    ...(HScroll === -1
+      ? { top: HScroll === -1 && defaultPosn[0] !== undefined ? defaultPosn[0] : 0 }
+      : { bottom: 0 }),
     left: HScroll === -1 && defaultPosn[1] !== undefined ? defaultPosn[1] : 0,
     width: defaultSize[1] + 'px',
     height: defaultSize[0],
@@ -233,11 +276,15 @@ const ScrollBar = ({ data }) => {
         <div
           className={`scroll-bar ${isHorizontal ? 'horizontal' : 'vertical'}`}
           style={{ ...trackStyle }}
-          onMouseDown={handleThumbDrag}
-          onClick={handleTrackClick}
+          onMouseDown={handleTrackClick}
           ref={trackRef}
         >
-          <div className='thumb' style={{ ...thumbStyle }} ref={thumbRef}></div>
+          <div
+            className='thumb'
+            style={{ ...thumbStyle }}
+            ref={thumbRef}
+            onMouseDown={handleThumbDrag}
+          ></div>
         </div>
       </div>
     </div>
