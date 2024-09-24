@@ -12,6 +12,7 @@ licenses.json
 generate-license-list.cjs
 dist-ssr
 *.local
+.env
 
 # Editor directories and files
 .vscode/*
