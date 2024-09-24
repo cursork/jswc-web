@@ -661,10 +661,26 @@ const App = () => {
           );
 
          if (!localStorage.getItem(serverEvent.ID)) {
-            const serverPropertiesObj = {};
-            serverEvent.Properties.map((key) => {
-              serverPropertiesObj[key] = Properties[key];
-            });
+  
+          let newSelItems = SelItems || new Array(Items.length).fill(0);
+
+          if (Text) {
+            const indexToChange = Items.indexOf(Text); 
+            if (indexToChange >= 0) {
+              newSelItems.fill(0); 
+              newSelItems[indexToChange] = 1;
+            }
+          }
+
+    
+          const serverPropertiesObj = {};
+          serverEvent.Properties.map((key) => {
+            serverPropertiesObj[key] =
+              key === "SelItems"
+                ? newSelItems
+                : Properties[key]
+          });
+          
 
             const message = {
               WG: {
