@@ -59,6 +59,7 @@ const ScrollBar = ({ data }) => {
 
   const handleThumbDrag = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     const startPosition = isHorizontal ? event.clientX : event.clientY;
     const thumbStyleProp = isHorizontal ? 'left' : 'top';
