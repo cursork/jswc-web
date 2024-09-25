@@ -24,15 +24,10 @@ const KendoChart = ({ data }) => {
         pannable
         zoomable
       >
-        <ChartLegend labels={
-          Series.map((_, i) =>
-            <ChartLegendItem name={"series-" + i}/>
-          ) 
-        }/>
         <ChartSeries>
           {
-            Series.map((s, i) =>
-              <ChartSeriesItem data={s.data} type="column" name={"series-" + i} />
+            Series.map((s, i) => 
+              <ChartSeriesItem key={i} data={s.data} type="column" name={"series-" + i} />
             )
           }
         </ChartSeries>
