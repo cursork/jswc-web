@@ -2,13 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icons } from '../../common';
 import './ScrollBar.css';
 import { useAppData } from '../../hooks';
-import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, parseFlexStyles } from '../../utils';
+import { handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, injectCssStyles, parseFlexStyles, processCssStyles } from '../../utils';
 
 const ScrollBar = ({ data }) => {
   const { FA } = Icons;
-  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach, CSS } = data?.Properties;
+  const { Align, Type, Thumb, Range, Event, Visible, Size, Posn, VScroll, HScroll, Attach, Css } = data?.Properties;
 
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(Css)
+
+  // console.log("CSS", Css, customStyles, data.ID)
   const isHorizontal = Type === 'Scroll' && (Align === 'Bottom' || HScroll === -1);
   const [scaledValue, setScaledValue] = useState(Thumb || 1);
 
@@ -16,7 +18,15 @@ const ScrollBar = ({ data }) => {
   const [showButtons, setShowButtons] = useState(false);
   const emitEvent = Event && Event[0];
 
-  const { socket, handleData } = useAppData();
+  const { socket, handleData, findDesiredData } = useAppData();
+  const Style = findDesiredData("F1.STYLE")
+
+  useEffect(() => {
+    if (Style && Style.Properties && Style.Properties.Style) {
+      const processedStyles = processCssStyles(Style.Properties.Style);  
+      injectCssStyles(processedStyles, Style.ID);
+    }
+  }, [Style]);
 
   const trackRef = useRef(null);
   const thumbRef = useRef(null);
@@ -188,6 +198,7 @@ const ScrollBar = ({ data }) => {
     display: Visible == 0 ? 'none' : 'block',
     ...attachStyle,
     ...customStyles
+
   };
 
   const horizontalPosition = {
@@ -213,6 +224,7 @@ const ScrollBar = ({ data }) => {
       onMouseEnter={handleTrackMouseEnter}
       onMouseLeave={handleTrackMouseLeave}
       style={isHorizontal ? horizontalPosition : verticalPosition}
+      
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);
       }}
@@ -225,17 +237,17 @@ const ScrollBar = ({ data }) => {
       }}
     
     >
-      <div>
+      {/* <div> */}
         <div
-          className={`ewc-scroll-bar ${isHorizontal ? 'horizontal' : 'vertical'}`}
-          style={{ ...trackStyle }}
+          className={`ewc-scroll-bar`}
+          style={{ ...trackStyle, }}
           onMouseDown={handleThumbDrag}
           onClick={handleTrackClick}
           ref={trackRef}
         >
           <div className={`ewc-thumb`} style={{ ...thumbStyle }} ref={thumbRef}></div>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

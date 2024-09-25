@@ -7,8 +7,9 @@ export * from "./getLastTabButton";
 
 export const handleMouseDown = (e, socket, Event, data) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.button;
 
   const mousedownEvent = JSON.stringify({
@@ -27,8 +28,10 @@ export const handleMouseDown = (e, socket, Event, data) => {
 
 export const handleMouseUp = (e, socket, Event, data) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+
   const button = e.button;
 
   const mouseUpEvent = JSON.stringify({
@@ -45,7 +48,29 @@ export const handleMouseUp = (e, socket, Event, data) => {
   socket.send(mouseUpEvent);
 };
 
-export const handleMouseEnter = (e, socket, Event, data) => {
+
+export const handleMouseDoubleClick = (e, socket, Event, ID) => {
+  const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+  const button = e.button;
+
+  const mouseUpEvent = JSON.stringify({
+    Event: {
+      EventName: "MouseDblClick",
+      ID,
+      Info: [y, x, button, shiftState],
+    },
+  });
+
+  const exists = Event && Event.some((item) => item[0] === "MouseDblClick");
+  if (!exists) return;
+  console.log(mouseUpEvent);
+  socket.send(mouseUpEvent);
+};
+
+export const handleMouseEnter = (e, socket, Event, ID) => {
   const previousObjectName = e.relatedTarget ? e.relatedTarget.id : ""; 
 
   const mouseEnterEvent = JSON.stringify({
@@ -81,8 +106,9 @@ export const handleMouseLeave = (e, socket, Event, data) => {
 
 export const handleMouseMove = (e, socket, Event, data) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.buttons;
 
   const mouseMoveEvent = JSON.stringify({
@@ -460,4 +486,33 @@ export const getCurrentUrl = () => {
   } else {
     return currentUrl + path;
   }
+};
+
+export const injectCssStyles = (cssStyles, id = 'dynamic-css-styles') => {
+  if (!cssStyles || !cssStyles.length) return;
+
+  // Check if the style tag with the given ID already exists
+  if (document.getElementById(id)) {
+    console.warn(`Style tag with id "${id}" already exists. Skipping injection.`);
+    return;
+  }
+
+  const styleTag = document.createElement('style');
+  styleTag.id = id;
+
+  // Append CSS rules
+  styleTag.appendChild(document.createTextNode(cssStyles.join('\n')));
+
+  // Append the style tag to the document head
+  document.head.appendChild(styleTag);
+};
+
+
+const appendImportantToCss = (cssRule) => {
+  return cssRule.replace(/:\s*([^;]+);/g, (match, p1) => `: ${p1.trim()} !important;`);
+};
+
+
+export const processCssStyles = (cssStyles) => {
+  return cssStyles.map(rule => appendImportantToCss(rule));
 };

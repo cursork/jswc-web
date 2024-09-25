@@ -32,7 +32,7 @@ const Button = ({
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData, reRender } =
   useAppData();
-  const { Picture, State, Visible, Event, Caption, Align, Posn, Size , CSS} =
+  const { Picture, State, Visible, Event, Caption, Align, Posn, Size , CSS, CssClass} =
   data?.Properties;
   const customStyles = parseFlexStyles(CSS)
   const inputRef = useRef();
@@ -480,6 +480,7 @@ const Button = ({
   return (
     <div
       id={data?.ID}
+      className={`${CssClass}`}
       onMouseDown={(e) => {
         handleMouseDown(e, socket, Event,data);
       }}
