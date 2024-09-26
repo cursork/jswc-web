@@ -27,7 +27,7 @@ jobs:
         run: yarn build  # Adjust if your build command is different
 
       - name: Create .zip file
-        id: build_info
+        id: zip_up
         run: |
           DATETIME=$(date +%Y%m%d%H%M%S)
           echo "DATETIME=${DATETIME}" >> $GITHUB_ENV
@@ -36,7 +36,7 @@ jobs:
           echo "SHORT_SHA=${SHORT_SHA}" >> $GITHUB_ENV
 
           ZIP_NAME="${DATETIME}-${SHORT_SHA}.zip"
-          zip -r $ZIP_NAME build  # Adjust 'build' if your build directory is different
+          zip -r $ZIP_NAME dist
           echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
 
       - name: Tag with date-sha
