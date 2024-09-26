@@ -61,6 +61,7 @@ jobs:
           body: "Automated build of commit `${{ github.sha }}` at `${{ env.DATETIME }}`."
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload release
         uses: actions/upload-release-asset@v1
@@ -69,3 +70,4 @@ jobs:
           asset_path: ./${{ env.ZIP_NAME }}
           asset_name: ${{ env.ZIP_NAME }}
           asset_content_type: application/zip
+          token: ${{ secrets.GITHUB_TOKEN }}
