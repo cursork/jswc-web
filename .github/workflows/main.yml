@@ -55,19 +55,21 @@ jobs:
       - name: Create GH release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "build-${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
           release_name: "Build ${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
           body: "Automated build of commit `${{ github.sha }}` at `${{ env.DATETIME }}`."
           draft: false
           prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{ env.ZIP_NAME }}
           asset_name: ${{ env.ZIP_NAME }}
           asset_content_type: application/zip
-          token: ${{ secrets.GITHUB_TOKEN }}
