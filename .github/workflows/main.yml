@@ -62,7 +62,7 @@ jobs:
           release_name: "${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
           body: "Automated build of commit `${{ github.sha }}` at `${{ env.DATETIME }}`."
           draft: false
-          prerelease: false
+          prerelease: true # Set this for now
 
       - name: Upload release
         uses: actions/upload-release-asset@v1
