@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release_test ### TODO: set to main ###
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   build-and-release:
