@@ -59,7 +59,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "build-${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
-          release_name: "Build ${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
+          release_name: "${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
           body: "Automated build of commit `${{ github.sha }}` at `${{ env.DATETIME }}`."
           draft: false
           prerelease: false
