@@ -19,7 +19,7 @@ const ScrollBar = ({ data }) => {
   const emitEvent = Event && Event[0];
 
   const { socket, handleData, findDesiredData } = useAppData();
-  const Style = findDesiredData("F1.STYLE")
+  const Style = findDesiredData("F1.STYLE"); // TODO - not everyone needs to use F1 as the form ID?
 
   useEffect(() => {
     if (Style && Style.Properties && Style.Properties.Style) {

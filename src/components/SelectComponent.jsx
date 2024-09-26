@@ -34,6 +34,7 @@ import Image from './Image';
 import { useAppData } from '../hooks';
 import Chart from './Chart';
 import MessageBox from './MessageBox';
+import CssStyled from './CssStyled';
 
 const SelectComponent = ({
   data,
@@ -168,6 +169,7 @@ const SelectComponent = ({
   if (data?.Properties?.Type == 'Circle') return <Circle data={data} />;
   if (data?.Properties?.Type == 'ApexChart') return <Chart data={data} />;
   if (data?.Properties?.Type == 'MsgBox') return <MessageBox data= {data} />;
+  if (data?.Properties?.Type == 'CssStyled') return <CssStyled data={data} />;
 };
 
 export default SelectComponent;
