@@ -1,0 +1,70 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - release_test ### TODO: set to main ###
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Node + yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Specify your Node.js version
+          cache: 'yarn'
+
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+
+      - name: yarn build
+        run: yarn build  # Adjust if your build command is different
+
+      - name: Create .zip file
+        id: build_info
+        run: |
+          DATETIME=$(date +%Y%m%d%H%M%S)
+          echo "DATETIME=${DATETIME}" >> $GITHUB_ENV
+
+          SHORT_SHA=${GITHUB_SHA::6}
+          echo "SHORT_SHA=${SHORT_SHA}" >> $GITHUB_ENV
+
+          ZIP_NAME="${DATETIME}-${SHORT_SHA}.zip"
+          zip -r $ZIP_NAME build  # Adjust 'build' if your build directory is different
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+
+      - name: Tag with date-sha
+        id: create_tag
+        run: |
+          TAG_NAME="build-${DATETIME}-${SHORT_SHA}"
+          ### TODO: name and email?, message? ###
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a $TAG_NAME -m "Release ${DATETIME}-${SHORT_SHA}"
+          git push origin $TAG_NAME
+        env:
+          DATETIME: ${{ env.DATETIME }}
+          SHORT_SHA: ${{ env.SHORT_SHA }}
+
+      - name: Create GH release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "build-${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
+          release_name: "Build ${{ env.DATETIME }}-${{ env.SHORT_SHA }}"
+          body: "Automated build of commit `${{ github.sha }}` at `${{ env.DATETIME }}`."
+          draft: false
+          prerelease: false
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.ZIP_NAME }}
+          asset_name: ${{ env.ZIP_NAME }}
+          asset_content_type: application/zip
