@@ -28,22 +28,41 @@ const KendoGrid = ({ data }) => {
   const [sort, setSort] = useState(initialSort);
 
   const columnTypes = pairsToObject(Options.columnTypes);
+  const filterableCols = pairsToObject(Options.filterableCols);
+  const sortableCols = Options.sortableCols;
 
   const ImageCell = (props) => {
     return (<td><img src={props.dataItem[props.field]}/></td>);
   };
 
   const ButtonCell = (props) => {
-    return (<td>
-      <Button onClick={() => alert(props.dataItem[props.field])}>
-        {props.dataItem[props.field]}
-      </Button>
-    </td>);
+    return (
+      <td>
+        <Button onClick={() => alert(props.dataItem[props.field])}>
+          {props.dataItem[props.field]}
+        </Button>
+      </td>
+    );
+  };
+
+  const VideoCell = (props) => {
+    const videoSrc = props.dataItem[props.field];
+    if (!videoSrc) {
+      return <td></td>;
+    }
+    return (
+      <td>
+        <video controls>
+          <source src={videoSrc} type='video/mp4'/>
+        </video>
+      </td>
+    );
   };
 
   const cellComponents = {
     "Image": ImageCell,
     "Button": ButtonCell,
+    "Video": VideoCell,
   };
 
   return (
@@ -62,13 +81,18 @@ const KendoGrid = ({ data }) => {
         onSortChange={(e) => setSort(e.sort)}
       >
         {
-          ColTitles.map((ct, _) =>
-            <GridColumn
-              field={ct}
-              title={ct}
-              cells={{data: cellComponents[columnTypes[ct]]}}
-            />
-          )
+          ColTitles.map((ct, _) => {
+            return (
+              <GridColumn
+                field={ct}
+                title={ct}
+                cells={{data: cellComponents[columnTypes[ct]]}}
+                filterable={filterableCols.hasOwnProperty(ct)}
+                filter={filterableCols[ct] === '' ? undefined : filterableCols[ct]}
+                sortable={sortableCols.includes(ct)}
+              />
+            );
+          })
         }
       </Grid>
     </div>
