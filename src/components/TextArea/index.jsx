@@ -25,17 +25,18 @@ const TextArea = ({ data }) => {
 
   useEffect(() => {
     console.log("seltext in useEffect", Text, JSON.parse(localStorage.getItem(data.ID)).Text );
-    handleData(
-      {
-        ID: data.ID,
-        Properties: {
-          Text: Text ? Text : JSON.parse(localStorage.getItem(data.ID)).Text,
+    setTimeout(() =>{
+      handleData(
+        {
+          
+          ID: data.ID,
+          Properties: {
+            Text: JSON.parse(localStorage.getItem(data.ID)).Text,
+          },
         },
-      },
-      "WS"
-    );
-
-    //   // {"WS":}
+        "WS"
+      );
+    }, 1000)
   }, [Text]);
 
   let updatedStyles = {
