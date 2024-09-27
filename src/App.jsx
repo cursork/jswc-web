@@ -562,16 +562,16 @@ const App = () => {
         }
 
         if (Type == 'Edit') {
-          const { Text, Value } = Properties;
+          const { Text, Value , SelText} = Properties;
           const supportedProperties = ['Text', 'Value', 'SelText'];
-
+          
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
-
+          
           if (!localStorage.getItem(serverEvent.ID)) {
             const editValue = Text ? Text : Value;
-
+            
             const isNumber = refData?.Properties?.hasOwnProperty('FieldType');
-
+            
             const serverPropertiesObj = {};
             serverEvent.Properties.forEach((key) => {
               if (key === "Text") {
@@ -594,8 +594,8 @@ const App = () => {
                   ...(result && result.NotSupported && result.NotSupported.length > 0
                     ? { NotSupported: result.NotSupported }
                     : null),
-                },
-              })
+                  },
+                })
             );
             return webSocket.send(
               JSON.stringify({
@@ -606,25 +606,27 @@ const App = () => {
                   ...(result && result.NotSupported && result.NotSupported.length > 0
                     ? { NotSupported: result.NotSupported }
                     : null),
-                },
-              })
-            );
+                  },
+                })
+              );
           }
-
+          
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => {
             serverPropertiesObj[key] =
-              key === "Value" || key === "SelText"
+              key === "Value"
                 ? Info
+                :key ==="SelText"
+                ? SelText
                 : key === "Text"
-                ? Array.isArray(Info)
-                  ? ""
+                ? Array.isArray(Text)
+                  ? Text
                   : Info
                 : Info.toString();
           });
-          
+
           console.log(
             JSON.stringify({
               WG: {

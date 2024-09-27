@@ -21,6 +21,7 @@ const TextArea = ({ data }) => {
 
   const { Text, Font, CSS, Event } = data?.Properties;
   const customStyles = parseFlexStyles(CSS);
+  console.log("data seltext", data?.Properties);
 
   useEffect(() => {
     handleData(
@@ -31,12 +32,13 @@ const TextArea = ({ data }) => {
             ["MouseUp", ""],
             ["MouseDown", ""],
           ],
+          Text: Text,
         },
       },
       "WS"
     );
 
-    // {"WS":}
+    //   // {"WS":}
   }, []);
 
   let updatedStyles = {
@@ -48,7 +50,10 @@ const TextArea = ({ data }) => {
     ...customStyles,
   };
 
-  // Convert Text array to string if in Multi mode
+  if (Text) {
+    localStorage.setItem(data.ID, JSON.stringify(data.Properties));
+  }
+
   const textString = Array.isArray(Text) ? Text.join("\n") : Text;
 
   const handleMouseUpLocal = (e, type) => {
@@ -56,15 +61,15 @@ const TextArea = ({ data }) => {
       handleMouseUp(e, socket, Event, data?.ID);
     } else if (type === "mouseDown") {
       handleMouseDown(e, socket, Event, data?.ID);
-    } else if (type === "mouseMove") {
-      handleMouseMove(e, socket, Event, data?.ID);
-    } else if (type === "mouseEnter") {
-      handleMouseEnter(e, socket, Event, data?.ID);
     } else if (type === "mouseLeave") {
       handleMouseLeave(e, socket, Event, data?.ID);
-    } else if (type === "mouseScroll") {
+    } else if (type === "mouseEnter") {
+      handleMouseEnter(e, socket, Event, data?.ID);
+    } else if (type === "mouseMove") {
+      handleMouseMove(e, socket, Event, data?.ID);
+    } else if (type === "mouseWheel") {
       handleMouseWheel(e, socket, Event, data?.ID);
-    } else if (type === "mouseDblClick") {
+    } else if (type === "dblclick") {
       handleMouseDoubleClick(e, socket, Event, data?.ID);
     }
     const textarea = textareaRef.current;
@@ -72,6 +77,7 @@ const TextArea = ({ data }) => {
 
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
+    console.log("seltext selection", textString, Text);
     const textLines = textString.split("\n");
 
     const offsetToLineColumn = (offset, lines) => {
@@ -94,6 +100,7 @@ const TextArea = ({ data }) => {
     const endLineCol = offsetToLineColumn(selectionEnd, textLines);
 
     const selText = [startLineCol, endLineCol];
+    console.log({ selText });
 
     handleData(
       {
@@ -119,20 +126,20 @@ const TextArea = ({ data }) => {
         onMouseDown={(e) => {
           handleMouseUpLocal(e, "mouseDown");
         }}
-        onMouseEnter={() => {
+        onMouseEnter={(e) => {
           handleMouseUpLocal(e, "mouseEnter");
         }}
-        onMouseLeave={() => {
+        onMouseLeave={(e) => {
           handleMouseUpLocal(e, "mouseLeave");
         }}
-        onMouseMove={() => {
-          handleMouseUpLocal(e, "mouseScroll");
+        onMouseMove={(e) => {
+          handleMouseUpLocal(e, "mouseMove");
         }}
         onWheel={(e) => {
-          handleMouseUpLocal(e, "mouseScroll");
+          handleMouseUpLocal(e, "mouseWheel");
         }}
         onDoubleClick={(e) => {
-          handleMouseUpLocal(e, "mouseDblClick");
+          handleMouseUpLocal(e, "dblclick");
         }}
         spellCheck={false}
       />
