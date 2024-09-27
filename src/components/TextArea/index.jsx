@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   handleMouseDoubleClick,
   handleMouseDown,
@@ -14,13 +14,30 @@ import "./textArea.css";
 import "../../styles/font.css";
 import { useAppData } from "../../hooks";
 
-const TextArea = ({ data, onUpdateProperties }) => {
+const TextArea = ({ data }) => {
   const { handleData, socket } = useAppData();
   const textareaRef = useRef(null);
   let styles = setStyle(data?.Properties);
 
   const { Text, Font, CSS, Event } = data?.Properties;
   const customStyles = parseFlexStyles(CSS);
+
+  useEffect(() => {
+    handleData(
+      {
+        ID: "F1.NotePad",
+        Properties: {
+          Event: [
+            ["MouseUp", ""],
+            ["MouseDown", ""],
+          ],
+        },
+      },
+      "WS"
+    );
+
+    // {"WS":}
+  }, []);
 
   let updatedStyles = {
     ...styles,
@@ -34,8 +51,22 @@ const TextArea = ({ data, onUpdateProperties }) => {
   // Convert Text array to string if in Multi mode
   const textString = Array.isArray(Text) ? Text.join("\n") : Text;
 
-  const handleMouseUpLocal = (e) => {
-    handleMouseUp(e, socket, Event, data?.ID);
+  const handleMouseUpLocal = (e, type) => {
+    if (type === "mouseUp") {
+      handleMouseUp(e, socket, Event, data?.ID);
+    } else if (type === "mouseDown") {
+      handleMouseDown(e, socket, Event, data?.ID);
+    } else if (type === "mouseMove") {
+      handleMouseMove(e, socket, Event, data?.ID);
+    } else if (type === "mouseEnter") {
+      handleMouseEnter(e, socket, Event, data?.ID);
+    } else if (type === "mouseLeave") {
+      handleMouseLeave(e, socket, Event, data?.ID);
+    } else if (type === "mouseScroll") {
+      handleMouseWheel(e, socket, Event, data?.ID);
+    } else if (type === "mouseDblClick") {
+      handleMouseDoubleClick(e, socket, Event, data?.ID);
+    }
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -82,25 +113,26 @@ const TextArea = ({ data, onUpdateProperties }) => {
         className="textArea"
         style={updatedStyles}
         defaultValue={textString}
-        onMouseUp={handleMouseUpLocal}
-        onKeyUp={handleMouseUpLocal}
+        onMouseUp={(e) => {
+          handleMouseUpLocal(e, "mouseUp");
+        }}
         onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event, data?.ID);
+          handleMouseUpLocal(e, "mouseDown");
         }}
-        onMouseEnter={(e) => {
-          handleMouseEnter(e, socket, Event, data?.ID);
+        onMouseEnter={() => {
+          handleMouseUpLocal(e, "mouseEnter");
         }}
-        onMouseMove={(e) => {
-          handleMouseMove(e, socket, Event, data?.ID);
+        onMouseLeave={() => {
+          handleMouseUpLocal(e, "mouseLeave");
         }}
-        onMouseLeave={(e) => {
-          handleMouseLeave(e, socket, Event, data?.ID);
+        onMouseMove={() => {
+          handleMouseUpLocal(e, "mouseScroll");
         }}
         onWheel={(e) => {
-          handleMouseWheel(e, socket, Event, data?.ID);
+          handleMouseUpLocal(e, "mouseScroll");
         }}
         onDoubleClick={(e) => {
-          handleMouseDoubleClick(e, socket, Event, data?.ID);
+          handleMouseUpLocal(e, "mouseDblClick");
         }}
         spellCheck={false}
       />
