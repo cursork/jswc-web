@@ -24,22 +24,19 @@ const TextArea = ({ data }) => {
   console.log("data seltext", data?.Properties);
 
   useEffect(() => {
+    console.log("seltext in useEffect", Text, JSON.parse(localStorage.getItem(data.ID)).Text );
     handleData(
       {
-        ID: "F1.NotePad",
+        ID: data.ID,
         Properties: {
-          Event: [
-            ["MouseUp", ""],
-            ["MouseDown", ""],
-          ],
-          Text: Text,
+          Text: Text ? Text : JSON.parse(localStorage.getItem(data.ID)).Text,
         },
       },
       "WS"
     );
 
     //   // {"WS":}
-  }, []);
+  }, [Text]);
 
   let updatedStyles = {
     ...styles,
@@ -77,7 +74,6 @@ const TextArea = ({ data }) => {
 
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
-    console.log("seltext selection", textString, Text);
     const textLines = textString.split("\n");
 
     const offsetToLineColumn = (offset, lines) => {

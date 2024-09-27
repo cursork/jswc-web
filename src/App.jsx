@@ -564,52 +564,52 @@ const App = () => {
         if (Type == 'Edit') {
           const { Text, Value , SelText} = Properties;
           const supportedProperties = ['Text', 'Value', 'SelText'];
-          
+              
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
           
-          if (!localStorage.getItem(serverEvent.ID)) {
-            const editValue = Text ? Text : Value;
+          // if (!localStorage.getItem(serverEvent.ID)) {
+          //   const editValue = Text ? Text : Value;
             
-            const isNumber = refData?.Properties?.hasOwnProperty('FieldType');
+          //   const isNumber = refData?.Properties?.hasOwnProperty('FieldType');
             
-            const serverPropertiesObj = {};
-            serverEvent.Properties.forEach((key) => {
-              if (key === "Text") {
-                serverPropertiesObj[key] = editValue ? editValue.toString() : "";
-              } else if (key === "Value") {
-                serverPropertiesObj[key] = isNumber ? parseInt(editValue) : editValue;
-              } else if (key === "SelText") {
-                serverPropertiesObj[key] = Properties[key] ? Properties[key] : [1, 1];
-              } else {
-                serverPropertiesObj[key] = editValue;
-              }
-            });
+          //   const serverPropertiesObj = {};
+          //   serverEvent.Properties.forEach((key) => {
+          //     if (key === "Text") {
+          //       serverPropertiesObj[key] = editValue ? editValue.toString() : "";
+          //     } else if (key === "Value") {
+          //       serverPropertiesObj[key] = isNumber ? parseInt(editValue) : editValue;
+          //     } else if (key === "SelText") {
+          //       serverPropertiesObj[key] = Properties[key] ? Properties[key] : [1, 1];
+          //     } else {
+          //       serverPropertiesObj[key] = editValue;
+          //     }
+          //   });
 
-            console.log(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverPropertiesObj,
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                  },
-                })
-            );
-            return webSocket.send(
-              JSON.stringify({
-                WG: {
-                  ID: serverEvent.ID,
-                  Properties: serverPropertiesObj,
-                  WGID: serverEvent.WGID,
-                  ...(result && result.NotSupported && result.NotSupported.length > 0
-                    ? { NotSupported: result.NotSupported }
-                    : null),
-                  },
-                })
-              );
-          }
+          //   console.log(
+          //     JSON.stringify({
+          //       WG: {
+          //         ID: serverEvent.ID,
+          //         Properties: serverPropertiesObj,
+          //         WGID: serverEvent.WGID,
+          //         ...(result && result.NotSupported && result.NotSupported.length > 0
+          //           ? { NotSupported: result.NotSupported }
+          //           : null),
+          //         },
+          //       })
+          //   );
+          //   return webSocket.send(
+          //     JSON.stringify({
+          //       WG: {
+          //         ID: serverEvent.ID,
+          //         Properties: serverPropertiesObj,
+          //         WGID: serverEvent.WGID,
+          //         ...(result && result.NotSupported && result.NotSupported.length > 0
+          //           ? { NotSupported: result.NotSupported }
+          //           : null),
+          //         },
+          //       })
+          //     );
+          // }
           
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
@@ -618,14 +618,17 @@ const App = () => {
             serverPropertiesObj[key] =
               key === "Value"
                 ? Info
-                :key ==="SelText"
+                : key === "SelText"
                 ? SelText
                 : key === "Text"
-                ? Array.isArray(Text)
-                  ? Text
+                ? Array.isArray(Text || JSON.parse(localStorage.getItem(serverEvent?.ID))?.Text)
+                  ? Text || JSON.parse(localStorage.getItem(serverEvent?.ID))?.Text
                   : Info
                 : Info.toString();
           });
+          
+
+          // console.log("seltext", {Properties, local: localStorage.getItem(serverEvent.ID), serverPropertiesObj, Text  ,json: JSON.parse(localStorage.getItem(serverEvent?.ID)).Text})
 
           console.log(
             JSON.stringify({
