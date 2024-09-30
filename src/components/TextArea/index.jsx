@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   handleMouseDoubleClick,
   handleMouseDown,
@@ -17,24 +17,40 @@ import { useAppData } from "../../hooks";
 const TextArea = ({ data }) => {
   const { handleData, socket } = useAppData();
   const textareaRef = useRef(null);
-  let styles = setStyle(data?.Properties);
 
-  const { Text, Font, CSS, Event } = data?.Properties;
+  // Safe initialization of localText
+  const initialText = () => {
+    if (data?.Properties?.Text) {
+      return Array.isArray(data.Properties.Text)
+        ? data.Properties.Text.join("\n")
+        : data.Properties.Text;
+    } else {
+      const stored = localStorage.getItem(data.ID);
+      return stored ? JSON.parse(stored).Text || "" : "";
+    }
+  };
+
+  const [localText, setLocalText] = useState(initialText);
+
+  let styles = setStyle(data?.Properties);
+  const { Font, CSS, Event } = data?.Properties;
   const customStyles = parseFlexStyles(CSS);
 
+  // Update localText when external Text changes
   useEffect(() => {
-    setTimeout(() =>{
-      handleData(
-        {          
-          ID: data.ID,
-          Properties: {
-            Text: JSON.parse(localStorage.getItem(data.ID)).Text,
-          },
-        },
-        "WS"
+    if (data?.Properties?.Text) {
+      localStorage.setItem(
+        data.ID,
+        JSON.stringify(data.Properties )
       );
-    }, 1000)
-  }, [Text]);
+      const newText = Array.isArray(data.Properties.Text)
+        ? data.Properties.Text.join("\n")
+        : data.Properties.Text;
+      if (newText !== localText) {
+        setLocalText(newText);
+      }
+    }
+  }, [data?.Properties?.Text]);
 
   let updatedStyles = {
     ...styles,
@@ -45,28 +61,56 @@ const TextArea = ({ data }) => {
     ...customStyles,
   };
 
-  if (Text) {
-    localStorage.setItem(data.ID, JSON.stringify(data.Properties));
-  }
+  const handleChange = (e) => {
+    const newText = e.target.value;
+    setLocalText(newText);
+    localStorage.setItem(
+      data.ID,
+      JSON.stringify({ ...data.Properties, Text: newText })
+    );
 
-  const textString = Array.isArray(Text) ? Text.join("\n") : Text;
+    handleData(
+      {
+        ID: data.ID,
+        Properties: {
+          Text: newText,
+        },
+      },
+      "WS"
+    );
+  };
+
+  const textString = localText;
 
   const handleMouseUpLocal = (e, type) => {
-    if (type === "mouseUp") {
-      handleMouseUp(e, socket, Event, data?.ID);
-    } else if (type === "mouseDown") {
-      handleMouseDown(e, socket, Event, data?.ID);
-    } else if (type === "mouseLeave") {
-      handleMouseLeave(e, socket, Event, data?.ID);
-    } else if (type === "mouseEnter") {
-      handleMouseEnter(e, socket, Event, data?.ID);
-    } else if (type === "mouseMove") {
-      handleMouseMove(e, socket, Event, data?.ID);
-    } else if (type === "mouseWheel") {
-      handleMouseWheel(e, socket, Event, data?.ID);
-    } else if (type === "dblclick") {
-      handleMouseDoubleClick(e, socket, Event, data?.ID);
+    // Handle specific mouse events
+    switch (type) {
+      case "mouseUp":
+        handleMouseUp(e, socket, Event, data?.ID);
+        break;
+      case "mouseDown":
+        handleMouseDown(e, socket, Event, data?.ID);
+        break;
+      case "mouseLeave":
+        handleMouseLeave(e, socket, Event, data?.ID);
+        break;
+      case "mouseEnter":
+        handleMouseEnter(e, socket, Event, data?.ID);
+        break;
+      case "mouseMove":
+        handleMouseMove(e, socket, Event, data?.ID);
+        break;
+      case "mouseWheel":
+        handleMouseWheel(e, socket, Event, data?.ID);
+        break;
+      case "dblclick":
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
+        break;
+      default:
+        break;
     }
+
+    // Selection handling
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -78,13 +122,15 @@ const TextArea = ({ data }) => {
       let totalChars = 0;
       for (let i = 0; i < lines.length; i++) {
         const lineLength = lines[i].length;
-        if (offset <= totalChars + lineLength) {
+        const lineEnd = totalChars + lineLength;
+        if (offset <= lineEnd) {
           const lineNumber = i + 1;
           const columnNumber = offset - totalChars + 1;
           return [lineNumber, columnNumber];
         }
-        totalChars += lineLength + 1;
+        totalChars += lineLength + 1; // +1 for newline
       }
+      // If offset exceeds total characters, return end of text
       const lineNumber = lines.length;
       const columnNumber = lines[lines.length - 1].length + 1;
       return [lineNumber, columnNumber];
@@ -94,6 +140,10 @@ const TextArea = ({ data }) => {
     const endLineCol = offsetToLineColumn(selectionEnd, textLines);
 
     const selText = [startLineCol, endLineCol];
+
+    // Debugging logs
+    console.log("Selection Start:", selectionStart, "End:", selectionEnd);
+    console.log("Selection Line/Column:", selText);
 
     handleData(
       {
@@ -113,27 +163,14 @@ const TextArea = ({ data }) => {
         className="textArea"
         style={updatedStyles}
         value={textString}
-        onMouseUp={(e) => {
-          handleMouseUpLocal(e, "mouseUp");
-        }}
-        onMouseDown={(e) => {
-          handleMouseUpLocal(e, "mouseDown");
-        }}
-        onMouseEnter={(e) => {
-          handleMouseUpLocal(e, "mouseEnter");
-        }}
-        onMouseLeave={(e) => {
-          handleMouseUpLocal(e, "mouseLeave");
-        }}
-        onMouseMove={(e) => {
-          handleMouseUpLocal(e, "mouseMove");
-        }}
-        onWheel={(e) => {
-          handleMouseUpLocal(e, "mouseWheel");
-        }}
-        onDoubleClick={(e) => {
-          handleMouseUpLocal(e, "dblclick");
-        }}
+        onChange={handleChange}
+        onMouseUp={(e) => handleMouseUpLocal(e, "mouseUp")}
+        onMouseDown={(e) => handleMouseUpLocal(e, "mouseDown")}
+        onMouseEnter={(e) => handleMouseUpLocal(e, "mouseEnter")}
+        onMouseLeave={(e) => handleMouseUpLocal(e, "mouseLeave")}
+        onMouseMove={(e) => handleMouseUpLocal(e, "mouseMove")}
+        onWheel={(e) => handleMouseUpLocal(e, "mouseWheel")}
+        onDoubleClick={(e) => handleMouseUpLocal(e, "dblclick")}
         spellCheck={false}
       />
     </div>
