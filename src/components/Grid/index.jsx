@@ -929,7 +929,9 @@ const Grid = ({ data }) => {
               : Array.isArray(CellHeights)
               ? CellHeights[j]
               : CellHeights,
-            align: "end",
+            align: !isNaN(Values[i][j]) ? "end" : "start",
+            paddingLeft:!isNaN(parseInt(Values[i][j])) ? "0px" : "5px",
+
           };
           body.push(obj);
         }
@@ -1147,6 +1149,7 @@ const Grid = ({ data }) => {
                       textAlign: data.type == "header" ? "center" : data?.align,
                       overflow: "hidden",
                       lineHeight: `${data?.height}px`,
+                      paddingLeft: data?.paddingLeft,
                     }}
                   >
                     <Component
