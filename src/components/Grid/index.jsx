@@ -915,7 +915,7 @@ const Grid = ({ data }) => {
           ? null
           : body.push(obj);
         for (let j = 0; j <= columns; j++) {
-          if (!Values[i][j]) continue;
+          if (Values[i][j] === undefined) continue;
           let obj = {
             type: "cell",
             value: Values[i][j],
