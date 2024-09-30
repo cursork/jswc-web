@@ -7,8 +7,9 @@ export * from "./getLastTabButton";
 
 export const handleMouseDown = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.button;
 
   const mousedownEvent = JSON.stringify({
@@ -27,8 +28,9 @@ export const handleMouseDown = (e, socket, Event, ID) => {
 
 export const handleMouseUp = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.button;
 
   const mouseUpEvent = JSON.stringify({
@@ -47,8 +49,9 @@ export const handleMouseUp = (e, socket, Event, ID) => {
 
 export const handleMouseDoubleClick = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.button;
 
   const mouseUpEvent = JSON.stringify({
@@ -101,8 +104,9 @@ export const handleMouseLeave = (e, socket, Event, ID) => {
 
 export const handleMouseMove = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0);
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.buttons;
   
   const mouseMoveEvent = JSON.stringify({
@@ -123,8 +127,9 @@ export const handleMouseMove = (e, socket, Event, ID) => {
 
 export const handleMouseWheel = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); 
-  const x = e.clientX;
-  const y = e.clientY;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
   const button = e.buttons;
   const delta = e.deltaY;
   const lines = e.deltaMode === 1 ? e.deltaY : -1; 
