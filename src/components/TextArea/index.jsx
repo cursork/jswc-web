@@ -21,14 +21,11 @@ const TextArea = ({ data }) => {
 
   const { Text, Font, CSS, Event } = data?.Properties;
   const customStyles = parseFlexStyles(CSS);
-  console.log("data seltext", data?.Properties);
 
   useEffect(() => {
-    console.log("seltext in useEffect", Text, JSON.parse(localStorage.getItem(data.ID)).Text );
     setTimeout(() =>{
       handleData(
-        {
-          
+        {          
           ID: data.ID,
           Properties: {
             Text: JSON.parse(localStorage.getItem(data.ID)).Text,
@@ -97,7 +94,6 @@ const TextArea = ({ data }) => {
     const endLineCol = offsetToLineColumn(selectionEnd, textLines);
 
     const selText = [startLineCol, endLineCol];
-    console.log({ selText });
 
     handleData(
       {
@@ -116,7 +112,7 @@ const TextArea = ({ data }) => {
         ref={textareaRef}
         className="textArea"
         style={updatedStyles}
-        defaultValue={textString}
+        value={textString}
         onMouseUp={(e) => {
           handleMouseUpLocal(e, "mouseUp");
         }}
