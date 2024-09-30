@@ -18,6 +18,9 @@ const TextArea = ({ data }) => {
   const { handleData, socket } = useAppData();
   const textareaRef = useRef(null);
 
+
+  console.log("multi edit",{data})
+
   // Safe initialization of localText
   const initialText = () => {
     if (data?.Properties?.Text) {
@@ -41,7 +44,17 @@ const TextArea = ({ data }) => {
     if (data?.Properties?.Text) {
       localStorage.setItem(
         data.ID,
-        JSON.stringify(data.Properties )
+        JSON.stringify(data.Properties)
+      );
+      const text = data?.Properties.Text
+      handleData(
+        {
+          ID: data.ID,
+          Properties: {
+            Text: text,
+          },
+        },
+        "WS"
       );
       const newText = Array.isArray(data.Properties.Text)
         ? data.Properties.Text.join("\n")
