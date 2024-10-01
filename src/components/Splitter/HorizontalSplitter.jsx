@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAppData, useResizeObserver } from '../../hooks';
-import { extractStringUntilSecondPeriod, parseFlexStyles } from '../../utils';
+import { extractStringUntilLastPeriod, parseFlexStyles } from '../../utils';
 
 const HorizontalSplitter = ({ data }) => {
   const { Size: SubformSize, Posn: SubFormPosn } = JSON.parse(
-    localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+    localStorage.getItem(extractStringUntilLastPeriod(data?.ID))
   );
 
 
@@ -16,7 +16,7 @@ const HorizontalSplitter = ({ data }) => {
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
 
   const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
@@ -114,7 +114,7 @@ const HorizontalSplitter = ({ data }) => {
         let newTop = e.clientY - formPositions[1];
 
         const parentSize = JSON.parse(
-          localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+          localStorage.getItem(extractStringUntilLastPeriod(data?.ID))
         );
         const { Size } = parentSize;
 

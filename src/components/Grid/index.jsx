@@ -293,7 +293,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   setStyle,
   generateHeader,
-  extractStringUntilSecondPeriod,
+  extractStringUntilLastPeriod,
   rgbColor,
   handleMouseDown,
   handleMouseMove,
@@ -338,7 +338,7 @@ const Grid = ({ data }) => {
   const [eventId, setEventId] = useState(null);
 
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
 
   const gridRef = useRef(null);

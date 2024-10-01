@@ -1,4 +1,4 @@
-import { extractStringUntilSecondPeriod, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, setStyle } from '../utils';
+import { extractStringUntilLastPeriod, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, setStyle } from '../utils';
 import { useEffect, useRef, useState } from 'react';
 import { useAppData, useResizeObserver } from '../hooks';
 
@@ -11,7 +11,7 @@ const List = ({ data }) => {
   const [selectedItem, _] = useState(1);
   const [items, setItems] = useState(SelItems);
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
   const [width, setWidth] = useState(Size[1]);
   useEffect(() => {

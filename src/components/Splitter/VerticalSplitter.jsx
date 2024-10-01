@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useAppData, useResizeObserver } from '../../hooks';
-import { extractStringUntilSecondPeriod, parseFlexStyles } from '../../utils';
+import { extractStringUntilLastPeriod, parseFlexStyles } from '../../utils';
 
 const VerticalSplitter = ({ data }) => {
   const { Size: SubformSize } = JSON.parse(
-    localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+    localStorage.getItem(extractStringUntilLastPeriod(data?.ID))
   );
 
   const { Posn, SplitObj1, SplitObj2, Event,CSS } = data?.Properties;
@@ -13,7 +13,7 @@ const VerticalSplitter = ({ data }) => {
   const [isResizing, setResizing] = useState(false);
   const { handleData, reRender, socket } = useAppData();
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
   const [oldFormValues, setoldFormValues] = useState(SubformSize && SubformSize);
 

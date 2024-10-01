@@ -3,7 +3,7 @@ import {
   setStyle,
   excludeKeys,
   getImageStyles,
-  extractStringUntilSecondPeriod,
+  extractStringUntilLastPeriod,
   parseFlexStyles,
   handleMouseWheel,
   handleMouseEnter,
@@ -27,7 +27,7 @@ const Group = ({ data }) => {
   } = data?.Properties;
   const { findDesiredData } = useAppData();
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
 
   const [width, setWidth] = useState(Size[1]);
@@ -99,27 +99,29 @@ const Group = ({ data }) => {
         ...flexStyles,
       }}
       id={data?.ID}
-      onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data?.ID);
-      }}
-      onMouseUp={(e) => {
-        handleMouseUp(e, socket, Event, data?.ID);
-      }}
-      onMouseEnter={(e) => {
-        handleMouseEnter(e, socket, Event, data?.ID);
-      }}
-      onMouseMove={(e) => {
-        handleMouseMove(e, socket, Event, data?.ID);
-      }}
-      onMouseLeave={(e) => {
-        handleMouseLeave(e, socket, Event, data?.ID);
-      }}
-      onWheel={(e) => {
-        handleMouseWheel(e, socket, Event, data?.ID);
-      }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
-      }}
+      // !!! TODO !!!
+      // Temporarily disabled due to errors around socket not available
+      // onMouseDown={(e) => {
+      //   handleMouseDown(e, socket, Event,data?.ID);
+      // }}
+      // onMouseUp={(e) => {
+      //   handleMouseUp(e, socket, Event, data?.ID);
+      // }}
+      // onMouseEnter={(e) => {
+      //   handleMouseEnter(e, socket, Event, data?.ID);
+      // }}
+      // onMouseMove={(e) => {
+      //   handleMouseMove(e, socket, Event, data?.ID);
+      // }}
+      // onMouseLeave={(e) => {
+      //   handleMouseLeave(e, socket, Event, data?.ID);
+      // }}
+      // onWheel={(e) => {
+      //   handleMouseWheel(e, socket, Event, data?.ID);
+      // }}
+      // onDoubleClick={(e)=>{
+      //   handleMouseDoubleClick(e, socket, Event,data?.ID);
+      // }}
     >
       {data?.Properties?.Caption != "" && (
         <span
