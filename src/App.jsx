@@ -176,13 +176,10 @@ const App = () => {
           const givenKey = extractStringFromLastPeriod(data.ID);
           Object.keys(excludeKeys(parent)).forEach((k) => {
             if (isRadio(parent[k])) {
-              if (k == givenKey && data.Properties?.State) {
-                parent[k].Properties.State = data.Properties.State;
-              } else {
-                parent[k].Properties.State = 0;
-              }
+              parent[k].Properties.State = 0;
             }
           });
+          parent[givenKey].Properties.State = data.Properties.State;
         }
 
         // Merge the existing object with new properties

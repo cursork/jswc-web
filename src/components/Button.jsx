@@ -423,24 +423,40 @@ const Button = ({
         extractStringUntilLastPeriod(data?.ID)
       );
       var radioInputs = parentElement.getElementsByTagName("input");
+
+      // TODO! I don't know why, but this works when we set all states to 0 and
+      // then update the desired radio to 1 afterwards.
       for (var i = 0; i < radioInputs.length; i++) {
         if (radioInputs[i].type !== 'radio') {
           continue;
         }
         var radioId = radioInputs[i].id;
         const button = JSON.parse(getObjectById(dataRef.current, radioId));
-        console.log('RADIO RADIO', radioId, data?.ID, button?.ID, button);
         handleData(
           {
             ID: button.ID,
             Properties: {
               ...button?.Properties,
-              State: data?.ID == button?.ID ? 1 : 0,
+              State: 0,
             },
           },
           "WS"
         );
       }
+
+      // See above comment: all radios have been zero'd, so now we set the one
+      // we want.
+      const button = JSON.parse(getObjectById(dataRef.current, data.ID));
+      handleData(
+        {
+          ID: data.ID,
+          Properties: {
+            ...button?.Properties,
+            State: 1,
+          },
+        },
+        "WS"
+      );
 
       handleRadioSelectEvent(value);
     };
