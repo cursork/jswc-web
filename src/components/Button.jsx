@@ -33,17 +33,15 @@ const Button = ({
 
   const styles = setStyle(data?.Properties);
   const { socket, findDesiredData, dataRef, handleData, reRender } =
-  useAppData();
-  const { Picture, State, Visible, Event, Caption, Align, Posn, Size , CSS} =
-  data?.Properties;
+    useAppData();
+  const { Picture, State, Visible, Event, Caption, Align, Posn, Size, CSS } =
+    data?.Properties;
 
+  console.log("data Button", data);
 
-  
-  console.log("data Button", data)
-
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(CSS);
   const inputRef = useRef();
-  
+
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
@@ -83,6 +81,29 @@ const Button = ({
     decideInput();
     setPosition({ top: Posn && Posn[0], left: Posn && Posn[1] });
   }, [data]);
+
+  useEffect(() => {
+    if (isRadio) {
+      const parentElement = document.getElementById(
+        extractStringUntilSecondPeriod(data?.ID)
+      );
+      var radioInputs = parentElement.getElementsByTagName("input");
+      for (var i = 0; i < radioInputs.length; i++) {
+        var radioId = radioInputs[i].id;
+        const button = JSON.parse(getObjectById(dataRef.current, radioId));
+        handleData(
+          {
+            ID: button.ID,
+            Properties: {
+              ...button?.Properties,
+              State: data?.ID == button?.ID && State === 1 ? 1 : 0,
+            },
+          },
+          "WS"
+        );
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!position) return;
@@ -379,7 +400,13 @@ const Button = ({
         />
         {!Align || Align == "Right" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 0, left: 16,...customStyles }}
+            style={{
+              fontSize: "12px",
+              position: "absolute",
+              top: 0,
+              left: 16,
+              ...customStyles,
+            }}
           >
             {Caption}
           </div>
@@ -471,12 +498,18 @@ const Button = ({
           ...styles,
           zIndex: 1,
           display: Visible == 0 ? "none" : "block",
-          ...customStyles
+          ...customStyles,
         }}
       >
         {Align && Align == "Left" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 2, left: 0, ...customStyles }}
+            style={{
+              fontSize: "12px",
+              position: "absolute",
+              top: 2,
+              left: 0,
+              ...customStyles,
+            }}
           >
             {Caption}
           </div>
@@ -494,7 +527,13 @@ const Button = ({
         />
         {!Align || Align == "Right" ? (
           <div
-            style={{ fontSize: "12px", position: "absolute", top: 2, left: 16, ...customStyles }}
+            style={{
+              fontSize: "12px",
+              position: "absolute",
+              top: 2,
+              left: 16,
+              ...customStyles,
+            }}
           >
             <label for={data?.ID}>{Caption}</label>
           </div>
@@ -503,12 +542,11 @@ const Button = ({
     );
   }
 
-
   return (
     <div
       id={data?.ID}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data?.ID);
+        handleMouseDown(e, socket, Event, data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
@@ -525,8 +563,8 @@ const Button = ({
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
       }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
       }}
       onClick={() => {
         console.log(
@@ -593,7 +631,7 @@ const Button = ({
         ...(data?.Properties?.hasOwnProperty("Posn")
           ? { left: position?.left }
           : {}),
-          ...customStyles,
+        ...customStyles,
         // left: position?.left,
       }}
     >

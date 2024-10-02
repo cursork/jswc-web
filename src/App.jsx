@@ -575,16 +575,19 @@ const App = () => {
         }
 
         if (Type == 'Edit') {
-          const { Text, Value } = Properties;
+          const { Text='', Value , SelText} = Properties;
           const supportedProperties = ['Text', 'Value', 'SelText'];
+          // setTimeout(() => {},100)
 
+          console.log("edit",{serverEvent, Properties,Text, local:localStorage.getItem(serverEvent.ID)});
+              
           const result = checkSupportedProperties(supportedProperties, serverEvent?.Properties);
-
+          
           if (!localStorage.getItem(serverEvent.ID)) {
             const editValue = Text ? Text : Value;
-
+            
             const isNumber = refData?.Properties?.hasOwnProperty('FieldType');
-
+            
             const serverPropertiesObj = {};
             serverEvent.Properties.forEach((key) => {
               if (key === "Text") {
@@ -607,8 +610,8 @@ const App = () => {
                   ...(result && result.NotSupported && result.NotSupported.length > 0
                     ? { NotSupported: result.NotSupported }
                     : null),
-                },
-              })
+                  },
+                })
             );
             return webSocket.send(
               JSON.stringify({
@@ -619,25 +622,34 @@ const App = () => {
                   ...(result && result.NotSupported && result.NotSupported.length > 0
                     ? { NotSupported: result.NotSupported }
                     : null),
-                },
-              })
-            );
+                  },
+                })
+              );
           }
-
+          
           const { Event } = JSON.parse(localStorage.getItem(serverEvent?.ID));
           const { Info } = Event;
           const serverPropertiesObj = {};
-          serverEvent.Properties.map((key) => {
-            serverPropertiesObj[key] =
-              key === "Value" || key === "SelText"
-                ? Info
-                : key === "Text"
-                ? Array.isArray(Info)
-                  ? ""
-                  : Info
-                : Info.toString();
+          console.log("edit 2", { serverPropertiesObj})
+          serverEvent.Properties.forEach((key) => {
+            if (key === "Value") {
+              serverPropertiesObj[key] = Info;
+            } else if (key === "SelText") {
+              serverPropertiesObj[key] = SelText;
+            } else if (key === "Text") {
+              console.log("edit 3 hrere")
+              const storedText = JSON.parse(localStorage.getItem(serverEvent?.ID))?.Text;
+              serverPropertiesObj[key] = Array.isArray(Text || storedText) 
+                ? Text || storedText 
+                : Text || "2";
+            } else {
+              serverPropertiesObj[key] = Info.toString();
+            }
           });
           
+          
+
+
           console.log(
             JSON.stringify({
               WG: {
