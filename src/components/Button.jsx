@@ -103,7 +103,7 @@ const Button = ({
         );
       }
     }
-  }, [data.Properties.Caption]);
+  }, []);
 
   useEffect(() => {
     if (!position) return;
