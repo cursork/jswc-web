@@ -84,6 +84,30 @@ const Button = ({
     setPosition({ top: Posn && Posn[0], left: Posn && Posn[1] });
   }, [data]);
 
+
+  useEffect(()=>{
+    if(isRadio){
+      const parentElement = document.getElementById(
+        extractStringUntilSecondPeriod(data?.ID)
+      );
+      var radioInputs = parentElement.getElementsByTagName("input");
+      for (var i = 0; i < radioInputs.length; i++) {
+        var radioId = radioInputs[i].id;
+        const button = JSON.parse(getObjectById(dataRef.current, radioId));
+        handleData(
+          {
+            ID: button.ID,
+            Properties: {
+              ...button?.Properties,
+              State: data?.ID == button?.ID ? 1 : 0,
+            },
+          },
+          "WS"
+        );
+      }
+    }
+  },[data.Properties.Caption])
+
   useEffect(() => {
     if (!position) return;
     if (!parentOldDimensions) return;
