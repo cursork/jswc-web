@@ -496,7 +496,7 @@ const Button = ({
           <div
             style={{ fontSize: "12px", position: "absolute", top: 2, left: 16, ...customStyles }}
           >
-            {Caption}
+            <label for={data?.ID}>{Caption}</label>
           </div>
         ) : null}
       </div>
