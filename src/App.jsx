@@ -8,6 +8,11 @@ import {
   deleteFormAndSiblings,
   rgbColor,
   getCurrentUrl,
+  extractStringUntilLastPeriod,
+  locateByPath,
+  locateParentByPath,
+  excludeKeys,
+  extractStringFromLastPeriod,
 } from './utils';
 import './App.css';
 import * as _ from 'lodash';
@@ -140,18 +145,7 @@ const App = () => {
 
     console.log("handleData", data, mode)
     const splitID = data.ID.split('.');
-
-    let currentLevel = dataRef.current;
-
-    for (let i = 0; i < splitID.length - 1; i++) {
-      const key = splitID[i];
-
-      if (!currentLevel[key]) {
-        currentLevel[key] = {};
-      }
-
-      currentLevel = currentLevel[key];
-    }
+    const currentLevel = locateParentByPath(dataRef.current, data.ID);
 
     // Check if the key already exists at the final level
     const finalKey = splitID[splitID.length - 1];
@@ -168,8 +162,27 @@ const App = () => {
           ...data,
         };
       } else if (mode === 'WS') {
-        // Merge the existing object with new properties
+        // Special logic for radio buttons! This goes up to the parent, and sets
+        // all other radio buttons within the container to false.
+        // N.B. the assumption is that radios are always within a container of
+        // some sort with its own ID - all examples I've seen so far, satisfy
+        // that.
+        const isRadio = (node) => {
+          return node.Properties?.Type == 'Button' &&
+                 node.Properties?.Style == 'Radio' 
+        };
+        if (isRadio(currentLevel[finalKey])) {
+          const parent = locateParentByPath(dataRef.current, data.ID);
+          const givenKey = extractStringFromLastPeriod(data.ID);
+          Object.keys(excludeKeys(parent)).forEach((k) => {
+            if (isRadio(parent[k])) {
+              parent[k].Properties.State = 0;
+            }
+          });
+          parent[givenKey].Properties.State = data.Properties.State;
+        }
 
+        // Merge the existing object with new properties
         currentLevel[finalKey] = {
           ID: data.ID,
           ...currentLevel[finalKey],

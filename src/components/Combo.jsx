@@ -1,11 +1,11 @@
-import { setStyle, extractStringUntilSecondPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../utils';
+import { setStyle, extractStringUntilLastPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../utils';
 
 import { useAppData, useResizeObserver } from '../hooks';
 import { useState, useRef } from 'react';
 import { useEffect } from 'react';
 
 const Combo = ({ data, value, event = '', row = '', column = '', location = '', values = [] }) => {
-  const parentSize = JSON.parse(localStorage.getItem(extractStringUntilSecondPeriod(data?.ID)));
+  const parentSize = JSON.parse(localStorage.getItem(extractStringUntilLastPeriod(data?.ID)));
   const {CSS} = data.Properties;
 
   const customStyles = parseFlexStyles(CSS)
@@ -16,7 +16,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   const styles = setStyle(data?.Properties);
   const { Items, SelItems, Event, Visible, Posn, Size } = data?.Properties;
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
 
   const [comboInput, setComboInput] = useState('+');
@@ -41,11 +41,11 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   }, [data]);
 
   const handleCellChangeEvent = (value) => {
-    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    const gridEvent = findDesiredData(extractStringUntilLastPeriod(data?.ID));
     values[parseInt(row) - 1][parseInt(column) - 1] = value;
     handleData(
       {
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Properties: {
           ...gridEvent.Properties,
           Values: values,
@@ -58,7 +58,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
     const triggerEvent = JSON.stringify({
       Event: {
         EventName: 'CellChanged',
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Row: parseInt(row),
         Col: parseInt(column),
         Value: value,
@@ -73,7 +73,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
       },
     });
 
-    localStorage.setItem(extractStringUntilSecondPeriod(data?.ID), updatedGridValues);
+    localStorage.setItem(extractStringUntilLastPeriod(data?.ID), updatedGridValues);
     const exists = event && event.some((item) => item[0] === 'CellChanged');
     if (!exists) return;
 
@@ -201,7 +201,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
   const triggerCellMoveEvent = (row, column, value) => {
     const Event = JSON.stringify({
       Event: {
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         EventName: 'CellMove',
         Info: [row, column, 0, 0, 0, value],
       },

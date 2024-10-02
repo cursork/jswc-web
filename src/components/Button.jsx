@@ -1,6 +1,6 @@
 import {
   setStyle,
-  extractStringUntilSecondPeriod,
+  extractStringUntilLastPeriod,
   getObjectTypeById,
   handleMouseMove,
   handleMouseLeave,
@@ -28,7 +28,7 @@ const Button = ({
   const PORT = localStorage.getItem("PORT");
 
   const parentSize = JSON.parse(
-    localStorage.getItem(extractStringUntilSecondPeriod(data?.ID))
+    localStorage.getItem(extractStringUntilLastPeriod(data?.ID))
   );
 
   const styles = setStyle(data?.Properties);
@@ -43,7 +43,7 @@ const Button = ({
   const inputRef = useRef();
 
   const dimensions = useResizeObserver(
-    document.getElementById(extractStringUntilSecondPeriod(data?.ID))
+    document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
 
   const [checkInput, setCheckInput] = useState();
@@ -173,11 +173,11 @@ const Button = ({
   }, [dimensions]);
 
   const handleCellChangedEvent = (value) => {
-    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    const gridEvent = findDesiredData(extractStringUntilLastPeriod(data?.ID));
     (values[parseInt(row) - 1][parseInt(column) - 1] = value ? 1 : 0),
       handleData(
         {
-          ID: extractStringUntilSecondPeriod(data?.ID),
+          ID: extractStringUntilLastPeriod(data?.ID),
           Properties: {
             ...gridEvent.Properties,
             Values: values,
@@ -190,7 +190,7 @@ const Button = ({
     const triggerEvent = JSON.stringify({
       Event: {
         EventName: "CellChanged",
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Row: parseInt(row),
         Col: parseInt(column),
         Value: value ? 1 : 0,
@@ -208,13 +208,13 @@ const Button = ({
     const formatCellEvent = JSON.stringify({
       FormatCell: {
         Cell: [row, column],
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Value: value ? 1 : 0,
       },
     });
 
     localStorage.setItem(
-      extractStringUntilSecondPeriod(data?.ID),
+      extractStringUntilLastPeriod(data?.ID),
       updatedGridValues
     );
     const exists = event && event.some((item) => item[0] === "CellChanged");
@@ -260,7 +260,7 @@ const Button = ({
   const triggerCellMoveEvent = (row, column) => {
     const Event = JSON.stringify({
       Event: {
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         EventName: "CellMove",
         Info: [row, column, 0, 0, 0, checkInput ? 1 : 0],
       },
@@ -447,10 +447,16 @@ const Button = ({
 
     const handleRadioButton = (id, value) => {
       const parentElement = document.getElementById(
-        extractStringUntilSecondPeriod(data?.ID)
+        extractStringUntilLastPeriod(data?.ID)
       );
       var radioInputs = parentElement.getElementsByTagName("input");
+
+      // TODO! I don't know why, but this works when we set all states to 0 and
+      // then update the desired radio to 1 afterwards.
       for (var i = 0; i < radioInputs.length; i++) {
+        if (radioInputs[i].type !== 'radio') {
+          continue;
+        }
         var radioId = radioInputs[i].id;
         const button = JSON.parse(getObjectById(dataRef.current, radioId));
         handleData(
@@ -458,12 +464,26 @@ const Button = ({
             ID: button.ID,
             Properties: {
               ...button?.Properties,
-              State: data?.ID == button?.ID ? 1 : 0,
+              State: 0,
             },
           },
           "WS"
         );
       }
+
+      // See above comment: all radios have been zero'd, so now we set the one
+      // we want.
+      const button = JSON.parse(getObjectById(dataRef.current, data.ID));
+      handleData(
+        {
+          ID: data.ID,
+          Properties: {
+            ...button?.Properties,
+            State: 1,
+          },
+        },
+        "WS"
+      );
 
       handleRadioSelectEvent(value);
     };
@@ -496,7 +516,7 @@ const Button = ({
         ) : null}
         <input
           onFocus={handleGotFocus}
-          name={extractStringUntilSecondPeriod(data?.ID)}
+          name={extractStringUntilLastPeriod(data?.ID)}
           id={data?.ID}
           checked={radioValue}
           type="radio"
@@ -515,7 +535,7 @@ const Button = ({
               ...customStyles,
             }}
           >
-            {Caption}
+            <label for={data?.ID}>{Caption}</label>
           </div>
         ) : null}
       </div>

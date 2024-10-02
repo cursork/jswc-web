@@ -3,6 +3,7 @@ export * from "./deleteForm";
 export * from "./flexStyles";
 export * from "./getType";
 export * from "./getLastTabButton";
+export * from "./locateInDataRef";
 
 
 export const handleMouseDown = (e, socket, Event, ID) => {
@@ -229,11 +230,22 @@ export const checkPeriod = (ID) => {
   return count;
 };
 
-export const extractStringUntilSecondPeriod = (inputString) => {
+export const extractStringUntilLastPeriod = (inputString) => {
   const lastPeriodIndex = inputString.lastIndexOf(".");
 
   if (lastPeriodIndex !== -1) {
     const result = inputString.slice(0, lastPeriodIndex);
+    return result;
+  }
+
+  return inputString;
+};
+
+export const extractStringFromLastPeriod = (inputString) => {
+  const lastPeriodIndex = inputString.lastIndexOf(".");
+
+  if (lastPeriodIndex !== -1) {
+    const result = inputString.slice(1+lastPeriodIndex);
     return result;
   }
 

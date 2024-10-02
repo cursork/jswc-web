@@ -4,7 +4,7 @@ import {
   getObjectById,
   calculateSumFromString,
   findParentIndex,
-  extractStringUntilSecondPeriod,
+  extractStringUntilLastPeriod,
   handleMouseDown,
   handleMouseUp,
   handleMouseEnter,

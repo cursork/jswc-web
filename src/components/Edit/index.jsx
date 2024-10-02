@@ -1,6 +1,6 @@
 import {
   setStyle,
-  extractStringUntilSecondPeriod,
+  extractStringUntilLastPeriod,
   generateAsteriskString,
   calculateDateAfterDays,
   calculateDaysFromDate,
@@ -186,7 +186,7 @@ const Edit = ({
   const triggerCellMoveEvent = (row, column, value) => {
     const Event = JSON.stringify({
       Event: {
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         EventName: "CellMove",
         Info: [row, column, 0, 0, 0, value],
       },
@@ -391,11 +391,11 @@ const Edit = ({
   };
 
   const triggerCellChangedEvent = () => {
-    const gridEvent = findDesiredData(extractStringUntilSecondPeriod(data?.ID));
+    const gridEvent = findDesiredData(extractStringUntilLastPeriod(data?.ID));
     values[parseInt(row) - 1][parseInt(column) - 1] = emitValue;
     handleData(
       {
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Properties: {
           ...gridEvent.Properties,
           Values: values,
@@ -408,7 +408,7 @@ const Edit = ({
     const cellChangedEvent = JSON.stringify({
       Event: {
         EventName: "CellChanged",
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Row: parseInt(row),
         Col: parseInt(column),
         Value: emitValue,
@@ -426,13 +426,13 @@ const Edit = ({
     const formatCellEvent = JSON.stringify({
       FormatCell: {
         Cell: [row, column],
-        ID: extractStringUntilSecondPeriod(data?.ID),
+        ID: extractStringUntilLastPeriod(data?.ID),
         Value: emitValue,
       },
     });
 
     localStorage.setItem(
-      extractStringUntilSecondPeriod(data?.ID),
+      extractStringUntilLastPeriod(data?.ID),
       updatedGridValues
     );
 
