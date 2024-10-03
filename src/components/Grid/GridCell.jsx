@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { handleKeyPressUtils } from '../../utils';
 
 const GridCell = ({ data, keyPress }) => {
   const cellRef = useRef(null);
@@ -10,8 +9,6 @@ const GridCell = ({ data, keyPress }) => {
       cellRef?.current?.focus();
     }
   }, [data.focused]);
-
-  const {Event} = data.typeObj.Properties;
 
   return (
     <>
@@ -44,11 +41,11 @@ const GridCell = ({ data, keyPress }) => {
           }}
           onBlur={() => setisEditable(false)}
           ref={cellRef}
-          id={data?.typeObj?.ID}
+          id={`${data?.row}-${data?.column}`}
           tabIndex='0'
-          onKeyDown={(e) => {
-            handleKeyPressUtils(e, socket, Event, data?.typeObj?.ID);
-          }}
+          // onKeyDown={(e) => {
+          //   keyPress(e);
+          // }}
         >
           {data?.value}
         </div>
