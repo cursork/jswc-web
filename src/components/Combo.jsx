@@ -1,4 +1,4 @@
-import { setStyle, extractStringUntilLastPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../utils';
+import { setStyle, extractStringUntilLastPeriod, getObjectTypeById, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick, handleKeyPressUtils } from '../utils';
 
 import { useAppData, useResizeObserver } from '../hooks';
 import { useState, useRef } from 'react';
@@ -276,6 +276,7 @@ const Combo = ({ data, value, event = '', row = '', column = '', location = '', 
 
   const handleKeyPress = (e) => {
     e.preventDefault();
+    handleKeyPressUtils(e, socket, Event, data?.ID)
     if (e.key == 'ArrowRight') handleRightArrow(e.target.value);
     else if (e.key == 'ArrowLeft') handleLeftArrow(e.target.value);
     else if (e.key == 'ArrowDown') handleCellMove(e.target.value);

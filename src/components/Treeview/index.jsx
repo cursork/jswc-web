@@ -14,19 +14,21 @@ import {
   parseFlexStyles,
   handleMouseWheel,
   handleMouseDoubleClick,
-} from '../../utils';
-import { useAppData } from '../../hooks';
-import { useEffect, useState, useRef } from 'react';
+  handleKeyPressUtils,
+} from "../../utils";
+import { useAppData } from "../../hooks";
+import { useEffect, useState, useRef } from "react";
 
-import Tree from 'rc-tree';
-import 'rc-tree/assets/index.css';
-import './TreeView.css';
+import Tree from "rc-tree";
+import "rc-tree/assets/index.css";
+import "./TreeView.css";
 
 const Treeview = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
-  const { Depth, Items, ImageListObj, ImageIndex, Visible, Event, CSS } = data?.Properties;
+  const PORT = localStorage.getItem("PORT");
+  const { Depth, Items, ImageListObj, ImageIndex, Visible, Event, CSS } =
+    data?.Properties;
 
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(CSS);
 
   const [nodeData, setNodeData] = useState([]);
 
@@ -52,14 +54,17 @@ const Treeview = ({ data }) => {
 
       const expandEvent = JSON.stringify({
         Event: {
-          EventName: 'Expanding',
+          EventName: "Expanding",
           ID: data?.ID,
           Info: node?.id,
         },
       });
 
       const exists =
-        Event && Event.some((item) => item[0] === 'Expanding' && node?.children?.length > 0);
+        Event &&
+        Event.some(
+          (item) => item[0] === "Expanding" && node?.children?.length > 0
+        );
       if (!exists) return;
 
       console.log(expandEvent);
@@ -67,35 +72,41 @@ const Treeview = ({ data }) => {
     } else if (treeState.length < nodeData.length) {
       const missingPart = nodeData.filter((item) => !treeState.includes(item));
 
-      const Info = findParentIndex(Depth, 1 + calculateSumFromString(missingPart));
+      const Info = findParentIndex(
+        Depth,
+        1 + calculateSumFromString(missingPart)
+      );
 
       // Check that if it has Event or not
 
       const retractEvent = JSON.stringify({
         Event: {
-          EventName: 'Retracting',
+          EventName: "Retracting",
           ID: data?.ID,
           Info: node?.id,
         },
       });
 
-      const exists = Event && Event.some((item) => item[0] === 'Retracting');
+      const exists = Event && Event.some((item) => item[0] === "Retracting");
       if (!exists) return;
 
       console.log(retractEvent);
       socket.send(retractEvent);
     } else {
-      console.log('Equal');
+      console.log("Equal");
     }
     setNodeData(treeState);
   };
 
   const createNode = (title, index) => {
-    if (!index) return <span onKeyDown={(e) => console.log({ e })}>{title}</span>;
+    if (!index)
+      return <span onKeyDown={(e) => console.log({ e })}>{title}</span>;
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={`${getCurrentUrl()}${ImageList?.Properties?.Files[index - 1]}`} />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img
+          src={`${getCurrentUrl()}${ImageList?.Properties?.Files[index - 1]}`}
+        />
         <div>{title}</div>
       </div>
     );
@@ -139,7 +150,7 @@ const Treeview = ({ data }) => {
 
     const event = JSON.stringify({
       Event: {
-        EventName: 'ItemDown',
+        EventName: "ItemDown",
         ID: data?.ID,
         Info: [index, 1, shiftState, 4],
       },
@@ -157,7 +168,7 @@ const Treeview = ({ data }) => {
       },
     });
     localStorage.setItem(data?.ID, storedFocusedIndex);
-    const exists = Event && Event.some((item) => item[0] === 'ItemDown');
+    const exists = Event && Event.some((item) => item[0] === "ItemDown");
     if (!exists) return;
     console.log(event);
     socket.send(event);
@@ -178,7 +189,7 @@ const Treeview = ({ data }) => {
   const handleDoubleClickEvent = (index, shiftState) => {
     const event = JSON.stringify({
       Event: {
-        EventName: 'ItemDblClick',
+        EventName: "ItemDblClick",
         ID: data?.ID,
         Info: [index, 1, shiftState, 4],
       },
@@ -196,7 +207,7 @@ const Treeview = ({ data }) => {
       },
     });
     localStorage.setItem(data?.ID, storedFocusedIndex);
-    const exists = Event && Event.some((item) => item[0] === 'ItemDblClick');
+    const exists = Event && Event.some((item) => item[0] === "ItemDblClick");
     if (!exists) return;
     console.log(event);
     socket.send(event);
@@ -231,16 +242,16 @@ const Treeview = ({ data }) => {
       id={data?.ID}
       style={{
         ...styles,
-        border: '1px solid black',
-        background: 'white',
-        paddingLeft: '2px',
-        paddingTop: '3px',
-        display: Visible == 0 ? 'none' : 'block',
-        overflowY: 'scroll',
-        ...customStyles
+        border: "1px solid black",
+        background: "white",
+        paddingLeft: "2px",
+        paddingTop: "3px",
+        display: Visible == 0 ? "none" : "block",
+        overflowY: "scroll",
+        ...customStyles,
       }}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event, data);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
@@ -257,20 +268,20 @@ const Treeview = ({ data }) => {
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
       }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
       }}
     >
       <Tree
         onDoubleClick={handleDoubleClick}
         onSelect={handleSelect}
-        onKeyDown={(e) => console.log('keydown', { e })}
+        onKeyDown={(e) => handleKeyPressUtils(e, socket, Event, data?.ID)}
         onExpand={eventEmit}
-        expandAction='click'
+        expandAction="click"
         treeData={treeData}
         showIcon={false}
         showLine={true}
-        style={{ fontSize: '12px', lineHeight: '15px', margin: 0, padding: 0 }}
+        style={{ fontSize: "12px", lineHeight: "15px", margin: 0, padding: 0 }}
       />
     </div>
   );

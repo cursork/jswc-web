@@ -6,7 +6,7 @@ export * from "./getLastTabButton";
 export * from "./locateInDataRef";
 
 
-export const handleMouseDown = (e, socket, Event, ID) => {
+export const  handleMouseDown = (e, socket, Event, ID) => {
   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
   const rect = e.currentTarget.getBoundingClientRect();
   const x = Math.round(e.clientX - rect.left);
@@ -149,6 +149,39 @@ export const handleMouseWheel = (e, socket, Event, ID) => {
   if (!exists) return;
   console.log(mouseWheelEvent);
   socket.send(mouseWheelEvent);
+};
+
+
+
+export const handleKeyPressUtils = (e, socket, Event, ID) => {
+  const isAltPressed = e?.altKey ? 4 : 0;
+  const isCtrlPressed = e?.ctrlKey ? 2 : 0;
+  const isShiftPressed = e?.shiftKey ? 1 : 0;
+  const charCode = e?.key?.charCodeAt(0);
+  let shiftState = isAltPressed + isCtrlPressed + isShiftPressed;
+
+  const exists = Event.some((item) => item[0] === 'KeyPress');
+  if (!exists) return;
+
+  console.log(
+    JSON.stringify({
+      Event: {
+        EventName: 'KeyPress',
+        ID: ID,
+        Info: [e.key, charCode, e.keyCode, shiftState],
+      },
+    })
+  );
+
+  socket.send(
+    JSON.stringify({
+      Event: {
+        EventName: 'KeyPress',
+        ID: data?.typeObj?.ID,
+        Info: [e.key, charCode, e.keyCode, shiftState],
+      },
+    })
+  );
 };
 
 

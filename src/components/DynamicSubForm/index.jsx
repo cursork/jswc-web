@@ -13,6 +13,7 @@ import {
   handleMouseDown,
   handleMouseWheel,
   handleMouseDoubleClick,
+  handleKeyPressUtils,
 } from "../../utils";
 import SelectComponent from "../SelectComponent";
 import { useAppData } from "../../hooks";
@@ -91,7 +92,6 @@ const SubForm = ({ data }) => {
       );
     }
   }, [data]);
- 
 
   return (
     <div
@@ -113,7 +113,7 @@ const SubForm = ({ data }) => {
       }}
       ref={observedDiv}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data?.ID);
+        handleMouseDown(e, socket, Event, data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
@@ -130,8 +130,11 @@ const SubForm = ({ data }) => {
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
       }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
+      }}
+      onKeyDown={(e) => {
+        handleKeyPressUtils(e, socket, Event, data?.ID);
       }}
     >
       {Object.keys(updatedData).map((key) => {

@@ -1,15 +1,37 @@
-import { useEffect } from 'react';
-import { setStyle, createListViewObjects, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseMove, handleMouseLeave,getCurrentUrl, parseFlexStyles, handleMouseWheel, handleMouseDoubleClick } from '../../utils';
-import { useAppData } from '../../hooks';
+import { useEffect } from "react";
+import {
+  setStyle,
+  createListViewObjects,
+  handleMouseDown,
+  handleMouseUp,
+  handleMouseEnter,
+  handleMouseMove,
+  handleMouseLeave,
+  getCurrentUrl,
+  parseFlexStyles,
+  handleMouseWheel,
+  handleMouseDoubleClick,
+  handleKeyPressUtils,
+} from "../../utils";
+import { useAppData } from "../../hooks";
 
 const ListView = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
+  const PORT = localStorage.getItem("PORT");
 
   const { findDesiredData, socket } = useAppData();
 
-  const { View, Border, ColTitles, ImageIndex, ImageListObj, Items, ReportInfo, Event,CSS } =
-    data && data?.Properties;
-    const customStyles = parseFlexStyles(CSS)
+  const {
+    View,
+    Border,
+    ColTitles,
+    ImageIndex,
+    ImageListObj,
+    Items,
+    ReportInfo,
+    Event,
+    CSS,
+  } = data && data?.Properties;
+  const customStyles = parseFlexStyles(CSS);
 
   const styles = setStyle(data?.Properties);
 
@@ -52,6 +74,9 @@ const ListView = ({ data }) => {
   };
 
   const handleEvent = (nativeEvent, index, eventName) => {
+    if (eventName === "ItemDblClick") {
+      handleMouseDoubleClick(e, socket, Event, data?.ID);
+    }
     const isAltPressed = nativeEvent?.altKey ? 4 : 0;
     const isCtrlPressed = nativeEvent?.ctrlKey ? 2 : 0;
     const isShiftPressed = nativeEvent?.shiftKey ? 1 : 0;
@@ -61,25 +86,29 @@ const ListView = ({ data }) => {
     handleListViewEvent(index, shiftState, eventName);
   };
 
-
   const ImageListView = ({
-    orientation = 'row',
+    orientation = "row",
     Images = [],
-    parentOrientation = 'row',
+    parentOrientation = "row",
     height,
     width,
     imageHeight,
     imageWidth,
-    style = '',
+    style = "",
   }) => {
     const listViewItems = !Items ? [] : Items;
 
     return (
       <div
         className={`d-flex flex-wrap flex-${parentOrientation}`}
-        style={{ ...styles, border: !Border ? null : '1px solid black', ...style, ...customStyles }}
+        style={{
+          ...styles,
+          border: !Border ? null : "1px solid black",
+          ...style,
+          ...customStyles,
+        }}
         onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event,data);
+          handleMouseDown(e, socket, Event, data?.ID);
         }}
         onMouseUp={(e) => {
           handleMouseUp(e, socket, Event, data?.ID);
@@ -96,16 +125,21 @@ const ListView = ({ data }) => {
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
         }}
-        onDoubleClick={(e)=>{
-          handleMouseDoubleClick(e, socket, Event,data?.ID);
+        onDoubleClick={(e) => {
+          handleMouseDoubleClick(e, socket, Event, data?.ID);
+        }}
+        onKeyDown={() => {
+          handleKeyPressUtils(e, socket, Event, data?.ID);
         }}
       >
         {listViewItems?.map((item, index) => {
           return (
             <div
-              onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
-              onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
-              style={{ width: '60px' }}
+              onDoubleClick={(e) =>
+                handleEvent(e.nativeEvent, index, "ItemDblClick")
+              }
+              onClick={(e) => handleEvent(e.nativeEvent, index, "ItemDown")}
+              style={{ width: "60px" }}
               className={`d-flex flex-${orientation}`}
             >
               {Images.length > 0 ? (
@@ -114,7 +148,7 @@ const ListView = ({ data }) => {
                   src={`${getCurrentUrl()}${Images[ImageIndex[index] - 1]}`}
                 />
               ) : null}
-              <span style={{ fontSize: '12px' }}>{item}</span>
+              <span style={{ fontSize: "12px" }}>{item}</span>
             </div>
           );
         })}
@@ -122,14 +156,14 @@ const ListView = ({ data }) => {
     );
   };
 
-  if (View && View == 'Icon') {
+  if (View && View == "Icon") {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[0]);
     const Images = ImageData?.Properties?.Files;
     const ImageSize = ImageData && ImageData?.Properties?.Size;
     return (
       <ImageListView
-        style={{ overflowY: 'scroll' }}
-        orientation='column'
+        style={{ overflowY: "scroll" }}
+        orientation="column"
         height={`${ImageSize && ImageSize[0] + 15}px`}
         width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
@@ -139,7 +173,7 @@ const ListView = ({ data }) => {
     );
   }
 
-  if (View && View == 'SmallIcon') {
+  if (View && View == "SmallIcon") {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
     const ImageSize = ImageData?.Properties?.Size;
@@ -147,14 +181,14 @@ const ListView = ({ data }) => {
       <ImageListView
         imageHeight={`${ImageSize && ImageSize[0]}px`}
         imageWidth={`${ImageSize && ImageSize[1]}px`}
-        orientation='row'
+        orientation="row"
         height={`${ImageSize && ImageSize[0] + 15}px`}
         width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
       />
     );
   }
-  if (View && View == 'List') {
+  if (View && View == "List") {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
     const ImageSize = ImageData?.Properties?.Size;
@@ -162,15 +196,15 @@ const ListView = ({ data }) => {
       <ImageListView
         imageHeight={`${ImageSize && ImageSize[0]}px`}
         imageWidth={`${ImageSize && ImageSize[1]}px`}
-        parentOrientation={'column'}
-        orientation='row'
+        parentOrientation={"column"}
+        orientation="row"
         height={`${ImageSize && ImageSize[0]}px`}
         width={`${ImageSize && ImageSize[1] + 30}px`}
         Images={Images}
       />
     );
   }
-  if (View && View == 'Report') {  
+  if (View && View == "Report") {
     const ImageData = findDesiredData(ImageListObj && ImageListObj[1]);
     const Images = ImageData?.Properties?.Files;
 
@@ -181,22 +215,50 @@ const ListView = ({ data }) => {
       !ImageIndex ? [] : ImageIndex
     );
 
-
-
-
     return (
-      <div style={{ ...styles, border: !Border ? null : '1px solid black', overflowY: 'scroll' ,...customStyles}} 
-     >
+      <div
+        style={{
+          ...styles,
+          border: !Border ? null : "1px solid black",
+          overflowY: "scroll",
+          ...customStyles,
+        }}
+      >
         {/* Header of the component */}
-        <div className='d-flex align-items-center'>
+        <div className="d-flex align-items-center">
           {ColTitles?.map((title, index, array) => {
             return (
               <div
                 style={{
-                  borderRight: index !== array.length - 1 ? '1px solid #F0F0F0' : 'none',
+                  borderRight:
+                    index !== array.length - 1 ? "1px solid #F0F0F0" : "none",
                   flex: 1,
-                  fontSize: '12px',
-                  paddingLeft: '5px',
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                }}
+                onMouseDown={(e) => {
+                  handleMouseDown(e, socket, Event, data?.ID);
+                }}
+                onMouseUp={(e) => {
+                  handleMouseUp(e, socket, Event, data?.ID);
+                }}
+                onMouseEnter={(e) => {
+                  handleMouseEnter(e, socket, Event, data?.ID);
+                }}
+                onMouseMove={(e) => {
+                  handleMouseMove(e, socket, Event, data?.ID);
+                }}
+                onMouseLeave={(e) => {
+                  handleMouseLeave(e, socket, Event, data?.ID);
+                }}
+                onWheel={(e) => {
+                  handleMouseWheel(e, socket, Event, data?.ID);
+                }}
+                onDoubleClick={(e) => {
+                  handleMouseDoubleClick(e, socket, Event, data?.ID);
+                }}
+                onKeyDown={() => {
+                  handleKeyPressUtils(e, socket, Event, data?.ID);
                 }}
               >
                 {title}
@@ -205,34 +267,113 @@ const ListView = ({ data }) => {
           })}
         </div>
 
-        <div className='mt-1'>
+        <div className="mt-1">
           {/* Report */}
           {reportsData?.map((report, index) => {
             return (
-              <div className='d-flex align-items-center'>
+              <div className="d-flex align-items-center">
                 <div
-                  style={{ flex: 1, paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
-                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
+                  style={{ flex: 1, paddingLeft: "5px", cursor: "pointer" }}
+                  onKeyDown={() => {
+                    handleKeyPressUtils(e, socket, Event, data?.ID);
+                  }}
+                  onDoubleClick={(e) =>
+                    handleEvent(e.nativeEvent, index, "ItemDblClick")
+                  }
+                  onMouseDown={(e) => {
+                    handleMouseDown(e, socket, Event, data);
+                  }}
+                  onMouseUp={(e) => {
+                    handleMouseUp(e, socket, Event, data?.ID);
+                  }}
+                  onMouseEnter={(e) => {
+                    handleMouseEnter(e, socket, Event, data?.ID);
+                  }}
+                  onMouseMove={(e) => {
+                    handleMouseMove(e, socket, Event, data?.ID);
+                  }}
+                  onMouseLeave={(e) => {
+                    handleMouseLeave(e, socket, Event, data?.ID);
+                  }}
+                  onWheel={(e) => {
+                    handleMouseWheel(e, socket, Event, data?.ID);
+                  }}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, "ItemDown")}
                 >
-                  <div className='d-flex align-items-center'>
+                  <div className="d-flex align-items-center">
                     {report?.image ? (
                       <img src={`${url}${ImageData?.Properties?.File}`} />
                     ) : null}
-                    <span style={{ fontSize: '12px' }}>{report?.title}</span>
+                    <span style={{ fontSize: "12px" }}>{report?.title}</span>
                   </div>
                 </div>
                 <div
-                  style={{ flex: 1, fontSize: '12px', paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
-                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
+                  style={{
+                    flex: 1,
+                    fontSize: "12px",
+                    paddingLeft: "5px",
+                    cursor: "pointer",
+                  }}
+                  onDoubleClick={(e) =>
+                    handleEvent(e.nativeEvent, index, "ItemDblClick")
+                  }
+                  onMouseDown={(e) => {
+                    handleMouseDown(e, socket, Event, data?.ID);
+                  }}
+                  onMouseUp={(e) => {
+                    handleMouseUp(e, socket, Event, data?.ID);
+                  }}
+                  onMouseEnter={(e) => {
+                    handleMouseEnter(e, socket, Event, data?.ID);
+                  }}
+                  onMouseMove={(e) => {
+                    handleMouseMove(e, socket, Event, data?.ID);
+                  }}
+                  onMouseLeave={(e) => {
+                    handleMouseLeave(e, socket, Event, data?.ID);
+                  }}
+                  onWheel={(e) => {
+                    handleMouseWheel(e, socket, Event, data?.ID);
+                  }}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, "ItemDown")}
+                  onKeyDown={() => {
+                    handleKeyPressUtils(e, socket, Event, data?.ID);
+                  }}
                 >
                   {report?.description}
                 </div>
                 <div
-                  style={{ flex: 1, fontSize: '12px', paddingLeft: '5px', cursor: 'pointer' }}
-                  onDoubleClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDblClick')}
-                  onClick={(e) => handleEvent(e.nativeEvent, index, 'ItemDown')}
+                  style={{
+                    flex: 1,
+                    fontSize: "12px",
+                    paddingLeft: "5px",
+                    cursor: "pointer",
+                  }}
+                  onKeyDown={() => {
+                    handleKeyPressUtils(e, socket, Event, data?.ID);
+                  }}
+                  onDoubleClick={(e) =>
+                    handleEvent(e.nativeEvent, index, "ItemDblClick")
+                  }
+                  onMouseDown={(e) => {
+                    handleMouseDown(e, socket, Event, data?.ID);
+                  }}
+                  onMouseUp={(e) => {
+                    handleMouseUp(e, socket, Event, data?.ID);
+                  }}
+                  onMouseEnter={(e) => {
+                    handleMouseEnter(e, socket, Event, data?.ID);
+                  }}
+                  onMouseMove={(e) => {
+                    handleMouseMove(e, socket, Event, data?.ID);
+                  }}
+                  onMouseLeave={(e) => {
+                    handleMouseLeave(e, socket, Event, data?.ID);
+                  }}
+                  onWheel={(e) => {
+                    handleMouseWheel(e, socket, Event, data?.ID);
+                  }}
+                  onClick={(e) => handleEvent(e.nativeEvent, index, "ItemDown")}
                 >
                   {report?.index}
                 </div>

@@ -1,12 +1,24 @@
-import { extractStringUntilLastPeriod, handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, setStyle } from '../utils';
-import { useEffect, useRef, useState } from 'react';
-import { useAppData, useResizeObserver } from '../hooks';
+import {
+  extractStringUntilLastPeriod,
+  handleKeyPressUtils,
+  handleMouseDoubleClick,
+  handleMouseDown,
+  handleMouseEnter,
+  handleMouseLeave,
+  handleMouseMove,
+  handleMouseUp,
+  handleMouseWheel,
+  parseFlexStyles,
+  setStyle,
+} from "../utils";
+import { useEffect, useRef, useState } from "react";
+import { useAppData, useResizeObserver } from "../hooks";
 
 const List = ({ data }) => {
-  const {socket} = useAppData()
+  const { socket } = useAppData();
   const styles = setStyle(data?.Properties);
   const { Items, SelItems, Visible, Size, Event, CSS } = data?.Properties;
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(CSS);
   const ref = useRef();
   const [selectedItem, _] = useState(1);
   const [items, setItems] = useState(SelItems);
@@ -19,9 +31,9 @@ const List = ({ data }) => {
   }, [dimensions]);
 
   const selectedStyles = {
-    background: '#1264FF',
-    color: 'white',
-    cursor: 'pointer',
+    background: "#1264FF",
+    color: "white",
+    cursor: "pointer",
   };
 
   const handleClick = (index) => {
@@ -49,11 +61,11 @@ const List = ({ data }) => {
       style={{
         ...styles,
         width,
-        border: '1px solid black',
-        display: Visible == 0 ? 'none' : 'block',
+        border: "1px solid black",
+        display: Visible == 0 ? "none" : "block",
       }}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data?.ID);
+        handleMouseDown(e, socket, Event, data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
@@ -70,8 +82,11 @@ const List = ({ data }) => {
       onWheel={(e) => {
         handleMouseWheel(e, socket, Event, data?.ID);
       }}
-      onDoubleClick={(e)=>{
-        handleMouseDoubleClick(e, socket, Event,data?.ID);
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
+      }}
+      onKeyDown={(e) => {
+        handleKeyPressUtils(e, socket, Event, data?.ID);
       }}
     >
       {Items &&
@@ -80,28 +95,27 @@ const List = ({ data }) => {
             <div
               style={{
                 ...selectedStyles,
-                fontSize: '12px',
-                height: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '1px',
+                fontSize: "12px",
+                height: "14px",
+                display: "flex",
+                alignItems: "center",
+                padding: "1px",
                 ...customStyles,
               }}
-              
-              >
+            >
               {item}
             </div>
           ) : (
             <div
-            onClick={() => handleClick(index)}
-            style={{
-              cursor: 'pointer',
-              fontSize: '12px',
-              height: '14px',
-              padding: '1px',
-              display: 'flex',
-              alignItems: 'center',
-              ...customStyles,
+              onClick={() => handleClick(index)}
+              style={{
+                cursor: "pointer",
+                fontSize: "12px",
+                height: "14px",
+                padding: "1px",
+                display: "flex",
+                alignItems: "center",
+                ...customStyles,
               }}
             >
               {item}

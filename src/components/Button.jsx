@@ -10,6 +10,7 @@ import {
   parseFlexStyles,
   handleMouseWheel,
   handleMouseDoubleClick,
+  handleKeyPressUtils,
 } from "../utils";
 import { useAppData, useResizeObserver } from "../hooks";
 import { useEffect, useState } from "react";
@@ -81,7 +82,6 @@ const Button = ({
     decideInput();
     setPosition({ top: Posn && Posn[0], left: Posn && Posn[1] });
   }, [data]);
-
 
   useEffect(() => {
     if (!position) return;
@@ -309,6 +309,7 @@ const Button = ({
   };
 
   const handleKeyPress = (e) => {
+    handleKeyPressUtils(e, socket, Event, data?.ID);
     if (e.key == "Enter") handleCellMove();
     else if (e.key == "ArrowRight") handleRightArrow();
     else if (e.key == "ArrowLeft") handleLeftArrow();
@@ -432,7 +433,7 @@ const Button = ({
       // TODO! I don't know why, but this works when we set all states to 0 and
       // then update the desired radio to 1 afterwards.
       for (var i = 0; i < radioInputs.length; i++) {
-        if (radioInputs[i].type !== 'radio') {
+        if (radioInputs[i].type !== "radio") {
           continue;
         }
         var radioId = radioInputs[i].id;

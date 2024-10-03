@@ -10,6 +10,7 @@ import {
   handleMouseLeave,
   handleMouseMove,
   handleMouseDoubleClick,
+  handleKeyPressUtils,
 } from "../utils";
 import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver } from "../hooks";
@@ -47,7 +48,7 @@ const Group = ({ data }) => {
   const updatedData = excludeKeys(data);
 
   const styles = setStyle(data?.Properties, "absolute", Flex);
- 
+
   //   const shiftState = (e.shiftKey ? 1 : 0) + (e.ctrlKey ? 2 : 0); // Shift + Ctrl state
   //   const x = e.clientX;
   //   const y = e.clientY;
@@ -121,6 +122,9 @@ const Group = ({ data }) => {
       // }}
       // onDoubleClick={(e)=>{
       //   handleMouseDoubleClick(e, socket, Event,data?.ID);
+      // }}
+      // onKeyDown={(e) => {
+      //   handleKeyPressUtils(e, socket, Event, data?.ID);
       // }}
     >
       {data?.Properties?.Caption != "" && (
