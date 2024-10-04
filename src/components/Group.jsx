@@ -11,6 +11,8 @@ import {
   handleMouseMove,
   handleMouseDoubleClick,
   handleKeyPressUtils,
+  handleMouseDown,
+  handleMouseUp,
 } from "../utils";
 import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver } from "../hooks";
@@ -26,7 +28,7 @@ const Group = ({ data }) => {
     CSS,
     Event,
   } = data?.Properties;
-  const { findDesiredData } = useAppData();
+  const { findDesiredData, socket } = useAppData();
   const dimensions = useResizeObserver(
     document.getElementById(extractStringUntilLastPeriod(data?.ID))
   );
@@ -35,8 +37,10 @@ const Group = ({ data }) => {
   const [height, setHeight] = useState(Size[0]);
 
   useEffect(() => {
-    setWidth(dimensions?.width - 47);
-    setHeight(dimensions?.height - 47);
+    if (!Size.length) {
+      setWidth(dimensions?.width - 47);
+      setHeight(dimensions?.height - 47);
+    }
   }, [dimensions]);
 
   const ImageData = findDesiredData(Picture && Picture[0]);
@@ -102,30 +106,30 @@ const Group = ({ data }) => {
       id={data?.ID}
       // !!! TODO !!!
       // Temporarily disabled due to errors around socket not available
-      // onMouseDown={(e) => {
-      //   handleMouseDown(e, socket, Event,data?.ID);
-      // }}
-      // onMouseUp={(e) => {
-      //   handleMouseUp(e, socket, Event, data?.ID);
-      // }}
-      // onMouseEnter={(e) => {
-      //   handleMouseEnter(e, socket, Event, data?.ID);
-      // }}
-      // onMouseMove={(e) => {
-      //   handleMouseMove(e, socket, Event, data?.ID);
-      // }}
-      // onMouseLeave={(e) => {
-      //   handleMouseLeave(e, socket, Event, data?.ID);
-      // }}
-      // onWheel={(e) => {
-      //   handleMouseWheel(e, socket, Event, data?.ID);
-      // }}
-      // onDoubleClick={(e)=>{
-      //   handleMouseDoubleClick(e, socket, Event,data?.ID);
-      // }}
-      // onKeyDown={(e) => {
-      //   handleKeyPressUtils(e, socket, Event, data?.ID);
-      // }}
+      onMouseDown={(e) => {
+        handleMouseDown(e, socket, Event, data?.ID);
+      }}
+      onMouseUp={(e) => {
+        handleMouseUp(e, socket, Event, data?.ID);
+      }}
+      onMouseEnter={(e) => {
+        handleMouseEnter(e, socket, Event, data?.ID);
+      }}
+      onMouseMove={(e) => {
+        handleMouseMove(e, socket, Event, data?.ID);
+      }}
+      onMouseLeave={(e) => {
+        handleMouseLeave(e, socket, Event, data?.ID);
+      }}
+      onWheel={(e) => {
+        handleMouseWheel(e, socket, Event, data?.ID);
+      }}
+      onDoubleClick={(e) => {
+        handleMouseDoubleClick(e, socket, Event, data?.ID);
+      }}
+      onKeyDown={(e) => {
+        handleKeyPressUtils(e, socket, Event, data?.ID);
+      }}
     >
       {data?.Properties?.Caption != "" && (
         <span
