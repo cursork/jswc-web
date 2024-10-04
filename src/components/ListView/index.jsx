@@ -281,7 +281,7 @@ const ListView = ({ data }) => {
                     handleEvent(e.nativeEvent, index, "ItemDblClick")
                   }
                   onMouseDown={(e) => {
-                    handleMouseDown(e, socket, Event, data);
+                    handleMouseDown(e, socket, Event, data?.ID);
                   }}
                   onMouseUp={(e) => {
                     handleMouseUp(e, socket, Event, data?.ID);

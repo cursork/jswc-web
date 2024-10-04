@@ -14,7 +14,7 @@ const Poly = ({ data }) => {
       id={data?.ID}
       style={{ position: "absolute", display: Visible == 0 ? "none" : "block" ,...customStyles}}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event,data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
