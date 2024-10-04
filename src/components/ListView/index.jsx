@@ -16,8 +16,6 @@ import {
 import { useAppData } from "../../hooks";
 
 const ListView = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
-
   const { findDesiredData, socket } = useAppData();
 
   const {

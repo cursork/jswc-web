@@ -2,7 +2,6 @@ import { getCurrentUrl } from "./index";
 
 export const getImageStyles = (
   decideImageStyle,
-  PORT,
   ImageData,
   ImageSize
 ) => {
@@ -135,6 +134,6 @@ export const getImageStyles = (
 //   };
 // }
 
-export const renderImage = (PORT, ImageData) => {
+export const renderImage = (ImageData) => {
   return `${getCurrentUrl()}${ImageData?.Properties?.File}`;
 };

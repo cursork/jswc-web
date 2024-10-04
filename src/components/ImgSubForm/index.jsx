@@ -3,7 +3,6 @@ import { useAppData } from '../../hooks';
 import { useEffect } from 'react';
 
 const ImageSubForm = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
 
   const { findDesiredData } = useAppData();
 
@@ -12,7 +11,7 @@ const ImageSubForm = ({ data }) => {
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
-  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  const imageStyles = getImageStyles(Picture && Picture[1], ImageData);
 
   const parentSize = JSON.parse(localStorage.getItem('formDimension'));
 

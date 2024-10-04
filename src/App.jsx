@@ -316,8 +316,6 @@ const App = () => {
       // webSocket.send('Initialise')
     };
     webSocket.onmessage = (event) => {
-      localStorage.setItem('PORT', "22322");
-      // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
         let windowCreationEvent = JSON.parse(event.data).WC;

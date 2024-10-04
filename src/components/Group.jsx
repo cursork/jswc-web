@@ -18,7 +18,6 @@ import SelectComponent from "./SelectComponent";
 import { useAppData, useResizeObserver } from "../hooks";
 
 const Group = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const {
     Visible,
     Picture,
@@ -45,7 +44,7 @@ const Group = ({ data }) => {
 
   const ImageData = findDesiredData(Picture && Picture[0]);
 
-  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  const imageStyles = getImageStyles(Picture && Picture[1], ImageData);
 
   const flexStyles = parseFlexStyles(CSS);
 

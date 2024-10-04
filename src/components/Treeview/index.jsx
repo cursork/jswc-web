@@ -24,7 +24,6 @@ import "rc-tree/assets/index.css";
 import "./TreeView.css";
 
 const Treeview = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const { Depth, Items, ImageListObj, ImageIndex, Visible, Event, CSS } =
     data?.Properties;
 
