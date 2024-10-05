@@ -1191,6 +1191,32 @@ const App = () => {
           webSocket.send(event);
           return;
         }
+        if (Type === "Upload") {
+          // For now, we grab with direct JS access to the ID
+          // TODO multiple files
+          const file = document.getElementById(serverEvent.ID)?.files[0];
+          if (file) {
+            // TODO? Memory leak? Creating lots of readers in pathological cases?
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              const contents = event.target.result;
+              const b64 = btoa(contents);
+              // TODO refactor in to a respond(serverEvent, props) function
+              webSocket.send(
+                JSON.stringify({
+                  WG: {
+                    ID: serverEvent.ID,
+                    WGID: serverEvent.WGID,
+                    Properties: {
+                      Base64: b64,
+                    },
+                  },
+                }),
+              );
+            };
+            reader.readAsText(file);
+          }
+        }
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const { Event, ID, Info, NoCallback = 0 } = nqEvent;
