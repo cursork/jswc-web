@@ -1392,6 +1392,11 @@ const App = () => {
             .map((c) => c.split('='))
             .filter((c) => Info.includes(c[0]));
           webSocket.send(JSON.stringify({ WX: { Info: found, WGID } }));
+        } else if (Method == 'SetTitle') {
+          document.title = Info[0];
+          webSocket.send(JSON.stringify({ WX: { Info: [], WGID } }));
+        } else if (Method == 'GetTitle') {
+          webSocket.send(JSON.stringify({ WX: { Info: [document.title], WGID } }));
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
