@@ -1203,6 +1203,13 @@ const App = () => {
               },
             },
           };
+          const props = resp.WG.Properties;
+          for (const p in props) {
+            if (!serverEvent.Properties.includes(p)) {
+              delete props[p];
+            }
+          }
+          
           if (file) {
             if (serverEvent.Properties.includes('FileBytes')) {
               const reader = new FileReader();
