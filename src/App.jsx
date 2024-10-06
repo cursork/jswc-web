@@ -1397,6 +1397,16 @@ const App = () => {
           webSocket.send(JSON.stringify({ WX: { Info: [], WGID } }));
         } else if (Method == 'GetTitle') {
           webSocket.send(JSON.stringify({ WX: { Info: [document.title], WGID } }));
+        } else if (Method == 'EvalJS') {
+          // Here be dragons!
+          const results = Info.map((code) => {
+            try {
+              return [0, eval?.(code)];
+            } catch (e) {
+              return [-1, e.toString()];
+            }
+          });
+          webSocket.send(JSON.stringify({ WX: { Info: results, WGID }}));
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
