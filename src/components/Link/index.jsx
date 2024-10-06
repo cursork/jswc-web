@@ -1,5 +1,4 @@
 const Link = ({data}) => {
-    console.log('LINKDATA', data);
     return (
         <div>
             <a id={data.Properties.ID}
