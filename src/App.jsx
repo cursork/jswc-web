@@ -1381,6 +1381,17 @@ const App = () => {
           const event = JSON.stringify({ WX: { Info: !focusedID ? [] : [focusedID], WGID } });
           console.log(event);
           webSocket.send(event);
+        } else if (Method == 'SetCookie') {
+          Info.forEach((c) => {
+            document.cookie = c;
+          });
+          webSocket.send(JSON.stringify({ WX: { Info: [], WGID } }));
+        } else if (Method == 'GetCookie') {
+          const found = document.cookie
+            .split('; ')
+            .map((c) => c.split('='))
+            .filter((c) => Info.includes(c[0]));
+          webSocket.send(JSON.stringify({ WX: { Info: found, WGID } }));
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
@@ -1409,7 +1420,7 @@ const App = () => {
           },
           'WS'
         );
-      }
+      } 
     };
   };
 
