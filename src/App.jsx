@@ -1193,31 +1193,42 @@ const App = () => {
           return;
         }
         if (Type === "Upload") {
+          // TODO this branching is a bit mad!
           // For now, we grab with direct JS access to the ID
           // TODO multiple files
           const file = document.getElementById(serverEvent.ID)?.files[0];
+          const resp = {
+            WG: {
+              ID: serverEvent.ID,
+              WGID: serverEvent.WGID,
+              Properties: {
+                LastModified: file.lastModified,
+                FileName: file.name,
+                FileSize: file.size,
+                FileType: file.type,
+              },
+            },
+          };
           if (file) {
             // TODO? Memory leak? Creating lots of readers in pathological cases?
-            const reader = new FileReader();
-            reader.onload = function (event) {
-              const contents = event.target.result;
-              const b64 = btoa(contents);
-              // TODO refactor in to a respond(serverEvent, props) function
+            if (serverEvent.Properties.includes('FileBytes')) {
+              const reader = new FileReader();
+              reader.onload = function (event) {
+                const base64Str = btoa(event.target.result); // Strip off the data URL part
+                resp.WG.Properties.FileBytes = base64Str;
+                webSocket.send(
+                  JSON.stringify(resp),
+                );
+              };
+              reader.readAsBinaryString(file);
+            } else {
               webSocket.send(
-                JSON.stringify({
-                  WG: {
-                    ID: serverEvent.ID,
-                    WGID: serverEvent.WGID,
-                    Properties: {
-                      Base64: b64,
-                    },
-                  },
-                }),
+                JSON.stringify(resp),
               );
-            };
-            reader.readAsText(file);
+            }
           }
         }
+        return;
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const { Event, ID, Info, NoCallback = 0 } = nqEvent;
