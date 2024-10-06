@@ -1204,11 +1204,10 @@ const App = () => {
             },
           };
           if (file) {
-            // TODO? Memory leak? Creating lots of readers in pathological cases?
             if (serverEvent.Properties.includes('FileBytes')) {
               const reader = new FileReader();
               reader.onload = function (event) {
-                const base64Str = btoa(event.target.result); // Strip off the data URL part
+                const base64Str = btoa(event.target.result);
                 resp.WG.Properties.FileBytes = base64Str;
                 webSocket.send(
                   JSON.stringify(resp),
