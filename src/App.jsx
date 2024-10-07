@@ -440,8 +440,8 @@ const App = () => {
         const { Properties } = refData;
 
         if (Type == 'Grid') {
-          const { Values } = Properties;
-          console.log("values", { Values})
+          const { Values, CurCell } = Properties;
+          console.log("250 values", { Values, CurCell})
 
           const supportedProperties = ['Values', 'CurCell'];
 
@@ -471,12 +471,17 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key]);
+            if (key === "CurCell") {
+              serverPropertiesObj[key] = CurCell;
+            } else {
+              serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key];
+            }
           });
           // console.log("issue check properties", {local: serverPropertiesObj, app: Properties})
 
           // Values[Row - 1][Col - 1] = Value;
           console.log(
+            "250",
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
