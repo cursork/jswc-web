@@ -542,7 +542,7 @@ export const createListViewObjects = (
     index: index + 1,
     title: code,
     description: descriptions && descriptions[index][0],
-    image: (images && images[imagesIndexes[index] - 1]) || "", // Set image to an empty string if it's undefined
+    image: (images && images[imagesIndexes[index] - 1]) || "",
   }));
 
   return result;
@@ -552,8 +552,10 @@ export const getCurrentUrl = () => {
   const currentUrl = window.location.origin;
   const path = window.location.pathname !== "/" ? window.location.pathname : "";
 
-  if (import.meta.env.VITE_APL_URL) {
-    return import.meta.env.VITE_APL_URL + path;
+  if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+    return import.meta.env.VITE_APL_URL;
+  } else {
+    return currentUrl + path;
   }
 
   if (import.meta.env.DEV) {
