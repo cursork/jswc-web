@@ -552,9 +552,8 @@ export const getCurrentUrl = () => {
   const currentUrl = window.location.origin;
   const path = window.location.pathname !== "/" ? window.location.pathname : "";
 
-  if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
-    return import.meta.env.VITE_APL_URL;
-  } else {
-    return currentUrl + path;
+  if (import.meta.env.VITE_APL_URL) {
+    return import.meta.env.VITE_APL_URL + path;
   }
+  return currentUrl + path;
 };

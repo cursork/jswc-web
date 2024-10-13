@@ -281,7 +281,7 @@ const App = () => {
 
   const fetchData = () => {
     let zoom = Math.round(window.devicePixelRatio * 100);
-    const envUrl =getCurrentUrl()
+    const envUrl = getCurrentUrl()
     const url = URL.parse(envUrl)
 
     const protocol = url.protocol === "https:" ? "wss" : "ws";
