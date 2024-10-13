@@ -438,7 +438,6 @@ const GridEdit = ({ data }) => {
               backgroundColor: data?.backgroundColor,
               outline: 0,
               textAlign: 'right',
-              paddingRight: '5px',
               paddingRight: '5px'
             }}
           >
