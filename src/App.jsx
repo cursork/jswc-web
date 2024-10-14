@@ -343,32 +343,55 @@ const App = () => {
       } else if (keys[0] == 'WS') {
         const serverEvent = JSON.parse(event.data).WS;
 
+        
         let value = null;
         // @Todo Check that the Edit is Already Present or not if it is Present just change the value we are getting from the server
         const data = JSON.parse(getObjectById(dataRef.current, serverEvent.ID));
-
-        if (data?.Properties?.Type == 'Edit') {
-          if (serverEvent?.Properties.hasOwnProperty('Text')) {
+        
+        console.log("WSSocket", { serverEvent, data });
+        if (data?.Properties?.Type == "Edit") {
+          if (serverEvent?.Properties.hasOwnProperty("Text")) {
             value = serverEvent?.Properties.Text;
-          } else if (serverEvent?.Properties.hasOwnProperty('Value')) {
+          } else if (serverEvent?.Properties.hasOwnProperty("Value")) {
             value = serverEvent?.Properties.Value;
-          }else if (serverEvent?.Properties.hasOwnProperty('SelText')) {
+          } else if (serverEvent?.Properties.hasOwnProperty("SelText")) {
             value = serverEvent?.Properties.SelText;
           }
+
+          const updatedProperties = {
+            ...data?.Properties,
+            ...serverEvent?.Properties,
+          };
+
+          return handleData(
+            {
+              ID: serverEvent.ID,
+              Properties: updatedProperties,
+            },
+            "WS"
+          );
           // Check that the Already Present Data have Text Key or Value Key
-          if (data?.Properties.hasOwnProperty('Text')) {
-            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+          if (data?.Properties.hasOwnProperty("Text")) {
+            setSocketData((prevData) => [
+              ...prevData,
+              JSON.parse(event.data).WS,
+            ]);
             return handleData(
               {
                 ID: serverEvent.ID,
+
                 Properties: {
+                  Event: serverEvent.Properties.Event,
                   Text: serverEvent?.Properties.Text,
                 },
               },
-              'WS'
+              "WS"
             );
-          } else if (data?.Properties.hasOwnProperty('Value')) {
-            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+          } else if (data?.Properties.hasOwnProperty("Value")) {
+            setSocketData((prevData) => [
+              ...prevData,
+              JSON.parse(event.data).WS,
+            ]);
             return handleData(
               {
                 ID: serverEvent.ID,
@@ -376,11 +399,13 @@ const App = () => {
                   Value: serverEvent?.Properties.Value,
                 },
               },
-              'WS'
+              "WS"
             );
-          }
-           else if (data?.Properties.hasOwnProperty('SelText')) {
-            setSocketData((prevData) => [...prevData, JSON.parse(event.data).WS]);
+          } else if (data?.Properties.hasOwnProperty("SelText")) {
+            setSocketData((prevData) => [
+              ...prevData,
+              JSON.parse(event.data).WS,
+            ]);
             return handleData(
               {
                 ID: serverEvent.ID,
@@ -388,8 +413,9 @@ const App = () => {
                   SelText: serverEvent?.Properties.SelText,
                 },
               },
-              'WS'
+              "WS"
             );
+          } else {
           }
         }
 
