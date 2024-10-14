@@ -212,7 +212,7 @@ const ListView = ({ data }) => {
       !ReportInfo ? [] : ReportInfo,
       !ImageIndex ? [] : ImageIndex
     );
-
+    
     return (
       <div
         style={{
@@ -300,7 +300,7 @@ const ListView = ({ data }) => {
                 >
                   <div className="d-flex align-items-center">
                     {report?.image ? (
-                      <img src={`${url}${ImageData?.Properties?.File}`} />
+                      <img src={`${getCurrentUrl()}${report.image}`} />
                     ) : null}
                     <span style={{ fontSize: "12px" }}>{report?.title}</span>
                   </div>

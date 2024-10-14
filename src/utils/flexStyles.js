@@ -1,5 +1,5 @@
 export const parseFlexStyles = (inputString) => {
-  console.log({inputString})
+  // console.log({inputString})
   let newInputString;
   if (Array.isArray(inputString)) {
     newInputString = inputString && inputString[1];
@@ -19,3 +19,4 @@ export const parseFlexStyles = (inputString) => {
 
   return stylesObject;
 };
+
