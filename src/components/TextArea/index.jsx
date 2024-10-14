@@ -19,8 +19,6 @@ const TextArea = ({ data }) => {
   const textareaRef = useRef(null);
 
 
-  console.log("multi edit",{data, socket:dataRef.current})
-
   // Safe initialization of localText
   const initialText = () => {
     if (data?.Properties?.Text) {
@@ -178,7 +176,7 @@ const TextArea = ({ data }) => {
         style={updatedStyles}
         value={textString}
         onChange={handleChange}
-        // onMouseUp={(e) => handleMouseUpLocal(e, "mouseUp")}
+        onMouseUp={(e) => handleMouseUpLocal(e, "mouseUp")}
         onMouseDown={(e) => handleMouseUpLocal(e, "mouseDown")}
         onMouseEnter={(e) => handleMouseUpLocal(e, "mouseEnter")}
         onMouseLeave={(e) => handleMouseUpLocal(e, "mouseLeave")}
