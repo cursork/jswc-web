@@ -13,7 +13,7 @@ const TabButton = ({ data, handleTabClick, activeTab, bgColor, fontColor, active
     <div
       id={data.ID}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event,data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);

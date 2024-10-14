@@ -92,7 +92,7 @@ const customStyles = parseFlexStyles(CSS)
           left: 0,
         }}
         onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event,data);
+          handleMouseDown(e, socket, Event,data?.ID);
         }}
         onMouseUp={(e) => {
           handleMouseUp(e, socket, Event, data?.ID);
@@ -184,7 +184,7 @@ const customStyles = parseFlexStyles(CSS)
                   })`}
                   style={{...customStyles}}
                 >
-                  {text.replace(/ /g, "\u00A0")}
+                  {text /*text.replace(/ /g, "\u00A0")*/}
                 </text>
               </g>
             );

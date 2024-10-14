@@ -5,7 +5,6 @@ import { MdOutlineQuestionMark } from "react-icons/md";
 import { getCurrentUrl, parseFlexStyles } from "../../utils";
 
 const CustomRibbonButton = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const ImageList = JSON.parse(localStorage.getItem("ImageList"));
   const ImagesData = JSON.parse(localStorage.getItem("ImagesData"));
   const { socket } = useAppData();

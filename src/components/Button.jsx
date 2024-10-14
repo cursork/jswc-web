@@ -26,7 +26,6 @@ const Button = ({
   location = "",
   values = [],
 }) => {
-  const PORT = localStorage.getItem("PORT");
 
   const parentSize = JSON.parse(
     localStorage.getItem(extractStringUntilLastPeriod(data?.ID))
@@ -62,7 +61,7 @@ const Button = ({
 
   const buttonEvent = data.Properties.Event && data?.Properties?.Event[0];
 
-  const imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  const imageStyles = getImageStyles(Picture && Picture[1], ImageData);
   const [position, setPosition] = useState({
     top: Posn && Posn[0],
     left: Posn && Posn[1],

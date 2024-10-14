@@ -316,8 +316,6 @@ const App = () => {
       // webSocket.send('Initialise')
     };
     webSocket.onmessage = (event) => {
-      localStorage.setItem('PORT', "22322");
-      // Window Creation WC
       const keys = Object.keys(JSON.parse(event.data));
       if (keys[0] == 'WC') {
         let windowCreationEvent = JSON.parse(event.data).WC;
@@ -442,8 +440,8 @@ const App = () => {
         const { Properties } = refData;
 
         if (Type == 'Grid') {
-          const { Values } = Properties;
-          console.log("values", { Values})
+          const { Values, CurCell } = Properties;
+          console.log("250 values", { Values, CurCell})
 
           const supportedProperties = ['Values', 'CurCell'];
 
@@ -473,12 +471,17 @@ const App = () => {
           const { Event } = JSON.parse(localStorage.getItem(serverEvent.ID));
           const serverPropertiesObj = {};
           serverEvent.Properties.map((key) => {
-            return (serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key]);
+            if (key === "CurCell") {
+              serverPropertiesObj[key] = CurCell;
+            } else {
+              serverPropertiesObj[key] = Event[key] || refData?.Properties?.[key];
+            }
           });
           // console.log("issue check properties", {local: serverPropertiesObj, app: Properties})
 
           // Values[Row - 1][Col - 1] = Value;
           console.log(
+            "250",
             JSON.stringify({
               WG: {
                 ID: serverEvent.ID,
@@ -702,8 +705,9 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             serverPropertiesObj[key] =
               key === "SelItems"
-                ? newSelItems
+                ? newSelItems : key === "Text" ? Text
                 : Properties[key]
+
           });
           
 
@@ -741,7 +745,7 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             serverPropertiesObj[key] =
               key === "SelItems"
-                ? newSelItems
+               ? newSelItems : key === "Text" ? Text
                 : key === "Items"
                 ? Items[Info]
                 : Event[key];
@@ -1188,6 +1192,49 @@ const App = () => {
           webSocket.send(event);
           return;
         }
+        if (Type === "Upload") {
+          // TODO this branching is a bit mad!
+          // For now, we grab with direct JS access to the ID
+          // TODO multiple files
+          const file = document.getElementById(serverEvent.ID)?.files[0];
+          const resp = {
+            WG: {
+              ID: serverEvent.ID,
+              WGID: serverEvent.WGID,
+              Properties: {
+                LastModified: file.lastModified,
+                FileName: file.name,
+                FileSize: file.size,
+                FileType: file.type,
+              },
+            },
+          };
+          const props = resp.WG.Properties;
+          for (const p in props) {
+            if (!serverEvent.Properties.includes(p)) {
+              delete props[p];
+            }
+          }
+          
+          if (file) {
+            if (serverEvent.Properties.includes('FileBytes')) {
+              const reader = new FileReader();
+              reader.onload = function (event) {
+                const base64Str = btoa(event.target.result);
+                resp.WG.Properties.FileBytes = base64Str;
+                webSocket.send(
+                  JSON.stringify(resp),
+                );
+              };
+              reader.readAsBinaryString(file);
+            } else {
+              webSocket.send(
+                JSON.stringify(resp),
+              );
+            }
+          }
+        }
+        return;
       } else if (keys[0] == 'NQ') {
         const nqEvent = JSON.parse(event.data).NQ;
         const { Event, ID, Info, NoCallback = 0 } = nqEvent;
@@ -1340,6 +1387,32 @@ const App = () => {
           const event = JSON.stringify({ WX: { Info: !focusedID ? [] : [focusedID], WGID } });
           console.log(event);
           webSocket.send(event);
+        } else if (Method == 'SetCookie') {
+          Info.forEach((c) => {
+            document.cookie = c;
+          });
+          webSocket.send(JSON.stringify({ WX: { Info: [], WGID } }));
+        } else if (Method == 'GetCookie') {
+          const found = document.cookie
+            .split('; ')
+            .map((c) => c.split('='))
+            .filter((c) => Info.includes(c[0]));
+          webSocket.send(JSON.stringify({ WX: { Info: found, WGID } }));
+        } else if (Method == 'SetTitle') {
+          document.title = Info[0];
+          webSocket.send(JSON.stringify({ WX: { Info: [], WGID } }));
+        } else if (Method == 'GetTitle') {
+          webSocket.send(JSON.stringify({ WX: { Info: [document.title], WGID } }));
+        } else if (Method == 'EvalJS') {
+          // Here be dragons!
+          const results = Info.map((code) => {
+            try {
+              return [0, eval?.(code)];
+            } catch (e) {
+              return [-1, e.toString()];
+            }
+          });
+          webSocket.send(JSON.stringify({ WX: { Info: results, WGID }}));
         }
       } else if (keys[0] == 'Options') {
         handleData(JSON.parse(event.data).Options, 'WC');
@@ -1368,7 +1441,7 @@ const App = () => {
           },
           'WS'
         );
-      }
+      } 
     };
   };
 

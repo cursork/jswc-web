@@ -2,7 +2,6 @@ import { useAppData } from '../../hooks';
 import { handleMouseDoubleClick, handleMouseDown, handleMouseEnter, handleMouseLeave, handleMouseMove, handleMouseUp, handleMouseWheel, parseFlexStyles, renderImage } from '../../utils';
 
 const Image = ({ data }) => {
-  const PORT = localStorage.getItem('PORT');
   const { findDesiredData, socket } = useAppData();
   const { Points, Picture, Visible,Event, CSS } = data?.Properties;
   const customStyles = parseFlexStyles(CSS)
@@ -22,7 +21,7 @@ const Image = ({ data }) => {
         ...customStyles
       }}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event,data);
+        handleMouseDown(e, socket, Event,data.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
@@ -47,7 +46,7 @@ const Image = ({ data }) => {
       <svg height={parentSize && parentSize[0]} width={parentSize && parentSize[1]}>
         {pointsArray.map((imagePoints, index) => {
           const imageObject = findDesiredData(Picture && Picture[index]);
-          const ImageUrl = renderImage(PORT, imageObject);
+          const ImageUrl = renderImage(imageObject);
           return <image href={ImageUrl} x={imagePoints[0]} y={imagePoints[1]} />;
         })}
       </svg>

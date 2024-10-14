@@ -19,7 +19,6 @@ import SelectComponent from "../SelectComponent";
 import { useAppData } from "../../hooks";
 
 const SubForm = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const { findDesiredData, socket } = useAppData();
   const {
     Size,
@@ -46,7 +45,6 @@ const SubForm = ({ data }) => {
 
   const imageStyles = getImageStyles(
     Picture && Picture[1],
-    PORT,
     ImageData,
     data?.Properties
   );

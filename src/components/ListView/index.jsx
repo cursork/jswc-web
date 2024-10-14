@@ -16,8 +16,6 @@ import {
 import { useAppData } from "../../hooks";
 
 const ListView = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
-
   const { findDesiredData, socket } = useAppData();
 
   const {
@@ -214,7 +212,7 @@ const ListView = ({ data }) => {
       !ReportInfo ? [] : ReportInfo,
       !ImageIndex ? [] : ImageIndex
     );
-
+    
     return (
       <div
         style={{
@@ -281,7 +279,7 @@ const ListView = ({ data }) => {
                     handleEvent(e.nativeEvent, index, "ItemDblClick")
                   }
                   onMouseDown={(e) => {
-                    handleMouseDown(e, socket, Event, data);
+                    handleMouseDown(e, socket, Event, data?.ID);
                   }}
                   onMouseUp={(e) => {
                     handleMouseUp(e, socket, Event, data?.ID);
@@ -302,7 +300,7 @@ const ListView = ({ data }) => {
                 >
                   <div className="d-flex align-items-center">
                     {report?.image ? (
-                      <img src={`${url}${ImageData?.Properties?.File}`} />
+                      <img src={`${getCurrentUrl()}${report.image}`} />
                     ) : null}
                     <span style={{ fontSize: "12px" }}>{report?.title}</span>
                   </div>

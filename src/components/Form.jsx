@@ -18,7 +18,6 @@ import { useAppData, useResizeObserver, useWindowDimensions } from "../hooks";
 import { useEffect, useState } from "react";
 
 const Form = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const { viewport } = useWindowDimensions();
   const { findDesiredData, socket } = useAppData();
   const [formStyles, setFormStyles] = useState({});
@@ -41,7 +40,7 @@ const Form = ({ data }) => {
   const updatedData = excludeKeys(data);
   const ImageData = findDesiredData(Picture && Picture[0]);
 
-  let imageStyles = getImageStyles(Picture && Picture[1], PORT, ImageData);
+  let imageStyles = getImageStyles(Picture && Picture[1], ImageData);
 
   const sendConfigureEvent = () => {
     const event = JSON.stringify({

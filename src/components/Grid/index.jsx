@@ -332,6 +332,7 @@ const Grid = ({ data }) => {
     proceedEventArray,
     setProceedEventArray,
     findAggregatedPropertiesData,
+    handleData
   } = useAppData();
   // console.log("waiting", { proceed, setProceed, proceedEventArray });
 
@@ -369,7 +370,7 @@ const Grid = ({ data }) => {
     HScroll = 0,
     Attach,
     Event,
-    CSS
+    CSS,
   } = data?.Properties;
 
   const [height, setHeight] = useState(Size[0]);
@@ -385,20 +386,43 @@ const Grid = ({ data }) => {
     !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[1]
   );
 
- 
-
   useEffect(() => {
     if (CurCell) {
+
       let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0];
-      let defaultCol = !CurCell
-        ? RowTitles?.length > 0
-          ? 1
-          : 0
-        : CurCell[1] - 1;
+      let defaultCol = !CurCell ? (ColTitles?.length > 0 ? 1 : 0) : CurCell[1];
       setSelectedRow((prev) => (prev !== CurCell[0] ? defaultRow : prev));
       setSelectedColumn((prev) => (prev !== CurCell[1] ? defaultCol : prev));
+      localStorage.setItem(
+        data?.ID,
+        JSON.stringify({
+          Event: {
+            CurCell: [defaultRow, defaultCol],
+          },
+        })
+      );
     }
   }, [CurCell]);
+
+  useEffect(() => {
+    if (localStorage.getItem(data.ID)) {
+      const { Event } = JSON.parse(localStorage.getItem(data.ID));
+      console.log("250", { storageCurCell: Event.CurCell });
+      if (Event.CurCell) {
+         handleData(
+      {
+        ID: data?.ID,
+        Properties: {
+          CurCell: [Event.CurCell[0], Event.CurCell[1]],
+        },
+      },
+      'WS'
+    );
+        
+      }
+    }
+
+  }, [localStorage.getItem(data.ID)]);
 
   // useEffect(()=>{
   //   let defaultRow = !CurCell ? (RowTitles?.length > 0 ? 1 : 0) : CurCell[0]
@@ -570,14 +594,14 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0
+                  ColTitles?.length > 0
                     ? selectedColumn + 1
                     : selectedColumn + 2,
                 ],
               },
             })
           );
-          if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          if (ColTitles?.length > 0 && selectedColumn == columns) return;
 
           localStorage.setItem(
             data?.ID,
@@ -585,7 +609,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0
+                  ColTitles?.length > 0
                     ? selectedColumn + 1
                     : selectedColumn + 2,
                 ],
@@ -593,13 +617,13 @@ const Grid = ({ data }) => {
             })
           );
         } else {
-          if (RowTitles?.length > 0 && selectedColumn == columns) return;
+          if (ColTitles?.length > 0 && selectedColumn == columns) return;
           console.log(
             JSON.stringify({
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0
+                  ColTitles?.length > 0
                     ? selectedColumn + 1
                     : selectedColumn + 2,
                 ],
@@ -614,7 +638,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0
+                  ColTitles?.length > 0
                     ? selectedColumn + 1
                     : selectedColumn + 2,
                 ],
@@ -626,7 +650,7 @@ const Grid = ({ data }) => {
 
         handleCellMove(
           selectedRow,
-          RowTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
+          ColTitles?.length > 0 ? selectedColumn + 1 : selectedColumn + 2,
           0
         );
       } else if (event.key === "ArrowLeft") {
@@ -639,7 +663,7 @@ const Grid = ({ data }) => {
         // console.log("issue arrow left", {selectedRow, selectedColumn, columns, selectedColumn:  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn})
 
         if (!localStoragValue) {
-          if (RowTitles?.length > 0 && selectedColumn == 1) return;
+          if (ColTitles?.length > 0 && selectedColumn == 1) return;
 
           localStorage.setItem(
             data?.ID,
@@ -647,20 +671,20 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+                  ColTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
                 ],
               },
             })
           );
         } else {
-          if (RowTitles?.length > 0 && selectedColumn == 1) return;
+          if (ColTitles?.length > 0 && selectedColumn == 1) return;
           localStorage.setItem(
             data?.ID,
             JSON.stringify({
               Event: {
                 CurCell: [
                   selectedRow,
-                  RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+                  ColTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
                 ],
                 Values: localStoragValue?.Event?.Values,
               },
@@ -669,7 +693,7 @@ const Grid = ({ data }) => {
         }
         handleCellMove(
           selectedRow,
-          RowTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
+          ColTitles?.length > 0 ? selectedColumn - 1 : selectedColumn,
           0
         );
       } else if (event.key === "ArrowUp") {
@@ -685,7 +709,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow - 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
               },
             })
@@ -698,7 +722,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow - 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
                 Values: localStoragValue?.Event?.Values,
               },
@@ -707,7 +731,7 @@ const Grid = ({ data }) => {
         }
         handleCellMove(
           selectedRow - 1,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
       } else if (event.key === "ArrowDown") {
@@ -722,7 +746,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow + 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
               },
             })
@@ -736,7 +760,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow + 1,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
                 Values: localStoragValue?.Event?.Values,
               },
@@ -745,7 +769,7 @@ const Grid = ({ data }) => {
         }
         handleCellMove(
           selectedRow + 1,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
       } else if (event.key === "PageDown") {
@@ -761,7 +785,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   demoRow,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
               },
             })
@@ -775,7 +799,7 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   demoRow,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
                 Values: localStoragValue?.Event?.Values,
               },
@@ -784,7 +808,7 @@ const Grid = ({ data }) => {
         }
         handleCellMove(
           demoRow,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
       } else if (event.key === "PageUp") {
@@ -800,20 +824,20 @@ const Grid = ({ data }) => {
               Event: {
                 CurCell: [
                   selectedRow - 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
               },
             })
           );
         } else {
-          if (selectedRow == 1 && RowTitles?.length > 0) return;
+          if (selectedRow == 1 && ColTitles?.length > 0) return;
           localStorage.setItem(
             data?.ID,
             JSON.stringify({
               Event: {
                 CurCell: [
                   selectedRow - 9,
-                  RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+                  ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
                 ],
                 Values: localStoragValue?.Event?.Values,
               },
@@ -822,7 +846,7 @@ const Grid = ({ data }) => {
         }
         handleCellMove(
           selectedRow - 9,
-          RowTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
+          ColTitles?.length > 0 ? selectedColumn : selectedColumn + 1,
           0
         );
       }
@@ -930,8 +954,7 @@ const Grid = ({ data }) => {
               ? CellHeights[j]
               : CellHeights,
             align: !isNaN(Values[i][j]) ? "end" : "start",
-            paddingLeft:!isNaN(parseInt(Values[i][j])) ? "0px" : "5px",
-
+            paddingLeft: !isNaN(parseInt(Values[i][j])) ? "0px" : "5px",
           };
           body.push(obj);
         }
@@ -1052,7 +1075,7 @@ const Grid = ({ data }) => {
   };
 
   const gridData = modifyGridData();
-  const customStyles = parseFlexStyles(CSS)
+  const customStyles = parseFlexStyles(CSS);
 
   return (
     <>
@@ -1068,7 +1091,7 @@ const Grid = ({ data }) => {
         ref={gridRef}
         onKeyDown={handleKeyDown}
         onMouseDown={(e) => {
-          handleMouseDown(e, socket, Event,data?.ID);
+          handleMouseDown(e, socket, Event, data?.ID);
         }}
         onMouseUp={(e) => {
           handleMouseUp(e, socket, Event, data?.ID);
@@ -1085,8 +1108,8 @@ const Grid = ({ data }) => {
         onWheel={(e) => {
           handleMouseWheel(e, socket, Event, data?.ID);
         }}
-        onDoubleClick={(e)=>{
-          handleMouseDoubleClick(e, socket, Event,data?.typeObj?.ID);
+        onDoubleClick={(e) => {
+          handleMouseDoubleClick(e, socket, Event, data?.typeObj?.ID);
         }}
         id={data?.ID}
         style={{

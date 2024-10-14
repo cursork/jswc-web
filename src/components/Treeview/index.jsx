@@ -24,7 +24,6 @@ import "rc-tree/assets/index.css";
 import "./TreeView.css";
 
 const Treeview = ({ data }) => {
-  const PORT = localStorage.getItem("PORT");
   const { Depth, Items, ImageListObj, ImageIndex, Visible, Event, CSS } =
     data?.Properties;
 
@@ -251,7 +250,7 @@ const Treeview = ({ data }) => {
         ...customStyles,
       }}
       onMouseDown={(e) => {
-        handleMouseDown(e, socket, Event, data);
+        handleMouseDown(e, socket, Event, data?.ID);
       }}
       onMouseUp={(e) => {
         handleMouseUp(e, socket, Event, data?.ID);
