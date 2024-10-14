@@ -705,8 +705,9 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             serverPropertiesObj[key] =
               key === "SelItems"
-                ? newSelItems
+                ? newSelItems : key === "Text" ? Text
                 : Properties[key]
+
           });
           
 
@@ -744,7 +745,7 @@ const App = () => {
           serverEvent.Properties.map((key) => {
             serverPropertiesObj[key] =
               key === "SelItems"
-                ? newSelItems
+               ? newSelItems : key === "Text" ? Text
                 : key === "Items"
                 ? Items[Info]
                 : Event[key];
