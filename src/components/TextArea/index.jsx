@@ -15,11 +15,9 @@ import "../../styles/font.css";
 import { useAppData } from "../../hooks";
 
 const TextArea = ({ data }) => {
-  const { handleData, socket } = useAppData();
+  const { handleData, socket,dataRef } = useAppData();
   const textareaRef = useRef(null);
 
-
-  console.log("multi edit",{data})
 
   // Safe initialization of localText
   const initialText = () => {
@@ -97,6 +95,7 @@ const TextArea = ({ data }) => {
 
   const handleMouseUpLocal = (e, type) => {
     // Handle specific mouse events
+    console.log("mousedown", Event)
     switch (type) {
       case "mouseUp":
         handleMouseUp(e, socket, Event, data?.ID);
